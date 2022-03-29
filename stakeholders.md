@@ -16,11 +16,14 @@
 | **Logistic transport unit** | External | Secondary | Indirect | Contributes to the supply chain by providing the necessary services to transport the items from the supplier to the warehouse |
 | **Quality assurance team** | Internal | Primary | Direct | Applies specific tests on random items in order to assure the quality standard established |
 | **Workers** | Internal | Primary | Direct | Work inside the warehouse, providing the management of items location and transport |
-| **Organizational units** of the company | External | Secondary | Indirect | May request items stored in the warehouse by means of internal orders |
+| **Organizational units** of the company | Internal | Secondary | Indirect | May request items stored in the warehouse by means of internal orders |
 | **Financiers** | External | Secondary | Indirect | Bank or venture capital |
-| **Competitors** | External | - | - | - |
-| **Payment service** | External | Secondary | Indirect | Manages the transactions between the warehouse, the suppliers and the customers |
-| **Marketing unit** | Internal | Secondary | Direct |
+| **Competitors** | External | - | - | Other software applications which compete with EZWH |
 | **Customers** | External | Secondary | - | May request items stored in the warehouse by means of external orders |
 | **Web service provider / App Store** | External | - | - | Provides the infrastructure to sell the application to the managers of the warehouses |
 | **Analytics team** | Internal | Secondary | Direct | Provides useful data for better managing the project applications |
+| **Cloud services** | External | - | Indirect | Provides... |
+| **Internal warehouse environment** | Internal | - | Direct |  |
+| **Pick-up area** | - | - | - |  |
+| **Government** | External | Secondary | Indirect | Law-related |
+| **Security** | External | Secondary | Direct | Provides security services to the overall management |
