@@ -9,20 +9,20 @@
 
 | Stakeholder name  | Internal/External | Role | Direct/Indirect | Description | 
 | ----------------- |:-----------:|:-----------:|:-----------:|:-----------:|
-| **Manager** of the warehouse | Internal | Primary | Direct | Supervises the availability of items inside the warehouse |
-| **Suppliers** | External | Secondary | Indirect | At the foundation of the supply chain, provides items to the warehouse when the manager requested it |
-| **Manager** of the company | External | Secondary | Indirect | CEO of the company the warehouse is a part of |
-| **Project team** | Internal | Primary | Direct | Develop and maintain the warehouse EZWH software application |
-| **Logistic transport unit** | External | Secondary | Indirect | Contributes to the supply chain by providing the necessary services to transport the items from the supplier to the warehouse |
-| **Quality assurance team** | Internal | Primary | Direct | Applies specific tests on random items in order to assure the quality standard established |
-| **Workers** | Internal | Primary | Direct | Work inside the warehouse, providing the management of items location and transport |
-| **Organizational units** of the company | Internal | Secondary | Indirect | May request items stored in the warehouse by means of internal orders |
-| **Financiers** | External | Secondary | Indirect | Bank or venture capital |
-| **Competitors** | External | - | - | Other software applications which compete with EZWH |
-| **Customers** | External | Secondary | - | May request items stored in the warehouse by means of external orders |
-| **Web service provider / App Store** | External | - | - | Provides the infrastructure to sell the application to the managers of the warehouses |
+| **Manager** of the warehouse | Internal | Primary | Direct | It is in charge of the management of the warehouse by supervising the availability of items inside the warehouse. |
+| **Suppliers** | External | Secondary | Indirect | At the foundation of the supply chain, provides items to the warehouse when the manager requests it. |
+| **Manager** of the company | External | Secondary | Indirect | CEO of the company the warehouse is a part of. |
+| **Project team** | Internal | Primary | Direct | Develop and maintain the warehouse EZWH software application. |
+| **Logistic transport unit** | External | Secondary | Indirect | Contributes to the supply chain by providing the necessary services to transport the items from the supplier to the warehouse. |
+| **Quality assurance team** | Internal | Primary | Direct | Applies specific tests on random items in order to assure the quality standard established. |
+| **Workers** | Internal | Primary | Direct | Work inside the warehouse, providing the management of items location and transport. |
+| **Organizational units** of the company | Internal | Secondary | Indirect | May request items stored in the warehouse by means of internal orders. |
+| **Financiers** | External | Secondary | Indirect | Bank or venture capital which finance the development and maintenance of the software. |
+| **Competitors** | External | - | - | Other software applications which compete with EZWH. |
+| **Customers** | External | Secondary | - | May request items stored in the warehouse by means of external orders. |
+| **Web service provider / App Store** | External | - | - | Provides the infrastructure to sell the application to the managers of the warehouses. |
 | **Analytics team** | Internal | Secondary | Direct | Provides useful data for better managing the project applications |
-| **Cloud services** | External | - | Indirect | Provides... |
+| **Cloud services** | External | - | Indirect | Provides servers to store useful data. |
 | **Internal warehouse environment** | Internal | - | Direct |  |
 | **Pick-up area** | - | - | - |  |
 | **Government** | External | Secondary | Indirect | Law-related |
