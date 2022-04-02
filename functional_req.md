@@ -12,14 +12,5 @@
 | FR (2) | Manage items income request |
 | FR (3) | Manage items outcome request |
 
-# TO BE CONVERTED TO A TABLE
-1. Register a user
-2. Manage internal items handling
-    1. Manage requests from EZWH to workers
-    2. Manage requests from Organizational Units to EZWH
-    3. Manage requests from Manager to EZWH
-3. Manage external items handling
-    1. Manage requests from EZWH to to Supplier
-    2. Manage request from Customer to EZWH
-4. 
+
 
