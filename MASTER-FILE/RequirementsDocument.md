@@ -102,11 +102,44 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 \<they match to high level use cases>
 
-| ID        | Description  |
+| ID | Description |
 | ------------- |:-------------:| 
-|  FR1     |  |
-|  FR2     |   |
-| FRx..  | | 
+| **FR 1** | User handling |
+| --> FR 1.1 | Register a new user in the system |
+| --> FR 1.2 | Delete an existing user from the system |
+| --> FR 1.3 | Change user permissions |
+| --> FR 1.4 | Authentication (Log-In) of users |
+| **FR 2** | Orders handling |
+| --> FR 2.1 | Manage internal orders |
+| -- -- --> FR 2.1.1| Accept requests from workers to EZWH |
+| -- -- --> FR 2.1.2 | Accept requests from Organizational Units to EZWH |
+| -- -- -- -- --> FR 2.1.2.1 | Confirm the "deliver" item to pick up area |
+| -- -- --> FR 2.1.3 | Accept requests from Manager to EZWH |
+| -- -- --> FR 2.1.4 | Confirm or reject order delivered |
+| --> FR 2.2 | Manage external orders |	
+| -- -- --> FR 2.2.1| Accept requests from EZWH to Supplier |
+| -- -- --> FR 2.2.2| Accept request from Customer to EZWH |
+| -- -- --> FR 2.2.3| Confirm or reject order delivered |
+| **FR 3** | Manage testing |
+| --> FR 3.1 | Select test for specific item |	
+| --> FR 3.2 | Manage result test |	
+| -- -- --> FR 3.2.1| Confirm order |
+| -- -- --> FR 3.2.2| Reject order |
+| **FR 4** | Manage warehouse |
+| --> FR 4.1 | Manage map environment |	
+| -- -- --> FR 4.1.1| Create new environment |
+| -- -- --> FR 4.1.2| Update an existing environment |
+| -- -- --> FR 4.1.3| Delete an exiting environment |
+| --> FR 4.2 | Define areas |	
+| --> FR 4.3 | Replace items in the area |	
+| --> FR 4.4 | Show items list |	
+| --> FR 4.4 | Show space availability |	
+| **FR 5** | Pick-Up Area |
+| --> FR 5.1 | Receive item from warehouse |	
+| --> FR 5.2 | Check item as delivered at the pick up area |	
+
+
+
 
 ## Non Functional Requirements
 
