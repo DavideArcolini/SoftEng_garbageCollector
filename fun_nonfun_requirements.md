@@ -13,7 +13,10 @@
 | FR (3) | Manage items outcome request |
 
 # TO BE CONVERTED TO A TABLE
-1. Register a user
+1. Users handling
+    1. Register an user
+    2. Delete an user
+    3. Manage user permission
 2. Orders handling
     1. Manage internal items handling   
         1. Manage requests from EZWH to workers
