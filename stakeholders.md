@@ -27,3 +27,4 @@
 | **Pick-up area** | - | - | - |  |
 | **Government** | External | Secondary | Indirect | Law-related |
 | **Security** | External | Secondary | Direct | Provides security services to the overall management |
+| **Admin** | Internal | - | Direct | Provides IT management of the app |
