@@ -18,12 +18,16 @@
     2. Delete an user
     3. Manage user permission
 2. Orders handling
-    1. Manage internal items handling   
-        1. Manage requests from EZWH to workers
-        2. Manage requests from Organizational Units to EZWH
-        3. Manage requests from Manager to EZWH
-    2. Manage external items handling
-        1. Manage requests from EZWH to to Supplier
-        2. Manage request from Customer to EZWH
+    1. Items requests
+        1. Manage internal requests
+            - Manage requests from EZWH to Workers
+            - Manage requests from Organizational Units to EZWH
+            - Manage requests from Manager to EZWH
+        2. Manage external requests
+            - Manage requests from EZWH to to Supplier
+            - Manage request from Customer to EZWH
+    2. Quality checks
+        1. Accept items
+        2. Reject items
 3. 
 
