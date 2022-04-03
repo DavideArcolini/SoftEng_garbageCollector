@@ -118,6 +118,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | -- -- --> FR 2.2.1| Accept requests from EZWH to Supplier |
 | -- -- --> FR 2.2.2| Accept request from Customer to EZWH |
 | -- -- --> FR 2.2.3| Confirm or reject order delivered |
+| --> FR 2.3 | Create a new pending order |	
 | **FR 3** | Manage testing |
 | --> FR 3.1 | Select test for specific item |	
 | --> FR 3.2 | Execute quality test and do something |	
@@ -180,44 +181,428 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 \<define here UML Use case diagram UCD summarizing all use cases, and their relationships>
 
 
-\<next describe here each use case in the UCD>
-### Use case 1, UC1
-| Actors Involved        |  |
+## Use case 1 (UC1): user handling
+| Actors Involved |  |
+| ------------- |:-------------| 
+|  | Admin |
+|  | Users |
+|  Precondition     | Check scenario |
+|  Post condition     | Check scenario |
+|  Nominal Scenario     |  |
+|  | 1. Creation of a new user |
+|  | 2. Deletion of an existing user |
+|  | 3. Update of user permissions |
+|  | 4. User authentication |
+|  | 5. User permissions granted  |
+|  Variants |  |
+|  | User authentication with credentials expired |
+|  Exceptions |  |
+|  | User authentication failed with wrong credentials |
+|  | User authentication failed - not authorized |
+
+### Scenario 1.1-1.3: management of users
+| **Scenario 1.1.1** | *Creation of a new user* |
 | ------------- |:-------------:| 
-|  Precondition     | \<Boolean expression, must evaluate to true before the UC can start> |
-|  Post condition     | \<Boolean expression, must evaluate to true after UC is finished> |
-|  Nominal Scenario     | \<Textual description of actions executed by the UC> |
-|  Variants     | \<other normal executions> |
-|  Exceptions     | \<exceptions, errors > |
+|  Pre-condition     | Admin should be logged-in. User should not be present in the system yet |
+|  Post-condition     | User should be now registered in the system and being able to log in |
+| **Step #** | **Description**  |
+| 1 | Admin gets access to the internet |
+| 2 | Admin opens EZWH Software |  
+| 3 | Admin authentication (Scenario 1.4) |
+| 4 | Admin provides user information |
+| 5 | Admin grants user permission |
+| 6 | System insert user record in the database |
+| 7 | User is registered in the system |
 
-##### Scenario 1.1 
-
-\<describe here scenarios instances of UC1>
-
-\<a scenario is a sequence of steps that corresponds to a particular execution of one use case>
-
-\<a scenario is a more formal description of a story>
-
-\<only relevant scenarios should be described>
-
-| Scenario 1.1 | |
+| **Scenario 1.2.1** | *Removal of an existing user* |
 | ------------- |:-------------:| 
-|  Precondition     | \<Boolean expression, must evaluate to true before the scenario can start> |
-|  Post condition     | \<Boolean expression, must evaluate to true after scenario is finished> |
-| Step#        | Description  |
-|  1     |  |  
-|  2     |  |
-|  ...     |  |
+|  Pre-condition     | Admin should be logged-in. User should be already present in the system |
+|  Post-condition     | User should not be present anymore in the system and not able to log in |
+| **Step #** | **Description**  |
+| 1 | Admin gets access to the internet |
+| 2 | Admin opens EZWH Software |  
+| 3 | Admin authentication (Scenario 1.4) |
+| 4 | Admin provides user information |
+| 5 | System retrieves user record from the database |
+| 6 | Admin confirm user deletion |
+| 7 | User is removed from the system |
 
-##### Scenario 1.2
+| **Scenario 1.3.1** | *Update user permissions* |
+| ------------- |:-------------:| 
+|  Pre-condition     | Admin should be logged-in. User should be already present in the system |
+|  Post-condition     | User permission should have changed |
+| **Step #** | **Description**  |
+| 1 | Admin gets access to the internet |
+| 2 | Admin opens EZWH Software |  
+| 3 | Admin authentication (Scenario 1.4) |
+| 4 | Admin provides user information |
+| 5 | System retrieves user record from the database |
+| 6 | Admin provides new set of user permissions |
+| 7 | System updates user record in the database |
 
-##### Scenario 1.x
 
-### Use case 2, UC2
-..
+### Scenario 1.4: authentication
+| **Scenario 1.4.1** | *Authentication succeeded* |
+| ------------- |:-------------:| 
+|  Pre-condition     | User should be already registered in the system |
+|  Post-condition     | User should be authenticated and authorized to perform properly operations on the system |
+| **Step #** | **Description**  |
+| 1 | User gets access to the internet |
+| 2 | User opens EZWH Software |  
+| 3 | User enters the login page |
+| 4 | User provides credentials |
+| 5 | System confirms authentication and grants permissions to the user |
 
-### Use case x, UCx
-..
+| **Scenario 1.4.2** | *Authentication succeeded with credentials expired* |
+| ------------- |:-------------:| 
+| Pre-condition | User should be already registered in the system |
+| Post-condition | User should be authenticated and authorized to perform properly operations on the system and credentials should be updated in the database |
+| **Step #** | **Description**  |
+| 1 | User gets access to the internet |
+| 2 | User opens EZWH Software |  
+| 3 | User enters the login page |
+| 4 | User provides credentials |
+| 5 | System confirms authentication but asks for new credentials |
+| 6 | User provides new credentials |
+| 7 | System updates credentials in the database |
+| 8 | System grants permissions to the user |
+
+| **Scenario 1.4.3** | *Authentication failed with wrong credentials* |
+| ------------- |:-------------:| 
+| Pre-condition | User should be already registered in the system |
+| Post-condition | User should be authenticated and authorized to perform properly operations on the system |
+| **Step #** | **Description**  |
+| 1 | User gets access to the internet |
+| 2 | User opens EZWH Software |  
+| 3 | User enters the login page |
+| 4 | User provides credentials |
+| 5 | System recognizes user associated with that account but asks for correct credentials |
+| 6 | User provides correct credentials |
+| 8 | System grants permissions to the user |
+
+| **Scenario 1.4.4** | *Authentication failed, user not authenticated* |
+| ------------- |:-------------:| 
+| Pre-condition | User should not be registered in the system |
+| Post-condition | User should not be authenticated and authorized to perform properly operations on the system |
+| **Step #** | **Description**  |
+| 1 | User gets access to the internet |
+| 2 | User opens EZWH Software |  
+| 3 | User enters the login page |
+| 4 | User provides credentials |
+| 5 | System recognizes that user is not associated with any accounts |
+| 8 | System doesn't grant permissions to the user |
+
+
+
+## Use case 2 (UC2): order handling
+| Actors Involved |  |
+| ------------- |:-------------|
+| | Manager | 
+| | Worker | 
+| | Organizational Unit|
+| | Supplier |
+| | Customer |
+|  Precondition     | Check scenarios |
+|  Post condition     | Check scenarios |
+|  Nominal Scenario     | 
+|| 1. User creates order |
+|| 2. User accept order request |
+|| 3. User confirm order delivered |
+|| 4. User create return order |
+|| 5. User sign an order as delivered |
+|  Variants     |  |
+|  Exceptions     | |
+
+### Scenario 2.3: create a new pending order 
+
+| **Scenario 2.3** | *Create order* |
+| ------------- |:-------------:| 
+|  Precondition     | Order exists in the items list |
+|  Post condition     | Order created in orders list |
+| **Steps #**        | **Description**  |
+|  1     | User asks for items list to EZWH |  
+|  2     | EZWH retrieves items list |
+|  3     | User asks EZWH to create a order |
+|  4     | EZWH create a order in the order list for certain items |
+
+### Scenario 2.1-2.2: manage orders
+
+| **Scenario 2.2.1** | *Accept order requests* |
+| ------------- |:-------------:| 
+|  Precondition     | Order in the requests list, user is authenticated |
+|  Post condition     | Order accepted |
+| **Steps #**        | **Description**  |
+|  1     | User asks for requests list to EZWH |  
+|  2     | EZWH retrieves requests list |
+|  3     | User asks EZWH to confirm requests in the requests list|
+|  4     | EZWH moves requests from requests list to orders list |
+
+| **Scenario 2.2.2** | *Confirm order delivered* |
+| ------------- |:-------------:| 
+|  Precondition     | Order exists in the orders list, user is authenticated |
+|  Post condition     | Order ends and removed from the order list |
+| **Steps #**        | **Description**  |
+|  1     | User asks for orders list to EZWH |  
+|  2     | EZWH retrieves orders list |
+|  3     | User asks EZWH to confirm orders in the orders list |
+|  4     | EZWH remove orders selected from orders list |
+
+| **Scenario 2.2.3** | *Return order* |
+| ------------- |:-------------:| 
+|  Precondition     | Item in return list, user is authenticated |
+|  Post condition     | Item moved from return list to orders list |
+| **Steps #**        | **Description**  |
+|  1     | User asks for return list to EZWH |  
+|  2     | EZWH retrieves return list |
+|  3     | User asks EZWH to confirm return in the return list |
+|  4     | EZWH move orders selected from return list to order list |
+
+| **Scenario 2.2.4** | *Deliver order* |
+| ------------- |:-------------:| 
+|  Precondition     | Item in orders list, user is authenticated |
+|  Post condition     | Item is marked  |
+| **Steps #**        | **Description**  |
+|  1     | User asks for orders list to EZWH |  
+|  2     | EZWH retrieves orders list |
+|  3     | User asks EZWH for deliver request of a certain order |
+|  4     | EZWH marks order as delivered and remove items from items list |
+
+
+
+
+
+
+## Use case 3 (UC3): manage testing
+
+| Actors Involved|  |
+| ------------- |:-------------| 
+|| Quality assurance office |
+| Precondition     | The items whose quality is to be checked are in the list of the received items, user is authenticated |  
+|  Post condition     | The items are put in the list of the items to be stored or in the return list according to the result of the tests  |
+| Exceptions| The item's quality cannot be checked due to some type's peculiarities that the system doesn't know how to treat  |
+|  Nominal Scenario     |  |
+||1. Select tests for specific item|
+||2. Execute quality test |
+||3. Tests approved and list of the items to be stored updated |
+||4. Test rejected and return list updated|
+
+
+### Scenario 3.1: select test for specific item
+
+| **Scenario 3.1** | *Select test for specific item* |
+| ------------- |:-------------:| 
+| Pre-condition |  The items to be checked are in the received item's list , user is authenticated |
+| Post-condition |  The test to be performed on the items are selected |
+| **Steps #**        | **Description**   |
+|  1     | User asks for items list whose quality is to be checked | 
+|  2    | EZWH shows the list of the items received |  
+|  3    | User select some of the items from the list  |
+|  4    | For each item EZWH selects the tests to be performed according to the type of the item and displays them|
+|  6    | User selects randomly some of the tests to be performed |
+| 7 | EZWH shows the overall tests to be run|
+| 8 | EZWH suggests the user to run the tests indicating the time that it will take |
+| Exceptions| Unknown type to which there are no test implemented |
+
+
+### Scenario 3.1: execute quality test
+
+| **Scenario 3.1** | *Execute quality test*  |
+| ------------- |:-------------:| 
+| Pre-condition | The tests to be performed on the items are selected , user is authenticated|
+| Post-condition | The report of the tests is ready  |
+| **Steps #**        |  **Description**   |
+|  1     | User asks to run the tests |  
+|  2     | EZWH runs the tests and it generates the report |
+|  3     | User asks EZWH to display the report  |
+|  4     | EZWH shows the report with the overall time that it took to perform the tests | 
+| **Exceptions** | The system is overloaded therefore the tests fail to run|
+| **Variant** | EZWH asks to run again the tests if they failed to run |
+|| User asks EZWH to download or print the report|
+
+| **Scenario 3.2.1** | *Tests approved and list of the items to be stored updated*  |
+| ------------- |:-------------:| 
+| Pre-condition |  The test's result is positive |
+| Post-condition |  The items are put in the list of the items to be stored  |
+| **Steps #**        |  **Description**   |
+|  1     | User asks EZWH to the list of the items that passed the tests |  
+|  2     | EZWH retrieves the list of the items that passed tha quality tests |
+|  3     | User asks EZWH to move the items whose quality is good in the list of the items to be stored |
+|  3     | EZWH moves the items that passed the tests to the list of the items to be stored |
+
+
+| **Scenario 3.2.2** | *Test rejected and return list updated* |
+| ------------- |:-------------:| 
+| Pre-condition |  Test's failure , user is authenticated |
+| Post-condition |  The items are put in the return list |
+| **Steps #**        |  **Description**   |
+|  1     | User asks EZWH to the list of the items that failed the tests |  
+|  2     | EZWH retrieves the list of the items that failed tha quality tests |
+|  3     | User asks EZWH to move the items to the return list |
+|  3     | EZWH moves the items that failed the tests to the list of the items to be sent back |
+
+
+
+
+## Use case 4 (UC4): manage warehouse
+| Use case 4     |  |
+| ------------- |:-------------|
+| Actor ||
+|| Administrator |
+|| Manager warehouse |
+|| Worker |
+|  Precondition     | Warehouse exists|
+|  Post condition     | Operation in warehouse is done |
+|  Nominal Scenario     |  |
+||4.1 Manage map|
+|| 4.1.1 Create map |
+||4.1.2 Update map|
+||4.1.3 Delete map |
+| | 4.2 Manage storage in the map |
+|  | 4.2.1 Store item |
+||4.2.2 Delete item|
+||4.2.3 Replace item |
+||4.2.4 Show space availability |
+| | 4.3 Show items list |
+|  Variants     |  |
+|  Exceptions     |  |
+
+### Scenario 4.1: manage map
+
+| Scenario 4.1.1 | *Create map* |
+| ------------- |:-------------:| 
+|  Precondition     | Map is not in the system, Administrator is authenticated |
+|  Post-condition   | Map is in the system |
+|  Steps #     | Description: |
+|  1     | Administrator loads map file |
+|  2     | EZWH controls type and file size |
+|  3     | EZWH asks confirm about the changes |
+|  4     | Administrator confirms or rejects the changes |
+|  5     | EZWH saves the map file |
+
+|Exceptions|
+| ------------- |
+| map file hasn't type or size required|
+|  Steps:     | Description: |
+|  1     | Control type and size of the file |
+|  2     | Redo scenario |
+|  3     | Contact project team in case of other errors|
+
+| Scenario 4.1.2 | *Update map* |
+| ------------- |:-------------:| 
+|  Precondition     | Map is in the system, Administrator is authenticated |
+|  Post-condition   | Map is updated |
+|  Steps:     | Description: |
+|  1     | EZWH loads map file|
+|  2     | Administrator modifies the map file |
+|  3     | EZWH check constrains (type,size) |
+|  4     | EZWH asks confirm about the changes |
+|  5     | Administrator confirms or rejects the changes |
+|  6     | EZWH saves the map file |
+
+|Exceptions|
+| ------------- |
+| map file hasn't type or size required after update|
+|  Steps:     | Description: |
+|  1     | EZWH re-load the older version |
+|  2     | Redo scenario from point 2 |
+|  3     | Contact project team in case of other errors|
+
+
+| Scenario 4.1.3 | *Delete map* |
+| ------------- |:-------------:| 
+|  Precondition     | Map is in the system, Administrator is authenticated, system is blocked for other users |-> mettiamo system blocked? poichè senza mappa non può funzionare
+|  Post-condition   | Map is deleted from the system |
+|  Steps:     | Description: |
+|  1     | EZWH shows map file |
+|  2     | Administrator deletes map file |
+|  3     | EZWH asks confirm about the deletion |--> mettiamo su tutti? o meglio evitare per non doverlo implementare dopo? 
+|  4     | Administrator confirms or rejects the deletion |
+|  5     | EZWH delete the file |
+
+|Exceptions|
+| ------------- |
+| map isn't deleted|
+|  Steps:     | Description: |
+|  1     | Redo scenario |
+|  2     | Contact project team |
+
+### Scenario 4.2: show items list
+
+| Scenario 4.3 | *Shows item list*  |
+| ------------- |:-------------:| 
+|  Precondition     | Item list exists, User is authenticathed |
+|  Post-condition   | list is showed |
+|  Steps:     | Description: |
+|  1     | User asks for the list |
+|  2     | EZWH loads and shows the list |
+
+exceptions-> mettiamo lista vuota o se è vuota si mostra nulla quindi non è exception? cambia pure precondition
+
+### Scenario 4.3: manage storage in the map
+
+| Scenario 4.3.1 | *Store item* |
+| ------------- |:-------------:| 
+|  Precondition     | Item is in the list, Worker is authenticated |
+|  Post-condition   | Item position is saved in the list |
+|  Steps:     | Description: |
+|  1     | Worker checks map file |-> sarebbe ultimo scenario, come posso esprimerlo?
+|  2     | Worker chooses a position |
+|  3     | Worker selects the item from the items list to add in that position|
+|  4     | EZWH asks for confirm |
+|  4     | Worker confirms the action to EZWH|
+|  5     | EZWH adds the position on the items list|-> esiste già una lista item o devo creare una coda con gli item arrivati?
+
+| Scenario 4.3.2 | *Delete item* |
+| ------------- |:-------------:| 
+|  Precondition     | Item is in item list, Item has a position, Worker is authenticated |
+|  Post-condition   | Item is deleted |
+|  Steps:     | Description: |
+|  1     | Worker selects an item |
+|  2     | Worker asks to delete the item|
+|  3     | EZWH asks for confirm|
+|  4     | Worker confirm the deletion|
+|  5     | EZWH checks the position and frees the space in the map|
+|  6     | EZWH deletes the item from the items list|
+
+| Scenario 4.3.3 | *Replace item* |
+| ------------- |:-------------:| 
+|  Precondition     | Item is in item list, Item has a position, Worker is authenticated |
+|  Post-condition   | Item position is changed |
+|  Steps:     | Description: |
+|  1     | Worker selects an item |
+|  2     | Worker checks the map |
+|  3     | Worker selects a new free position in the map |
+|  4     | EZWH asks for confirm the new position|
+|  5     | Worker confirms or rejects  |
+|  6     | EZWH frees the old position of the item |
+|  7     | EZWH changes the position of the item |
+
+| Scenario 4.3.4 | *Show space availability* |
+| ------------- |:-------------:| 
+|  Precondition     | Map file exist, Worker is authenticated |
+|  Post-condition   | Space is showed|
+|  Steps:     | Description: |
+|  1     | Worker asks for map|
+|  2     | EZWH loads the map |
+|  3     | EZWH shows the maps with the types of spaces|
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
