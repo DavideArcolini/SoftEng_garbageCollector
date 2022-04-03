@@ -122,18 +122,20 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | -- -- --> FR 2.2.3| Confirm or reject order delivered |
 | **FR 3** | Manage testing |
 | --> FR 3.1 | Select test for specific item |	
-| --> FR 3.2 | Manage result test |	
-| -- -- --> FR 3.2.1| Confirm order |
-| -- -- --> FR 3.2.2| Reject order |
+| --> FR 3.2 | Execute quality test and do something |	
+| -- -- --> FR 3.2.1| Test approved and item stored in the warehouse |
+| -- -- --> FR 3.2.2| Test rejected and item stored in pickup area (?) |
 | **FR 4** | Manage warehouse |
 | --> FR 4.1 | Manage map environment |	
 | -- -- --> FR 4.1.1| Create new environment |
 | -- -- --> FR 4.1.2| Update an existing environment |
 | -- -- --> FR 4.1.3| Delete an exiting environment |
-| --> FR 4.2 | Define areas |	
-| --> FR 4.3 | Replace items in the area |	
-| --> FR 4.4 | Show items list |	
-| --> FR 4.4 | Show space availability |	
+| -- -- --> FR 4.1.4 | Show space availability in the map |
+| --> FR 4.2 | Show items list |	
+| --> FR 4.3 | Manage storage of the map |
+| -- -- --> FR 4.3.1 | Store item in a certain area of the map | 
+| -- -- --> FR 4.3.2 | Replace item in a certain area of the map |
+| -- -- --> FR 4.3.3 | Remove item in a certain area of the map |
 | **FR 5** | Pick-Up Area |
 | --> FR 5.1 | Receive item from warehouse |	
 | --> FR 5.2 | Check item as delivered at the pick up area |	
