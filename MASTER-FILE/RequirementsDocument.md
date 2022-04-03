@@ -468,11 +468,11 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 ### Scenario 4.1: manage map
 
-| Scenario 4.1.1 | *Create map* |
+| **Scenario 4.1.1** | *Create map* |
 | ------------- |:-------------:| 
 |  Precondition     | Map is not in the system, Administrator is authenticated |
 |  Post-condition   | Map is in the system |
-|  Steps #     | Description: |
+|  **Steps #**     | **Description** |
 |  1     | Administrator loads map file |
 |  2     | EZWH controls type and file size |
 |  3     | EZWH asks confirm about the changes |
@@ -482,16 +482,16 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |Exceptions|
 | ------------- |
 | map file hasn't type or size required|
-|  Steps:     | Description: |
+|  **Steps #**     | **Description** |
 |  1     | Control type and size of the file |
 |  2     | Redo scenario |
 |  3     | Contact project team in case of other errors|
 
-| Scenario 4.1.2 | *Update map* |
+| **Scenario 4.1.2** | *Update map* |
 | ------------- |:-------------:| 
-|  Precondition     | Map is in the system, Administrator is authenticated |
+|  Pre-condition     | Map is in the system, Administrator is authenticated |
 |  Post-condition   | Map is updated |
-|  Steps:     | Description: |
+|  **Steps #**     | **Description** |
 |  1     | EZWH loads map file|
 |  2     | Administrator modifies the map file |
 |  3     | EZWH check constrains (type,size) |
@@ -502,17 +502,17 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |Exceptions|
 | ------------- |
 | map file hasn't type or size required after update|
-|  Steps:     | Description: |
+|  **Steps #**     | **Description** |
 |  1     | EZWH re-load the older version |
 |  2     | Redo scenario from point 2 |
 |  3     | Contact project team in case of other errors|
 
 
-| Scenario 4.1.3 | *Delete map* |
+| **Scenario 4.1.3** | *Delete map* |
 | ------------- |:-------------:| 
-|  Precondition     | Map is in the system, Administrator is authenticated, system is blocked for other users |-> mettiamo system blocked? poichè senza mappa non può funzionare
+|  Pre-condition     | Map is in the system, Administrator is authenticated, system is blocked for other users |-> mettiamo system blocked? poichè senza mappa non può funzionare
 |  Post-condition   | Map is deleted from the system |
-|  Steps:     | Description: |
+|  **Steps #**     | **Description** |
 |  1     | EZWH shows map file |
 |  2     | Administrator deletes map file |
 |  3     | EZWH asks confirm about the deletion |--> mettiamo su tutti? o meglio evitare per non doverlo implementare dopo? 
@@ -522,17 +522,17 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |Exceptions|
 | ------------- |
 | map isn't deleted|
-|  Steps:     | Description: |
+|  **Steps #**     | **Description** |
 |  1     | Redo scenario |
 |  2     | Contact project team |
 
 ### Scenario 4.2: show items list
 
-| Scenario 4.3 | *Shows item list*  |
+| **Scenario 4.3** | *Shows item list*  |
 | ------------- |:-------------:| 
-|  Precondition     | Item list exists, User is authenticathed |
+|  Pre-condition     | Item list exists, User is authenticathed |
 |  Post-condition   | list is showed |
-|  Steps:     | Description: |
+|  **Steps #**     | **Description** |
 |  1     | User asks for the list |
 |  2     | EZWH loads and shows the list |
 
@@ -540,11 +540,11 @@ exceptions-> mettiamo lista vuota o se è vuota si mostra nulla quindi non è ex
 
 ### Scenario 4.3: manage storage in the map
 
-| Scenario 4.3.1 | *Store item* |
+| **Scenario 4.3.1** | *Store item* |
 | ------------- |:-------------:| 
-|  Precondition     | Item is in the list, Worker is authenticated |
+|  Pre-condition     | Item is in the list, Worker is authenticated |
 |  Post-condition   | Item position is saved in the list |
-|  Steps:     | Description: |
+|  **Steps #**     | **Description** |
 |  1     | Worker checks map file |-> sarebbe ultimo scenario, come posso esprimerlo?
 |  2     | Worker chooses a position |
 |  3     | Worker selects the item from the items list to add in that position|
@@ -552,11 +552,11 @@ exceptions-> mettiamo lista vuota o se è vuota si mostra nulla quindi non è ex
 |  4     | Worker confirms the action to EZWH|
 |  5     | EZWH adds the position on the items list|-> esiste già una lista item o devo creare una coda con gli item arrivati?
 
-| Scenario 4.3.2 | *Delete item* |
+| **Scenario 4.3.2** | *Delete item* |
 | ------------- |:-------------:| 
-|  Precondition     | Item is in item list, Item has a position, Worker is authenticated |
+|  Pre-condition     | Item is in item list, Item has a position, Worker is authenticated |
 |  Post-condition   | Item is deleted |
-|  Steps:     | Description: |
+|  **Steps #**     | **Description** |
 |  1     | Worker selects an item |
 |  2     | Worker asks to delete the item|
 |  3     | EZWH asks for confirm|
@@ -564,11 +564,11 @@ exceptions-> mettiamo lista vuota o se è vuota si mostra nulla quindi non è ex
 |  5     | EZWH checks the position and frees the space in the map|
 |  6     | EZWH deletes the item from the items list|
 
-| Scenario 4.3.3 | *Replace item* |
+| **Scenario 4.3.3** | *Replace item* |
 | ------------- |:-------------:| 
-|  Precondition     | Item is in item list, Item has a position, Worker is authenticated |
+|  Pre-condition     | Item is in item list, Item has a position, Worker is authenticated |
 |  Post-condition   | Item position is changed |
-|  Steps:     | Description: |
+|  **Steps #**     | **Description** |
 |  1     | Worker selects an item |
 |  2     | Worker checks the map |
 |  3     | Worker selects a new free position in the map |
@@ -577,11 +577,11 @@ exceptions-> mettiamo lista vuota o se è vuota si mostra nulla quindi non è ex
 |  6     | EZWH frees the old position of the item |
 |  7     | EZWH changes the position of the item |
 
-| Scenario 4.3.4 | *Show space availability* |
+| **Scenario 4.3.4** | *Show space availability* |
 | ------------- |:-------------:| 
-|  Precondition     | Map file exist, Worker is authenticated |
+|  Pre-condition     | Map file exist, Worker is authenticated |
 |  Post-condition   | Space is showed|
-|  Steps:     | Description: |
+|  **Steps #**     | **Description** |
 |  1     | Worker asks for map|
 |  2     | EZWH loads the map |
 |  3     | EZWH shows the maps with the types of spaces|
