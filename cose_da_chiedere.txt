@@ -2,4 +2,5 @@
 2. Analytics team come attore (quindi implementazione di analytics nel software)
 3. Non-functional requirements: tempi per la gestione
 4. If we can use directly CRUD or specify every action
-5.
+5. Pick up area solo per OU oppure per tutti?
+6. 
