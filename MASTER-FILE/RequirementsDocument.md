@@ -471,7 +471,6 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  3     | EZWH asks confirm about the changes |
 |  4     | Administrator confirms or rejects the changes |
 |  5     | EZWH saves the map file |
-
 |Exceptions| if map file hasn't type or size required, EZWH asks to control file|
 
 | **Scenario 4.1.2** | *Update map* |
@@ -485,7 +484,6 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  4     | EZWH asks confirm about the changes |
 |  5     | Administrator confirms or rejects the changes |
 |  6     | EZWH saves the map file |
-
 |Exceptions| If map file hasn't type or size required after update, EZWH doesn't save and asks about it|
 
 | **Scenario 4.1.3** | *Delete map* |
@@ -498,7 +496,6 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  3     | EZWH asks confirm about the deletion |--> mettiamo su tutti? o meglio evitare per non doverlo implementare dopo? 
 |  4     | Administrator confirms or rejects the deletion |
 |  5     | EZWH delete the file |
-
 |Exceptions| If map isn't deleted, EZWH informs the user|
 
 
