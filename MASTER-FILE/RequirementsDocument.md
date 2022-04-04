@@ -404,7 +404,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | Exceptions| Unknown type to which there are no test implemented |
 
 
-### Scenario 3.1: execute quality test
+### Scenario 3.2: execute quality test
 
 | **Scenario 3.1** | *Execute quality test*  |
 | ------------- |:-------------:| 
