@@ -406,7 +406,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 ### Scenario 3.2: execute quality test
 
-| **Scenario 3.1** | *Execute quality test*  |
+| **Scenario 3.2** | *Execute quality test*  |
 | ------------- |:-------------:| 
 | Pre-condition | The tests to be performed on the items are selected , user is authenticated|
 | Post-condition | The report of the tests is ready  |
