@@ -3,4 +3,4 @@
 3. Non-functional requirements: tempi per la gestione
 4. If we can use directly CRUD or specify every action
 5. Pick up area solo per OU oppure per tutti?
-6. 
+6. Va messo spegnimento e accensione del sistema come UC?
