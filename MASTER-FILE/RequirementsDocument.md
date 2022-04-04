@@ -454,19 +454,12 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  Post condition     | Operation in warehouse is done |
 |  Nominal Scenario     |  |
 ||4.1 Manage map|
-|| 4.1.1 Create map |
-||4.1.2 Update map|
-||4.1.3 Delete map |
-| | 4.2 Manage storage in the map |
-|  | 4.2.1 Store item |
-||4.2.2 Delete item|
-||4.2.3 Replace item |
-||4.2.4 Show space availability |
-| | 4.3 Show items list |
+|| 4.2 Manage storage in the map |
+|| 4.3 Show items list |
 |  Variants     |  |
 |  Exceptions     |  |
 
-### Scenario 4.1: manage map
+### Scenario 4.1.1-4.1.3: manage map
 
 | **Scenario 4.1.1** | *Create map* |
 | ------------- |:-------------:| 
@@ -478,14 +471,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  3     | EZWH asks confirm about the changes |
 |  4     | Administrator confirms or rejects the changes |
 |  5     | EZWH saves the map file |
-
-|Exceptions|
-| ------------- |
-| map file hasn't type or size required|
-|  **Steps #**     | **Description** |
-|  1     | Control type and size of the file |
-|  2     | Redo scenario |
-|  3     | Contact project team in case of other errors|
+|Exceptions| if map file hasn't type or size required, EZWH asks to control file|
 
 | **Scenario 4.1.2** | *Update map* |
 | ------------- |:-------------:| 
@@ -498,15 +484,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  4     | EZWH asks confirm about the changes |
 |  5     | Administrator confirms or rejects the changes |
 |  6     | EZWH saves the map file |
-
-|Exceptions|
-| ------------- |
-| map file hasn't type or size required after update|
-|  **Steps #**     | **Description** |
-|  1     | EZWH re-load the older version |
-|  2     | Redo scenario from point 2 |
-|  3     | Contact project team in case of other errors|
-
+|Exceptions| If map file hasn't type or size required after update, EZWH doesn't save and asks about it|
 
 | **Scenario 4.1.3** | *Delete map* |
 | ------------- |:-------------:| 
@@ -518,17 +496,12 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  3     | EZWH asks confirm about the deletion |--> mettiamo su tutti? o meglio evitare per non doverlo implementare dopo? 
 |  4     | Administrator confirms or rejects the deletion |
 |  5     | EZWH delete the file |
+|Exceptions| If map isn't deleted, EZWH informs the user|
 
-|Exceptions|
-| ------------- |
-| map isn't deleted|
-|  **Steps #**     | **Description** |
-|  1     | Redo scenario |
-|  2     | Contact project team |
 
 ### Scenario 4.2: show items list
 
-| **Scenario 4.3** | *Shows item list*  |
+| **Scenario 4.2** | *Shows item list*  |
 | ------------- |:-------------:| 
 |  Pre-condition     | Item list exists, User is authenticathed |
 |  Post-condition   | list is showed |
@@ -538,7 +511,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 exceptions-> mettiamo lista vuota o se è vuota si mostra nulla quindi non è exception? cambia pure precondition
 
-### Scenario 4.3: manage storage in the map
+### Scenario 4.3.1-4.3.4: manage storage in the map
 
 | **Scenario 4.3.1** | *Store item* |
 | ------------- |:-------------:| 
