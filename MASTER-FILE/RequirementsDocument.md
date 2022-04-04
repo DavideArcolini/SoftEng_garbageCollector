@@ -588,24 +588,6 @@ exceptions-> mettiamo lista vuota o se è vuota si mostra nulla quindi non è ex
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Glossary
 
 \<use UML class diagram to define important terms, or concepts in the domain of the system, and their relationships> 
