@@ -6222,7 +6222,7 @@
 											"top": 601,
 											"width": 156,
 											"height": 13,
-											"text": "User Computer"
+											"text": "User Device"
 										},
 										{
 											"_type": "LabelView",
@@ -6954,7 +6954,7 @@
 											"top": 601,
 											"width": 157,
 											"height": 13,
-											"text": "Company Computer"
+											"text": "Company Device"
 										},
 										{
 											"_type": "LabelView",
@@ -7503,7 +7503,7 @@
 											"top": 369,
 											"width": 164,
 											"height": 13,
-											"text": "Admin Computer"
+											"text": "Admin Device"
 										},
 										{
 											"_type": "LabelView",
@@ -10730,7 +10730,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "User Computer",
+					"name": "User Device",
 					"ownedElements": [
 						{
 							"_type": "UMLCommunicationPath",
@@ -10918,7 +10918,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "Company Computer",
+					"name": "Company Device",
 					"ownedElements": [
 						{
 							"_type": "UMLCommunicationPath",
@@ -10986,7 +10986,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "Admin Computer",
+					"name": "Admin Device",
 					"ownedElements": [
 						{
 							"_type": "UMLCommunicationPath",
