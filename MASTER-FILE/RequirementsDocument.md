@@ -399,7 +399,8 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  | **Nominal (UC4.3)**: tests approved and list of the items to be stored updated |
 |  | **Nominal (UC4.4)**: test rejected and return list updated |
 |  | **Exception (UC4.5)**: the item's quality cannot be checked due to some type's peculiarities that the system doesn't know how to treat |
-| | **Variant (UC4.6)**: user asks EZWH to download or print the report |
+| | **Variant (UC4.6)**: user asks EZWH to download the report |
+| | **Variant (UC4.7)**: user asks EZWH to print the report |
 
 | **UC4.1** | *Select test for specific item* |
 | ------------- |:-------------:| 
@@ -455,19 +456,30 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  1     | User asks to run the tests |  
 |  2     | EZWH fails to recognize items type |
 |  3     | Quality test is not performed |
+|  4     | EZWH suggests to update tests database |
 
-| **UC4.6** | *User requests report of quality tests* |
+| **UC4.6** | *User requests digital report of quality tests* |
 | ------------- |:-------------:| 
 | Pre-condition | Item is in the received orders list. Test has been performed correctly and result is available. |
 | Post-condition | User is provided with the report. |
 | **Steps #**        |  **Description**   |
-|  1     |  |  
+|  1     | User asks EZWH  |  
 |  2     |  |
 |  3     |  |
+|  4     |  |
+
+| **UC4.7** | *User requests physical report of quality tests* |
+| ------------- |:-------------:| 
+| Pre-condition | Item is in the received orders list. Test has been performed correctly and result is available. |
+| Post-condition | User is provided with the report. |
+| **Steps #**        |  **Description**   |
+|  1     | User asks EZWH  |  
+|  2     |  |
 |  3     |  |
+|  4     |  |
 
 
-## Use case 5 (UC5): warehouse management
+## Use case 5 (UC5): map management
 | Use case 5     |  |
 | ------------- |:-------------|
 | Actor ||
@@ -478,13 +490,13 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  Post condition     | Operation in warehouse is performed correctly |
 |  Scenarios     |  |
 |  | **Nominal (UC5.1)**: load map in the system |
-|  | **Nominal (UC5.2)**: remove map in the system |
+|  | **Nominal (UC5.2)**: remove map from the system |
 |  | **Nominal (UC5.3)**: manage storage in the map |
-|  | **Nominal (UC5.4)**: show items list updated |
+|  | **Nominal (UC5.4)**: show space availability |
 |  | **Exception (UC5.5)**: map constraints not satisfied, reload map | 
 |  | **Exception (UC5.6)**): map deletion failed |
 
-| **UC5.1** | *Create map* |
+| **UC5.1** | *Load map* |
 | ------------- |:-------------:| 
 |  Precondition     | Map is not in the system, Administrator is authenticated |
 |  Post-condition   | Map is in the system |
@@ -495,8 +507,18 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  4     | Administrator confirms or rejects the changes |
 |  5     | EZWH saves the map file |
 
+| **UC5.2** | *Remove map* |
+| ------------- |:-------------:| 
+|  Precondition     | Map is in the system, Administrator is authenticated |
+|  Post-condition   | Map is not in the system anymore |
+|  **Steps #**     | **Description** |
+|  1     | Administrator asks to remove map file |
+|  2     | EZWH retrieves map file |
+|  3     | EZWH asks confirm about the removal |
+|  4     | Administrator confirms or rejects the removal |
+|  5     | EZWH removes map file if administrator confirms |
 
-| **UC5.2** | *Update map* |
+| **UC5.3** | *Update map* |
 | ------------- |:-------------:| 
 |  Pre-condition     | Map is in the system, Administrator is authenticated |
 |  Post-condition   | Map is updated |
@@ -508,22 +530,53 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  5     | Administrator confirms or rejects the changes |
 |  6     | EZWH saves the map file |
 
-| **UC5.2** | *Delete map* |
+
+| **UC5.4** | *Show space availability* |
 | ------------- |:-------------:| 
-|  Pre-condition     | Map is in the system, Administrator is authenticated, system is blocked for other users |-> mettiamo system blocked? poichè senza mappa non può funzionare
-|  Post-condition   | Map is deleted from the system |
+|  Pre-condition     | Map file exist, Worker is authenticated |
+|  Post-condition   | Space is showed|
 |  **Steps #**     | **Description** |
-|  1     | EZWH shows map file |
-|  2     | Administrator deletes map file |
-|  3     | EZWH asks confirm about the deletion |--> mettiamo su tutti? o meglio evitare per non doverlo implementare dopo? 
-|  4     | Administrator confirms or rejects the deletion |
-|  5     | EZWH delete the file |
+|  1     | Worker asks for map|
+|  2     | EZWH loads the map |
+|  3     | EZWH shows the maps with the types of spaces|
+
+| **UC5.5** | *Map constraints not satisfied, reload map* |
+| ------------- |:-------------:| 
+|  Pre-condition     | Administrator is authenticated. Map is not in the system |
+|  Post-condition   | No changes to the map environment are performed |
+|  **Steps #**     | **Description** |
+|  1     | Admin loads a new map |
+|  2     | EZWH checks map constraints |
+|  3     | Map constraints are not satisfied |
+|  4     | EZWH asks to reload the map |
+
+| **UC5.6** | *Map deletion failed* |
+| ------------- |:-------------:| 
+|  Pre-condition     | Map file exist, Administrator is authenticated |
+|  Post-condition   | No changes to the map environment are performed |
+|  **Steps #**     | **Description** |
+|  1     | Admin asks to remove the map|
+|  2     | EZWH fails to remove the map |
+|  3     | EZWH informs the administrator |
 
 
+## Use case 6 (UC6): items management
+| Use case 6     |  |
+| ------------- |:-------------|
+| Actor ||
+|| Administrator |
+|| Manager warehouse |
+|| Worker |
+|  Precondition     | Warehouse exists |
+|  Post condition     | Operation in warehouse is performed correctly |
+|  Scenarios     |  |
+|  | **Nominal (UC6.1)**: show items list |
+|  | **Nominal (UC6.2)**: store new item |
+|  | **Nominal (UC6.3)**: remove existing item |
+|  | **Exception (UC6.4)**: update item status | 
 
-### Scenario 4.2: show items list
 
-| **Scenario 4.2** | *Shows item list*  |
+| **UC6.1** | *Shows item list*  |
 | ------------- |:-------------:| 
 |  Pre-condition     | Item list exists, User is authenticathed |
 |  Post-condition   | list is showed |
@@ -531,23 +584,19 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  1     | User asks for the list |
 |  2     | EZWH loads and shows the list |
 
-exceptions-> mettiamo lista vuota o se è vuota si mostra nulla quindi non è exception? cambia pure precondition
-
-### Scenario 4.3.1-4.3.4: manage storage in the map
-
-| **Scenario 4.3.1** | *Store item* |
+| **UC6.2** | *Store new item* |
 | ------------- |:-------------:| 
 |  Pre-condition     | Item is in the list, Worker is authenticated |
 |  Post-condition   | Item position is saved in the list |
 |  **Steps #**     | **Description** |
-|  1     | Worker checks map file |-> sarebbe ultimo scenario, come posso esprimerlo?
+|  1     | Worker checks map file (UC5.4)|
 |  2     | Worker chooses a position |
 |  3     | Worker selects the item from the items list to add in that position|
 |  4     | EZWH asks for confirm |
 |  4     | Worker confirms the action to EZWH|
-|  5     | EZWH adds the position on the items list|-> esiste già una lista item o devo creare una coda con gli item arrivati?
+|  5     | EZWH adds the position on the items list |
 
-| **Scenario 4.3.2** | *Delete item* |
+| **UC6.3** | *Delete existing item* |
 | ------------- |:-------------:| 
 |  Pre-condition     | Item is in item list, Item has a position, Worker is authenticated |
 |  Post-condition   | Item is deleted |
@@ -559,35 +608,21 @@ exceptions-> mettiamo lista vuota o se è vuota si mostra nulla quindi non è ex
 |  5     | EZWH checks the position and frees the space in the map|
 |  6     | EZWH deletes the item from the items list|
 
-| **Scenario 4.3.3** | *Replace item* |
+| **UC6.4** | *Update item status* |
 | ------------- |:-------------:| 
-|  Pre-condition     | Item is in item list, Item has a position, Worker is authenticated |
-|  Post-condition   | Item position is changed |
+|  Pre-condition     | Item is in item list. Worker is authenticated |
+|  Post-condition   | Item status is changed |
 |  **Steps #**     | **Description** |
 |  1     | Worker selects an item |
 |  2     | Worker checks the map |
-|  3     | Worker selects a new free position in the map |
-|  4     | EZWH asks for confirm the new position|
+|  3     | Worker defines a new status for the item |
+|  4     | EZWH asks for confirm the new status|
 |  5     | Worker confirms or rejects  |
-|  6     | EZWH frees the old position of the item |
-|  7     | EZWH changes the position of the item |
-
-| **Scenario 4.3.4** | *Show space availability* |
-| ------------- |:-------------:| 
-|  Pre-condition     | Map file exist, Worker is authenticated |
-|  Post-condition   | Space is showed|
-|  **Steps #**     | **Description** |
-|  1     | Worker asks for map|
-|  2     | EZWH loads the map |
-|  3     | EZWH shows the maps with the types of spaces|
-
+|  6     | EZWH updates item status |
 
 
 # Glossary
-
-\<use UML class diagram to define important terms, or concepts in the domain of the system, and their relationships> 
-
-\<concepts are used consistently all over the document, ex in use cases, requirements etc>
+![class diagram](Class_Diagram.png)
 
 # System Design
 \<describe here system design>
@@ -595,8 +630,7 @@ exceptions-> mettiamo lista vuota o se è vuota si mostra nulla quindi non è ex
 \<must be consistent with Context diagram>
 
 # Deployment Diagram 
-
-\<describe here deployment diagram >
+![deployment diagram](Deployment_Diagram.png)
 
 
 
