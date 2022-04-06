@@ -203,8 +203,9 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | 3 | Admin authentication (Scenario 1.4) |
 | 4 | Admin provides user information |
 | 5 | Admin grants user permission |
-| 6 | System insert user record in the database |
-| 7 | User is registered in the system |
+| 6 | Admin sends an email to the new user requesting to complete the registration with user credentials (i.e. password) |
+| 7 | System insert user record in the database |
+| 8 | User is registered in the system |
 
 | **UC1.2** | *Removal of an existing user* |
 | ------------- |:-------------:| 
