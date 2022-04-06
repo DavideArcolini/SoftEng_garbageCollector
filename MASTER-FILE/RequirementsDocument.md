@@ -298,33 +298,39 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 
 ## Use case 3 (UC3): order management
-| Actors Involved |  |
+| Actors Involved | Administrator, Manager, Supplier |
 | ------------- |:-------------|
 | | Manager | 
 | | Worker | 
 | | Organizational Unit|
 | | Supplier |
 | | Customer |
-|  Precondition     | System is ON. List of suppliers is available. Items database is reachable and in a reliable state. |
-|  Post condition     | Items database is modified and in a reliable state. Orders list is updated. |
+|  Precondition     | System is ON. List of suppliers is available. Items database is reachable and in a reliable state. Items exists |
+|  Post condition     | Items database is modified and in a reliable state. Orders list is updated. Order O exists |
+| Nominal Scenario | Manager check items list. If a certain item is in short supply, he issues an order to a supplier. When the order arrives to the shop, Workers records order arrival |
 |  Scenarios     |  |
 |  | **Nominal (UC3.1)**: user creates order |
 |  | **Nominal (UC3.2)**: user accept order request |
 |  | **Nominal (UC3.3)**: user confirm order delivered |
-|  | **Nominal (UC3.4)**: user create return order |
+|  | **Nominal (UC3.4)**: user create refund order |
 |  | **Nominal (UC3.5)**: user sign an order as delivered |
 |  | **Exception (UC3.6)**: items list is empty. Order cannot be performed |
 |  | **Exception (UC3.7)**: supplier list is empty. Order cannot be performed |
+| Variants 		 | Creation of order, Item I does not exist, issue warning |
+|  | I has no location assigned when registering an order arrival, issue warning |
 
-| **UC3.1** | *Create order* |
+| **UC3.1** | *Create order to a supplier* |
 | ------------- |:-------------:| 
-|  Precondition     | Order exists in the items list |
-|  Post condition     | Order created in orders list |
+|  Precondition     | Order O doesn't exists Manager M logged in |
+|  Post condition     | Order O exists |
 | **Steps #**        | **Description**  |
-|  1     | User asks for items list to EZWH |  
-|  2     | EZWH retrieves items list |
-|  3     | User asks EZWH to create a order |
-|  4     | EZWH create a order in the order list for certain items |
+|  1     | M asks for items list to EZWH |  
+|  2     | EZWH retrieves a list of items in short supply |
+|  3     | M selects a specific I and its quantity |
+|  4	 | EZWH retrieves a suppliers list for that specific I |
+|  5	 | M selects a specific supplier for I |
+|  6	 | M asks EZWH to create order |
+|  7     | EZWH record a order in the order list marking it as ISSUED |
 
 | **UC3.2** | *Accept order requests* |
 | ------------- |:-------------:| 
@@ -333,28 +339,28 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | **Steps #**        | **Description**  |
 |  1     | User asks for requests list to EZWH |  
 |  2     | EZWH retrieves requests list |
-|  3     | User asks EZWH to confirm requests in the requests list|
+|  3     | User asks EZWH to confirm requests in the requests list |
 |  4     | EZWH moves requests from requests list to orders list |
 
-| **UC3.3** | *Confirm order delivered* |
+| **UC3.3** | *Confirm Order arrival* |
 | ------------- |:-------------:| 
-|  Precondition     | Order exists in the orders list, user is authenticated |
-|  Post condition     | Order ends and removed from the order list |
+|  Precondition     | Order O exists in the orders list, Manager M is authenticated, O did not signed as REFUND |
+|  Post condition     | O record removed from the order list |
 | **Steps #**        | **Description**  |
-|  1     | User asks for orders list to EZWH |  
+|  1     | M asks for orders list to EZWH |  
 |  2     | EZWH retrieves orders list |
-|  3     | User asks EZWH to confirm orders in the orders list |
-|  4     | EZWH remove orders selected from orders list |
+|  3     | M asks EZWH to confirm O in the orders list |
+|  4     | EZWH check O as COMPLETED in the orders list |
 
-| **UC3.4** | *Return order* |
+| **UC3.4** | *Refund order* |
 | ------------- |:-------------:| 
-|  Precondition     | Item in return list, user is authenticated |
-|  Post condition     | Item moved from return list to orders list |
+|  Precondition     | Item signed as REFUND, Manager M is authenticated |
+|  Post condition     | Item moved from refund list to orders list |
 | **Steps #**        | **Description**  |
-|  1     | User asks for return list to EZWH |  
-|  2     | EZWH retrieves return list |
-|  3     | User asks EZWH to confirm return in the return list |
-|  4     | EZWH move orders selected from return list to order list |
+|  1     | M asks for refund list to EZWH |  
+|  2     | EZWH retrieves refund list |
+|  3     | M asks EZWH to confirm refund in the refund list |
+|  4     | EZWH moves orders selected from refund list to order list |
 
 | **UC3.5** | *Deliver order* |
 | ------------- |:-------------:| 
@@ -393,12 +399,12 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | ------------- |:-------------| 
 || Quality assurance office |
 | Precondition     | The items whose quality is to be checked are in the list of the received items, user is authenticated |  
-|  Post condition     | The items are put in the list of the items to be stored or in the return list according to the result of the tests  |
+|  Post condition     | The items are put in the list of the items to be stored or in the refund list according to the result of the tests  |
 |  Scenarios     |  |
 |  | **Nominal (UC4.1)**: select tests for specific item |
 |  | **Nominal (UC4.2)**: execute quality test |
 |  | **Nominal (UC4.3)**: tests approved and list of the items to be stored updated |
-|  | **Nominal (UC4.4)**: test rejected and return list updated |
+|  | **Nominal (UC4.4)**: test rejected and refund list updated |
 |  | **Exception (UC4.5)**: the item's quality cannot be checked due to some type's peculiarities that the system doesn't know how to treat |
 | | **Variant (UC4.6)**: user asks EZWH to download the report |
 | | **Variant (UC4.7)**: user asks EZWH to print the report |
@@ -439,14 +445,14 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  3     | EZWH moves the items that passed the tests to the list of the items to be stored |
 
 
-| **UC4.4** | *Test rejected and return list updated* |
+| **UC4.4** | *Test rejected and refund list updated* |
 | ------------- |:-------------:| 
 | Pre-condition |  Test's failure , user is authenticated |
-| Post-condition |  The items are put in the return list |
+| Post-condition |  The items are put in the refund list |
 | **Steps #**        |  **Description**   |
 |  1     | User asks EZWH to the list of the items that failed the tests |  
 |  2     | EZWH retrieves the list of the items that failed tha quality tests |
-|  3     | User asks EZWH to move the items to the return list |
+|  3     | User asks EZWH to move the items to the refund list |
 |  3     | EZWH moves the items that failed the tests to the list of the items to be sent back |
 
 | **UC4.5** | *Unknown items type: quality check failed* |
