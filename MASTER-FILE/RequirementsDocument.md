@@ -344,33 +344,40 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 | **UC3.3** | *Confirm Order arrival* |
 | ------------- |:-------------:| 
-|  Precondition     | Order O exists in the orders list, Manager M is authenticated, O did not signed as REFUND |
-|  Post condition     | O record removed from the order list |
+|  Precondition     | Order O exists in the orders list, O checked as DELIVERED, Manager M is authenticated |
+|  Post condition     | O record signed as COMPLETED |
 | **Steps #**        | **Description**  |
 |  1     | M asks for orders list to EZWH |  
 |  2     | EZWH retrieves orders list |
 |  3     | M asks EZWH to confirm O in the orders list |
-|  4     | EZWH check O as COMPLETED in the orders list |
+|  4     | EZWH asks M if shure to confirm |
+|  5	 | M confirms |
+|  6	 | EZWH signs O as COMPLETED |
 
 | **UC3.4** | *Refund order* |
 | ------------- |:-------------:| 
-|  Precondition     | Item signed as REFUND, Manager M is authenticated |
+|  Precondition     | Item in refunds list, Manager M is authenticated |
 |  Post condition     | Item moved from refund list to orders list |
 | **Steps #**        | **Description**  |
 |  1     | M asks for refund list to EZWH |  
 |  2     | EZWH retrieves refund list |
-|  3     | M asks EZWH to confirm refund in the refund list |
-|  4     | EZWH moves orders selected from refund list to order list |
+|  3     | M select a refund record and asks EZWH to issue an order |
+|  4	 | EZWH asks M if shure to confirm the order |
+|  5 	 | M confirms | 
+|  6 	 | EZWH create an order marked as REFUND |
+|  7     | EZWH moves orders selected from refund list to order list |
 
 | **UC3.5** | *Deliver order* |
 | ------------- |:-------------:| 
-|  Precondition     | Item in orders list, user is authenticated |
-|  Post condition     | Item is marked  |
+|  Precondition     | Item in orders list, Manager M is authenticated |
+|  Post condition     | Item is marked as DELIVERED |
 | **Steps #**        | **Description**  |
-|  1     | User asks for orders list to EZWH |  
+|  1     | M asks for orders list to EZWH |  
 |  2     | EZWH retrieves orders list |
-|  3     | User asks EZWH for deliver request of a certain order |
-|  4     | EZWH marks order as delivered and remove items from items list |
+|  3     | M asks EZWH to deliver O in the orders list |
+|  4     | EZWH asks M if shure to confirm |
+|  5	 | M confirms |
+|  6	 | EZWH signs O as DELIVERED |
 
 | **UC3.6** | *Reject order due to lack of items* |
 | ------------- |:-------------:| 
