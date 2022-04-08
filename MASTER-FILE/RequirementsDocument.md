@@ -138,7 +138,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | -- -- --> FR 6.1.4 | Show map |
 | --> FR 6.2 | Manage items list |	
 | -- --> FR 6.2.1 | Show items list |	
-| -- --> FR 6.2.2 | Add a new item in the list |	
+| -- --> FR 6.2.2 | Store a new item in the list |	
 | -- --> FR 6.2.3 | Remove an existing item from the list |	
 | -- --> FR 6.2.4 | Update item status from the list |
 | **FR 7** | Suppliers management |	
