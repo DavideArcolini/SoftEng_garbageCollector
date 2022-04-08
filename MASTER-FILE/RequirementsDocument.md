@@ -46,14 +46,22 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 
 # Stakeholders
-
+## Glossary 
+| Name | Description |
+| ----- | ------ |
+| Internal | Exist inside the business and are directly affected by the project outcome |
+| External | Have an interest in the success of a business but do not have a direct affiliation with the projects at an organization |
+| Role: Primary | Have the highest level of interest in the outcome of a project because they are directly affected by the outcome. They actively contribute to a project |
+| Role: Secondary | Help to complete projects, but on a lower, general level. These types of stakeholders help with administrative processes, financial, and legal matters. | 
+| Direct | Constantly involved with the activities of the project |
+| Indirect | More interested in the outcome and usability of the project rather than the process of completing it |
 
 | Stakeholder name  | Internal/External | Role | Direct/Indirect | Description | 
 | ----------------- |:-----------:|:-----------:|:-----------:|:-----------:|
-| **Manager** of the warehouse | Internal | Primary | Direct | It is in charge of the management of the warehouse by supervising the availability of items inside the warehouse. |
+| **Manager** of the warehouse | Internal | Primary | Direct | It is in charge of the management of the warehouse by creating internal and external orders, managing maps, adding suppliers into the system supervising the availability of items inside the warehouse. |
 | **Suppliers** | External | Secondary | Indirect | At the foundation of the supply chain, provides items to the warehouse when the manager requests it. |
 | **Manager** of the company | External | Secondary | Indirect | CEO of the company the warehouse is a part of. |
-| **Project team** | Internal | Primary | Direct | Develop and maintain the warehouse EZWH software application. |
+| **Project team** | External | Primary | Direct | Develop and maintain the warehouse EZWH software application. |
 | **Logistic transport unit** | External | Secondary | Indirect | Contributes to the supply chain by providing the necessary services to transport the items from the supplier to the warehouse. |
 | **Quality assurance team** | Internal | Primary | Direct | Applies specific tests on random items in order to assure the quality standard established. |
 | **Workers** | Internal | Primary | Direct | Work inside the warehouse, providing the management of items location and transport. |
@@ -98,42 +106,47 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 | ID | Description |
 | ------------- |:-------------:| 
-| **FR 1** | User handling |
+| **FR 1** | User management |
 | --> FR 1.1 | Register a new user in the system |
 | --> FR 1.2 | Delete an existing user from the system |
-| --> FR 1.3 | Change user permissions |
-| --> FR 1.4 | Authentication (Log-In) of users |
-| **FR 2** | Orders handling |
-| --> FR 2.1 | Manage internal orders |
-| -- -- --> FR 2.1.1| Accept requests from workers to EZWH |
-| -- -- --> FR 2.1.2 | Accept requests from Organizational Units to EZWH |
-| -- -- -- -- --> FR 2.1.2.1 | Confirm the "deliver" item to pick up area |
-| -- -- --> FR 2.1.3 | Accept requests from Manager to EZWH |
-| -- -- --> FR 2.1.4 | Confirm or reject order delivered |
-| --> FR 2.2 | Manage external orders |	
-| -- -- --> FR 2.2.1| Accept requests from EZWH to Supplier |
-| -- -- --> FR 2.2.2| Accept request from Customer to EZWH |
-| -- -- --> FR 2.2.3| Confirm or reject order delivered |
-| --> FR 2.3 | Create a new pending order |	
-| **FR 3** | Manage testing |
-| --> FR 3.1 | Select test for specific item |	
-| --> FR 3.2 | Execute quality test and do something |	
+| --> FR 1.3 | Update user permissions |
+| **FR 2** | User authentication |
+| --> FR 2.1 | Login |
+| --> FR 2.2 | Logout |
+| **FR 3** | Orders management |
+| --> FR 3.1 | Manage internal orders |
+| -- -- --> FR 3.1.1 | Accept requests from Organizational Units to EZWH |
+| -- -- --> FR 3.1.2 | Rejects requests from Organizational Units to EZWH |
+| --> FR 3.2 | Manage external orders |	
+| -- -- --> FR 3.2.1 | Create requests from EZWH to Supplier |
+| -- -- --> FR 3.2.2 | Confirm order arrival |
+| -- -- --> FR 3.2.3 | Refund order |
+| **FR 4** | Tests execution |
+| --> FR 4.1 | Select test for specific item |	
+| --> FR 4.2 | Execute quality test and produce reports |	
 | -- -- --> FR 3.2.1| Test approved and item stored in the warehouse |
-| -- -- --> FR 3.2.2| Test rejected and item stored in pickup area (?) |
-| **FR 4** | Manage warehouse |
-| --> FR 4.1 | Manage map environment |	
-| -- -- --> FR 4.1.1| Create new environment |
-| -- -- --> FR 4.1.2| Update an existing environment |
-| -- -- --> FR 4.1.3| Delete an exiting environment |
-| -- -- --> FR 4.1.4 | Show space availability in the map |
-| --> FR 4.2 | Show items list |	
-| --> FR 4.3 | Manage storage of the map |
-| -- -- --> FR 4.3.1 | Store item in a certain area of the map | 
-| -- -- --> FR 4.3.2 | Replace item in a certain area of the map |
-| -- -- --> FR 4.3.3 | Remove item in a certain area of the map |
-| **FR 5** | Pick-Up Area |
-| --> FR 5.1 | Receive item from warehouse |	
-| --> FR 5.2 | Check item as delivered at the pick up area |	
+| -- -- --> FR 3.2.2| Test rejected and item stored in pickup area |
+| **FR 5** | Tests management|
+| --> FR 5.1 | Create a new test |	
+| --> FR 5.2 | Remove an existing test |
+| --> FR 5.3 | Update an existing test |
+| **FR 6** | Warehouse management |
+| --> FR 6.1 | Manage map environment |	
+| -- -- --> FR 6.1.1| Load new environment |
+| -- -- --> FR 6.1.2| Update an existing environment |
+| -- -- --> FR 6.1.3| Delete an existing environment |
+| -- -- --> FR 6.1.4 | Show map |
+| --> FR 6.2 | Manage items list |	
+| -- --> FR 6.2.1 | Show items list |	
+| -- --> FR 6.2.2 | Add a new item in the list |	
+| -- --> FR 6.2.3 | Remove an existing item from the list |	
+| -- --> FR 6.2.4 | Update item status from the list |
+| **FR 7** | Suppliers management |	
+| --> FR 7.1 | Add new supplier |
+| --> FR 7.2 | Remove an existing supplier |	
+| **FR 8** | Pick-Up Area |
+| --> FR 8.1 | Receive item from warehouse |
+| --> FR 8.2 | Set item status as READY |	
 
 
 
@@ -141,7 +154,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 | ID | Type (efficiency, reliability, ..) | Description  | Refers to |
 | ------------- |:-------------:| :-----:| -----:|
-| **NFR1.1** | Efficiency | User creation performance < 0.25 seconds | User handling |
+| **NFR1.1** | Efficiency | User creation performance < 0.25 seconds | User management |
 | **NFR1.2** | Efficiency | User deletion performance < 0.25 seconds | User handling |
 | **NFR1.3** | Efficiency | User permission changes performance < 0.1 seconds | User handling |
 | **NFR1.4** | Efficiency | User authentication performance < 0.25 seconds | User handling |
