@@ -329,8 +329,8 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 | **UC3.2** | *Accept Organisational Unit order* |
 | ------------- |:-------------:| 
-|  Precondition     | Order O in the internal orders list, Manager M authenticated, Order O marked as ISSUED |
-|  Post condition     | O marked as DELIVERED |
+|  Precondition     | Order O in the internal orders list, Manager M authenticated, Order O marked as ISSUED in internal orders list |
+|  Post condition     | O marked as ISSUED in orders list |
 | **Steps #**        | **Description**  |
 |  1     | M asks for internal orders to EZWH |  
 |  2     | EZWH retrieves internal orders |
@@ -361,6 +361,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  5 	 | M confirms | 
 |  6 	 | EZWH create an order marked as REFUND |
 |  7     | EZWH moves orders selected from refund list to order list |
+|  8 	 | EZWH send a refund email to Supplier |
 
 | **UC3.5** | *Deliver order* |
 | ------------- |:-------------:| 
@@ -436,7 +437,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  4     | EZWH shows the report with the overall time that it took to perform the tests | 
 
 
-| **UC4.3** | *Tests approved and list of the items to be stored updated*  |
+| **UC4.3** | *Confirm order for approved items*  |
 | ------------- |:-------------:| 
 | Pre-condition |  The test's result is positive |
 | Post-condition |  The items are put in the list of the items to be stored  |
@@ -447,7 +448,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  3     | EZWH moves the items that passed the tests to the list of the items to be stored |
 
 
-| **UC4.4** | *Test rejected and refund list updated* |
+| **UC4.4** | *Discard order for rejected items* |
 | ------------- |:-------------:| 
 | Pre-condition |  Test's failure , user is authenticated |
 | Post-condition |  The items are put in the refund list |
@@ -467,7 +468,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  3     | Quality test is not performed |
 |  4     | EZWH suggests to update tests database |
 
-| **UC4.6** | *User requests digital report of quality tests* |
+| **UC4.6** | *User requests report of quality tests* |
 | ------------- |:-------------:| 
 | Pre-condition | Item is in the received orders list. Test has been performed correctly and result is available. |
 | Post-condition | User is provided with the report. |
@@ -476,17 +477,6 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  2     |  |
 |  3     |  |
 |  4     |  |
-
-| **UC4.7** | *User requests physical report of quality tests* |
-| ------------- |:-------------:| 
-| Pre-condition | Item is in the received orders list. Test has been performed correctly and result is available. |
-| Post-condition | User is provided with the report. |
-| **Steps #**        |  **Description**   |
-|  1     | User asks EZWH  |  
-|  2     |  |
-|  3     |  |
-|  4     |  |
-
 
 ## Use case 5 (UC5): map management
 | Use case 5     |  |
@@ -527,7 +517,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  4     | Administrator confirms or rejects the removal |
 |  5     | EZWH removes map file if administrator confirms |
 
-| **UC5.3** | *Update map* |
+| **UC5.3** | *Update maps* |
 | ------------- |:-------------:| 
 |  Pre-condition     | Map is in the system, Administrator is authenticated |
 |  Post-condition   | Map is updated |
@@ -540,13 +530,13 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  6     | EZWH saves the map file |
 
 
-| **UC5.4** | *Show space availability* |
+| **UC5.4** | *Show maps* |
 | ------------- |:-------------:| 
 |  Pre-condition     | Map file exist, Worker is authenticated |
 |  Post-condition   | Space is showed|
 |  **Steps #**     | **Description** |
-|  1     | Worker asks for map|
-|  2     | EZWH loads the map |
+|  1     | Worker asks for maps |
+|  2     | EZWH loads the maps |
 |  3     | EZWH shows the maps with the types of spaces|
 
 | **UC5.5** | *Map constraints not satisfied, reload map* |
@@ -649,7 +639,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  6	 | OU asks EZWH to create order |
 |  7     | EZWH record a order in the internal orders list marking it as ISSUED |
 
-| **UC7.1** | *Confirm OU order arrival* |
+| **UC7.2** | *Confirm OU order arrival* |
 | ------------- |:-------------:| 
 |  Pre-condition     | Order O in the internal orders list. OU is authenticated. |
 |  Post-condition   | Order O marked as COMPLETED |
