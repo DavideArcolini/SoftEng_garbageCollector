@@ -155,21 +155,23 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | ID | Type (efficiency, reliability, ..) | Description  | Refers to |
 | ------------- |:-------------:| :-----:| -----:|
 | **NFR1.1** | Efficiency | User creation performance < 0.25 seconds | User management |
-| **NFR1.2** | Efficiency | User deletion performance < 0.25 seconds | User handling |
-| **NFR1.3** | Efficiency | User permission changes performance < 0.1 seconds | User handling |
-| **NFR1.4** | Efficiency | User authentication performance < 0.25 seconds | User handling |
-| **NFR2.1** | Efficiency | Manage internal orders performance < 0.25 seconds | Request handling |
+| **NFR1.2** | Efficiency | User deletion performance < 0.25 seconds | User management |
+| **NFR1.3** | Efficiency | User permission changes performance < 0.1 seconds | User management |
+| **NFR2.1** | Efficiency | User login performance < 0.25 seconds | User authentication |
+| **NFR2.2** | Efficiency | User logout performance < 0.25 seconds | User authentication |
+| **NFR3.1** | Efficiency | Manage internal orders performance < 0.25 seconds | Request handling |
 | **NFR2.2** | Efficiency | Manage external orders performance < 0.25 seconds | Request handling |
-| **NFR3.1** | Efficiency | Select test for specific items performance < 0.25 seconds | Manage testing |
-| **NFR3.2** | Efficiency | Manage result test performance < 0.25 seconds | Manage testing |
-| **NFR4.1** | Efficiency | Manage map environment performance < 0.5 seconds | Manage map environment |
-| **NFR4.1.4** | Efficiency | Show map environment performance < 1 second | Manage map environment |
-| **NFR4.2** | Efficiency | Show items list performance < 0.25 seconds | Manage warehouse |
-| **NFR4.3** | Efficiency | Manage storage performance < 0.25 seconds | Manage warehouse |
-| **NFR5** | Efficiency | Manage pick-up area performance < 0.25 seconds | Pick-Up Area |
-| **NFR1** | Privacy | Confidential data should not be disclosed to non-authorized users | User handling |
-| **NFR1** | Security | User data should be handled only by authorized users | User handling |
-| **NFR1** | Security | Authentication (Log in) of users should respect the industry standards | User activity |
+| **NFR4** | Efficiency | Manage result test performance < 0.25 seconds | Tests management |
+| **NFR4.1** | Efficiency | Select test for specific items performance < 0.25 seconds | Tests management |
+| **NFR4** | Efficiency | Manage result test performance < 0.25 seconds | Tests management |
+| **NFR6.1** | Efficiency | Manage map environment performance < 0.5 seconds | Warehouse management |
+| **NFR6.1.4** | Efficiency | Show map environment performance < 1 second | Warehouse management |
+| **NFR6.2.1** | Efficiency | Show items list performance < 0.25 seconds | Warehouse management |
+| **NFR6.2.2** | Efficiency | Manage storage performance < 0.25 seconds | Warehouse management |
+| **NFR8.2** | Efficiency | Manage pick-up area performance < 0.25 seconds | Pick-Up Area |
+| **NFR** | Privacy | Confidential data should not be disclosed to non-authorized users | Data management |
+| **NFR** | Security | User data should be handled only by authorized users | Data management |
+| **NFR** | Security | Authentication (Log in) of users should respect the industry standards | User activity |
 | **NFR** | Usability | Users should be able to perform operations inside the system without encountering any issues | User activity |
 | **NFR** | Usability | Users' interfaces should be user-friendly and easy to use | User activity |
 | **NFR** | Reliability | Mean Time Between Failures (MTBF) < 2 defect per user per year | Software | 
@@ -180,8 +182,6 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | **NFR** | Durability | Software should be able to work properly for at least 10 years. | Software |
 | **NFR** | Portability | Software must be able to work properly on **all** working stations inside the warehouse. Software should be able to work properly on **$99\%$** user devices. | Software |
 | **NFR** | Easy of use | Training time for workers ~ 1 day | Workers |
-
-
 
 # Use case diagram and use cases
 
