@@ -174,8 +174,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 
 ## Use case diagram
-\<define here UML Use case diagram UCD summarizing all use cases, and their relationships>
-
+![Use case diagram](UseCase_Diagram.png)
 
 ## Use case 1 (UC1): user management
 | Actors Involved |  |
