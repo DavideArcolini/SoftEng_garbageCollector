@@ -298,13 +298,10 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 
 ## Use case 3 (UC3): order management
-| Actors Involved | Administrator, Manager, Supplier |
+| Actors Involved | Administrator, Manager |
 | ------------- |:-------------|
-| | Manager | 
-| | Worker | 
+| | Manager |
 | | Organizational Unit|
-| | Supplier |
-| | Customer |
 |  Precondition     | System is ON. List of suppliers is available. Items database is reachable and in a reliable state. Items exists |
 |  Post condition     | Items database is modified and in a reliable state. Orders list is updated. Order O exists |
 | Nominal Scenario | Manager check items list. If a certain item is in short supply, he issues an order to a supplier. When the order arrives to the shop, Workers records order arrival |
@@ -332,15 +329,15 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  6	 | M asks EZWH to create order |
 |  7     | EZWH record a order in the order list marking it as ISSUED |
 
-| **UC3.2** | *Accept order requests* |
+| **UC3.2** | *Accept Organisational Unit order* |
 | ------------- |:-------------:| 
-|  Precondition     | Order in the requests list, user is authenticated |
-|  Post condition     | Order accepted |
+|  Precondition     | Order O in the internal orders, Manager M logged in|
+|  Post condition     | O marked as ACCEPTED |
 | **Steps #**        | **Description**  |
-|  1     | User asks for requests list to EZWH |  
-|  2     | EZWH retrieves requests list |
-|  3     | User asks EZWH to confirm requests in the requests list |
-|  4     | EZWH moves requests from requests list to orders list |
+|  1     | M asks for internal orders to EZWH |  
+|  2     | EZWH retrieves internal orders |
+|  3     | User asks EZWH to confirm order in the internal orders list |
+|  4     | EZWH marks internal order record as ACCEPTED |
 
 | **UC3.3** | *Confirm Order arrival* |
 | ------------- |:-------------:| 
@@ -634,6 +631,36 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  5     | Worker confirms or rejects  |
 |  6     | EZWH updates item status |
 
+## Use case 7 (UC7): Manage Organisational Unit order
+| Actors Involved | Administrator, Organisational Unit |
+| ------------- |:-------------|
+|  Precondition     | System is ON.Items database is reachable and in a reliable state. Items exists. Organisational Unit OU in the system |
+|  Post condition     | Orders database is modified and in a reliable state. Orders list is updated. Order O exists |
+| Nominal Scenario | Manager check items list. If a certain item is in short supply, he issues an order to a supplier. When the order arrives to the shop, Workers records order arrival |
+|  Scenarios     |  |
+|  | I has no location assigned when registering an order arrival, issue warning |
+
+| **UC7.1** | *Create OU order* |
+| ------------- |:-------------:| 
+|  Pre-condition     | Item is in item list. OU is authenticated. |
+|  Post-condition   | Order O in the internal orders list |
+|  **Steps #**     | **Description** |
+|  1     | OU asks for items list to EZWH |  
+|  2     | EZWH retrieves a list of items |
+|  3     | OU selects a specific I and its quantity |
+|  6	 | OU asks EZWH to create order |
+|  7     | EZWH record a order in the internal orders list marking it as ISSUED |
+
+| **UC7.1** | *Confirm OU order arrival* |
+| ------------- |:-------------:| 
+|  Pre-condition     | Order O in the internal orders list. OU is authenticated. |
+|  Post-condition   | Order O marked as COMPLETED |
+|  **Steps #**     | **Description** |
+|  1     | OU asks for delivered internal orders |
+|  1     | EZWH retrieves internal orders marked as DELIVERED | 
+|  3 	 | OU selects O
+|  4	 | OU tells EZWH that order is arrived |
+|  5 	 | EZWH marked internal order as COMPLETED |
 
 # Glossary
 ![class diagram](Class_Diagram.png)
