@@ -297,11 +297,9 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 
 
-## Use case 3 (UC3): order management
+## Use case 3 (UC3): Warehouse management
 | Actors Involved | Administrator, Manager |
 | ------------- |:-------------|
-| | Manager |
-| | Organizational Unit|
 |  Precondition     | System is ON. List of suppliers is available. Items database is reachable and in a reliable state. Items exists |
 |  Post condition     | Items database is modified and in a reliable state. Orders list is updated. Order O exists |
 | Nominal Scenario | Manager check items list. If a certain item is in short supply, he issues an order to a supplier. When the order arrives to the shop, Workers records order arrival |
@@ -331,13 +329,13 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 | **UC3.2** | *Accept Organisational Unit order* |
 | ------------- |:-------------:| 
-|  Precondition     | Order O in the internal orders, Manager M logged in|
-|  Post condition     | O marked as ACCEPTED |
+|  Precondition     | Order O in the internal orders list, Manager M authenticated, Order O marked as ISSUED |
+|  Post condition     | O marked as DELIVERED |
 | **Steps #**        | **Description**  |
 |  1     | M asks for internal orders to EZWH |  
 |  2     | EZWH retrieves internal orders |
 |  3     | User asks EZWH to confirm order in the internal orders list |
-|  4     | EZWH marks internal order record as ACCEPTED |
+|  4     | EZWH marks internal order record as DELIVERED |
 
 | **UC3.3** | *Confirm Order arrival* |
 | ------------- |:-------------:| 
