@@ -499,16 +499,15 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  | **Nominal (UC5.1)**: load map in the system |
 |  | **Nominal (UC5.2)**: remove map from the system |
 |  | **Nominal (UC5.3)**: manage storage in the map |
-|  | **Nominal (UC5.4)**: show space availability |
-|  | **Exception (UC5.5)**: map constraints not satisfied, reload map | 
-|  | **Exception (UC5.6)**): map deletion failed |
+|  | **Exception (UC5.4)**: map constraints not satisfied, reload map | 
+|  | **Exception (UC5.5)**): map deletion failed |
 
 | **UC5.1** | *Load map* |
 | ------------- |:-------------:| 
 |  Precondition     | Map is not in the system, Administrator is authenticated |
 |  Post-condition   | Map is in the system |
 |  **Steps #**     | **Description** |
-|  1     | Administrator loads map file |
+|  1     | Administrator chooses and loads map file |
 |  2     | EZWH controls type and file size |
 |  3     | EZWH asks confirm about the changes |
 |  4     | Administrator confirms or rejects the changes |
@@ -525,7 +524,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  4     | Administrator confirms or rejects the removal |
 |  5     | EZWH removes map file if administrator confirms |
 
-| **UC5.3** | *Update maps* |
+| **UC5.3** | *Update maps* | ?
 | ------------- |:-------------:| 
 |  Pre-condition     | Map is in the system, Administrator is authenticated |
 |  Post-condition   | Map is updated |
@@ -537,19 +536,9 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  5     | Administrator confirms or rejects the changes |
 |  6     | EZWH saves the map file |
 
-
-| **UC5.4** | *Show maps* |
+| **UC5.4** | *Map constraints not satisfied, reload map* |
 | ------------- |:-------------:| 
-|  Pre-condition     | Map file exist, Worker is authenticated |
-|  Post-condition   | Space is showed|
-|  **Steps #**     | **Description** |
-|  1     | Worker asks for maps |
-|  2     | EZWH loads the maps |
-|  3     | EZWH shows the maps with the types of spaces|
-
-| **UC5.5** | *Map constraints not satisfied, reload map* |
-| ------------- |:-------------:| 
-|  Pre-condition     | Administrator is authenticated. Map is not in the system |
+|  Pre-condition     | Administrator is authenticated. Map  is not in the system |
 |  Post-condition   | No changes to the map environment are performed |
 |  **Steps #**     | **Description** |
 |  1     | Admin loads a new map |
@@ -557,9 +546,9 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  3     | Map constraints are not satisfied |
 |  4     | EZWH asks to reload the map |
 
-| **UC5.6** | *Map deletion failed* |
+| **UC5.5** | *Map deletion failed* |
 | ------------- |:-------------:| 
-|  Pre-condition     | Map file exist, Administrator is authenticated |
+|  Pre-condition     | Map exist, Administrator is authenticated |
 |  Post-condition   | No changes to the map environment are performed |
 |  **Steps #**     | **Description** |
 |  1     | Admin asks to remove the map|
@@ -580,7 +569,8 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  | **Nominal (UC6.1)**: show items list |
 |  | **Nominal (UC6.2)**: store new item |
 |  | **Nominal (UC6.3)**: remove existing item |
-|  | **Exception (UC6.4)**: update item status | 
+|  | **Exception (UC6.4)**: update item status |
+|  | **Nominal (UC6.5)**: show space availability |
 
 
 | **UC6.1** | *Shows item list*  |
@@ -593,7 +583,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 | **UC6.2** | *Store new item* |
 | ------------- |:-------------:| 
-|  Pre-condition     | Item is in the list, Worker is authenticated |
+|  Pre-condition     | Item is scanned, Worker is authenticated |
 |  Post-condition   | Item position is saved in the list |
 |  **Steps #**     | **Description** |
 |  1     | Worker checks map file (UC5.4)|
@@ -605,7 +595,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 | **UC6.3** | *Delete existing item* |
 | ------------- |:-------------:| 
-|  Pre-condition     | Item is in item list, Item has a position, Worker is authenticated |
+|  Pre-condition     | Item is scanned, Item has a position, Worker is authenticated |
 |  Post-condition   | Item is deleted |
 |  **Steps #**     | **Description** |
 |  1     | Worker selects an item |
@@ -617,7 +607,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 | **UC6.4** | *Update item status* |
 | ------------- |:-------------:| 
-|  Pre-condition     | Item is in item list. Worker is authenticated |
+|  Pre-condition     | Item is scanned. Worker is authenticated |
 |  Post-condition   | Item status is changed |
 |  **Steps #**     | **Description** |
 |  1     | Worker selects an item |
@@ -626,6 +616,15 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  4     | EZWH asks for confirm the new status|
 |  5     | Worker confirms or rejects  |
 |  6     | EZWH updates item status |
+
+| **UC6.5** | *Show space available* |
+| ------------- |:-------------:| 
+|  Pre-condition     | Map file exist, Worker is authenticated |
+|  Post-condition   | Space is showed|
+|  **Steps #**     | **Description** |
+|  1     | Worker asks for maps |
+|  2     | EZWH loads the maps |
+|  3     | EZWH shows the maps with the types of spaces|
 
 ## Use case 7 (UC7): Manage Organisational Unit order
 | Actors Involved | Administrator, Organisational Unit |
