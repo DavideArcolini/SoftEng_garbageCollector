@@ -416,7 +416,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  | **Nominal (UC4.2)**: execute quality test |
 |  | **Nominal (UC4.3)**: tests approved and list of the items to be stored updated |
 |  | **Nominal (UC4.4)**: test rejected and refund list updated |
-|  | **Exception (UC4.5)**: the item's quality cannot be checked due to some type's peculiarities that the system doesn't know how to treat |
+|  | **Exception (UC4.5)**: the item's quality cannot be checked due to unknown value that the system doesn't know how to treat |
 | | **Variant (UC4.6)**: user asks EZWH to download the report |
 | | **Variant (UC4.7)**: user asks EZWH to print the report |
 
@@ -426,13 +426,11 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | Post-condition |  The test to be performed on the items are selected |
 | **Steps #**        | **Description**   |
 |  1     | User asks for items list whose quality is to be checked | 
-|  2    | EZWH shows the list of the items received |  
-|  3    | User select some of the items from the list  |
-|  4    | For each item EZWH selects the tests to be performed according to the type of the item and displays them|
-|  6    | User selects randomly some of the tests to be performed |
-| 7 | EZWH shows the overall tests to be run|
-| 8 | EZWH suggests the user to run the tests indicating the time that it will take |
-| Exceptions| Unknown type to which there are no test implemented |
+|  2    | EZWH shows the list of the items received and selects randomly an item for the quality control|  
+|  3    | User confirms the item to be checked   |
+|  4    | EZWH selects the tests to be performed according to the type of the item and displays them|
+|  6    | User performs the tests |
+
 
 | **UC4.2** | *Execute quality test*  |
 | ------------- |:-------------:| 
@@ -440,9 +438,9 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | Post-condition | The report of the tests is ready  |
 | **Steps #**        |  **Description**   |
 |  1     | User asks to run the tests |  
-|  2     | EZWH runs the tests and it generates the report |
-|  3     | User asks EZWH to display the report  |
-|  4     | EZWH shows the report with the overall time that it took to perform the tests | 
+|  2     | EZWH runs the tests by comparing the values filled in with the specs required for the item|
+|  3 	 | EZWH shows the report |
+
 
 
 | **UC4.3** | *Confirm order for approved items*  |
@@ -450,10 +448,10 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | Pre-condition |  The test's result is positive |
 | Post-condition |  The items are put in the list of the items to be stored  |
 | **Steps #**        |  **Description**   |
-|  1     | User asks EZWH to the list of the items that passed the tests |  
-|  2     | EZWH retrieves the list of the items that passed the quality tests |
-|  3     | User asks EZWH to move the items whose quality is good in the list of the items to be stored |
-|  3     | EZWH moves the items that passed the tests to the list of the items to be stored |
+|  1     | User asks EZWH to move the items that passed the tests to the list of confirmed orders |  
+|  2     | EZWH asks for confirmation |
+|  3     | User confirms the operation |
+|  4     | EZWH moves the items that passed the tests to the list of confirmed orders |
 
 
 | **UC4.4** | *Discard order for rejected items* |
@@ -461,30 +459,22 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | Pre-condition |  Test's failure , user is authenticated |
 | Post-condition |  The items are put in the refund list |
 | **Steps #**        |  **Description**   |
-|  1     | User asks EZWH to the list of the items that failed the tests |  
-|  2     | EZWH retrieves the list of the items that failed tha quality tests |
-|  3     | User asks EZWH to move the items to the refund list |
-|  3     | EZWH moves the items that failed the tests to the list of the items to be sent back |
+|  1     | User asks EZWH to move the items that failed the tests to the list of refund orders|  
+|  3     | User asks for confirmation |
+|  3     | User confirms the operation |
+|  4     | EZWH moves the items that failed the tests to the list of the refund orders|
 
-| **UC4.5** | *Unknown items type: quality check failed* |
+| **UC4.5** | *Unknown value for a test: quality check failed* |
 | ------------- |:-------------:| 
-| Pre-condition | Item is in the received orders list. Type of item is unknown. |
+| Pre-condition | Item is in the received orders list. Type of value unknown. |
 | Post-condition | Quality test is not performed |
 | **Steps #**        |  **Description**   |
 |  1     | User asks to run the tests |  
-|  2     | EZWH fails to recognize items type |
+|  2     | EZWH fails to recognize the value provided for the test |
 |  3     | Quality test is not performed |
 |  4     | EZWH suggests to update tests database |
 
-| **UC4.6** | *User requests report of quality tests* |
-| ------------- |:-------------:| 
-| Pre-condition | Item is in the received orders list. Test has been performed correctly and result is available. |
-| Post-condition | User is provided with the report. |
-| **Steps #**        |  **Description**   |
-|  1     | User asks EZWH  |  
-|  2     |  |
-|  3     |  |
-|  4     |  |
+
 
 ## Use case 5 (UC5): map management
 | Use case 5     |  |
