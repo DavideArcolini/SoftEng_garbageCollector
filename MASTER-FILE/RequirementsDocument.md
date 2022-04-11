@@ -404,7 +404,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  4     | EZWH suggests to update the suppliers list |
 
 
-## Use case 4 (UC4): manage testing
+## Use case 4 (UC4): execute testing
 
 | Actors Involved|  |
 | ------------- |:-------------| 
@@ -474,10 +474,57 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  3     | Quality test is not performed |
 |  4     | EZWH suggests to retry again |
 
+### Use case 5 (UC5): manage testing
+| Actors Involved        | Quality assurance office |
+| ------------- |:-------------| 
+|  Precondition     | Quality officer is authenticated and the system is on |
+|  Post condition     | test database is in a reliable state | 
+|  Scenarios   ||  
+| | **Nominal (UC5.1):** create a new test |
+| | **Nominal (UC5.2)** delete an existing test |
+| | **Nominal (UC5.3)** update an existing test |
 
 
-## Use case 5 (UC5): map management
-| Use case 5     |  |
+| UC5.1 | *Create a new test* |
+| ------------- |:-------------:| 
+|  Precondition     | the test database is reachable and the system is on.  |
+|  Post condition     | a new test is created and the test list is updated |
+| Step#        | Description  |
+|  1     | User asks to create a new test |
+|  2  	 | EZWH asks to load a file for the tests |
+|  3  	 | User loads a file for the tests |
+|  4     | EZWH asks the user to fill the test details |
+|  5     | User fills test details and confirms them | 
+|  6     | EZWH saves the new test in the database |
+
+
+| UC5.2 | *Delete test* |
+| ------------- |:-------------:| 
+|  Precondition     | the test to be deleted is in the list and the system is on |
+|  Post condition     | Test is deleted |
+| Step#        | Description  |
+|  1     | User asks to delete a test |
+|  2     | EZWH retrivies the test list |
+|  3     | User selects the test to be deleted |
+|  4     | EZWH asks for confirmation |
+
+
+
+| UC5.5 | *Update test* |
+| ------------- |:-------------:| 
+|  Precondition     | the test to be updated is in the list and the system is on |
+|  Post condition     | Ttest is updated |
+| Step#        | Description  |
+|  1     | User asks to update an existing test |
+|  2     | EZWH retrivies the test list |
+|  3     | User selects the test to be updated |
+|  4     | EZWH shows the details of the test|
+|  5     | User updates the test |
+|  6     | EZWH asks for confirmation |
+
+
+## Use case 6 (UC6): map management
+| Use case 6     |  |
 | ------------- |:-------------|
 | Actor ||
 || Administrator |
@@ -486,13 +533,13 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  Precondition     | Warehouse exists |
 |  Post condition     | Operation in warehouse is performed correctly |
 |  Scenarios     |  |
-|  | **Nominal (UC5.1)**: load map in the system |
-|  | **Nominal (UC5.2)**: remove map from the system |
-|  | **Nominal (UC5.3)**: manage storage in the map |
-|  | **Exception (UC5.4)**: map constraints not satisfied, reload map | 
-|  | **Exception (UC5.5)**): map deletion failed |
+|  | **Nominal (UC6.1)**: load map in the system |
+|  | **Nominal (UC6.2)**: remove map from the system |
+|  | **Nominal (UC6.3)**: manage storage in the map |
+|  | **Exception (UC6.4)**: map constraints not satisfied, reload map | 
+|  | **Exception (UC6.5)**): map deletion failed |
 
-| **UC5.1** | *Load map* |
+| **UC6.1** | *Load map* |
 | ------------- |:-------------:| 
 |  Precondition     | Map is not in the system, Administrator is authenticated |
 |  Post-condition   | Map is in the system |
@@ -503,7 +550,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  4     | Administrator confirms or rejects the changes |
 |  5     | EZWH saves the map file |
 
-| **UC5.2** | *Remove map* |
+| **UC6.2** | *Remove map* |
 | ------------- |:-------------:| 
 |  Precondition     | Map is in the system, Administrator is authenticated |
 |  Post-condition   | Map is not in the system anymore |
@@ -514,7 +561,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  4     | Administrator confirms or rejects the removal |
 |  5     | EZWH removes map file if administrator confirms |
 
-| **UC5.3** | *Update maps* | ?
+| **UC6.3** | *Update maps* | ?
 | ------------- |:-------------:| 
 |  Pre-condition     | Map is in the system, Administrator is authenticated |
 |  Post-condition   | Map is updated |
@@ -526,7 +573,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  5     | Administrator confirms or rejects the changes |
 |  6     | EZWH saves the map file |
 
-| **UC5.4** | *Map constraints not satisfied, reload map* |
+| **UC6.4** | *Map constraints not satisfied, reload map* |
 | ------------- |:-------------:| 
 |  Pre-condition     | Administrator is authenticated. Map  is not in the system |
 |  Post-condition   | No changes to the map environment are performed |
@@ -536,7 +583,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  3     | Map constraints are not satisfied |
 |  4     | EZWH asks to reload the map |
 
-| **UC5.5** | *Map deletion failed* |
+| **UC6.5** | *Map deletion failed* |
 | ------------- |:-------------:| 
 |  Pre-condition     | Map exist, Administrator is authenticated |
 |  Post-condition   | No changes to the map environment are performed |
@@ -546,8 +593,8 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  3     | EZWH informs the administrator |
 
 
-## Use case 6 (UC6): items management
-| Use case 6     |  |
+## Use case 7 (UC7): items management
+| Use case 7     |  |
 | ------------- |:-------------|
 | Actor ||
 || Administrator |
@@ -563,7 +610,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  | **Nominal (UC6.5)**: show space availability |
 
 
-| **UC6.1** | *Shows item list*  |
+| **UC7.1** | *Shows item list*  |
 | ------------- |:-------------:| 
 |  Pre-condition     | Item list exists, User is authenticathed |
 |  Post-condition   | list is showed |
@@ -571,7 +618,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  1     | User asks for the list |
 |  2     | EZWH loads and shows the list |
 
-| **UC6.2** | *Store new item* |
+| **UC7.2** | *Store new item* |
 | ------------- |:-------------:| 
 |  Pre-condition     | Item is scanned, Worker is authenticated |
 |  Post-condition   | Item position is saved in the list |
@@ -583,7 +630,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  4     | Worker confirms the action to EZWH|
 |  5     | EZWH adds the position on the items list |
 
-| **UC6.3** | *Delete existing item* |
+| **UC7.3** | *Delete existing item* |
 | ------------- |:-------------:| 
 |  Pre-condition     | Item is scanned, Item has a position, Worker is authenticated |
 |  Post-condition   | Item is deleted |
@@ -595,7 +642,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  5     | EZWH checks the position and frees the space in the map|
 |  6     | EZWH deletes the item from the items list|
 
-| **UC6.4** | *Update item status* |
+| **UC7.4** | *Update item status* |
 | ------------- |:-------------:| 
 |  Pre-condition     | Item is scanned. Worker is authenticated |
 |  Post-condition   | Item status is changed |
@@ -607,7 +654,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  5     | Worker confirms or rejects  |
 |  6     | EZWH updates item status |
 
-| **UC6.5** | *Show space available* |
+| **UC7.5** | *Show space available* |
 | ------------- |:-------------:| 
 |  Pre-condition     | Map file exist, Worker is authenticated |
 |  Post-condition   | Space is showed|
@@ -616,7 +663,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  2     | EZWH loads the maps |
 |  3     | EZWH shows the maps with the types of spaces|
 
-## Use case 7 (UC7): Manage Organisational Unit order
+## Use case 8 (UC8): Manage Organisational Unit order
 | Actors Involved | Administrator, Organisational Unit |
 | ------------- |:-------------|
 |  Precondition     | System is ON.Items database is reachable and in a reliable state. Items exists. Organisational Unit OU in the system |
@@ -625,7 +672,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  Scenarios     |  |
 |  | I has no location assigned when registering an order arrival, issue warning |
 
-| **UC7.1** | *Create OU order* |
+| **UC8.1** | *Create OU order* |
 | ------------- |:-------------:| 
 |  Pre-condition     | Item is in item list. OU is authenticated. |
 |  Post-condition   | Order O in the internal orders list |
@@ -636,7 +683,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  6	 | OU asks EZWH to create order |
 |  7     | EZWH record a order in the internal orders list marking it as ISSUED |
 
-| **UC7.2** | *Confirm OU order arrival* |
+| **UC8.2** | *Confirm OU order arrival* |
 | ------------- |:-------------:| 
 |  Pre-condition     | Order O in the internal orders list. OU is authenticated. |
 |  Post-condition   | Order O marked as COMPLETED |
