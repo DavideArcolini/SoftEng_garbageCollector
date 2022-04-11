@@ -345,13 +345,13 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  3     | User asks EZWH to confirm order in the internal orders list |
 |  4     | EZWH marks internal order record as DELIVERED |
 
-| **UC3.3** | *Confirm Order arrival* |
+| **UC3.3** | *Confirm Supplier Order arrival* |
 | ------------- |:-------------:| 
 |  Precondition     | Order O exists in the orders list, O checked as DELIVERED, Manager M is authenticated |
 |  Post condition     | O record signed as COMPLETED |
 | **Steps #**        | **Description**  |
-|  1     | M asks for orders list to EZWH |  
-|  2     | EZWH retrieves orders list |
+|  1     | M asks for External orders list to EZWH |  
+|  2     | EZWH retrieves external orders list |
 |  3     | M asks EZWH to confirm O in the orders list |
 |  4     | EZWH asks M if shure to confirm |
 |  5	 | M confirms |
