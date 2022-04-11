@@ -1,6 +1,6 @@
 # Project Estimation  
-Date: Wednesday, 13 April 2022\
-Version: `1.0`
+**Date**: Wednesday, 13 April 2022\
+**Version**: `1.0`
 
 
 # Estimation approach
@@ -47,7 +47,7 @@ title Gantt's diagram
 saturday are closed
 sunday are closed
 project starts the 2022/03/27
-[Planning] lasts 19 days
+[Planning] lasts 19 days<>
 [Requirements] lasts 3 days
 [Design] lasts 3 days
 [Design] starts at [Requirements]'s end
@@ -62,7 +62,11 @@ project starts the 2022/03/27
 @endgantt
 ```
 # Summary
-Report here the results of the three estimation approaches. The  estimates may differ. Discuss here the possible reasons for the difference
+1. The results obtained through *estimation by size* does not take into account the project management and documentation parts. Although it has the least estimated effort overall, it is exclusively dependent by the **Lines Of Code** (LOC). 
+
+2. The results obtained through *estimation by product decomposition* do take into accounts the project management and documentation parts. However, the results may be *under-estimated* due to the application of the **Delphi** method, which considers expert of the field to compute the effort.
+
+3. The results obtained through *estimation by activity decomposition* take into account only the **qualitative** aspect of the project, due to the lack of data from the company itself and the lack of previous experiences of the team in the field.
 
 |             | Estimated effort | Estimated duration |          
 | ----------- | ------------------------------- | ---------------|
