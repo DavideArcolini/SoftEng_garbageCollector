@@ -561,7 +561,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  4     | Administrator confirms or rejects the removal |
 |  5     | EZWH removes map file if administrator confirms |
 
-| **UC6.3** | *Update maps* | ?
+| **UC6.3** | *Update maps* | 
 | ------------- |:-------------:| 
 |  Pre-condition     | Map is in the system, Administrator is authenticated |
 |  Post-condition   | Map is updated |
