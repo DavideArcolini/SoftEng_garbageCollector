@@ -472,7 +472,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  1     | User asks to run the tests |  
 |  2     | EZWH fails to recognize the value provided for the test |
 |  3     | Quality test is not performed |
-|  4     | EZWH suggests to update tests database |
+|  4     | EZWH suggests to retry again |
 
 
 
