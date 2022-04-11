@@ -99,6 +99,11 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 
 \<stories will be formalized later as scenarios in use cases>
 
+1. Admin
+2. Manager
+3. Worker
+4. Quality Officer
+
 
 # Functional and non functional requirements
 
@@ -183,9 +188,8 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | **NFR** | Portability | Software must be able to work properly on **all** working stations inside the warehouse. Software should be able to work properly on **$99\%$** user devices. | Software |
 | **NFR** | Easy of use | Training time for workers ~ 1 day | Workers |
 
+
 # Use case diagram and use cases
-
-
 ## Use case diagram
 ![Use case diagram](UseCase_Diagram.png)
 
