@@ -618,11 +618,12 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  Precondition     | Warehouse exists |
 |  Post condition     | Operation in warehouse is performed correctly |
 |  Scenarios     |  |
-|  | **Nominal (UC6.1)**: show item info |
-|  | **Nominal (UC6.2)**: store new item |
-|  | **Nominal (UC6.3)**: remove existing item |
-|  | **Exception (UC6.4)**: update item position |
-|  | **Nominal (UC6.5)**: show space availability |
+|  | **Nominal (UC7.1)**: show item info |
+|  | **Nominal (UC7.2)**: store new item |
+|  | **Nominal (UC7.3)**: remove existing item |
+|  | **Exception (UC7.4)**: update item position |
+|  | **Nominal (UC7.5)**: show space availability |
+|  | **Nominal (UC7.6)**: show route to item |
 
 
 | **UC7.1** | *Shows item information*  |
@@ -674,9 +675,18 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  Pre-condition     | Map file exist, Worker is authenticated |
 |  Post-condition   | Space is showed|
 |  **Steps #**     | **Description** |
-|  1     | Worker asks for maps |
+|  1     | Worker asks for map |
+|  2     | EZWH loads the map |
+|  3     | EZWH shows the map with the types of spaces|
+
+| **UC7.6** | *Show route to item* |
+| ------------- |:-------------:| 
+|  Pre-condition     | Item has a position, Item is scanned, Worker is authenticated |
+|  Post-condition   | Routee is showed|
+|  **Steps #**     | **Description** |
+|  1     | Worker asks for route |
 |  2     | EZWH loads the maps |
-|  3     | EZWH shows the maps with the types of spaces|
+|  3     | EZWH shows the route in the map |
 
 ## Use case 8 (UC8): Manage Organisational Unit order
 | Actors Involved | Administrator, Organisational Unit |
