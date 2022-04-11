@@ -528,8 +528,6 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | ------------- |:-------------|
 | Actor ||
 || Administrator |
-|| Manager warehouse |
-|| Worker |
 |  Precondition     | Warehouse exists |
 |  Post condition     | Operation in warehouse is performed correctly |
 |  Scenarios     |  |
@@ -612,26 +610,24 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | Use case 7     |  |
 | ------------- |:-------------|
 | Actor ||
-|| Administrator |
-|| Manager warehouse |
 || Worker |
 |  Precondition     | Warehouse exists |
 |  Post condition     | Operation in warehouse is performed correctly |
 |  Scenarios     |  |
-|  | **Nominal (UC6.1)**: show items list |
+|  | **Nominal (UC6.1)**: show item info |
 |  | **Nominal (UC6.2)**: store new item |
 |  | **Nominal (UC6.3)**: remove existing item |
-|  | **Exception (UC6.4)**: update item status |
+|  | **Exception (UC6.4)**: update item position |
 |  | **Nominal (UC6.5)**: show space availability |
 
 
 | **UC7.1** | *Shows item list*  |
 | ------------- |:-------------:| 
-|  Pre-condition     | Item list exists, User is authenticathed |
-|  Post-condition   | list is showed |
+|  Pre-condition     | Item exists, Worker is authenticathed |
+|  Post-condition   | item informations is showed |
 |  **Steps #**     | **Description** |
-|  1     | User asks for the list |
-|  2     | EZWH loads and shows the list |
+|  1     | Worker scans the item |
+|  2     | EZWH shows the correspondent informations |
 
 | **UC7.2** | *Store new item* |
 | ------------- |:-------------:| 
