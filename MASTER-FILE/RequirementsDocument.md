@@ -639,8 +639,8 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  Post-condition   | Item position is saved in the list |
 |  **Steps #**     | **Description** |
 |  1     | Worker checks map file (UC5.4)|
-|  2     | Worker chooses a position |
-|  3     | Worker selects the item from the items list to add in that position|
+|  2     | Worker chooses a rack |
+|  3     | Worker selects the shelf|
 |  4     | EZWH asks for confirm |
 |  4     | Worker confirms the action to EZWH|
 |  5     | EZWH adds the position on the items list |
@@ -657,14 +657,14 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  5     | EZWH checks the position and frees the space in the map|
 |  6     | EZWH deletes the item from the items list|
 
-| **UC7.4** | *Update item status* |
+| **UC7.4** | *Update item position* |
 | ------------- |:-------------:| 
 |  Pre-condition     | Item is scanned. Worker is authenticated |
-|  Post-condition   | Item status is changed |
+|  Post-condition   | Item position is changed |
 |  **Steps #**     | **Description** |
 |  1     | Worker selects an item |
 |  2     | Worker checks the map |
-|  3     | Worker defines a new status for the item |
+|  3     | Worker defines a new position for the item |
 |  4     | EZWH asks for confirm the new status|
 |  5     | Worker confirms or rejects  |
 |  6     | EZWH updates item status |
