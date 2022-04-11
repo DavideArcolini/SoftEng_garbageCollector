@@ -533,13 +533,28 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  Precondition     | Warehouse exists |
 |  Post condition     | Operation in warehouse is performed correctly |
 |  Scenarios     |  |
-|  | **Nominal (UC6.1)**: load map in the system |
-|  | **Nominal (UC6.2)**: remove map from the system |
-|  | **Nominal (UC6.3)**: manage storage in the map |
-|  | **Exception (UC6.4)**: map constraints not satisfied, reload map | 
-|  | **Exception (UC6.5)**): map deletion failed |
+|  | **Nominal (UC6.1)**: create map in the system |
+|  | **Nominal (UC6.2)**: load map in the system |
+|  | **Nominal (UC6.3)**: remove map from the system |
+|  | **Nominal (UC6.4)**: update map in the system |
+|  | **Exception (UC6.5)**: map constraints not satisfied, reload map | 
+|  | **Exception (UC6.6)**): map deletion failed |
 
-| **UC6.1** | *Load map* |
+
+| **UC6.1** | *Create map* |
+| ------------- |:-------------:| 
+|  Precondition     | Administrator is authenticated |
+|  Post-condition   | Map is in the system |
+|  **Steps #**     | **Description** |
+|  1     | Administrator asks to create a map file |
+|  2     | EZWH load an empty map file plus blocks |
+|  3     | Administrator builds the map |
+|  4     | EZWH check constrains (type,size) |
+|  5     | EZWH asks confirm about the creation |
+|  6     | Administrator confirms or rejects the creation |
+|  7     | EZWH saves the map file |
+
+| **UC6.2** | *Load map* |
 | ------------- |:-------------:| 
 |  Precondition     | Map is not in the system, Administrator is authenticated |
 |  Post-condition   | Map is in the system |
@@ -550,7 +565,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  4     | Administrator confirms or rejects the changes |
 |  5     | EZWH saves the map file |
 
-| **UC6.2** | *Remove map* |
+| **UC6.3** | *Remove map* |
 | ------------- |:-------------:| 
 |  Precondition     | Map is in the system, Administrator is authenticated |
 |  Post-condition   | Map is not in the system anymore |
@@ -561,7 +576,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  4     | Administrator confirms or rejects the removal |
 |  5     | EZWH removes map file if administrator confirms |
 
-| **UC6.3** | *Update maps* | 
+| **UC6.4** | *Update maps* | 
 | ------------- |:-------------:| 
 |  Pre-condition     | Map is in the system, Administrator is authenticated |
 |  Post-condition   | Map is updated |
@@ -573,7 +588,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  5     | Administrator confirms or rejects the changes |
 |  6     | EZWH saves the map file |
 
-| **UC6.4** | *Map constraints not satisfied, reload map* |
+| **UC6.5** | *Map constraints not satisfied, reload map* |
 | ------------- |:-------------:| 
 |  Pre-condition     | Administrator is authenticated. Map  is not in the system |
 |  Post-condition   | No changes to the map environment are performed |
@@ -583,7 +598,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  3     | Map constraints are not satisfied |
 |  4     | EZWH asks to reload the map |
 
-| **UC6.5** | *Map deletion failed* |
+| **UC6.6** | *Map deletion failed* |
 | ------------- |:-------------:| 
 |  Pre-condition     | Map exist, Administrator is authenticated |
 |  Post-condition   | No changes to the map environment are performed |
