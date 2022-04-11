@@ -625,7 +625,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  | **Nominal (UC6.5)**: show space availability |
 
 
-| **UC7.1** | *Shows item list*  |
+| **UC7.1** | *Shows item information*  |
 | ------------- |:-------------:| 
 |  Pre-condition     | Item exists, Worker is authenticathed |
 |  Post-condition   | item informations is showed |
