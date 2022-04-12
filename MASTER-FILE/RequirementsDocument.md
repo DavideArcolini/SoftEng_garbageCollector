@@ -759,8 +759,7 @@ His wish is fulfilled by the software EZWH which drives him during the execution
 ![System diagram](System_Design.png)
 
 # Deployment Diagram 
-![deployment diagram](Deployment_Diagram.png)
-
+![deployment diagram](Deployment_Diagram.png )
 # Notes on development
 
 EZWarehouse is a system (including bar code reader, printer etc). However, for simplicity you are requested to 
