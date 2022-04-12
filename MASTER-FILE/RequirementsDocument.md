@@ -1,14 +1,14 @@
 
 # Requirements Document 
 
-Date: 22 march 2022
+Date: 13 April 2022
 
-Version: 0.0
+Version: 1.0
 
  
 | Version number | Change |
 | ----------------- |:-----------|
-| | | 
+| 1.0 | First upload | 
 
 
 # Contents
@@ -26,7 +26,6 @@ Version: 0.0
 - [Use case diagram and use cases](#use-case-diagram-and-use-cases)
 	+ [Use case diagram](#use-case-diagram)
 	+ [Use cases](#use-cases)
-    	+ [Relevant scenarios](#relevant-scenarios)
 - [Glossary](#glossary)
 - [System design](#system-design)
 - [Deployment diagram](#deployment-diagram)
@@ -53,30 +52,28 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | External | Have an interest in the success of a business but do not have a direct affiliation with the projects at an organization |
 | Role: Primary | Have the highest level of interest in the outcome of a project because they are directly affected by the outcome. They actively contribute to a project |
 | Role: Secondary | Help to complete projects, but on a lower, general level. These types of stakeholders help with administrative processes, financial, and legal matters. | 
-| Direct | Constantly involved with the activities of the project |
-| Indirect | More interested in the outcome and usability of the project rather than the process of completing it |
 
-| Stakeholder name  | Internal/External | Role | Direct/Indirect | Description | 
-| ----------------- |:-----------:|:-----------:|:-----------:|:-----------:|
-| **Manager** of the warehouse | Internal | Primary | Direct | It is in charge of the management of the warehouse by creating internal and external orders, managing maps, adding suppliers into the system supervising the availability of items inside the warehouse. |
-| **Suppliers** | External | Secondary | Indirect | At the foundation of the supply chain, provides items to the warehouse when the manager requests it. |
-| **Manager** of the company | External | Secondary | Indirect | CEO of the company the warehouse is a part of. |
-| **Project team** | External | Primary | Direct | Develop and maintain the warehouse EZWH software application. |
-| **Logistic transport unit** | External | Secondary | Indirect | Contributes to the supply chain by providing the necessary services to transport the items from the supplier to the warehouse. |
-| **Quality assurance team** | Internal | Primary | Direct | Applies specific tests on random items in order to assure the quality standard established. |
-| **Workers** | Internal | Primary | Direct | Work inside the warehouse, providing the management of items location and transport. |
-| **Organizational units** of the company | Internal | Secondary | Indirect | May request items stored in the warehouse by means of internal orders. |
-| **Financiers** | External | Secondary | Indirect | Bank or venture capital which finance the development and maintenance of the software. |
-| **Competitors** | External | - | - | Other software applications which compete with EZWH. |
-| **Customers** | External | Secondary | - | May request items stored in the warehouse by means of external orders. |
-| **Web service provider / App Store** | External | - | - | Provides the infrastructure to sell the application to the managers of the warehouses. |
-| **Analytics team** | Internal | Secondary | Direct | Provides useful data for better managing the project applications |
-| **Cloud services** | External | - | Indirect | Provides servers to store useful data. |
-| **Internal warehouse environment** | Internal | - | Direct |  |
-| **Pick-up area** | - | - | - |  |
-| **Government** | External | Secondary | Indirect | Law-related |
-| **Security** | External | Secondary | Direct | Provides security services to the overall management |
-| **System Administrator** | Internal | Primary | Direct | Provides IT management of the software. He is in charge of the overall IT system |
+| Stakeholder name  | Internal/External | Role | Description | 
+| ----------------- |:-----------:|:-----------:|:-----------:|
+| **Manager** of the warehouse | Internal | Primary | It is in charge of the management of the warehouse by creating internal and external orders, managing maps, adding suppliers into the system supervising the availability of items inside the warehouse. |
+| **Suppliers** | External | Secondary |  At the foundation of the supply chain, provides items to the warehouse when the manager requests it. |
+| **Manager** of the company | External | Secondary |  CEO of the company the warehouse is a part of. |
+| **Project team** | External | Primary | Develop and maintain the warehouse EZWH software application. |
+| **Logistic transport unit** | External | Secondary |  Contributes to the supply chain by providing the necessary services to transport the items from the supplier to the warehouse. |
+| **Quality assurance team** | Internal | Primary | Applies specific tests on random items in order to assure the quality standard established. |
+| **Workers** | Internal | Primary | Work inside the warehouse, providing the management of items location and transport. |
+| **Organizational units** of the company | Internal | Secondary |  May request items stored in the warehouse by means of internal orders. |
+| **Financiers** | External | Secondary |  Bank or venture capital which finance the development and maintenance of the software. |
+| **Competitors** | External | - | Other software applications which compete with EZWH. |
+| **Customers** | External | Secondary | May request items stored in the warehouse by means of external orders. |
+| **Web service provider / App Store** | External | - | Provides the infrastructure to sell the application to the managers of the warehouses. |
+| **Analytics team** | Internal | Secondary | Provides useful data for better managing the project applications |
+| **Cloud services** | External | - |  Provides servers to store useful data. |
+| **Internal warehouse environment** | Internal | - | Provides spaces where workers store items in stock |
+| **Pick-up area** | Internal | - | Provides a space where workers store items before delivering |
+| **Government** | External | Secondary |  Provides a set of laws to stick to |
+| **Security** | External | Secondary | Provides security services to the overall management |
+| **System Administrator** | Internal | Primary | Provides IT management of the software. He is in charge of the overall IT system |
 
 # Context Diagram and interfaces
 
@@ -86,23 +83,34 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 ## Interfaces
 | Actor | Logical Interface | Physical Interface  |
 | ------------- |:-------------:| :-----:|
-| **Warehouse** | Inventory, Supply Request | PC, Smartphone, Wifi connection |
-| **Workers** | View Inventory, Insert items in inventory, Remove Items, Move Items in another position of the map | Scanner gun, Smartphone, Internet connection, Bar code, QR code |
-| **Organizational Unit** | Inventory, Supply Request, Supply Management | PC, Smartphone, Internet Connection |
-| **Quality Officer** | Checklist for each item, List of items checked | Scanner Gun, QR Code, Bar Code, Smartphone, PC, internet connection |
-| **System Admin** | Accounts management | DBMS, PC, smartphone, internet connection |
-
+| **Warehouse Manager** | GUI | Screen keyboard mouse on PC, Smartphone, Internet connection |
+| **Workers** | GUI | Screen keyboard mouse on PC, Scanner gun, Smartphone, Internet connection, Bar code |
+| **Organizational Unit** | GUI | Screen keyboard mouse on PC, Smartphone, Internet Connection |
+| **Quality Officer** | GUI | Screen keyboard mouse on PC, Scanner gun, Smartphone, Internet connection, Bar code |
+| **System Admin** | GUI | Screen keyboard mouse on PC, Smartphone, Internet connection |
+| **Supplier** | send receive email (email gateway) | Internet connection |
 # Stories and personas
-\<A Persona is a realistic impersonation of an actor. Define here a few personas and describe in plain text how a persona interacts with the system>
 
-\<Persona is-an-instance-of actor>
 
-\<stories will be formalized later as scenarios in use cases>
+1. **Admin: Jody Stubbs**\
+Male, 32 y.o., not married, wrote his first script at the age of 9. Knows how to exit VIM. High responsability, high income.\
+As the system administrator of the EZWareHouse, Jody Stubbs is at the heart of the company. His role is crucial: he knows every users, because he created their accounts! He is responsable for the account management of all the users that can access the system and grants them the necessary permissions. Moreover, Jody is the reference man for every technical problem that can happen all over the user experience, from the Login to the smallest change of the databases. Sometimes, he feels a bit overwhelmed of all the workload he has to manage, but he loves what he does (and it's salary too) so he has soon forgotten about it.
 
-1. Admin
-2. Manager
-3. Worker
-4. Quality Officer: Andrew Miguel is a man in his fifties and he is the sole breadwinner in his family. Since his wife died his respunsabilities have been 	increased: he is the father of two twins daughters  who are 12 years old and he has to accompanies them to school after doing the workhouse in the morning.
+2. **Manager: Dave Grohl**\
+Male, 53 y.o., married with children, high income.\
+As a manager, Dave Grohl is responsible in the maintainance of one of the EZShop’s warehouse. In particular, he needs to manage the availability of items in stock (communicating with EZShop’s suppliers by sending an email, both for supply and refund requests), answer to Organisational Unit orders requests to confirm them. He also has to check the space availability in two separate maps, one for each of two areas of the warehouse (internal warehouse and pickup area).
+
+3. **Worker: Cale Henituse**\
+Young male worker, 23 y.o, with normal income.\
+Cale work as a warehouse employee with fixed 8-hour shifts, where three shifts are
+in the morning (5-12) while the other in the afternoon (2-10).
+Cale doesn't like his job, so he gets angry at every small problem. He mainly
+move item in the warehouse, to store or to retrieve them, and he would like to
+easily confirm his actions. He has also myopia, so has difficulty to select small
+objects on a screen, and gets annoyed if he couldn't go back
+
+4. **Quality Officer: Andrew Miguel**\
+Man in his fifties and he is the sole breadwinner in his family. Since his wife died his respunsabilities have been increased: he is the father of two twins daughters  who are 12 years old and he has to accompanies them to school after doing the workhouse in the morning.
 Then he goes to job although he doesn't like his role: he is a quality officer at the warehouse where he has to check the quality of the items received in order to approve or rejects them. He doesn't like doing this task since it requires a great care while examining the items received and he's aways afraid of making mistakes. He would like to feel a bit free from the respunsabilities.
 His wish is fulfilled by the software EZWH which drives him during the execution of quality test: he doesn't need to be very thorough anymore and he goes to job more serenely.
 
@@ -195,6 +203,7 @@ His wish is fulfilled by the software EZWH which drives him during the execution
 ## Use case diagram
 ![Use case diagram](UseCase_Diagram.png)
 
+## Use Cases
 ## Use case 1 (UC1): user management
 | Actors Involved |  |
 | ------------- |:-------------| 
@@ -747,11 +756,21 @@ His wish is fulfilled by the software EZWH which drives him during the execution
 ![class diagram](Class_Diagram.png)
 
 # System Design
-![System diagram](System_Design.jpeg)
+![System diagram](System_Design.png)
 
 # Deployment Diagram 
 ![deployment diagram](Deployment_Diagram.png)
 
+# Notes on development
+
+EZWarehouse is a system (including bar code reader, printer etc). However, for simplicity you are requested to 
+develop a software only application. Further, the system interacts with others such as suppliers or barcode readers.
+These external systems are avoided or simulated.
+
+ * Hardware components
+     * Printer: not available, print function not implemented
+     * Bar code reader: not available, bar code provided as string of digits to API functions.
 
 
-
+* Actors
+    * Supplier: no email with orders sent to it (orders only generated and stored internally) 
