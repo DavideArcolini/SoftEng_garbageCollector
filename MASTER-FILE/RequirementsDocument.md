@@ -78,7 +78,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 # Context Diagram and interfaces
 
 ## Context Diagram
-![context diagram](Context_Diagram.png)
+![context diagram](./Diagrams/Context_Diagram.png)
 
 ## Interfaces
 | Actor | Logical Interface | Physical Interface  |
@@ -201,7 +201,7 @@ His wish is fulfilled by the software EZWH which drives him during the execution
 
 # Use case diagram and use cases
 ## Use case diagram
-![Use case diagram](UseCase_Diagram.png)
+![Use case diagram](./Diagrams/UseCase_Diagram.png)
 
 ## Use Cases
 ## Use case 1 (UC1): user management
@@ -753,13 +753,13 @@ His wish is fulfilled by the software EZWH which drives him during the execution
 |  5 	 | EZWH marked internal order as COMPLETED |
 
 # Glossary
-![class diagram](Class_Diagram.png)
+![class diagram](./Diagrams/Class_Diagram.png)
 
 # System Design
-![System diagram](System_Design.png)
+![System diagram](./Diagrams/System_Design.png)
 
 # Deployment Diagram 
-![deployment diagram](Deployment_Diagram.png )
+![deployment diagram](./Diagrams/Deployment_Diagram.png )
 # Notes on development
 
 EZWarehouse is a system (including bar code reader, printer etc). However, for simplicity you are requested to 
