@@ -407,12 +407,11 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  3     | EZWH rejects the order |
 |  4     | EZWH suggests to update the suppliers list |
 
-
 ## Use case 4 (UC4): execute testing
 
 | Actors Involved|  |
 | ------------- |:-------------| 
-|| Quality assurance office |
+ Quality assurance office |
 | Precondition     | The items whose quality is to be checked are in the list of the received items, user is authenticated |  
 |  Post condition     | The items are put in the list of the items to be stored or in the refund list according to the result of the tests  |
 |  Scenarios     |  |
@@ -420,20 +419,18 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  | **Nominal (UC4.2)**: execute quality test |
 |  | **Nominal (UC4.3)**: tests approved and list of the items to be stored updated |
 |  | **Nominal (UC4.4)**: test rejected and refund list updated |
-|  | **Exception (UC4.5)**: the item's quality cannot be checked due to unknown value that the system doesn't know how to treat |
-| | **Variant (UC4.6)**: user asks EZWH to download the report |
-| | **Variant (UC4.7)**: user asks EZWH to print the report |
+|  | **Exception (UC4.5)**: no test available for the item selected |
 
 | **UC4.1** | *Select test for specific item* |
 | ------------- |:-------------:| 
 | Pre-condition |  The items to be checked are in the received item's list , user is authenticated |
 | Post-condition |  The test to be performed on the items are selected |
 | **Steps #**        | **Description**   |
-|  1     | User asks for items list whose quality is to be checked | 
+|  1     | User asks for quality check | 
 |  2    | EZWH shows the list of the items received and selects randomly an item for the quality control|  
 |  3    | User confirms the item to be checked   |
 |  4    | EZWH selects the tests to be performed according to the type of the item and displays them|
-|  6    | User performs the tests |
+|  5    | User performs or skips the test |
 
 
 | **UC4.2** | *Execute quality test*  |
@@ -452,10 +449,9 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | Pre-condition |  The test's result is positive |
 | Post-condition |  The items are put in the list of the items to be stored  |
 | **Steps #**        |  **Description**   |
-|  1     | User asks EZWH to move the items that passed the tests to the list of confirmed orders |  
-|  2     | EZWH asks for confirmation |
+|  1     | EZWH asks for sending the items in order to be stored in the warehouse |
 |  3     | User confirms the operation |
-|  4     | EZWH moves the items that passed the tests to the list of confirmed orders |
+|  4     | EZWH moves the items that passed the tests to the list of items to be stored in the warehouse |
 
 
 | **UC4.4** | *Discard order for rejected items* |
@@ -463,46 +459,58 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | Pre-condition |  Test's failure , user is authenticated |
 | Post-condition |  The items are put in the refund list |
 | **Steps #**        |  **Description**   |
-|  1     | User asks EZWH to move the items that failed the tests to the list of refund orders|  
-|  3     | User asks for confirmation |
-|  3     | User confirms the operation |
-|  4     | EZWH moves the items that failed the tests to the list of the refund orders|
+|  1     | EZWH asks for adding the items to the list of orders to be discarted |
+|  2     | User confirms the operation |
+|  3     | EZWH moves the rejected items to the list of orders to be discarded  |
 
-| **UC4.5** | *Unknown value for a test: quality check failed* |
+| **UC4.5** | *no test available for the item selected* |
 | ------------- |:-------------:| 
-| Pre-condition | Item is in the received orders list. Type of value unknown. |
+| Pre-condition | Item is in the received orders list. No test for the item available. |
 | Post-condition | Quality test is not performed |
 | **Steps #**        |  **Description**   |
-|  1     | User asks to run the tests |  
-|  2     | EZWH fails to recognize the value provided for the test |
-|  3     | Quality test is not performed |
-|  4     | EZWH suggests to retry again |
+|  1     | User confirms the item to be checked |  
+|  2     | EZWH retrivies no test for the item selected |
+|  3     | EZWH provides a warning suggesting to create a new test for the item |
+
 
 ### Use case 5 (UC5): manage testing
 | Actors Involved        | Quality assurance office |
 | ------------- |:-------------| 
 |  Precondition     | Quality officer is authenticated and the system is on |
 |  Post condition     | test database is in a reliable state | 
-|  Scenarios   ||  
-| | **Nominal (UC5.1):** create a new test |
-| | **Nominal (UC5.2)** delete an existing test |
-| | **Nominal (UC5.3)** update an existing test |
+|  Scenarios     
+| | Nominal (UC5.1): create a new test |
+| | Nominal (UC5.2): load a test |
+| | Nominal (UC5.3) delete an existing test |
+| | Nominal (UC5.4) update an existing test |
+| | Exception (UC5.5) Test file's constrains not satisfied |
 
 
 | UC5.1 | *Create a new test* |
 | ------------- |:-------------:| 
-|  Precondition     | the test database is reachable and the system is on.  |
-|  Post condition     | a new test is created and the test list is updated |
-| Step#        | Description  |
+  |  Precondition     | Quality officer is authenticated, the system is on|
+|  Post-condition   | a new test is created |
+|  Steps #     | Description |
 |  1     | User asks to create a new test |
-|  2  	 | EZWH asks to load a file for the tests |
-|  3  	 | User loads a file for the tests |
-|  4     | EZWH asks the user to fill the test details |
-|  5     | User fills test details and confirms them | 
-|  6     | EZWH saves the new test in the database |
+|  2     | EZWH load an empty test file |
+|  3     | User fills in the test details |
+|  4     | EZWH asks for confirmation |
+|  5     | User confirms the creation of the new test |
+|  6     | EZWH saves the test details |
+
+| UC5.2 | *Load a test* |
+| ------------- |:-------------:| 
+|  Precondition     | Quality officer is authenticated, the system is on  |
+|  Post-condition   | a new test is in in the databse |
+|  Steps #     | Description |
+|  1     | Administrator chooses and loads a test file|
+|  2     | EZWH controls type and file size |
+|  3     | EZWH asks for confirmation |
+|  4     | User confirms the operation |
+|  5     | EZWH saves the new test |
 
 
-| UC5.2 | *Delete test* |
+| UC5.3 | *Delete test* |
 | ------------- |:-------------:| 
 |  Precondition     | the test to be deleted is in the list and the system is on |
 |  Post condition     | Test is deleted |
@@ -511,10 +519,12 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  2     | EZWH retrivies the test list |
 |  3     | User selects the test to be deleted |
 |  4     | EZWH asks for confirmation |
+|  5     | User confirms the operation |
+|  6     | EZWH remove the test selected|
 
 
 
-| UC5.5 | *Update test* |
+| UC5.4 | *Update test* |
 | ------------- |:-------------:| 
 |  Precondition     | the test to be updated is in the list and the system is on |
 |  Post condition     | Ttest is updated |
@@ -525,6 +535,18 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 |  4     | EZWH shows the details of the test|
 |  5     | User updates the test |
 |  6     | EZWH asks for confirmation |
+|  7     | User confirms the operation |
+|  8     | EZWH saves the changes|
+
+| UC5.5 | *Test file's constrains not satisfied* |
+| ------------- |:-------------:| 
+|  Pre-condition     |  Quality officer is authenticated, the system is on |
+|  Post-condition   | No changes to the test list are performed |
+|  Steps #     | Description |
+|  1     | User loads a new test file |
+|  2     | EZWH checks test file's constraints |
+|  3     | Test file constraints are not satisfied |
+|  4     | EZWH asks to reload the test file |
 
 
 ## Use case 6 (UC6): map management
