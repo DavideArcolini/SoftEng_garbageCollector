@@ -102,7 +102,9 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 1. Admin
 2. Manager
 3. Worker
-4. Quality Officer
+4. Quality Officer: Andrew Miguel is a man in his fifties and he is the sole breadwinner in his family. Since his wife died his respunsabilities have been 	increased: he is the father of two twins daughters  who are 12 years old and he has to accompanies them to school after doing the workhouse in the morning.
+Then he goes to job although he doesn't like his role: he is a quality officer at the warehouse where he has to check the quality of the items received in order to approve or rejects them. He doesn't like doing this task since it requires a great care while examining the items received and he's aways afraid of making mistakes. He would like to feel a bit free from the respunsabilities.
+His wish is fulfilled by the software EZWH which drives him during the execution of quality test: he doesn't need to be very thorough anymore and he goes to job more serenely.
 
 
 # Functional and non functional requirements
