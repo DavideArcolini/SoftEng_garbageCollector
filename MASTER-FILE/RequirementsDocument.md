@@ -76,7 +76,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | **Pick-up area** | - | - | - |  |
 | **Government** | External | Secondary | Indirect | Law-related |
 | **Security** | External | Secondary | Direct | Provides security services to the overall management |
-| **Admin** | Internal | - | Direct | Provides IT management of the app |
+| **System Administrator** | Internal | Primary | Direct | Provides IT management of the software. He is in charge of the overall IT system |
 
 # Context Diagram and interfaces
 

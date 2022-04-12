@@ -1,0 +1,3 @@
+Jody Stubbs: male, 32 y.o., not married, wrote his first script at the age of 9. Knows how to exit VIM. High responsability, high income. 
+
+As the system administrator of the EZWareHouse, Jody Stubbs is at the heart of the company. It's role is crucial: he knows every users, because he created their accounts! He is responsable for the account management of all the users that can access the system and grants them the necessary permissions. Moreover, Jody is the reference man for every technical problem that can happen all over the user experience, from the Login to the smallest change of the databases. Sometimes, he feels a bit overwhelmed of all the workload he has to manage, but he loves what he does (and it's salary too) so he has soon forgotten about it.
