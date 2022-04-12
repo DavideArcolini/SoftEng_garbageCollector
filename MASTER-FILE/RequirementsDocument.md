@@ -443,7 +443,7 @@ EZWH (EaSy WareHouse) is a software application to support the management of a w
 | **Steps #**        |  **Description**   |
 |  1     | User asks to run the tests |  
 |  2     | EZWH runs the tests by comparing the values filled in with the specs required for the item|
-|  3 	 | EZWH shows the report |
+|  3    | EZWH shows the report |
 
 
 
