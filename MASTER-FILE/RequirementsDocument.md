@@ -163,6 +163,20 @@ His wish is fulfilled by the software EZWH which drives him during the execution
 | --> FR 8.1 | Receive item from warehouse |
 | --> FR 8.2 | Set item status as READY |	
 
+### Access right, actor vs function
+
+| Function | Administrator | Warehouse Manager | Worker | Quality Officer|
+| -------- | ----- | ------------ | ------- | ----- |
+| FR1 | yes | no | no | no |
+| FR2 | yes | yes | yes | yes |
+| FR3 | yes | yes | no | no |
+| FR4 | yes | yes | no | yes |
+| FR5 | yes | yes | no | yes |
+| FR6.1 | yes | yes | no | no |
+| FR6.2 | yes | yes | yes | no |
+| FR7 | yes | yes | no | no |
+| FR8.1 | yes | yes | yes | no |
+| FR8.2 | yes | yes | no | no |
 
 
 ## Non Functional Requirements
