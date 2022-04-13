@@ -320,7 +320,7 @@ His wish is fulfilled by the software EZWH which drives him during the execution
 
 
 
-## Use case 3 (UC3): Warehouse management
+## Use case 3 (UC3): Warehouse orders management
 | Actors Involved | Administrator, Manager |
 | ------------- |:-------------|
 |  Precondition     | System is ON. List of suppliers is available. Items database is reachable and in a reliable state. Items exists |
