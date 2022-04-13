@@ -1,3 +1,16 @@
+# Graphical User Interface Prototype  
+
+**Authors**:
+ * Riccardo Medina
+ * Simran Singh
+ * Davide Arcolini
+ * Giuseppe Atanasio
+
+**Date**: 13 April 2022
+
+**Version**: 1.0
+
+
 # **UC1 user management**
 ## UC1.1 Creation of a new user
 ![UC1.1.png](./GUI_images/UC1/UC1.1.png)
