@@ -1,0 +1,22 @@
+@startuml
+package it.polito.ezshop.exceptions {
+    class "Exceptions" as E
+
+    notLoggedInException -down-|> E
+    unauthorizedAccessException -down-|> E
+    internalServerErrorException -down--|> E
+    serviceUnavailableException -down--|> E
+    userConflictException -down---|> E
+
+    nonExistingObjectException -up--|> E
+    
+    volumeConstraintException -up-|> E
+    WeightConstraintException -up-|> E
+    userConstraintException -up--|> E
+
+    invalidRequestBodyException -down--|> E
+    invalidOrderIDException -down-|> E
+    invalidObjectIDException -down-|> E
+    invalidOrderDateException -down--|> E  
+}
+@enduml
