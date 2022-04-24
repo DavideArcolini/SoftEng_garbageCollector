@@ -533,19 +533,127 @@ deactivate EZWarehouse
 RICCARDO
 ## **SC3.1**: *Restock Order of SKU S issued by quantity*
 ```plantuml
-
+actor Manager 
+participant EzWarehouse
+participant DataImpl
+participant RestockOrder
+participant DatabaseHelper
+note over EzWarehouse: EzWarehouse contains Interface and GUI
+Manager->EzWarehouse: Insert product
+activate EzWarehouse
+Manager->EzWarehouse: Insert quantity
+EzWarehouse->DataImpl: getSuppliers()
+activate DataImpl
+DataImpl->EzWarehouse: array of objects 
+deactivate DataImpl
+Manager->EzWarehouse: Select supplier
+Manager->EzWarehouse: Confirm data
+EzWarehouse->DataImpl: createRestockOrder(issueDate, products, supplierID)
+note over EzWarehouse: issueDate is autofilled by software
+activate DataImpl
+DataImpl->RestockOrder: RestockOrder(issueDate, products, supplierID)
+RestockOrder->DataImpl: object RestockOrder
+DataImpl->DatabaseHelper: storeRestockOrder(object RestockOrder)
+activate DatabaseHelper
+DatabaseHelper->DataImpl: void
+deactivate DatabaseHelper
+DataImpl->EzWarehouse: void
+deactivate DataImpl
+EzWarehouse->Manager: Confirmation of the insertion
+deactivate EzWarehouse
 ```
 ## **SC4.1**: *Create user and define rights*
 ```plantuml
-
+actor Admin 
+participant EzWarehouse
+participant DataImpl
+participant User
+participant DatabaseHelper
+note over EzWarehouse: EzWarehouse contains Interface and GUI
+Admin->EzWarehouse: Insert ID
+activate EzWarehouse
+Admin->EzWarehouse: Insert name
+Admin->EzWarehouse: Insert surname
+Admin->EzWarehouse: Insert username
+Admin->EzWarehouse: Insert type
+Admin->EzWarehouse: Insert permission
+Admin->EzWarehouse: Confirm data
+EzWarehouse->DataImpl: createUser(ID,username,name,surname,type)
+activate DataImpl
+DataImpl->User: User(ID,username,name,surname,type)
+activate User
+User->DataImpl: object User
+deactivate User
+DataImpl->DatabaseHelper: storeUser(object User)
+activate DatabaseHelper
+DatabaseHelper->DataImpl: void
+deactivate DatabaseHelper
+DataImpl->EzWarehouse: void
+deactivate DataImpl
+EzWarehouse->Admin: confirmation of the insertion
+deactivate EzWarehouse
 ```
 ## **SC5.1.1**: *Record restock order arrival*
 ```plantuml
-
+actor Clerk 
+participant EzWarehouse
+participant DataImpl
+participant SKUItem
+participant DatabaseHelper
+note over EzWarehouse: EzWarehouse contains Interface and GUI
+Clerk->EzWarehouse: Insert Item
+activate EzWarehouse
+EzWarehouse->DataImpl:   createSkuItem(RFID, SKUID, DateOfStock)
+note over EzWarehouse: DateOfStock is autofilled by software
+activate DataImpl
+DataImpl->SKUItem: SkuItem(RFID, SKUID, DateOfStock)
+activate SKUItem
+SKUItem->DataImpl: object SkuItem
+deactivate SKUItem
+DataImpl->DatabaseHelper: storeSKUItem(object SKUItem)
+activate DatabaseHelper
+DatabaseHelper->DataImpl: void
+deactivate DatabaseHelper
+DataImpl->EzWarehouse: void
+deactivate DataImpl
+note over EzWarehouse: Repeat for all items
+EzWarehouse->Clerk: Confirmation of the insertion
+deactivate EzWarehouse
 ```
 ## **SC5.2.1**: *Record positive test results of all SKU items of a RestockOrder*
 ```plantuml
-
+actor QualityEmployee 
+participant EzWarehouse
+participant DataImpl
+participant TestResult
+participant DatabaseHelper
+note over EzWarehouse: EzWarehouse contains Interface and GUI
+QualityEmployee ->EzWarehouse: Choose to test
+activate EzWarehouse
+EzWarehouse->DataImpl: getTests()
+activate DataImpl
+DataImpl->EzWarehouse: array of objects Test
+deactivate DataImpl
+QualityEmployee ->EzWarehouse: Select test and give result
+EzWarehouse->DataImpl: createTestResult(idTestDescriptor, Date, Result) : void
+activate DataImpl
+DataImpl->TestResult: TestResult(idTestDescriptor, Date, Result)
+activate TestResult
+TestResult->DataImpl: Object TestResult
+deactivate TestResult
+DataImpl->DatabaseHelper: storeTestResult(object TestResult)
+activate DatabaseHelper
+DatabaseHelper->DataImpl: void
+deactivate DatabaseHelper
+note over EzWarehouse: Repeat for all test
+DataImpl->DatabaseHelper: storeRestockOrder(object RestockOrder)
+activate DatabaseHelper
+DatabaseHelper->DataImpl: void
+deactivate DatabaseHelper
+DataImpl->EzWarehouse: void
+deactivate DataImpl
+EzWarehouse->QualityEmployee : Confirmation of the operations
+deactivate EzWarehouse
 ```
 SIMRAN
 ## **SC5.3.1**: *Stock all SKU items of a RO*
