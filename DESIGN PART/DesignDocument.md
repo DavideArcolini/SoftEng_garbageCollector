@@ -144,7 +144,7 @@ package it.polito.ezwh.controller{
 
 ```plantuml
 package it.polito.ezwh.model {
-  left to right direction
+  top to bottom direction
 
   class DatabaseHelper {
     - databaseName: String
@@ -434,22 +434,6 @@ package it.polito.ezwh.model {
   }
 }
 
-User -- "*" Item : sells
-User -- "*" RestockOrder
-RestockOrder -- "*" Item : skuid, description, price
-RestockOrder -- "0..1" ReturnOrder : refers
-RestockOrder -- "*" SKUItem :skuid, rfid
-SKUItem "*" -- "0..1" ReturnOrder : params
-SKU -- "*" SKUItem
-SKU -- "*" Item : corresponds to 
-SKU "*" -- "*" TestDescriptor : SKUid
-TestDescriptor -- "*" TestResult
-SKU "1" -- "1" Position: must be placed in
-InternalOrder -- "*" SKU: skuid, description, price
-InternalOrder "0..1" -- "*" SKUItem: :skuid, rfid
-SKUItem -- "*" TestResult
-SKUItem "*" -- "0..1" Position
-User -- "*" InternalOrder : customerID
 enumState "1"-- "1" RestockOrder
 internalOrderState "1"--"1" InternalOrder
 Qty_per_Item -- "*" Item
@@ -609,7 +593,10 @@ PEPPE
 
 ```plantuml
 actor Manager
-
+Manager -> GUI : insert name
+Manager -> GUI : insert SKU id
+Manager -> GUI : insert procedure description
+Manager -> GUI : confirm inserted data
 GUI -> DataImpl : createTestDescriptor(name, procedureDescription, idSKU)
 activate DataImpl
 DataImpl -> TestDescriptor : TestDescriptor(name, procedureDescription, idSKU) 
@@ -620,7 +607,6 @@ DataImpl -> DatabaseHelper : storeTestDescriptor(test)
 activate DatabaseHelper
 DataImpl <- DatabaseHelper : void
 deactivate DatabaseHelper
-EzWarehouse <- DataImpl : void
+GUI <- DataImpl : void
 deactivate DataImpl
-deactivate EzWarehouse
 ```
