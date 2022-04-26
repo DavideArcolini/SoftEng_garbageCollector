@@ -59,24 +59,25 @@ package it.polito.ezwh.data {
     reset() : void
     
     -- SKU Management --
-    getSKUs() : Array
-    getSKUByID(ID : String) : Object
+    getSKUs() : Array<SKU>
+    getSKUByID(ID : Integer) : SKU
     createSKU(description: String, weight : Integer , volume: Integer, notes : String, price : Float, availableQuantity : Integer) : Void
     updateSKUDimensions(ID : String, weight : Integer, volume : Integer) : void
+    deleteSKU(ID: Integer): void
     
     -- SKUItem Management --
     getSKUItems() : Array
-    getBySkuID(ID: String) : Object
-    getByRFID(RFID: String) : Object
+    getSKUItemBySkuID(SKUID: Integer) : Array<SKUItem>
+    getSKUItemByRFID(RFID: String) : Object
     createSkuItem(RFID: String, SKUID: Integer, DateOfStock: Date) : void
     modifySkuItem(newRFID: String, newAvailable: Boolean, newDateOfStock: Date) : void
     deleteSkuItem(RFID: String) : void
 
     -- TestResult Management --
-    getTests() : Array
-    getTestByID(id : Integer) : Object
-    createTestResult(idTestDescriptor : Integer, Date : String, Result : boolean) : void
-    modifyTestResult(newTestDescriptor : Integer, newDate : String, newResult : boolean) : void
+    getTestResults() : Array
+    getTestResultByID(id : Integer) : Object
+    createTestResult(idTestDescriptor : Integer, date : Date, Result : boolean) : void
+    modifyTestResult(newTestDescriptor : Integer, newDate : Date, newResult : boolean) : void
     deleteTestResult(id : Integer) : void
     
     -- Position Management --
@@ -88,7 +89,7 @@ package it.polito.ezwh.data {
     
     -- Test Descriptor Management --
     getTestDescriptors() : Array
-    getTestDescriptorByID(id : Integer) : Object
+    getTestDescriptorByID(ID : Integer) : Object
     createTestDescriptor(name : String, procedureDescription : String, idSKU : Integer) : void
     modifyTestDescriptor(newName : String, newProcedureDescription : String, newIdSKU : Integer) : void
     deleteTestDescriptor(id : Integer) : void
@@ -103,15 +104,15 @@ package it.polito.ezwh.data {
     deleteUser(username : String, type : String) : void
     
     -- Restock Order Management --
-    getRestockOrders(void) : Array
-    getRestockOrdersIssued(void) : Array
-    getRestockOrderByID(ID: String) : Object
-    getReturnItems(ID: String) : Array
-    createRestockOrder(issueDate : Date, products : List, supplierID : Integer) : void
-    modifyState( newState : Integer) : void
-    addItems(items : List) : void
+    getRestockOrders() : Array
+    getRestockOrdersIssued() : Array
+    getRestockOrderByID(ID: Integer) : Object
+    getRestockOrderReturnItems(ID: Integer) : Array
+    createRestockOrder(issueDate : Date, products : Array, supplierID : Integer) : void
+    modifyRestockOrderState( newState : Integer) : void
+    addRestockOrderItems(items : List) : void
     addTransportNote( transportNote : String ) : void
-    deleteRestockOrder(ID : String) : void
+    deleteRestockOrder(ID : Integer) : void
 
     -- Return Order Management --
     getReturnOrders() : Array
@@ -130,10 +131,10 @@ package it.polito.ezwh.data {
     
     -- Item Management --
     getItems() : Array
-    getItemByID(ID: String) : Object
-    createItem(description : string, price : Integer, SKUId: String, supplierId : String) : void
+    getItemByID(ID: Integer) : Object
+    createItem(description : string, price : Integer, SKUId: Integer, supplierId : Integer) : void
     modifyItem(description : string, price : Integer) : void
-    deleteItem(ID : String) : void
+    deleteItem(ID : Integer) : void
 
   }
 
@@ -200,6 +201,7 @@ package it.polito.ezwh.model {
     + surname: String
     + username: String
     + type: userType
+    + email: String
     
     -- Getters --
     + getID(): Integer
@@ -207,6 +209,7 @@ package it.polito.ezwh.model {
     + getSurname(): String
     + getUsername(): String
     + getUserType(): userType
+    + getEmail(): String
     
     -- Setters --
     + setID(id: Integer): Void
@@ -214,20 +217,27 @@ package it.polito.ezwh.model {
     + setSurname(surname: String): Void
     + setUsername(username: String): Void
     + setUserType(usertype: userType): Void
+    + setEmail(email: String): Void
   }
 
   class Item {
     + ID : String
     + description : String
     + price : Float
+    + SKUId: Integer
+    + supplierID: Integer
     -- Getters --
     + getID(): String
     + getDescription(): String
     + getPrice(): Float
+    + getSKUId(): Integer
+    + getSupplierID(): Integer
     -- Setters --
     + setID(id: String): Void
     + setDescription(description: String): Void
     + setPrice(price: Float): Void
+    + setSKUId(SkuID: Integer): Void
+    + setSupplierID(supplierID): Void
   }
 
   enum enumState {
@@ -241,62 +251,86 @@ package it.polito.ezwh.model {
   }
 
   class RestockOrder {
-    + ID : String
+    + ID : Integer
     + issueDate: Date
     + state: enumState
     + products : Array
+    + supplierID: Integer
+    + transportNote: TrasportNote
+    + skuItems: Array
+    + returnItems: Array
     -- Getters --
     + getID(): String
     + getIssueDate(): Date
     + getState(): enumState
     + getProducts() : Array
+    + getTransportNote(): TransportNote
+    + getSupplierID() : Integer
+    + getSkuItems() : Array
+    + getReturnItems(): Array
     -- Setters --
-    + setID(id: String): Void
+    + setID(id: Integer): Void
     + setIssueDate(issueDate: Date): Void
     + setState(state: enumState): Void
     + setProducts(products : Array) : Void
+    + setSupplierID(supplierID: Integer): Void
+    + setSkuItems(skuItems: Array): Void
+    + setReturnItems(skuItems: Array): Void
+    
+    
   }
 
   class ReturnOrder {
-    + ID : String
+    + ID : Integer
     + returnDate: Date
     + products : Array
+    + restockOrderID: Integer
     -- Getters --
-    + getID(): String
+    + getID(): Integer
     + getReturnDate(): Date
     + getProducts() : Array
+    + getRestockOrderID(): Integer
     -- Setters --
-    + setID(id: String): Void
+    + setID(id: Integer): Void
     + setReturnDate(returnDate: Date): Void
     + setProducts(products : Array) : Void
+    + setRestockOrderID(restockOrderID: Integer): Void
   }
 
   class SKU {
-    + ID : String
+    + ID : Integer
     + description : String
     + weight: Integer
     + volume : Integer
     + price : Float
     + notes : String
     + availableQuantity : Integer
+    + position: String 
+    + testDescriptors : Array<Integer>
     --
-    + getID() : Object
+    + getID() : Integer
     + getDescription(): String
     + getWeight() : Integer
     + getVolume() : Integer
     + getPrice() : Float
     + getNotes() : String
-    + isAvailable() : boolean
+    + getAvailableQuantity : Integer
+    + getPosition(): String
+    + getTestDescriptors() : Array<Integer>
     --
     + setWeight(weight : Integer) : void
     + setVolume(volume : Integer) : void
+    + setDescription(description: String): void
+    + setAvailableQuantity(availableQuantity: Integer) : void
+    + setNotes(notes: String): void
+    + setTestDescriptors(testDescriptors: Array<Integer>): void
   }
 
   class SKUItem {
     + RFID : String
     + Available : boolean
     + DateOfStock : String
-    + SKUID: Integer
+    + SKUID: Integer 
     --
     + getRFID() : Object
     + isAvailable() : boolean
@@ -325,6 +359,7 @@ package it.polito.ezwh.model {
   }
 
   class TestResult {
+    + ID: Integer
     + RFID : String
     + idTestDescriptor: Integer
     + date : Date
@@ -335,6 +370,7 @@ package it.polito.ezwh.model {
     getDate(): String
     getResult(): boolean
     --
+    + setRFID(RFID: String): void
     + setDate(date : String) : void
     + setResult(result: boolean): void
   }
@@ -368,6 +404,8 @@ package it.polito.ezwh.model {
     + setOccupied_Volume(occupiedVolume : Integer) : void
       
   }
+  
+ 
 
   enum internalOrderState {
     ISSUED
@@ -381,7 +419,7 @@ package it.polito.ezwh.model {
     ID : Integer
     issueDate : Date
     state: internalOrderState
-    customedID : Integer
+    customerID : Integer
     products : Array
      -- Getters --
     + getID(): String
