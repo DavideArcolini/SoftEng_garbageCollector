@@ -1,12 +1,10 @@
-# Design Document 
+# Design Document
 
-
-Authors: 
+Authors:
 
 Date:
 
 Version:
-
 
 # Contents
 
@@ -23,22 +21,27 @@ Version:
 
 The design must satisfy the Official Requirements document, notably functional and non functional requirements, and be consistent with the APIs
 
-# High level design 
+# High level design
+
 ## Package Diagram
 
 ```plantuml
-package it.polito.ezwh as EzWh
-package it.polito.ezwh.data as EzWhData
+database it.polito.ezwh.data as EzWhData
 package it.polito.ezwh.exceptions as EzWhExceptions
 package it.polito.ezwh.model as EzWhModel
-package it.polito.ezwh.gui as GUI
+package it.polito.ezwh.gui as EZWhView
+package it.polito.ezwh.controller as EZWhController
 
-EzWh <-left- GUI
-EzWh <-- EzWhModel
-EzWhData <-- EzWhModel
-EzWhExceptions <-left- EzWhModel
-EzWhData <-- GUI
+EzWhData -- EzWhModel
+EzWhExceptions -left- EzWhModel
+EZWhView -- EZWhController
+EzWhModel -- EZWhController
 ```
+
+We have implemented a MVC architecture:
+- **EzWhModel**: manage the data of the application;
+- **EZWhView**: manage the DOM and the interface of the application. We consider this package for granted;
+- **EZWhController**: manage the interactions between model and view exploiting event listener and callbacks from the view.
 
 <discuss architectural styles used, if any>
 <report package diagram, if needed>
@@ -49,50 +52,47 @@ We use a MVC pattern because the user of EZWH application can modify data and, c
 
 <for each package in high level design, report class diagram. Each class should detail attributes and operations>
 
-## it.polito.ezwh.data and it.polito.ezwh.model
+## it.polito.ezwh.controller
 
 ```plantuml
-package it.polito.ezwh.data {
-  top to bottom direction
-
+package it.polito.ezwh.controller{
   interface "DataImpl" as API{
     reset() : void
     
     -- SKU Management --
-    getSKUs() : Array<SKU>
-    getSKUByID(ID : Integer) : SKU
-    createSKU(description: String, weight : Integer , volume: Integer, notes : String, price : Float, availableQuantity : Integer) : Void
-    updateSKUDimensions(ID : String, weight : Integer, volume : Integer) : void
-    deleteSKU(ID: Integer): void
+    getSKUs() : Array
+    getSKUByID(ID : String) : Object
+    createSKU(description: String, weight : number , volume: number, notes : String, price : number, availableQuantity : number) : Void
+    updateSKUDimensions(ID : String, weight : number, volume : number) : void
     
     -- SKUItem Management --
     getSKUItems() : Array
-    getSKUItemBySkuID(SKUID: Integer) : Array<SKUItem>
-    getSKUItemByRFID(RFID: String) : Object
-    createSkuItem(RFID: String, SKUID: Integer, DateOfStock: Date) : void
+    getBySkuID(ID: String) : Object
+    getByRFID(RFID: String) : Object
+    createSkuItem(RFID: String, SKUID: number, DateOfStock: Date) : void
     modifySkuItem(newRFID: String, newAvailable: Boolean, newDateOfStock: Date) : void
     deleteSkuItem(RFID: String) : void
 
     -- TestResult Management --
-    getTestResults() : Array
-    getTestResultByID(id : Integer) : Object
-    createTestResult(idTestDescriptor : Integer, date : Date, Result : boolean) : void
-    modifyTestResult(newTestDescriptor : Integer, newDate : Date, newResult : boolean) : void
-    deleteTestResult(id : Integer) : void
+    getTests() : Array
+    getTestByRFID(RFID : number) : Object
+    createTestResult(idTestDescriptor : number, Date : String, Result : boolean) : void
+    modifyTestResult(newTestDescriptor : number, newDate : String, newResult : boolean) : void
+    deleteTestResult(id : number) : void
     
     -- Position Management --
     getPositions() : Array
-    createPosition(positionID : String, aisleID : String, row : String, col : String, maxWeight : Integer, maxVolume : Integer, occupiedWeight=0,occupiedVolume=0) : void
-    modifyPosition(newAisleID : String, newRow : String, newCol : String, newMaxWeight : Integer, newMaxVolume : Integer, newOccupiedWeight : Integer, newOccupiedVolume : Integer) : void
+    createPosition(positionID : String, aisleID : String, row : String, col : String, maxWeight : number, maxVolume : number, occupiedWeight=0,occupiedVolume=0) : void
+    modifyPosition(newAisleID : String, newRow : String, newCol : String, newMaxWeight : number, newMaxVolume : number, newOccupiedWeight : number, newOccupiedVolume : number) : void
     updatePID(newPositionId : String) : void
     deletePosition(positionID : String) : void
     
     -- Test Descriptor Management --
     getTestDescriptors() : Array
-    getTestDescriptorByID(ID : Integer) : Object
-    createTestDescriptor(name : String, procedureDescription : String, idSKU : Integer) : void
-    modifyTestDescriptor(newName : String, newProcedureDescription : String, newIdSKU : Integer) : void
-    deleteTestDescriptor(id : Integer) : void
+    getTestDescriptorByID(id : number) : Object
+    createTestDescriptor(name : String, procedureDescription : String, idSKU : number) : void
+    modifyTestDescriptor(newName : String, newProcedureDescription : String, newIdSKU : number) : void
+    deleteTestDescriptor(id : number) : void
 
     -- User Management --
     getUserByID(ID : String) : Object
@@ -104,44 +104,47 @@ package it.polito.ezwh.data {
     deleteUser(username : String, type : String) : void
     
     -- Restock Order Management --
-    getRestockOrders() : Array
-    getRestockOrdersIssued() : Array
-    getRestockOrderByID(ID: Integer) : Object
-    getRestockOrderReturnItems(ID: Integer) : Array
-    createRestockOrder(issueDate : Date, products : Array, supplierID : Integer) : void
-    modifyRestockOrderState( newState : Integer) : void
-    addRestockOrderItems(items : List) : void
+    getRestockOrders(void) : Array
+    getRestockOrdersIssued(void) : Array
+    getRestockOrderByID(ID: String) : Object
+    getReturnItems(ID: String) : Array
+    createRestockOrder(issueDate : Date, products : Array, supplierID : number) : void
+    modifyState( newState : number) : void
+    addItems(items : List) : void
     addTransportNote( transportNote : String ) : void
-    deleteRestockOrder(ID : Integer) : void
+    deleteRestockOrder(ID : String) : void
 
     -- Return Order Management --
     getReturnOrders() : Array
-    getReturnOrder(id : Integer) : Object
-    createReturnOrder(returnDate : String, products : Array, restockOrderId : Integer) : void
-    deleteReturnOrder(id : Integer) : void
+    getReturnOrder(id : number) : Object
+    createReturnOrder(returnDate : String, products : Array, restockOrderId : number) : void
+    deleteReturnOrder(id : number) : void
     
     -- Internal Order Management --
     getInternalOrders(void) : Array
     getInternalOrderIssued(void) : Array
     getInternalOrderAccepted(void) : Array
-    getInternalOrderByID(ID: Integer) : Object
-    createInternalOrder(issueDate : Date, products : Array, customerID : Integer) : void
-    modifyInternalOrder(newState : Integer, products : Array) : Array
-    deleteInternalOrder(ID : Integer) : void
+    getInternalOrderByID(ID: number) : Object
+    createInternalOrder(issueDate : Date, products : Array, customerID : number) : void
+    modifyInternalOrder(newState : number, products : Array) : Array
+    deleteInternalOrder(ID : number) : void
     
     -- Item Management --
     getItems() : Array
-    getItemByID(ID: Integer) : Object
-    createItem(description : string, price : Integer, SKUId: Integer, supplierId : Integer) : void
-    modifyItem(description : string, price : Integer) : void
-    deleteItem(ID : Integer) : void
+    getItemByID(ID: String) : Object
+    createItem(description : string, price : number, SKUId: String, supplierId : String) : void
+    modifyItem(description : string, price : number) : void
+    deleteItem(ID : String) : void
 
   }
-
 }
+```
 
+## it.polito.ezwh.model
+
+```plantuml
 package it.polito.ezwh.model {
-  top to bottom direction
+  left to right direction
 
   class DatabaseHelper {
     - databaseName: String
@@ -184,8 +187,6 @@ package it.polito.ezwh.model {
     + updatePosition(position: Position): Void
   }
 
-  class Warehouse {}
-
   enum userType {
     SUPPLIER
     CUSTOMER
@@ -196,47 +197,44 @@ package it.polito.ezwh.model {
   }
 
   class User {
-    + ID: Integer
+    + ID: number
     + name: String
     + surname: String
     + username: String
     + type: userType
-    + email: String
     
     -- Getters --
-    + getID(): Integer
+    + getID(): number
     + getName(): String
     + getSurname(): String
     + getUsername(): String
     + getUserType(): userType
-    + getEmail(): String
     
     -- Setters --
-    + setID(id: Integer): Void
+    + setID(id: number): Void
     + setName(name: String): Void
     + setSurname(surname: String): Void
     + setUsername(username: String): Void
     + setUserType(usertype: userType): Void
-    + setEmail(email: String): Void
   }
 
   class Item {
     + ID : String
     + description : String
-    + price : Float
-    + SKUId: Integer
-    + supplierID: Integer
+    + price : number
+    + SKUId: number
+    + supplierID: number
     -- Getters --
     + getID(): String
     + getDescription(): String
-    + getPrice(): Float
-    + getSKUId(): Integer
-    + getSupplierID(): Integer
+    + getPrice(): number
+    + getSKUId(): number
+    + getSupplierID(): number
     -- Setters --
     + setID(id: String): Void
     + setDescription(description: String): Void
-    + setPrice(price: Float): Void
-    + setSKUId(SkuID: Integer): Void
+    + setPrice(price: number): Void
+    + setSKUId(SkuID: number): Void
     + setSupplierID(supplierID): Void
   }
 
@@ -251,12 +249,12 @@ package it.polito.ezwh.model {
   }
 
   class RestockOrder {
-    + ID : Integer
+    + ID : String
     + issueDate: Date
     + state: enumState
     + products : Array
-    + supplierID: Integer
-    + transportNote: TrasportNote
+    + supplierID: number
+    + transportNote: Array
     + skuItems: Array
     + returnItems: Array
     -- Getters --
@@ -264,109 +262,111 @@ package it.polito.ezwh.model {
     + getIssueDate(): Date
     + getState(): enumState
     + getProducts() : Array
-    + getTransportNote(): TransportNote
-    + getSupplierID() : Integer
+    + getTransportNote(): Array
+    + getSupplierID() : number
     + getSkuItems() : Array
     + getReturnItems(): Array
     -- Setters --
-    + setID(id: Integer): Void
+    + setID(id: number): Void
     + setIssueDate(issueDate: Date): Void
     + setState(state: enumState): Void
     + setProducts(products : Array) : Void
-    + setSupplierID(supplierID: Integer): Void
+    + setSupplierID(supplierID: number): Void
     + setSkuItems(skuItems: Array): Void
     + setReturnItems(skuItems: Array): Void
-    
-    
   }
 
   class ReturnOrder {
-    + ID : Integer
+    + ID : String
     + returnDate: Date
     + products : Array
-    + restockOrderID: Integer
+    + restockOrderID: number
     -- Getters --
-    + getID(): Integer
+    + getID(): String
     + getReturnDate(): Date
     + getProducts() : Array
-    + getRestockOrderID(): Integer
+    + getRestockOrderID(): number
     -- Setters --
-    + setID(id: Integer): Void
+    + setID(id: String): Void
     + setReturnDate(returnDate: Date): Void
     + setProducts(products : Array) : Void
-    + setRestockOrderID(restockOrderID: Integer): Void
+    + setRestockOrderID(restockOrderID: number): Void
+  }
+
+  class Qty_per_Item {
+    + qty: number
   }
 
   class SKU {
-    + ID : Integer
+    + ID : number
     + description : String
-    + weight: Integer
-    + volume : Integer
-    + price : Float
+    + weight: number
+    + volume : number
+    + price : number
     + notes : String
-    + availableQuantity : Integer
+    + availableQuantity : number
     + position: String 
-    + testDescriptors : Array<Integer>
+    + testDescriptors : Array<number>
     --
-    + getID() : Integer
+    + getID() : number
     + getDescription(): String
-    + getWeight() : Integer
-    + getVolume() : Integer
-    + getPrice() : Float
+    + getWeight() : number
+    + getVolume() : number
+    + getPrice() : number
     + getNotes() : String
-    + getAvailableQuantity : Integer
+    + getAvailableQuantity : number
     + getPosition(): String
-    + getTestDescriptors() : Array<Integer>
+    + getTestDescriptors() : Array<number>
     --
-    + setWeight(weight : Integer) : void
-    + setVolume(volume : Integer) : void
+    + setWeight(weight : number) : void
+    + setVolume(volume : number) : void
     + setDescription(description: String): void
-    + setAvailableQuantity(availableQuantity: Integer) : void
+    + setAvailableQuantity(availableQuantity: number) : void
     + setNotes(notes: String): void
-    + setTestDescriptors(testDescriptors: Array<Integer>): void
+    + setTestDescriptors(testDescriptors: Array<number>): void
   }
 
   class SKUItem {
     + RFID : String
     + Available : boolean
     + DateOfStock : String
-    + SKUID: Integer 
+    + SKUID: number 
     --
     + getRFID() : Object
     + isAvailable() : boolean
-    + getSKUId(): Integer
+    + getSKUId(): number
     --
     + setRFID(newRFID: String) : void
     + setAvailability(available : boolean) : void
     + setDate(dateOfStock : string) : void
-    + setSKUID(SKUID: Integer): void
+    + setSKUID(SKUID: number): void
   }
 
   class TestDescriptor {
     + ID : String
     + name : String
     + procedureDescription : String
-    + idSKU : Integer
+    + idSKU : number
     --
     + getID() : String
     + getName() : String
     + getProcedureDescription() : String
-    + getSKUId() : Integer
+    + getSKUId() : number
     --
     + setName(name : String) : void
     + setProcedureDescription(procedureDescription : String) : void
-    + setSKUId(idSKU : Integer) : void
+    + setSKUId(idSKU : number) : void
   }
 
   class TestResult {
-    + ID: Integer
+    + ID: number
     + RFID : String
-    + idTestDescriptor: Integer
+    + idTestDescriptor: number
     + date : Date
     + result: boolean
     --
     getRFID(): String
-    getIDTestDescriptor(): Integer
+    getIDTestDescriptor(): number
     getDate(): String
     getResult(): boolean
     --
@@ -376,49 +376,34 @@ package it.polito.ezwh.model {
   }
 
   class Position {
-    positionID : String
-    aisle : String
-    row : String
-    col : String
-    + max_weight : Integer
-    + max_volume : Integer
-    + occupied_weight : Integer
-    + occupied_volume : Integer 
-
+    + positionID : String
+    + aisle : String
+    + row : String
+    + col : String
+    + max_weight : number
+    + max_volume : number
+    + occupied_weight : number
+    + occupied_volume : number 
     -- Getters --
     + getPositionID(): String
     + getAisle(): String
     + getRow(): String
     + getCol(): String
-    + getMax_Weight : Integer
-    + getMax_Volume : Integer
-    + getOccupied_Weight : Integer
-    + getOccupied_Volume : Integer
-
+    + getMax_Weight : number
+    + getMax_Volume : number
+    + getOcuupied_Weight : number
+    + getOccupied_Volume : number
     -- Setters --
-    + setPositionID(positionID : String): void
+    + setPositionID(poistionID : String): void
     + setAisle(aisleID : String): void
-    + setRow(row: Integer): void 
-    + setCol(col: Integer): void
-    + setMax_Weight(maxWeight: Integer) : void
-    + setMax_Volume(maxVolume : Integer) : void
-    + setOccupied_Weight(occupiedWeight : Integer) : void
-    + setOccupied_Volume(occupiedVolume : Integer) : void
-
-    -- Methods -- 
-    /* 
-    *  TODO: DECIDERE SE SI OCCUPA IL CHIAMANTE DI FARE LA MATEMATICA PER IL NUOVO VALORE DI VOLUME/PESO OCCUPATO O DIRETTAMENTE LA CLASSE POSITION
-    *
-    *  Queste funzioni ricevono uno SKU come parametro e si occupano di modificare il nuovo valore della position tipo: 
-    *
-    *   this.Occupied_Weight += newitem.getWeigth()
-    */
-    + increaseStatus(item: SKU): void  
-    + decreaseStatus(item: SKU): void  
+    + setRow(row: number): void 
+    + setCol(col: number): void
+    + setMax_Weight(maxWeight: number) : void
+    + setMax_Volume(maxVolume : number) : void
+    + setOcuupied_Weight(occupiedWeight : number) : void
+    + setOccupied_Volume(occupiedVolume : number) : void
       
   }
-  
- 
 
   enum internalOrderState {
     ISSUED
@@ -429,55 +414,49 @@ package it.polito.ezwh.model {
   }
 
   class InternalOrder {
-    ID : Integer
+    ID : number
     issueDate : Date
     state: internalOrderState
-    customerID : Integer
+    customerID : number
     products : Array
      -- Getters --
     + getID(): String
     + getIssueDate(): Date
     + getState(): enumState
-    + getCustomer() : Integer
+    + getCustomerID() : number
     + getProducts() : Array
     -- Setters --
     + setID(id: String): Void
     + setIssueDate(issueDate: Date): Void
     + setState(state: enumState): Void
-    + setCustomer(customerID: Integer): Void
+    + setCustomerID(customerID: number): Void
     + setProducts(products : Array) : Void
   }
 }
 
-Warehouse -left- "*" Position
-Warehouse - "*" Supplier
-Warehouse -down- "*" Customer
-Warehouse -down- "*" Item
-Warehouse -down- "*" RestockOrder
-Warehouse -down- "*" InternalOrder
-Warehouse -down- "*" ReturnOrder
-Warehouse -down- "*" TestDescriptor
-Warehouse -down--- "*" SKU
-Supplier -left- "*" Item : sells
-Supplier -right- "*" RestockOrder
-RestockOrder - "*" Item
-RestockOrder - "0..1" ReturnOrder : refers
-RestockOrder - "*" SKUItem
-SKUItem "*" - "0..1" ReturnOrder
-SKU - "*" SKUItem
-SKU -right- "*" Item : corresponds to 
-SKU "*" -up- "*" TestDescriptor
-TestDescriptor - "*" TestResult
-SKU "1" - "1" Position: must be placed in
-InternalOrder -- "*" SKU
-InternalOrder "0..1" - "*" SKUItem
-SKUItem - "*" TestResult
-SKUItem "*" - "0..1" Position
-Customer - "*" InternalOrder : places
-enumState "1"-up- "1" RestockOrder
-internalOrderState "1"-up-"1" InternalOrder
+User -- "*" Item : sells
+User -- "*" RestockOrder
+RestockOrder -- "*" Item : skuid, description, price
+RestockOrder -- "0..1" ReturnOrder : refers
+RestockOrder -- "*" SKUItem :skuid, rfid
+SKUItem "*" -- "0..1" ReturnOrder : params
+SKU -- "*" SKUItem
+SKU -- "*" Item : corresponds to 
+SKU "*" -- "*" TestDescriptor : SKUid
+TestDescriptor -- "*" TestResult
+SKU "1" -- "1" Position: must be placed in
+InternalOrder -- "*" SKU: skuid, description, price
+InternalOrder "0..1" -- "*" SKUItem: :skuid, rfid
+SKUItem -- "*" TestResult
+SKUItem "*" -- "0..1" Position
+User -- "*" InternalOrder : customerID
+enumState "1"-- "1" RestockOrder
+internalOrderState "1"--"1" InternalOrder
+Qty_per_Item -- "*" Item
+Qty_per_Item -- "*" RestockOrder
+Qty_per_Item -- "*" InternalOrder
+userType -- User
 
-API <|-- Warehouse : <<implements>>
 ```
 
 ## it.polito.ezwh.exceptions
@@ -532,9 +511,9 @@ participant DataImpl as DataImpl
 participant SKU as SKU
 participant DatabaseHelper as DatabaseHelper
 
-note over EZWarehouse : EZWarehouse includes\n GUI and DataImpl
 Manager -> EZWarehouse: insert: SKU description
 activate EZWarehouse
+note right : EZWarehouse includes\n GUI and DataImpl
 Manager -> EZWarehouse: insert: SKU weight
 Manager -> EZWarehouse: insert: SKU volume
 Manager -> EZWarehouse: insert: SKU notes
@@ -542,16 +521,22 @@ Manager -> EZWarehouse: confirm data
 
 EZWarehouse -> DataImpl: createSKU()
 activate DataImpl
+
 DataImpl -> SKU: new SKU()
 activate SKU
+
 SKU --> DataImpl: return SKU: S
 deactivate SKU
+
 DataImpl -> DatabaseHelper: storeSKU(S)
 activate DatabaseHelper
+
 DatabaseHelper --> DataImpl: void 
 deactivate DatabaseHelper
+
 DataImpl --> EZWarehouse: return SKU: S 
 deactivate DataImpl
+
 EZWarehouse --> Manager: confirm
 deactivate EZWarehouse
 ```
@@ -564,200 +549,33 @@ deactivate EZWarehouse
 
 ## **SC2.1**: *Create Position*
 ```plantuml
-actor Manager as Manager
-participant EZWarehouse as EZWarehouse
-participant DataImpl as DataImpl
-participant Position as Position
 
-note over EZWarehouse : EZWarehouse includes\n GUI and DataImpl
-Manager -> EZWarehouse: insert: PositionID
-activate EZWarehouse
-Manager -> EZWarehouse: insert: AisleID
-Manager -> EZWarehouse: insert: Row number
-Manager -> EZWarehouse: insert: Column number
-Manager -> EZWarehouse: insert: Maximum weight value
-Manager -> EZWarehouse: insert: Maximum volume value
-Manager -> EZWarehouse: confirm data
 
-EZWarehouse -> DataImpl: createPosition()
-activate DataImpl
-DataImpl -> Position: new Position()
-activate Position
-Position --> DataImpl: return Position: P
-deactivate Position
-DataImpl -> DatabaseHelper: storePosition(P)
-activate DatabaseHelper
-DatabaseHelper --> DataImpl: void 
-deactivate DatabaseHelper
-DataImpl --> EZWarehouse: return Position: P
-deactivate DataImpl
-EZWarehouse --> Manager: confirm
-deactivate EZWarehouse
 ```
 
 ## **SC2.3**: *Modify weight and volume of Position*
 ```plantuml
-actor Manager as Manager
-participant EZWarehouse as EZWarehouse
-participant DataImpl as DataImpl
-participant Position as Position
-participant DatabaseHelper as DatabaseHelper
 
-note over EZWarehouse : EZWarehouse includes\n GUI and DataImpl
-Manager -> EZWarehouse: insert: PositionID
-activate EZWarehouse
-Manager -> EZWarehouse: insert: new aisleID
-Manager -> EZWarehouse: insert: new row number
-Manager -> EZWarehouse: insert: new column number
-Manager -> EZWarehouse: insert: new maximum weight value
-Manager -> EZWarehouse: insert: new maximum volume value
-Manager -> EZWarehouse: insert: new occupied weight value
-Manager -> EZWarehouse: insert: new occupied volume value
-Manager -> EZWarehouse: confirm data
 
-EZWarehouse -> DataImpl: getPositions()
-activate DataImpl
-DataImpl --> EZWarehouse: return Array<Position>: A
-EZWarehouse -> DataImpl: modifyPosition(Array<Position: PositionID>, item: SKU)
-DataImpl -> Position: editStatus(item: SKU)
-activate Position
-Position --> DataImpl: return Position P
-deactivate Position
-DataImpl -> DatabaseHelper: updatePosition(P)
-activate DatabaseHelper
-DatabaseHelper --> DataImpl: confirm update
-deactivate DatabaseHelper
-DataImpl --> EZWarehouse: confirm modification
-deactivate DataImpl
-EZWarehouse --> Manager: confirm
-deactivate EZWarehouse
 ```
 
 
 RICCARDO
 ## **SC3.1**: *Restock Order of SKU S issued by quantity*
 ```plantuml
-actor Manager 
-participant EzWarehouse
-participant DataImpl
-participant RestockOrder
-participant DatabaseHelper
-note over EzWarehouse: EzWarehouse contains Interface and GUI
-Manager->EzWarehouse: Insert product
-activate EzWarehouse
-Manager->EzWarehouse: Insert quantity
-EzWarehouse->DataImpl: getSuppliers()
-activate DataImpl
-DataImpl->EzWarehouse: array of objects 
-deactivate DataImpl
-Manager->EzWarehouse: Select supplier
-Manager->EzWarehouse: Confirm data
-EzWarehouse->DataImpl: createRestockOrder(issueDate, products, supplierID)
-note over EzWarehouse: issueDate is autofilled by software
-activate DataImpl
-DataImpl->RestockOrder: RestockOrder(issueDate, products, supplierID)
-RestockOrder->DataImpl: object RestockOrder
-DataImpl->DatabaseHelper: storeRestockOrder(object RestockOrder)
-activate DatabaseHelper
-DatabaseHelper->DataImpl: void
-deactivate DatabaseHelper
-DataImpl->EzWarehouse: void
-deactivate DataImpl
-EzWarehouse->Manager: Confirmation of the insertion
-deactivate EzWarehouse
+
 ```
 ## **SC4.1**: *Create user and define rights*
 ```plantuml
-actor Admin 
-participant EzWarehouse
-participant DataImpl
-participant User
-participant DatabaseHelper
-note over EzWarehouse: EzWarehouse contains Interface and GUI
-Admin->EzWarehouse: Insert ID
-activate EzWarehouse
-Admin->EzWarehouse: Insert name
-Admin->EzWarehouse: Insert surname
-Admin->EzWarehouse: Insert username
-Admin->EzWarehouse: Insert type
-Admin->EzWarehouse: Insert permission
-Admin->EzWarehouse: Confirm data
-EzWarehouse->DataImpl: createUser(ID,username,name,surname,type)
-activate DataImpl
-DataImpl->User: User(ID,username,name,surname,type)
-activate User
-User->DataImpl: object User
-deactivate User
-DataImpl->DatabaseHelper: storeUser(object User)
-activate DatabaseHelper
-DatabaseHelper->DataImpl: void
-deactivate DatabaseHelper
-DataImpl->EzWarehouse: void
-deactivate DataImpl
-EzWarehouse->Admin: confirmation of the insertion
-deactivate EzWarehouse
+
 ```
 ## **SC5.1.1**: *Record restock order arrival*
 ```plantuml
-actor Clerk 
-participant EzWarehouse
-participant DataImpl
-participant SKUItem
-participant DatabaseHelper
-note over EzWarehouse: EzWarehouse contains Interface and GUI
-Clerk->EzWarehouse: Insert Item
-activate EzWarehouse
-EzWarehouse->DataImpl:   createSkuItem(RFID, SKUID, DateOfStock)
-note over EzWarehouse: DateOfStock is autofilled by software
-activate DataImpl
-DataImpl->SKUItem: SkuItem(RFID, SKUID, DateOfStock)
-activate SKUItem
-SKUItem->DataImpl: object SkuItem
-deactivate SKUItem
-DataImpl->DatabaseHelper: storeSKUItem(object SKUItem)
-activate DatabaseHelper
-DatabaseHelper->DataImpl: void
-deactivate DatabaseHelper
-DataImpl->EzWarehouse: void
-deactivate DataImpl
-note over EzWarehouse: Repeat for all items
-EzWarehouse->Clerk: Confirmation of the insertion
-deactivate EzWarehouse
+
 ```
 ## **SC5.2.1**: *Record positive test results of all SKU items of a RestockOrder*
 ```plantuml
-actor QualityEmployee 
-participant EzWarehouse
-participant DataImpl
-participant TestResult
-participant DatabaseHelper
-note over EzWarehouse: EzWarehouse contains Interface and GUI
-QualityEmployee ->EzWarehouse: Choose to test
-activate EzWarehouse
-EzWarehouse->DataImpl: getTests()
-activate DataImpl
-DataImpl->EzWarehouse: array of objects Test
-deactivate DataImpl
-QualityEmployee ->EzWarehouse: Select test and give result
-EzWarehouse->DataImpl: createTestResult(idTestDescriptor, Date, Result) : void
-activate DataImpl
-DataImpl->TestResult: TestResult(idTestDescriptor, Date, Result)
-activate TestResult
-TestResult->DataImpl: Object TestResult
-deactivate TestResult
-DataImpl->DatabaseHelper: storeTestResult(object TestResult)
-activate DatabaseHelper
-DatabaseHelper->DataImpl: void
-deactivate DatabaseHelper
-note over EzWarehouse: Repeat for all test
-DataImpl->DatabaseHelper: storeRestockOrder(object RestockOrder)
-activate DatabaseHelper
-DatabaseHelper->DataImpl: void
-deactivate DatabaseHelper
-DataImpl->EzWarehouse: void
-deactivate DataImpl
-EzWarehouse->QualityEmployee : Confirmation of the operations
-deactivate EzWarehouse
+
 ```
 SIMRAN
 ## **SC5.3.1**: *Stock all SKU items of a RO*
