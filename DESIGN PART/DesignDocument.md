@@ -348,6 +348,7 @@ package it.polito.ezwh.model {
     + max_volume : Integer
     + occupied_weight : Integer
     + occupied_volume : Integer 
+
     -- Getters --
     + getPositionID(): String
     + getAisle(): String
@@ -355,17 +356,28 @@ package it.polito.ezwh.model {
     + getCol(): String
     + getMax_Weight : Integer
     + getMax_Volume : Integer
-    + getOcuupied_Weight : Integer
+    + getOccupied_Weight : Integer
     + getOccupied_Volume : Integer
+
     -- Setters --
-    + setPositionID(poistionID : String): void
+    + setPositionID(positionID : String): void
     + setAisle(aisleID : String): void
     + setRow(row: Integer): void 
     + setCol(col: Integer): void
     + setMax_Weight(maxWeight: Integer) : void
     + setMax_Volume(maxVolume : Integer) : void
-    + setOcuupied_Weight(occupiedWeight : Integer) : void
+    + setOccupied_Weight(occupiedWeight : Integer) : void
     + setOccupied_Volume(occupiedVolume : Integer) : void
+
+    -- Methods -- 
+    /* 
+    *  TODO: DECIDERE SE SI OCCUPA IL CHIAMANTE DI FARE LA MATEMATICA PER IL NUOVO VALORE DI VOLUME/PESO OCCUPATO O DIRETTAMENTE LA CLASSE POSITION
+    *
+    *  Questa funzione riceve un SKU come parametro e si occupa di modificare il nuovo valore della position tipo: 
+    *
+    *   newitem.
+    */
+    + editStatus(item: SKU, ): void  
       
   }
 
@@ -481,9 +493,9 @@ participant DataImpl as DataImpl
 participant SKU as SKU
 participant DatabaseHelper as DatabaseHelper
 
+note over EZWarehouse : EZWarehouse includes\n GUI and DataImpl
 Manager -> EZWarehouse: insert: SKU description
 activate EZWarehouse
-note right : EZWarehouse includes\n GUI and DataImpl
 Manager -> EZWarehouse: insert: SKU weight
 Manager -> EZWarehouse: insert: SKU volume
 Manager -> EZWarehouse: insert: SKU notes
@@ -491,22 +503,16 @@ Manager -> EZWarehouse: confirm data
 
 EZWarehouse -> DataImpl: createSKU()
 activate DataImpl
-
 DataImpl -> SKU: new SKU()
 activate SKU
-
 SKU --> DataImpl: return SKU: S
 deactivate SKU
-
 DataImpl -> DatabaseHelper: storeSKU(S)
 activate DatabaseHelper
-
 DatabaseHelper --> DataImpl: void 
 deactivate DatabaseHelper
-
 DataImpl --> EZWarehouse: return SKU: S 
 deactivate DataImpl
-
 EZWarehouse --> Manager: confirm
 deactivate EZWarehouse
 ```
@@ -519,8 +525,35 @@ deactivate EZWarehouse
 
 ## **SC2.1**: *Create Position*
 ```plantuml
+actor Manager as Manager
+participant EZWarehouse as EZWarehouse
+participant DataImpl as DataImpl
+participant Position as Position
 
+note over EZWarehouse : EZWarehouse includes\n GUI and DataImpl
+Manager -> EZWarehouse: insert: PositionID
+activate EZWarehouse
+Manager -> EZWarehouse: insert: AisleID
+Manager -> EZWarehouse: insert: Row number
+Manager -> EZWarehouse: insert: Column number
+Manager -> EZWarehouse: insert: Maximum weight value
+Manager -> EZWarehouse: insert: Maximum volume value
+Manager -> EZWarehouse: confirm data
 
+EZWarehouse -> DataImpl: createPosition()
+activate DataImpl
+DataImpl -> Position: new Position()
+activate Position
+Position --> DataImpl: return Position: P
+deactivate Position
+DataImpl -> DatabaseHelper: storePosition(P)
+activate DatabaseHelper
+DatabaseHelper --> DataImpl: void 
+deactivate DatabaseHelper
+DataImpl --> EZWarehouse: return Position: P
+deactivate DataImpl
+EZWarehouse --> Manager: confirm
+deactivate EZWarehouse
 ```
 
 ## **SC2.3**: *Modify weight and volume of Position*

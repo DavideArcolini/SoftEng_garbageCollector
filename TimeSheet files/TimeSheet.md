@@ -2,7 +2,7 @@
 
 Report in this table the effort (in person hours) spent per week, per activity, per team. 
 [One person hour is the effort of one person working one hour.
-Two person hours is the effort of one person working 2 hours, or 2 persons woring one hour. And so on.]
+Two person hours is the effort of one person working 2 hours, or 2 persons working one hour. And so on.]
 You have to sum the working hours of each component of the team.
 Count only effort spent on EZWh (so do not count effort spent in virtual labs, studying, lessons)
 
@@ -10,11 +10,11 @@ These figures will not be used to evaluate neither the project nor the team, the
 
 | Week | requirement engineering | design | coding | unit testing | integration testing | acceptance testing | management | git maven |
 |:-----------:|:--------:|:-----------:|:-----------:|:----------:|:------------:|:---------------:|:-------------:|:--------------:|
-| mar 21 - 27 | 12.5h | | | | | | | |
-| mar 28 - apr 3 | | | | | | | | |
-| apr 4 - 10 | | | | | | | | |
-| apr 11 - 17| | | | | | | | | 
-| apr 18 - 24| | | | | | | | | 
+| mar 21 - 27 | 12 *ph* | | | | | | 0.5 *ph* | |
+| mar 28 - apr 3 | 35 *ph* | | | | | | 1 *ph* | |
+| apr 4 - 10 | 44 *ph* | | | | | | 1 *ph* | |
+| apr 11 - 17| 32 *ph*| | | | | | 0.5 *ph* | | 
+| apr 18 - 24| | 32 *ph* | | | | | | | 
 | apr 25 - may 1 | | | | | | | | | 
 | may 2 - 8  | | | | | | | | | 
 | may 9 - 15| | | | | | | | | 
