@@ -610,13 +610,7 @@ PEPPE
 ```plantuml
 actor Manager
 
-Manager -> EzWarehouse : insert name
-Manager -> EzWarehouse : insert SKU id
-Manager -> EzWarehouse : insert procedure description
-Manager -> EzWarehouse : confirm inserted data
-note over EzWarehouse : includes GUI and DataInterface
-EzWarehouse -> DataImpl : createTestDescriptor(name, procedureDescription, idSKU)
-activate EzWarehouse
+GUI -> DataImpl : createTestDescriptor(name, procedureDescription, idSKU)
 activate DataImpl
 DataImpl -> TestDescriptor : TestDescriptor(name, procedureDescription, idSKU) 
 activate TestDescriptor
