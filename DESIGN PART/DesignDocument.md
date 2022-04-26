@@ -409,11 +409,12 @@ package it.polito.ezwh.model {
     /* 
     *  TODO: DECIDERE SE SI OCCUPA IL CHIAMANTE DI FARE LA MATEMATICA PER IL NUOVO VALORE DI VOLUME/PESO OCCUPATO O DIRETTAMENTE LA CLASSE POSITION
     *
-    *  Questa funzione riceve un SKU come parametro e si occupa di modificare il nuovo valore della position tipo: 
+    *  Queste funzioni ricevono uno SKU come parametro e si occupano di modificare il nuovo valore della position tipo: 
     *
-    *   newitem.
+    *   this.Occupied_Weight += newitem.getWeigth()
     */
-    + editStatus(item: SKU, ): void  
+    + increaseStatus(item: SKU): void  
+    + decreaseStatus(item: SKU): void  
       
   }
   
@@ -596,8 +597,40 @@ deactivate EZWarehouse
 
 ## **SC2.3**: *Modify weight and volume of Position*
 ```plantuml
+actor Manager as Manager
+participant EZWarehouse as EZWarehouse
+participant DataImpl as DataImpl
+participant Position as Position
+participant DatabaseHelper as DatabaseHelper
 
+note over EZWarehouse : EZWarehouse includes\n GUI and DataImpl
+Manager -> EZWarehouse: insert: PositionID
+activate EZWarehouse
+Manager -> EZWarehouse: insert: new aisleID
+Manager -> EZWarehouse: insert: new row number
+Manager -> EZWarehouse: insert: new column number
+Manager -> EZWarehouse: insert: new maximum weight value
+Manager -> EZWarehouse: insert: new maximum volume value
+Manager -> EZWarehouse: insert: new occupied weight value
+Manager -> EZWarehouse: insert: new occupied volume value
+Manager -> EZWarehouse: confirm data
 
+EZWarehouse -> DataImpl: getPositions()
+activate DataImpl
+DataImpl --> EZWarehouse: return Array<Position>: A
+EZWarehouse -> DataImpl: modifyPosition(Array<Position: PositionID>, item: SKU)
+DataImpl -> Position: editStatus(item: SKU)
+activate Position
+Position --> DataImpl: return Position P
+deactivate Position
+DataImpl -> DatabaseHelper: updatePosition(P)
+activate DatabaseHelper
+DatabaseHelper --> DataImpl: confirm update
+deactivate DatabaseHelper
+DataImpl --> EZWarehouse: confirm modification
+deactivate DataImpl
+EZWarehouse --> Manager: confirm
+deactivate EZWarehouse
 ```
 
 
