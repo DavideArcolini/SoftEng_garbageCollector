@@ -83,10 +83,11 @@ package it.polito.ezwh.controller{
     
     -- Position Management --
     getPositions() : Array
-    getPositionByID(positionID: String): Object
     createPosition(positionID : String, aisleID : String, row : String, col : String, maxWeight : number, maxVolume : number, occupiedWeight=0,occupiedVolume=0) : void
     modifyPosition(positionID: String, newAisleID : String, newRow : String, newCol : String, newMaxWeight : number, newMaxVolume : number, newOccupiedWeight : number, newOccupiedVolume : number) : void
     updatePID(positionID: String, newPositionId : String) : void
+    decreaseOccupation(skus : array) : void
+    increaseOccupation(skus:) : void
     deletePosition(positionID : String) : void
     
     -- Test Descriptor Management --
@@ -440,197 +441,68 @@ RICCARDO
 ```
 SIMRAN
 ## **SC5.3.1**: *Stock all SKU items of a RO*
-```plantuml
-group Stock all SKU items of a RO
-actor Clerk
-Clerk -> EzWarehouse : select RFID
-Clerk -> EzWarehouse : select RFID
-Clerk -> EzWarehouse : select RFID
 
-group for each RFID selected
-group retrieve SKU
-EzWarehouse -> DataImpl : getSKUItemByRFID(RFID)
-activate DataImpl
-EzWarehouse <- DataImpl : return SKUItem as SI
-deactivate DataImpl
-EzWarehouse->DataImpl: getSKUByID(SI.SKUId)
-activate DataImpl
-EzWarehouse <- DataImpl: return SKU as S
-deactivate DataImpl
-end
+## SC6.1
 
-group update Position
-EzWarehouse->DataImpl: getPositionById(S.position)
-activate DataImpl
-EzWarehouse<-DataImpl: Position as P
-deactivate DataImpl
-EzWarehouse->DataImpl: modifyPosition(P.ID, P.aisle, P.row, P.col, P.maxWeight, P.maxVolume, P.occupiedWeight-RO.units*S.volume, P.occupiedVolume -RO.units*S.weight) 
-end
+## SC7.1
 
-group update SKU's available quantity
-EzWarehouse->DataImpl : modifySKU(S.Id,S.description, S.weight,S. note, S.volume, S.price, S.availableQuantity+RO.units)
-activate DataImpl
-DataImpl->EzWarehouse: void
-deactivate DataImpl
-end
+## SC9.1
 
-
-group update RO's state
-EzWarehouse->DataImpl : modifyState( RO.id, enumState.COMPLETED) 
-activate DataImpl
-DataImpl->EzWarehouse: void
-deactivate DataImpl
-end
-end
-end
-```
-
-## SC6.1 *Return order of SKU items that failed quality test*
-```plantuml
-group Manage return order of SKU items
-actor Manager
-Manager -> EzWarehouse : insert RO.ID
-EzWarehouse->DataImpl: getReturnItems(RO.ID)
-activate DataImpl
-EzWarehouse<-DataImpl: RI.RFID
-deactivate DataImpl
-Manager -> EzWarehouse : select RFID  
-Manager -> EzWarehouse : select RFID
-Manager -> EzWarehouse : confirm 
-group for each RFID selected
-group update SKUItem availability
-EzWarehouse -> DataImpl : getSKUItemByRFID(RFID)
-activate DataImpl
-EzWarehouse <- DataImpl : return SKUItem as SI
-deactivate DataImpl
-EzWarehouse->DataImpl: modifySkuItem(SI.RFID, False, undefined)
-activate DataImpl
-EzWarehouse <- DataImpl: void
-deactivate DataImpl
-end
-end
-group create REO
-EzWarehouse->DataImpl: createReturnOrder(today, products : Array, RO.ID) 
-activate DataImpl
-DataImpl->ReturnOrder: new ReturnOrder
-activate ReturnOrder
-DataImpl<-ReturnOrder: ReturnOrder as REO
-deactivate ReturnOrder
-DataImpl->DataBaseHelper: storeReturnOrder(REO)
-activate DataBaseHelper
-DataImpl<-DataBaseHelper: REO
-deactivate DataBaseHelper
-EzWarehouse<-DataImpl: REO
-deactivate DataImpl
-end
-
-
-end
-
-
-```
-
-## SC7.1 *Login*
-
-```plantuml
-  
-  group Login
-actor User
-User -> EzWarehouse : insert username
-User -> EzWarehouse : insert password
-
-activate EzWarehouse
-EzWarehouse -> DataImpl : login(username, password)
-activate DataImpl
-EzWarehouse <- DataImpl : functionalities
-deactivate DataImpl
-
-
-deactivate EzWarehouse
-end
-```
-
-## SC9.1 *Internal Order IO accepted*
-```plantuml
-group Internal Order IO accepted
-actor Customer
-actor Manager
-
-group Customer creates an InternalOrder
-
-Customer -> EzWarehouse : insert add SKU
-Customer -> EzWarehouse : insert add quantity
-Customer -> EzWarehouse : insert add SKU
-Customer -> EzWarehouse : insert add quantity
-
-
-group create IO
-EzWarehouse->DataImpl: createInternalOrder(today, products , customer.ID) 
-activate DataImpl
-DataImpl->InternalOrder: new InternalOrder
-activate InternalOrder
-DataImpl<-InternalOrder: InternalOrder as IO
-deactivate InternalOrder
-DataImpl->DataBaseHelper: storeInternalOrder(IO)
-activate DataBaseHelper
-DataImpl<-DataBaseHelper: void
-deactivate DataBaseHelper
-EzWarehouse<-DataImpl: IO
-deactivate DataImpl
-Customer -> EzWarehouse : confirm
-EzWarehouse->DataImpl: modifyInternalOrder(ISSUED, IO.products)
-activate DataImpl
-EzWarehouse<- DataImpl: void
-deactivate DataImpl
-end
-end
-
-group for each SKU S ordered
-
-group update Position
-EzWarehouse->DataImpl: getPositionById(S.position)
-activate DataImpl
-EzWarehouse<-DataImpl: Position as P
-deactivate DataImpl
-EzWarehouse->DataImpl: modifyPosition(P.ID, P.aisle, P.row, P.col, P.maxWeight, P.maxVolume, P.occupiedWeight+IO.units*S.volume, P.occupiedVolume+IO.units*S.weight) 
-
-
-group update SKU's available quantity
-EzWarehouse->DataImpl : modifySKU(S.Id,S.description, S.weight,S. note, S.volume, S.price, S.availableQuantity-IO.units)
-activate DataImpl
-DataImpl->EzWarehouse: void
-deactivate DataImpl
-end
-end
-end 
-
-group manager confirms the order
-Manager->EzWarehouse: confirm IO
-EzWarehouse->DataImpl: modifyInternalOrder(ACCEPTED, IO.products)
-activate DataImpl
-EzWarehouse<- DataImpl: void
-deactivate DataImpl
-end
-end
-
-```
 PEPPE
 ## **SC9.3 : *Internal Order IO cancelled***
 
 ```plantuml
 actor Customer
+actor Manager
 
-Customer -> GUI : add SKUs with qty (product)
-activate GUI
-GUI -> DataImpl: update positions
+Customer -> HTTPCalls : create order
+activate HTTPCalls
+HTTPCalls -> DataImpl : createInternalOrder(json)
 activate DataImpl
-GUI <- DataImpl: positions
-GUI -> DataImpl : createInternalOrder(issueDate, products, customerID)
-GUI -> DataImpl : modifyPosition(params)
-GUI <- DataImpl : void
-deactivate GUI
-DataImpl -> DatabaseHelper : 
-DataImpl -> InternalOrder : InternalOrder(issueDate, products, customerID)
+DataImpl -> InternalOrder : InternalOrder(json)
+activate InternalOrder
+DataImpl <- InternalOrder : order
+deactivate InternalOrder
+DataImpl -> DatabaseHelper : storeInternalOrder(order)
+activate DatabaseHelper
+DataImpl <- DatabaseHelper : void
+deactivate DatabaseHelper
+
+loop for each product
+DataImpl -> DataImpl : getSKUByID(params.id)
+DataImpl -> DataImpl : compute new availability
+DataImpl -> DataImpl : modifySKU(newParams)
+DataImpl -> DatabaseHelper: updateSKU(params)
+activate DatabaseHelper
+DataImpl <- DatabaseHelper: void
+deactivate DatabaseHelper
+DataImpl -> DataImpl : getPositionByID(positionID)
+DataImpl -> DataImpl : compute new occupation
+DataImpl -> DataImpl : modifyPosition(params)
+DataImpl -> DatabaseHelper: updatePosition(params)
+activate DatabaseHelper
+DataImpl <- DatabaseHelper: void
+deactivate DatabaseHelper
+end
+DataImpl -> HTTPCalls : 201 created
+deactivate DataImpl
+deactivate HTTPCalls
+
+Manager -> HTTPCalls : refuse order
+activate HTTPCalls
+HTTPCalls -> DataImpl : modifyInternalOrder(params)
+activate DataImpl
+DataImpl -> DatabaseHelper : updateInternalOrder(params)
+activate DatabaseHelper
+DataImpl <- DatabaseHelper: void
+deactivate DatabaseHelper
+
+loop for each product, same operations as before
+DataImpl -> DataImpl
+end
+deactivate DataImpl
+DataImpl -> HTTPCalls : 200 OK
+deactivate HTTPCalls
 ```
 
 ## **SC10.1: *Internal Order IO Completed***
@@ -649,11 +521,11 @@ DataImpl -> InternalOrder : InternalOrder(issueDate, products, customerID)
 
 ```plantuml
 actor Manager
-Manager -> GUI : insert name
-Manager -> GUI : insert SKU id
-Manager -> GUI : insert procedure description
-Manager -> GUI : confirm inserted data
-GUI -> DataImpl : createTestDescriptor(name, procedureDescription, idSKU)
+Manager -> HTTPCalls : insert name
+Manager -> HTTPCalls : insert SKU id
+Manager -> HTTPCalls : insert procedure description
+Manager -> HTTPCalls : confirm inserted data
+HTTPCalls -> DataImpl : createTestDescriptor(name, procedureDescription, idSKU)
 activate DataImpl
 DataImpl -> TestDescriptor : TestDescriptor(name, procedureDescription, idSKU) 
 activate TestDescriptor
@@ -663,6 +535,6 @@ DataImpl -> DatabaseHelper : storeTestDescriptor(test)
 activate DatabaseHelper
 DataImpl <- DatabaseHelper : void
 deactivate DatabaseHelper
-GUI <- DataImpl : void
+HTTPCalls <- DataImpl : void
 deactivate DataImpl
 ```
