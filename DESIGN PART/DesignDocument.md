@@ -83,6 +83,7 @@ package it.polito.ezwh.controller{
     
     -- Position Management --
     getPositions() : Array
+    getPositionByID(positionID: String): Object
     createPosition(positionID : String, aisleID : String, row : String, col : String, maxWeight : number, maxVolume : number, occupiedWeight=0,occupiedVolume=0) : void
     modifyPosition(positionID: String, newAisleID : String, newRow : String, newCol : String, newMaxWeight : number, newMaxVolume : number, newOccupiedWeight : number, newOccupiedVolume : number) : void
     updatePID(positionID: String, newPositionId : String) : void
@@ -439,8 +440,53 @@ RICCARDO
 ```
 SIMRAN
 ## **SC5.3.1**: *Stock all SKU items of a RO*
+```plantuml
+group Stock all SKU items of a RO
+actor Clerk
+Clerk -> EzWarehouse : select RFID
+Clerk -> EzWarehouse : select RFID
+Clerk -> EzWarehouse : select RFID
+
+group for each RFID selected
+group retrieve SKU
+EzWarehouse -> DataImpl : getSKUItemByRFID(RFID)
+activate DataImpl
+EzWarehouse <- DataImpl : return SKUItem as SI
+deactivate DataImpl
+EzWarehouse->DataImpl: getSKUByID(SI.SKUId)
+activate DataImpl
+EzWarehouse <- DataImpl: return SKU as S
+deactivate DataImpl
+end
+
+group update Position
+EzWarehouse->DataImpl: getPositionById(S.position)
+activate DataImpl
+EzWarehouse<-DataImpl: Position as P
+deactivate DataImpl
+EzWarehouse->DataImpl: modifyPosition(P.ID, P.aisle, P.row, P.col, P.maxWeight, P.maxVolume, P.occupiedWeight-RO.units*S.volume, P.occupiedVolume -RO.units*S.weight) 
+end
+
+group update SKU's available quantity
+EzWarehouse->DataImpl : modifySKU(S.Id,S.description, S.weight,S. note, S.volume, S.price, S.availableQuantity+RO.units)
+activate DataImpl
+DataImpl->EzWarehouse: void
+deactivate DataImpl
+end
+
+
+group update RO's state
+EzWarehouse->DataImpl : modifyState( RO.id, enumState.COMPLETED) 
+activate DataImpl
+DataImpl->EzWarehouse: void
+deactivate DataImpl
+end
+end
+end
+```
 
 ## SC6.1
+
 
 ## SC7.1
 
