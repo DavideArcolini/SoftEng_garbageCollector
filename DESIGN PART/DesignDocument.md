@@ -485,8 +485,50 @@ end
 end
 ```
 
-## SC6.1
+## SC6.1 *Return order of SKU items that failed quality test*
+```plantuml
+group Manage return order of SKU items
+actor Manager
+Manager -> EzWarehouse : insert RO.ID
+EzWarehouse->DataImpl: getReturnItems(RO.ID)
+activate DataImpl
+EzWarehouse<-DataImpl: RI.RFID
+deactivate DataImpl
+Manager -> EzWarehouse : select RFID  
+Manager -> EzWarehouse : select RFID
+Manager -> EzWarehouse : confirm 
+group for each RFID selected
+group update SKUItem availability
+EzWarehouse -> DataImpl : getSKUItemByRFID(RFID)
+activate DataImpl
+EzWarehouse <- DataImpl : return SKUItem as SI
+deactivate DataImpl
+EzWarehouse->DataImpl: modifySkuItem(SI.RFID, False, undefined)
+activate DataImpl
+EzWarehouse <- DataImpl: void
+deactivate DataImpl
+end
+end
+group create REO
+EzWarehouse->DataImpl: createReturnOrder(today, products : Array, RO.ID) 
+activate DataImpl
+DataImpl->ReturnOrder: new ReturnOrder
+activate ReturnOrder
+DataImpl<-ReturnOrder: ReturnOrder as REO
+deactivate ReturnOrder
+DataImpl->DataBaseHelper: storeReturnOrder(REO)
+activate DataBaseHelper
+DataImpl<-DataBaseHelper: REO
+deactivate DataBaseHelper
+EzWarehouse<-DataImpl: REO
+deactivate DataImpl
+end
 
+
+end
+
+
+```end
 
 ## SC7.1
 
