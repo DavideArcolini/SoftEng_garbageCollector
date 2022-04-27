@@ -550,8 +550,70 @@ deactivate EzWarehouse
 end
 ```
 
-## SC9.1
+## SC9.1 *Internal Order IO accepted*
+```plantuml
+group Internal Order IO accepted
+actor Customer
+actor Manager
 
+group Customer creates an InternalOrder
+
+Customer -> EzWarehouse : insert add SKU
+Customer -> EzWarehouse : insert add quantity
+Customer -> EzWarehouse : insert add SKU
+Customer -> EzWarehouse : insert add quantity
+
+
+group create IO
+EzWarehouse->DataImpl: createInternalOrder(today, products , customer.ID) 
+activate DataImpl
+DataImpl->InternalOrder: new InternalOrder
+activate InternalOrder
+DataImpl<-InternalOrder: InternalOrder as IO
+deactivate InternalOrder
+DataImpl->DataBaseHelper: storeInternalOrder(IO)
+activate DataBaseHelper
+DataImpl<-DataBaseHelper: void
+deactivate DataBaseHelper
+EzWarehouse<-DataImpl: IO
+deactivate DataImpl
+Customer -> EzWarehouse : confirm
+EzWarehouse->DataImpl: modifyInternalOrder(ISSUED, IO.products)
+activate DataImpl
+EzWarehouse<- DataImpl: void
+deactivate DataImpl
+end
+end
+
+group for each SKU S ordered
+
+group update Position
+EzWarehouse->DataImpl: getPositionById(S.position)
+activate DataImpl
+EzWarehouse<-DataImpl: Position as P
+deactivate DataImpl
+EzWarehouse->DataImpl: modifyPosition(P.ID, P.aisle, P.row, P.col, P.maxWeight, P.maxVolume, P.occupiedWeight+IO.units*S.volume, P.occupiedVolume+IO.units*S.weight) 
+
+
+group update SKU's available quantity
+EzWarehouse->DataImpl : modifySKU(S.Id,S.description, S.weight,S. note, S.volume, S.price, S.availableQuantity-IO.units)
+activate DataImpl
+DataImpl->EzWarehouse: void
+deactivate DataImpl
+end
+end
+end 
+
+group manager confirms the order
+Manager->EzWarehouse: confirm IO
+EzWarehouse->DataImpl: modifyInternalOrder(ACCEPTED, IO.products)
+activate DataImpl
+EzWarehouse<- DataImpl: void
+deactivate DataImpl
+end
+end
+
+```
 PEPPE
 ## **SC9.3 : *Internal Order IO cancelled***
 
