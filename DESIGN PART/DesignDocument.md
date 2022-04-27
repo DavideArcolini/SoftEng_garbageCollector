@@ -530,7 +530,25 @@ end
 
 ```
 
-## SC7.1
+## SC7.1 *Login*
+
+```plantuml
+  
+  group Login
+actor User
+User -> EzWarehouse : insert username
+User -> EzWarehouse : insert password
+
+activate EzWarehouse
+EzWarehouse -> DataImpl : login(username, password)
+activate DataImpl
+EzWarehouse <- DataImpl : functionalities
+deactivate DataImpl
+
+
+deactivate EzWarehouse
+end
+```
 
 ## SC9.1
 
