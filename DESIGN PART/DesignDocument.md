@@ -63,7 +63,8 @@ package it.polito.ezwh.controller{
     getSKUs() : Array
     getSKUByID(ID : String) : Object
     createSKU(description: String, weight : number , volume: number, notes : String, price : number, availableQuantity : number) : Void
-    updateSKUDimensions(ID : String, weight : number, volume : number) : void
+    modifySKU(ID: String, newDescription: String, newWeight: number, newVolume: number, newNotes: String, newPrice: number, newAvailableQuantity: number)
+    updateSKUPosition(ID: number, positionID: String)
     
     -- SKUItem Management --
     getSKUItems() : Array
@@ -83,15 +84,15 @@ package it.polito.ezwh.controller{
     -- Position Management --
     getPositions() : Array
     createPosition(positionID : String, aisleID : String, row : String, col : String, maxWeight : number, maxVolume : number, occupiedWeight=0,occupiedVolume=0) : void
-    modifyPosition(newAisleID : String, newRow : String, newCol : String, newMaxWeight : number, newMaxVolume : number, newOccupiedWeight : number, newOccupiedVolume : number) : void
-    updatePID(newPositionId : String) : void
+    modifyPosition(positionID: String, newAisleID : String, newRow : String, newCol : String, newMaxWeight : number, newMaxVolume : number, newOccupiedWeight : number, newOccupiedVolume : number) : void
+    updatePID(positionID: String, newPositionId : String) : void
     deletePosition(positionID : String) : void
     
     -- Test Descriptor Management --
     getTestDescriptors() : Array
     getTestDescriptorByID(id : number) : Object
     createTestDescriptor(name : String, procedureDescription : String, idSKU : number) : void
-    modifyTestDescriptor(newName : String, newProcedureDescription : String, newIdSKU : number) : void
+    modifyTestDescriptor(id: number, newName : String, newProcedureDescription : String, newIdSKU : number) : void
     deleteTestDescriptor(id : number) : void
 
     -- User Management --
@@ -100,18 +101,20 @@ package it.polito.ezwh.controller{
     getUsers() : Array
     createUser(ID : String, username : String, name : String, surname : String, type : String) : void
     login(username : String, password : String) : Object
-    modifyUser(newType : String) : void
+    modifyUserPermissions(username: String, newType : String) : void
     deleteUser(username : String, type : String) : void
     
     -- Restock Order Management --
     getRestockOrders(void) : Array
     getRestockOrdersIssued(void) : Array
-    getRestockOrderByID(ID: String) : Object
-    getReturnItems(ID: String) : Array
+    getRestockOrderByID(ID: number) : Object
+    getReturnItems(ID: number) : Array
+    getSKUitems(ID: number) : Array
     createRestockOrder(issueDate : Date, products : Array, supplierID : number) : void
-    modifyState( newState : number) : void
-    addItems(items : List) : void
-    addTransportNote( transportNote : String ) : void
+    modifyState( ID: number, newState : number) : void
+    addItems(ID: number, items : List) : void
+    addTransportNote( ID: number, transportNote : String ) : void
+    setSkuItems(ID: number, skuItems: Array): Void
     deleteRestockOrder(ID : String) : void
 
     -- Return Order Management --
@@ -122,8 +125,8 @@ package it.polito.ezwh.controller{
     
     -- Internal Order Management --
     getInternalOrders(void) : Array
-    getInternalOrderIssued(void) : Array
-    getInternalOrderAccepted(void) : Array
+    getInternalOrdersIssued(void) : Array
+    getInternalOrdersAccepted(void) : Array
     getInternalOrderByID(ID: number) : Object
     createInternalOrder(issueDate : Date, products : Array, customerID : number) : void
     modifyInternalOrder(newState : number, products : Array) : Array
@@ -132,8 +135,8 @@ package it.polito.ezwh.controller{
     -- Item Management --
     getItems() : Array
     getItemByID(ID: String) : Object
-    createItem(description : string, price : number, SKUId: String, supplierId : String) : void
-    modifyItem(description : string, price : number) : void
+    createItem(ID: String, description : string, price : number, SKUId: String, supplierId : String) : void
+    modifyItem(ID: String, description : string, price : number) : void
     deleteItem(ID : String) : void
 
   }
@@ -141,6 +144,7 @@ package it.polito.ezwh.controller{
 ```
 
 ## it.polito.ezwh.model
+N.B. All the classes are linked to the class `DataImpl`of `it.polito.ezwh.controller`
 
 ```plantuml
 package it.polito.ezwh.model {
@@ -202,20 +206,6 @@ package it.polito.ezwh.model {
     + surname: String
     + username: String
     + type: userType
-    
-    -- Getters --
-    + getID(): number
-    + getName(): String
-    + getSurname(): String
-    + getUsername(): String
-    + getUserType(): userType
-    
-    -- Setters --
-    + setID(id: number): Void
-    + setName(name: String): Void
-    + setSurname(surname: String): Void
-    + setUsername(username: String): Void
-    + setUserType(usertype: userType): Void
   }
 
   class Item {
@@ -224,18 +214,6 @@ package it.polito.ezwh.model {
     + price : number
     + SKUId: number
     + supplierID: number
-    -- Getters --
-    + getID(): String
-    + getDescription(): String
-    + getPrice(): number
-    + getSKUId(): number
-    + getSupplierID(): number
-    -- Setters --
-    + setID(id: String): Void
-    + setDescription(description: String): Void
-    + setPrice(price: number): Void
-    + setSKUId(SkuID: number): Void
-    + setSupplierID(supplierID): Void
   }
 
   enum enumState {
@@ -257,23 +235,6 @@ package it.polito.ezwh.model {
     + transportNote: Array
     + skuItems: Array
     + returnItems: Array
-    -- Getters --
-    + getID(): String
-    + getIssueDate(): Date
-    + getState(): enumState
-    + getProducts() : Array
-    + getTransportNote(): Array
-    + getSupplierID() : number
-    + getSkuItems() : Array
-    + getReturnItems(): Array
-    -- Setters --
-    + setID(id: number): Void
-    + setIssueDate(issueDate: Date): Void
-    + setState(state: enumState): Void
-    + setProducts(products : Array) : Void
-    + setSupplierID(supplierID: number): Void
-    + setSkuItems(skuItems: Array): Void
-    + setReturnItems(skuItems: Array): Void
   }
 
   class ReturnOrder {
@@ -281,16 +242,6 @@ package it.polito.ezwh.model {
     + returnDate: Date
     + products : Array
     + restockOrderID: number
-    -- Getters --
-    + getID(): String
-    + getReturnDate(): Date
-    + getProducts() : Array
-    + getRestockOrderID(): number
-    -- Setters --
-    + setID(id: String): Void
-    + setReturnDate(returnDate: Date): Void
-    + setProducts(products : Array) : Void
-    + setRestockOrderID(restockOrderID: number): Void
   }
 
   class Qty_per_Item {
@@ -307,39 +258,13 @@ package it.polito.ezwh.model {
     + availableQuantity : number
     + position: String 
     + testDescriptors : Array<number>
-    --
-    + getID() : number
-    + getDescription(): String
-    + getWeight() : number
-    + getVolume() : number
-    + getPrice() : number
-    + getNotes() : String
-    + getAvailableQuantity : number
-    + getPosition(): String
-    + getTestDescriptors() : Array<number>
-    --
-    + setWeight(weight : number) : void
-    + setVolume(volume : number) : void
-    + setDescription(description: String): void
-    + setAvailableQuantity(availableQuantity: number) : void
-    + setNotes(notes: String): void
-    + setTestDescriptors(testDescriptors: Array<number>): void
   }
 
   class SKUItem {
     + RFID : String
     + Available : boolean
     + DateOfStock : String
-    + SKUID: number 
-    --
-    + getRFID() : Object
-    + isAvailable() : boolean
-    + getSKUId(): number
-    --
-    + setRFID(newRFID: String) : void
-    + setAvailability(available : boolean) : void
-    + setDate(dateOfStock : string) : void
-    + setSKUID(SKUID: number): void
+    + SKUID: number
   }
 
   class TestDescriptor {
@@ -347,15 +272,6 @@ package it.polito.ezwh.model {
     + name : String
     + procedureDescription : String
     + idSKU : number
-    --
-    + getID() : String
-    + getName() : String
-    + getProcedureDescription() : String
-    + getSKUId() : number
-    --
-    + setName(name : String) : void
-    + setProcedureDescription(procedureDescription : String) : void
-    + setSKUId(idSKU : number) : void
   }
 
   class TestResult {
@@ -364,15 +280,6 @@ package it.polito.ezwh.model {
     + idTestDescriptor: number
     + date : Date
     + result: boolean
-    --
-    getRFID(): String
-    getIDTestDescriptor(): number
-    getDate(): String
-    getResult(): boolean
-    --
-    + setRFID(RFID: String): void
-    + setDate(date : String) : void
-    + setResult(result: boolean): void
   }
 
   class Position {
@@ -383,26 +290,7 @@ package it.polito.ezwh.model {
     + max_weight : number
     + max_volume : number
     + occupied_weight : number
-    + occupied_volume : number 
-    -- Getters --
-    + getPositionID(): String
-    + getAisle(): String
-    + getRow(): String
-    + getCol(): String
-    + getMax_Weight : number
-    + getMax_Volume : number
-    + getOcuupied_Weight : number
-    + getOccupied_Volume : number
-    -- Setters --
-    + setPositionID(poistionID : String): void
-    + setAisle(aisleID : String): void
-    + setRow(row: number): void 
-    + setCol(col: number): void
-    + setMax_Weight(maxWeight: number) : void
-    + setMax_Volume(maxVolume : number) : void
-    + setOcuupied_Weight(occupiedWeight : number) : void
-    + setOccupied_Volume(occupiedVolume : number) : void
-      
+    + occupied_volume : number
   }
 
   enum internalOrderState {
@@ -419,18 +307,6 @@ package it.polito.ezwh.model {
     state: internalOrderState
     customerID : number
     products : Array
-     -- Getters --
-    + getID(): String
-    + getIssueDate(): Date
-    + getState(): enumState
-    + getCustomerID() : number
-    + getProducts() : Array
-    -- Setters --
-    + setID(id: String): Void
-    + setIssueDate(issueDate: Date): Void
-    + setState(state: enumState): Void
-    + setCustomerID(customerID: number): Void
-    + setProducts(products : Array) : Void
   }
 }
 
@@ -574,7 +450,19 @@ PEPPE
 ## **SC9.3 : *Internal Order IO cancelled***
 
 ```plantuml
+actor Customer
 
+Customer -> GUI : add SKUs with qty (product)
+activate GUI
+GUI -> DataImpl: update positions
+activate DataImpl
+GUI <- DataImpl: positions
+GUI -> DataImpl : createInternalOrder(issueDate, products, customerID)
+GUI -> DataImpl : modifyPosition(params)
+GUI <- DataImpl : void
+deactivate GUI
+DataImpl -> DatabaseHelper : 
+DataImpl -> InternalOrder : InternalOrder(issueDate, products, customerID)
 ```
 
 ## **SC10.1: *Internal Order IO Completed***
