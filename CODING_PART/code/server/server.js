@@ -4,9 +4,13 @@ const express = require('express');
 const app = new express();
 const UserDAO = require("./modules/UserDAO");
 const usr_db = new UserDAO();
+const userrouter = require("./router/UserRouter");
+
 const port = 3001;
 
 app.use(express.json());
+
+//app.use("/api", userrouter)
 
 //GET /api/test
 app.get('/api/hello', (req,res)=>{
@@ -15,6 +19,7 @@ app.get('/api/hello', (req,res)=>{
   }
   return res.status(200).json(message);
 });
+
 
 /* NEW USER */
 app.post('/api/newUser', async(req, res) => {

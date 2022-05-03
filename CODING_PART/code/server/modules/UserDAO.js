@@ -32,7 +32,7 @@ class UserDAO {
 
     newTableName() {
         return new Promise((res, rej)=>{
-            const sql = "CREATE TABLE IF NOT EXISTS USERS(ID INTEGER PRIMARY KEY AUTOINCREMENT, USERNAME VARCHAR UNIQUE, NAME VARCHAR, SURNAME VARCHAR, PASSWORD VARCHAR, TYPE VARCHAR)";
+            const sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR)";
             this.db.run(sql, (err)=>{
                 if (err) {
                     rej(err);
