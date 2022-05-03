@@ -15,13 +15,27 @@ class UserController {
         let data = req.body;
         await this.dao.run(sql, [data.username, data.name, data.surname, data.password, data.type])
         //await usr_db.storeUser(req.body);
-        return res.status(201).json({message: "ok"})
+        return res.status(201)
     }
 
     getStoredUsers = async (req, res) =>{
+            if (Object.keys(req.body)) {
+
+            }
             const sql = "SELECT * FROM USERS";
             let result = await this.dao.all(sql);
             return res.status(200).json(result);
+    }
+
+    getUser = async(req, res) => {
+            const sql = "SELECT id, username, name, surname FROM USERS WHERE username=? AND password=?";
+            let data = req.body;
+            let result = await this.dao.get(sql, [data.username, data.password, data.type]);
+            return res.status(200).json(result);
+    }
+
+    logout = (req, res) => {
+        return res.status(200)
     }
 }
 

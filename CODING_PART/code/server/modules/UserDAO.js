@@ -68,11 +68,11 @@ class UserDAO {
             });
         });
     }
-
+    
     getUser(data) {
         return new Promise((res, rej)=>{
             const sql = "SELECT id, username, name, surname FROM USERS WHERE username=? AND password=?";
-            this.db.all(sql, [data.username, data.password], (err, rows)=>{
+            this.db.get(sql, [data.username, data.password], (err, rows)=>{
                 if (err) {
                     rej(err);
                     return;

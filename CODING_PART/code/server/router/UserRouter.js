@@ -6,7 +6,27 @@ const DAO = require("../db/DAO")
 const dao = new DAO();
 const uc = new UserController(dao);
 
-router.get("/newUser", uc.newUser);
+router.post("/newUser", uc.newUser);
+router.get("/users", uc.getStoredUsers);
+
+/* MANAGER  */
 router.get("/managerSessions", uc.getStoredUsers);
+router.post("/managerSessions", uc.getUser);
+
+/* CUSTOMER */
+router.post("/customerSessions", uc.getUser)
+
+/* SUPPLIER */
+router.post("/supplierSessions", uc.getUser)
+
+/* CLERK */
+router.post("/clerkSessions", uc.getUser)
+
+/* QUALITY EMPLOYEE */
+router.post("/qualityEmployeeSessions", uc.getUser)
+
+/* DELIVERY EMPLOYEE */
+router.post("/deliveryEmployeeSessions", uc.getUser)
+
 
 module.exports = router;
