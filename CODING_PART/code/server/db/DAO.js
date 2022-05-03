@@ -8,6 +8,8 @@ class DAO {
         this.db = new sqlite.Database("ezwh_db", (err)=>{
             if(err) throw err;
         });
+
+        this.newTableName();
     }
 
     run(sql, params = []) {
@@ -52,7 +54,18 @@ class DAO {
         })
     }
 
-
+    newTableName() {
+      return new Promise((res, rej)=>{
+          const sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR)";
+          this.db.run(sql, (err)=>{
+              if (err) {
+                  rej(err);
+                  return;
+              }
+              res(this.lastID);
+          });
+      });
+  }
 }
 
 module.exports = DAO;

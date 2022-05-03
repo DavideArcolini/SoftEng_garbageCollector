@@ -5,12 +5,15 @@ const app = new express();
 const UserDAO = require("./modules/UserDAO");
 const usr_db = new UserDAO();
 const userrouter = require("./router/UserRouter");
+const dao = require('./db/DAO');
+const db = new dao();
 
 const port = 3001;
 
 app.use(express.json());
 
-//app.use("/api", userrouter)
+/* USERS  */
+app.use("/api", userrouter)
 
 //GET /api/test
 app.get('/api/hello', (req,res)=>{
@@ -22,6 +25,7 @@ app.get('/api/hello', (req,res)=>{
 
 
 /* NEW USER */
+/*
 app.post('/api/newUser', async(req, res) => {
   if (Object.keys(req.body).length === 0) {
     return res.status(422).json({error: "Empty Body request"});
@@ -31,6 +35,7 @@ app.post('/api/newUser', async(req, res) => {
   return res.status(201).json({message: "ok"})
 });
 /* MANAGER SESSION */
+/*
 app.post('/api/managerSessions', async(req, res) => {
   if (Object.keys(req.body).length === 0) {
     return res.status(422).json({error: "Empty Body request"})
@@ -43,7 +48,7 @@ app.post('/api/managerSessions', async(req, res) => {
 app.get('/api/managerSessions', async (req, res) => {
   const userList = await usr_db.getStoredUsers();
   return res.status(200).json(userList);
-});
+}); */
 
 /* CUSTOMER SESSION */
 
