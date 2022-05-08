@@ -46,7 +46,7 @@ function DeliverRO (props){
                     }}
                     >
                       <option>
-                        Select Restock Order
+                        Select Restock Order                     
                       </option>
                       {props.ROIssued.length > 0 ? (
                         props.ROIssued.map((p) => (

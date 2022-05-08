@@ -2,11 +2,11 @@
 const express = require('express');
 // init express
 const app = new express();
-const UserDAO = require("./modules/UserDAO");
-const usr_db = new UserDAO();
 const userrouter = require("./router/UserRouter");
-const dao = require('./db/DAO');
-const db = new dao();
+const RORouter = require("./router/RestockOrderRouter");
+const IORouter = require("./router/InternalOrderRouter");
+const RTORouter = require("./router/ReturnOrderRouter");
+
 
 const port = 3001;
 
@@ -15,6 +15,11 @@ app.use(express.json());
 /* USERS  */
 app.use("/api", userrouter)
 
+app.use("/api",RORouter)
+
+app.use("/api",IORouter);
+
+app.use("/api",RTORouter);
 //GET /api/test
 app.get('/api/hello', (req,res)=>{
   let message = {
@@ -22,6 +27,9 @@ app.get('/api/hello', (req,res)=>{
   }
   return res.status(200).json(message);
 });
+
+ 
+
 
 
 /* NEW USER */
