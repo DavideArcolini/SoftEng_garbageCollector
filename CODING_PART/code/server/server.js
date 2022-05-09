@@ -2,8 +2,6 @@
 const express = require('express');
 // init express
 const app = new express();
-const UserDAO = require("./modules/UserDAO");
-const usr_db = new UserDAO();
 const userrouter = require("./router/UserRouter");
 const dao = require('./db/DAO');
 const db = new dao();
