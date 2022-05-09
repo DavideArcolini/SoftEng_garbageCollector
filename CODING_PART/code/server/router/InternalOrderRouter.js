@@ -2,9 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const IOController = require('../controller/InternalOrderController');
-const DAOIO = require("../db/IO")
-const daoio = new DAOIO();
-const ioc = new IOController(daoio);
+const DAO = require("../db/DAO")
+const dao = new DAO();
+const ioc = new IOController(dao);
 
 router.post("/internalOrders", ioc.createInternalOrder);
 router.get("/internalOrders/:id", ioc.getInternalOrderById);

@@ -7,15 +7,22 @@ class RestockOrderController {
     }
 
     createRestockOrder = async (req, res) => {
-        let sql = "INSERT INTO RESTOCK_ORDERS(issueDate, state, supplierId) VALUES (?,?,?)";
+        //let sql = "INSERT INTO RESTOCK_ORDERS(issueDate, state, supplierId) VALUES (?,?,?)";
         
         if (req.body.issueDate===undefined || req.body.supplierId===undefined ) {
             return res.status(422).json();           
           }
+        
+        let sql = "SELECT MAX(id) as id FROM RESTOCK_ORDERS"
+        let max_id = await this.daoro.get(sql);
+        let id=1;
+        if(max_id.id!==null)
+            id = max_id.id+1;
+        console.log(id);
         let data = req.body;
         console.log("req body: " + JSON.stringify(req.body));
-        let response = await this.daoro.run(sql, [ data.issueDate, "ISSUED", data.supplierId])
-        console.log(`${response}`);
+        //let response = await this.daoro.run(sql, [ data.issueDate, "ISSUED", data.supplierId])
+        //console.log(`${response}`);
         for (const prod of req.body.products)
         {
             console.log(`${prod.SKUId} ${prod.description} ${prod.price} ${prod.qty}`)
@@ -24,8 +31,8 @@ class RestockOrderController {
             sql = "INSERT INTO PRODUCTS_IO(IOId, SKUId, description, price) VALUES(?,?,?,?)"
             await this.daoio.run(sql,[response, prod.SKUId, prod.description, prod.price])}*/
             await Promise.all([...Array(prod.qty)].map(async () => {
-                sql = "INSERT INTO PRODUCTS_RO(ROId, SKUId, description, price) VALUES(?,?,?,?)"
-                await this.daoro.run(sql,[response, prod.SKUId, prod.description, prod.price])
+                sql = "INSERT INTO RESTOCK_ORDERS(id, issueDate, state, supplierId, SKUId, description, price) VALUES(?,?,?,?,?,?,?)"
+                await this.daoro.run(sql,[id, data.issueDate, "ISSUED", data.supplierId, prod.SKUId, prod.description, prod.price])
             }));
 
         }
@@ -39,23 +46,23 @@ class RestockOrderController {
    
 
     getRestockOrders = async (req, res) =>{
-        let sql = "SELECT * FROM RESTOCK_ORDERS";
+        let sql = "SELECT id, issueDate, state, supplierId, deliveryDate FROM RESTOCK_ORDERS GROUP BY id";
         let result = await this.daoro.all(sql);
         console.log(result.length);
         await Promise.all(result.map(async (x) => {
-            sql = "SELECT ROId, SKUId, description, price, COUNT(*) as qty FROM PRODUCTS_RO WHERE ROId==? GROUP BY ROId, SKUId, description, price "
+            sql = "SELECT id, SKUId, description, price, COUNT(*) as qty FROM RESTOCK_ORDERS WHERE id==? GROUP BY id, SKUId, description, price "
             x.products = await this.daoro.all(sql,x.id);
                 //console.log(result.products.length);
             x.products = x.products.map( (x)=>{
                     //console.log(x.SKUId, x.description, x.price, x.qty);
                     
-                    delete x.ROId
+                    delete x.id
                     delete x.RFID
                     console.log(JSON.stringify(x));
                     return x;
 
             })
-            sql = "SELECT SKUId, RFID FROM PRODUCTS_RO WHERE ROId==? AND RFID IS NOT NULL"
+            sql = "SELECT SKUId, RFID FROM RESTOCK_ORDERS WHERE id==? AND RFID IS NOT NULL"
             x.skuItems = await this.daoro.all(sql,x.id);
 
 
@@ -71,30 +78,35 @@ class RestockOrderController {
             }
             return x;
         }));
-        
-        
         return res.status(200).json(result);
-}
+    }
 
     getRestockOrdersIssued = async (req, res) =>{
+        /*let sql = "SELECT id, issueDate, state, supplierId, deliveryDate, SKUId, description, price, COUNT(*) as qty FROM RESTOCK_ORDERS WHERE state==? GROUP BY id, issueDate, state, supplierId, deliveryDate, SKUId, description, price "
+        let response = await this.daoro.all(sql,["ISSUED"]);
+        console.log(JSON.stringify(response));
+        if(response==null){
+            return res.status(404).json();
+        }*/
         
-        let sql = "SELECT * FROM RESTOCK_ORDERS WHERE state==?";
+    
+        let sql = "SELECT id, issueDate, state, supplierId, deliveryDate FROM RESTOCK_ORDERS WHERE state==? GROUP BY id";
         let result = await this.daoro.all(sql,["ISSUED"]);
         console.log(result.length);
         await Promise.all(result.map(async (x) => {
-            sql = "SELECT ROId, SKUId, description, price, COUNT(*) as qty FROM PRODUCTS_RO WHERE ROId==? GROUP BY ROId, SKUId, description, price "
+            sql = "SELECT id, SKUId, description, price, COUNT(*) as qty FROM RESTOCK_ORDERS WHERE id==? GROUP BY id, SKUId, description, price "
             x.products = await this.daoro.all(sql,x.id);
                 //console.log(result.products.length);
             x.products = x.products.map( (x)=>{
                     //console.log(x.SKUId, x.description, x.price, x.qty);
                     
-                    delete x.ROId
+                    delete x.id
                     delete x.RFID
                     console.log(JSON.stringify(x));
                     return x;
 
             })
-            sql = "SELECT SKUId, RFID FROM PRODUCTS_RO WHERE ROId==? AND RFID IS NOT NULL"
+            sql = "SELECT SKUId, RFID FROM RESTOCK_ORDERS WHERE id==? AND RFID IS NOT NULL"
             x.skuItems = await this.daoro.all(sql,x.id);
 
 
@@ -102,9 +114,8 @@ class RestockOrderController {
             x.products = await this.daoro.all(sql,x.id);
             sql = "SELECT SKUId, RFID FROM SKUITEMS_RO WHERE ROId==?";
             x.skuItems = await this.daoro.all(sql,x.id);*/
-            if(x.state==="ISSUED"){
-                delete x.deliveryDate;
-            }/*else{
+            delete x.deliveryDate;
+            /*else{
                 x.transportNote = {"deliveryDate" : x.deliveryDate};
                 delete x.deliveryDate;
             }*/
@@ -119,30 +130,43 @@ class RestockOrderController {
             //console.log(typeof id);
             return res.status(422).json();
         }
-        let sql = "SELECT * FROM RESTOCK_ORDERS WHERE id==?";
+        /*let sql = "SELECT * FROM RESTOCK_ORDERS WHERE id==?";
         let result = await this.daoro.get(sql,id);
         if(result==null){
             return res.status(404).json();
+        }*/
+        let sql = "SELECT id, issueDate, state, supplierId, SKUId, description, price, COUNT(*) as qty FROM RESTOCK_ORDERS WHERE id==? GROUP BY id, issueDate, state, supplierId, SKUId, description, price "
+        let response = await this.daoro.all(sql,id);
+        console.log(JSON.stringify(response));
+        if(response==null){
+            return res.status(404).json();
         }
-        sql = "SELECT ROId, SKUId, description, price, COUNT(*) as qty FROM PRODUCTS_RO WHERE ROId==? GROUP BY ROId, SKUId, description, price "
-                result.products = await this.daoro.all(sql,id);
-                //console.log(result.products.length);
-                result.products = result.products.map( (x)=>{
-                    //console.log(x.SKUId, x.description, x.price, x.qty);
-                    
-                    delete x.ROId
-                    delete x.RFID
-                    console.log(JSON.stringify(x));
-                    return x;
-                    
-        })    
+       // let result = {id , response.issueDate, state , supplierId, products: [], skuItems :[] };
+        let result = {id: response[0].id, issueDate: response[0].issueDate, state: response[0].state, supplierId: response[0].supplierId,  transportNote : {"deliveryDate" : response[0].deliveryDate}};
+      
+        console.log(JSON.stringify(result));
+        let products = response.map( (x)=>{
+            //console.log(x.SKUId, x.description, x.price, x.qty);
+
+            delete x.id
+            delete x.issueDate
+            delete x.state
+            delete x.supplierId
+            delete x.RFID
+            //delete x.deliveryDate
+            console.log(JSON.stringify(x));
+            return x;
+            
+}) ;
+       result = {...result , products : products };   
         /*sql = "SELECT SKUId, description, price, qty FROM PRODUCTS_RO WHERE ROId==?"
         let products = await this.daoro.all(sql,id);
         sql = "SELECT SKUId, RFID FROM SKUITEMS_RO WHERE ROId==?";
         result.skuItems = await this.daoro.all(sql,id);*/
-        sql = "SELECT SKUId, RFID FROM PRODUCTS_RO WHERE ROId==? AND RFID IS NOT NULL"
-                result.skuItems = await this.daoro.all(sql,id);
+        sql = "SELECT SKUId, RFID FROM RESTOCK_ORDERS WHERE id==? AND RFID IS NOT NULL"
+               // [..result, skuItems: result.skuItems = await this.daoro.all(sql,id);
                 //console.log(result.products.length);
+        result = {...result , skuItems : await this.daoro.all(sql,id) };
                 
                     
            
@@ -150,12 +174,10 @@ class RestockOrderController {
             products[i] = JSON.stringify(products[i]
         }*/
         if(result.state==="ISSUED"){
-            delete result.deliveryDate;
-        }else{
-            result.transportNote = {"deliveryDate" : result.deliveryDate};
-            delete result.deliveryDate;
+            delete result.transportNotee;
         }
         result.products = result.products.map((x)=> JSON.parse(JSON.stringify(x)));
+        console.log("RESULT : "+ JSON.stringify(result))
         return res.status(200).json(result);
     }
 
@@ -167,8 +189,8 @@ class RestockOrderController {
         }
         let sql = "DELETE FROM RESTOCK_ORDERS WHERE id==?";
         let _ = await this.daoro.run(sql,id);
-        sql = "DELETE FROM PRODUCTS_RO WHERE ROId==?";
-        _ = await this.daoro.run(sql,id);
+        /*sql = "DELETE FROM PRODUCTS_RO WHERE ROId==?";
+        _ = await this.daoro.run(sql,id);*/
         /*sql = "DELETE FROM SKUITEMS_RO WHERE ROId==?";
         _ = await this.daoro.run(sql,id);*/
         return res.status(204).json();
@@ -213,12 +235,12 @@ class RestockOrderController {
         {
             console.log(`${s.SKUId} ${s.rfid}`)
             /*sql = "INSERT INTO SKUITEMS_RO(ROId, SKUId,RFID) VALUES(?,?,?)"*/
-            sql = "SELECT MIN(id) as id FROM PRODUCTS_RO WHERE ROId==? AND SKUId==? AND RFID IS NULL "
+            sql = "SELECT MIN(key) as min_id FROM RESTOCK_ORDERS WHERE id==? AND SKUId==? AND RFID IS NULL "
             let pid= await this.daoro.get(sql,[id,s.SKUId]);
-            console.log(pid.id);
-            sql = "UPDATE PRODUCTS_RO SET RFID=? WHERE SKUId==? AND ROId==? AND id == ?"
+            console.log(pid.min_id);
+            sql = "UPDATE RESTOCK_ORDERS SET RFID=? WHERE SKUId==? AND id==? AND key == ?"
             console.log(JSON.stringify(s));
-            await this.daoro.run(sql,[s.rfid, s.SKUId, id, pid.id])
+            await this.daoro.run(sql,[s.rfid, s.SKUId, id, pid.min_id])
            // await this.daoro.run(sql,[id,s.SKUId,s.rfid]);
 
         }

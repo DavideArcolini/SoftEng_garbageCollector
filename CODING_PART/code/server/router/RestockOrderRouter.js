@@ -2,9 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const ROController = require('../controller/RestockOrderController');
-const DAORO = require("../db/RO")
-const daoro = new DAORO();
-const roc = new ROController(daoro);
+const DAO = require("../db/DAO")
+const dao = new DAO();
+const roc = new ROController(dao);
 
 router.get("/restockOrders",roc.getRestockOrders);
 router.get("/restockOrdersIssued",roc.getRestockOrdersIssued);

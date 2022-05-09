@@ -2,9 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const RTOController = require('../controller/ReturnOrderController');
-const DAORTO = require("../db/RTO")
-const daorto = new DAORTO();
-const rtoc = new RTOController(daorto);
+const DAO = require("../db/DAO")
+const dao = new DAO();
+const rtoc = new RTOController(dao);
 
 router.post("/returnOrder", rtoc.createReturnOrder);
 router.get("/returnOrders/:id",rtoc.getReturnOrderById);
