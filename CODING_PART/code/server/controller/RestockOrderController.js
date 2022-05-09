@@ -130,7 +130,7 @@ class RestockOrderController {
                 result.products = result.products.map( (x)=>{
                     //console.log(x.SKUId, x.description, x.price, x.qty);
                     
-                    delete x.IOId
+                    delete x.ROId
                     delete x.RFID
                     console.log(JSON.stringify(x));
                     return x;
