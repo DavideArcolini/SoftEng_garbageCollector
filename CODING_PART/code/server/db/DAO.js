@@ -5,7 +5,7 @@ const sqlite = require('sqlite3');
 class DAO {
     static db;
     constructor() {
-        this.db = new sqlite.Database("ezwh_db", (err)=>{
+        this.db = new sqlite.Database("ezwh_db.sqlite", (err)=>{
             if(err) throw err;
         });
 
@@ -327,16 +327,16 @@ class DAO {
   *  - dropTableUser(): drop the users table.
   */
   newTableUsers() {
-      return new Promise((res, rej)=>{
-          const sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR)";
-          this.db.run(sql, (err)=>{
-              if (err) {
-                  rej(err);
-                  return;
-              }
-              res(this.lastID);
-          });
+    return new Promise((res, rej)=>{
+      const sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR)";
+      this.db.run(sql, (err)=>{
+        if (err) {
+          rej(err);
+            return;
+          }
+        res(this.lastID);
       });
+    });
   }
   
   dropTableUsers() {
@@ -349,7 +349,7 @@ class DAO {
           }
           res(this.lastID);
       });
-  });
+    });
   }
 
   

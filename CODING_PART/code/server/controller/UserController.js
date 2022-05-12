@@ -3,6 +3,7 @@
 class UserController {
     constructor(dao) {
         this.dao = dao
+        this.dao.new
     }
 
     newUser = async (req, res) => {
@@ -19,10 +20,11 @@ class UserController {
     }
 
     getStoredUsers = async (req, res) =>{
+
             if (Object.keys(req.body)) {
 
             }
-            const sql = "SELECT * FROM USERS";
+            const sql = "SELECT * FROM USERS WHERE USERS.type <> 'manager'";
             let result = await this.dao.all(sql);
             return res.status(200).json(result);
     }
