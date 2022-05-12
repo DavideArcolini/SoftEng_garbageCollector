@@ -8,6 +8,7 @@ const uc = new UserController(dao);
 
 router.post("/newUser", uc.newUser);
 router.get("/users", uc.getStoredUsers);
+router.put("/users/:username", uc.editUser);
 
 /* MANAGER  */
 router.get("/managerSessions", uc.getStoredUsers);
