@@ -1,21 +1,30 @@
 'use strict';
+
+/* ROUTER MODULE */
+const userrouter      = require("./router/UserRouter");
+const routerSKU       = require("./router/SKURouter");
+const routerPosition  = require("./router/PositionRouter");
+const routerSKUitem   = require("./router/SKUitemRouter");
+
+/* EXPRESS MODULE */
 const express = require('express');
-// init express
 const app = new express();
-const UserDAO = require("./modules/UserDAO");
-const usr_db = new UserDAO();
-const userrouter = require("./router/UserRouter");
-const dao = require('./db/DAO');
-const db = new dao();
+const PORT = 3001;
 
-const port = 3001;
+/* Enabling built-in middleware function .json(): parses incoming requests with JSON payloads */
+app.use(express.json()); 
 
-app.use(express.json());
+/* ENABLING ROUTER TO DISPACH API  */
+app.use("/api", userrouter);
+app.use("/api", routerSKU);
+app.use("/api", routerPosition);
+app.use("/api", routerSKUitem);
 
-/* USERS  */
-app.use("/api", userrouter)
 
-//GET /api/test
+/**
+ * API: 
+ *        GET /api/test
+ */
 app.get('/api/hello', (req,res)=>{
   let message = {
     message: 'Hello World!'
@@ -52,9 +61,15 @@ app.get('/api/managerSessions', async (req, res) => {
 
 /* CUSTOMER SESSION */
 
-// activate the server
-app.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`);
+
+
+
+
+
+/* STARTING THE SERVER CONNECTION */
+app.listen(PORT, () => {
+  console.log(`Server listening at http://localhost:${PORT}`);
 });
 
+/* EXPORTING MODULES */
 module.exports = app;
