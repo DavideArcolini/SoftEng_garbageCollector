@@ -9,7 +9,7 @@ class DAO {
             if(err) throw err;
         });
 
-        this.newTableName();
+        this.newTableUser();
         this.newTablePositions();
         this.newTableSKUS();
         this.newTableSKUItems();
@@ -190,18 +190,18 @@ class DAO {
       });
     }
 
-    newTableName() {
+    newTableUser() {
       return new Promise((res, rej)=>{
-          const sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR)";
-          this.db.run(sql, (err)=>{
-              if (err) {
-                  rej(err);
-                  return;
-              }
-              res(this.lastID);
-          });
+        const sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR)";
+        this.db.run(sql, (err)=>{
+            if (err) {
+                rej(err);
+                return;
+            }
+            res(this.lastID);
       });
     }
+  }
 }
 
 module.exports = DAO;
