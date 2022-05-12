@@ -9,6 +9,7 @@ const uc = new UserController(dao);
 router.post("/newUser", uc.newUser);
 router.get("/users", uc.getStoredUsers);
 router.put("/users/:username", uc.editUser);
+router.delete("/users/:username/:type", uc.deleteUser);
 
 /* MANAGER  */
 router.get("/managerSessions", uc.getStoredUsers);
@@ -19,6 +20,7 @@ router.post("/customerSessions", uc.getUser)
 
 /* SUPPLIER */
 router.post("/supplierSessions", uc.getUser)
+router.get("/suppliers", uc.getSuppliers)
 
 /* CLERK */
 router.post("/clerkSessions", uc.getUser)
