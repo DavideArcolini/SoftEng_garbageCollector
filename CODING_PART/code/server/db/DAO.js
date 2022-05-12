@@ -5,7 +5,7 @@ const sqlite = require('sqlite3');
 class DAO {
     static db;
     constructor() {
-        this.db = new sqlite.Database("ezwh_db.sqlite", (err)=>{
+        this.db = new sqlite.Database("ezwh_db", (err)=>{
             if(err) throw err;
         });
 

@@ -22,7 +22,7 @@ app.use(express.json());
 app.use("/api", router_USER);                                     /* USER                   */
 app.use("/api", router_SKU);                                      /* SKU                    */
 app.use("/api", router_Position);                                 /* POSITION               */
-app.use("/api", routerSKUitem);                                   /* SKUitem                */
+app.use("/api", router_SKUitem);                                   /* SKUitem                */
 app.use("/api", router_RestockOrder);                             /* RESTOCK ORDER          */
 app.use("/api", router_InternalOrder);                            /* INTERNAL ORDER         */
 app.use("/api", router_ReturnOrder);                              /* RETURN ORDER           */

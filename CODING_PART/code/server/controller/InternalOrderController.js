@@ -9,10 +9,12 @@ class InternalOrderController {
     createInternalOrder = async (req, res) => {
        
         if (req.body.issueDate===undefined || req.body.customerId===undefined ) {
+            console.log("qui si rompe");
             return res.status(422).json();           
-          }
+        }
         let sql = "SELECT MAX(id) as id FROM INTERNAL_ORDERS"
         let max_id = await this.daoio.get(sql);
+        console.log(max_id);
         let id=1;
         if(max_id.id!==null)
             id = max_id.id+1;
@@ -28,10 +30,6 @@ class InternalOrderController {
             }));
 
         }
-
-    
-        
-       
 
         return res.status(201).json()
         

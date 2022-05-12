@@ -80,6 +80,7 @@ class PositionController {
     newPosition = async (request, resolve) => {
         
         const data = request.body;
+        data.po
 
         /**
          *  VALIDATING USER INPUT
@@ -111,6 +112,7 @@ class PositionController {
          */
         try {
             const query_SQL = "INSERT INTO POSITIONS (POSITIONID, AISLEID, ROW, COL, MAXWEIGHT, MAXVOLUME, OCCUPIEDWEIGHT, OCCUPIEDVOLUME) VALUES (?, ?, ?, ?, ?, ?, 0, 0)";
+            
             await this.dao.run(query_SQL, [data.positionID, data.aisleID, data.row, data.col, data.maxWeight, data.maxVolume], (error) => {
                 if (error) {
                     return resolve.status(503).json(ERROR_503);
