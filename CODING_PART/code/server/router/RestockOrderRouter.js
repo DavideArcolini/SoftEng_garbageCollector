@@ -14,6 +14,7 @@ router.delete("/restockOrder/:id",roc.deleteRestockOrder);
 router.put("/restockOrder/:id", roc.modifyRestockOrderState);
 router.put("/restockOrder/:id/skuItems", roc.setSkuItems);
 router.put("/restockOrder/:id/transportNote",roc.addTransportNote);
+router.get("/restockOrders/:id/returnItems",roc.getReturnItems);
 
 
 module.exports = router;
