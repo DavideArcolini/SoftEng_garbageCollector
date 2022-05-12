@@ -1,19 +1,34 @@
 'use strict';
-const express = require('express');
-// init express
-const app = new express();
-const UserDAO = require("./modules/UserDAO");
-const usr_db = new UserDAO();
-const userrouter = require("./router/UserRouter");
-const dao = require('./db/DAO');
-const db = new dao();
 
-const port = 3001;
+/* ---------- IMPORTS ---------- */
+const router_USER           = require("./router/UserRouter");
+const router_SKU            = require("./router/SKURouter");
+const router_Position       = require("./router/PositionRouter");
+const router_SKUitem        = require("./router/SKUitemRouter");
+const router_ITEM           = require("./router/ItemRouter");
+const router_TestDescriptor = require("./router/TestDescriptorRouter");
+const router_TestResult     = require("./router/TestResultRouter");
+const router_RestockOrder   = require("./router/RestockOrderRouter");
+const router_InternalOrder  = require("./router/InternalOrderRouter");
+const router_ReturnOrder    = require("./router/ReturnOrderRouter");
 
+/* ---------- EXPRESS MODULE ---------- */
+const express     = require('express');
+const app         = new express();
+const PORT        = 3001;
 app.use(express.json());
 
-/* USERS  */
-app.use("/api", userrouter)
+/* ---------- ENABLING ROUTER TO DISPATCH API ---------- */
+app.use("/api", router_USER);                                     /* USER                   */
+app.use("/api", router_SKU);                                      /* SKU                    */
+app.use("/api", router_Position);                                 /* POSITION               */
+app.use("/api", routerSKUitem);                                   /* SKUitem                */
+app.use("/api", router_RestockOrder);                             /* RESTOCK ORDER          */
+app.use("/api", router_InternalOrder);                            /* INTERNAL ORDER         */
+app.use("/api", router_ReturnOrder);                              /* RETURN ORDER           */
+app.use("/api", router_ITEM)                                      /* ITEM ORDER             */
+app.use("/api", router_TestDescriptor);                           /* TEST DESCRIPTOR        */
+app.use("/api", router_TestResult);                               /* TEST RESULT            */
 
 //GET /api/test
 app.get('/api/hello', (req,res)=>{
@@ -23,38 +38,9 @@ app.get('/api/hello', (req,res)=>{
   return res.status(200).json(message);
 });
 
-
-/* NEW USER */
-/*
-app.post('/api/newUser', async(req, res) => {
-  if (Object.keys(req.body).length === 0) {
-    return res.status(422).json({error: "Empty Body request"});
-  }
-
-  await usr_db.storeUser(req.body);
-  return res.status(201).json({message: "ok"})
-});
-/* MANAGER SESSION */
-/*
-app.post('/api/managerSessions', async(req, res) => {
-  if (Object.keys(req.body).length === 0) {
-    return res.status(422).json({error: "Empty Body request"})
-  }
-  console.log(req.body)
-  const usr = await usr_db.getUser(req.body);
-  return res.status(200).json(usr);
-});
-
-app.get('/api/managerSessions', async (req, res) => {
-  const userList = await usr_db.getStoredUsers();
-  return res.status(200).json(userList);
-}); */
-
-/* CUSTOMER SESSION */
-
 // activate the server
-app.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Server listening at http://localhost:${PORT}`);
 });
 
 module.exports = app;
