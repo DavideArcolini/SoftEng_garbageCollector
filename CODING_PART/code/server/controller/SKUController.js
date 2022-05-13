@@ -71,7 +71,7 @@ class SKUController {
 
         /* QUERYING DATABASE */
         const query_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
-        let result_SQL = await this.dao.all(query_SQL, [target_id], (error, rows) => {
+        let result_SQL = await this.dao.get(query_SQL, [target_id], (error, rows) => {
             if (error) {
                 return resolve.status(500).json(error_500);
             }
