@@ -478,7 +478,7 @@ class SKUController {
             });
 
             /* CHECKING TEST DESCRIPTOR */
-            if (result_retrieveSKU_SQL[0].testDescriptors !== undefined) {
+            if (result_retrieveSKU_SQL[0].testDescriptors !== null) {
                 return response.status(422).json(ERROR_422);
             }
 

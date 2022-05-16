@@ -26,7 +26,7 @@ class UserController {
             let control = await this.dao.get("SELECT username FROM USERS where username = (?)", data.username)
             
             if (Object.keys(req.body).length === 0 || (data.type == "manager") || (data.type == "administrator") || (data.password.length < 8) || !this.regex.test(data.username)) {
-                return res.status(422).json({error: "Empty Body request"});
+                return res.status(422).json({error: "validation of request body failed or attempt to create manager or administrator accounts"});
             }
             else if (control != undefined) {
                 return res.status(409).json({message: "User already exists"})

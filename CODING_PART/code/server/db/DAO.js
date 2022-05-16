@@ -30,7 +30,7 @@ class DAO {
         // this.dropTablePositions();
         // this.dropTableSKUItems();
         // this.dropTableTD();
-        // this.dropTableTR();
+        //this.dropTableTR();
         // this.dropTableI();
     }
 
@@ -232,7 +232,7 @@ class DAO {
     */
     newTableRO() {
       return new Promise((res, rej)=>{
-          const sql = "CREATE TABLE IF NOT EXISTS RESTOCK_ORDERS(key INTEGER PRIMARY KEY AUTOINCREMENT, id INTEGER, issueDate DATE, state VARCHAR, supplierId INTEGER, deliveryDate DATE, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR)";
+          const sql = "CREATE TABLE IF NOT EXISTS RESTOCK_ORDERS(key INTEGER PRIMARY KEY AUTOINCREMENT, id INTEGER, issueDate DATE, state VARCHAR, supplierId INTEGER, deliveryDate DATE, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR) ";
           this.db.run(sql, (err)=>{
               if (err) {
                   rej(err);
@@ -296,7 +296,7 @@ class DAO {
     */
   newTableIO() {
     return new Promise((res, rej)=>{
-        const sql = "CREATE TABLE IF NOT EXISTS INTERNAL_ORDERS(key INTEGER PRIMARY KEY AUTOINCREMENT, id INTEGER, issueDate DATE, state VARCHAR, customerId INTEGER, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR )";
+        const sql = "CREATE TABLE IF NOT EXISTS INTERNAL_ORDERS(key INTEGER PRIMARY KEY AUTOINCREMENT, id INTEGER, issueDate DATE, state VARCHAR, customerId INTEGER, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR ) ";
         this.db.run(sql, (err)=>{
             if (err) {
                 rej(err);

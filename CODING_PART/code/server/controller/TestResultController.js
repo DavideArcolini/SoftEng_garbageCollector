@@ -1,5 +1,12 @@
 "use strict";
 
+/* SOME ERROR MESSAGES HERE */
+const ERROR_400 = {error: 'Bad request'};
+const ERROR_404 = {error: '404 Not Found'};
+const ERROR_422 = {error: 'Unprocessable Entity'};
+const ERROR_500 = {error: 'Internal Server Error'};
+const ERROR_503 = {error: 'Service Unavailable'};
+
 class TestResultController {
     constructor(daotr) {
         this.daotr = daotr
@@ -14,9 +21,10 @@ class TestResultController {
         const sql = "SELECT * FROM TEST_RESULTS WHERE rfid==?";
         const result = await this.daotr.all(sql,req.params.rfid,(error, rows) => {
             if (error) {
-                return response.status(500).json(ERROR_500);
-            }});
-        
+                return res.status(500).json(ERROR_500);
+            }
+        });
+        console.log(result);
         return res.status(200).json(result);
     }
 
@@ -33,7 +41,7 @@ class TestResultController {
         const sql = "SELECT * FROM TEST_RESULTS WHERE rfid==? "
         const testarray = await this.daotr.all(sql,req.params.rfid,(error, rows) => {
             if (error) {
-                return response.status(500).json(ERROR_500);
+                return res.status(500).json(ERROR_500);
             }});
 
         //RFID doesn't exist
@@ -66,7 +74,7 @@ class TestResultController {
         let sql ="SELECT * FROM SKUITEMS WHERE RFID==?"
         let result = await this.daotr.all(sql,req.body.rfid,(error, rows) => {
             if (error) {
-                return response.status(503).json(ERROR_503);
+                return res.status(503).json(ERROR_503);
             }});
 
         //RFID doesn't exist
@@ -76,13 +84,14 @@ class TestResultController {
 
         //Control of idtest
         sql ="SELECT * FROM TEST_DESCRIPTORS WHERE id==?"
-        result = await this.daotr.all(sql,req.body.idTestDescriptor,(error, rows) => {
+        result = await this.daotr.all(sql,[req.body.idTestDescriptor],(error) => {
             if (error) {
-                return response.status(503).json(ERROR_503);
-            }});
+                return res.status(503).json(ERROR_503);
+            }
+        });
 
         //idTest doesn't exist
-        if(result[0]==undefined){
+        if (result[0] === undefined){
             return res.status(404).json();
         }
 
@@ -90,8 +99,9 @@ class TestResultController {
         sql = "INSERT INTO TEST_RESULTS(rfid, idTestDescriptor, Date, Result) VALUES(?,?,?,?)";
         await this.daotr.run(sql,[req.body.rfid, req.body.idTestDescriptor, req.body.Date, req.body.Result],(error, rows) => {
             if (error) {
-                return response.status(503).json(ERROR_503);
-            }});
+                return res.status(503).json(ERROR_503);
+            }
+        });
 
         return res.status(201).json();
 
@@ -110,7 +120,7 @@ class TestResultController {
         let sql ="SELECT * FROM SKUITEMS WHERE RFID==?"
         let result = await this.daotr.all(sql,req.body.rfid,(error, rows) => {
             if (error) {
-                return response.status(503).json(ERROR_503);
+                return res.status(503).json(ERROR_503);
             }});
 
         //RFID doesn't exist (it isn't created)
@@ -122,7 +132,7 @@ class TestResultController {
         sql ="SELECT * FROM TEST_DESCRIPTORS WHERE id==?"
         result = await this.daotr.all(sql,req.body.newIdTestDescriptor,(error, rows) => {
             if (error) {
-                return response.status(503).json(ERROR_503);
+                return res.status(503).json(ERROR_503);
             }});
 
         //idTest doesn't exist
@@ -134,7 +144,7 @@ class TestResultController {
         sql = "SELECT * FROM TEST_RESULTS WHERE rfid==? "
         const testarray = await this.daotr.all(sql,req.params.rfid,(error, rows) => {
             if (error) {
-                return response.status(503).json(ERROR_503);
+                return res.status(503).json(ERROR_503);
             }});
 
         //RFID doesn't exist (don't have a test result)
@@ -154,7 +164,7 @@ class TestResultController {
         sql = "UPDATE TEST_RESULTS SET IdtestDescriptor=?, Date=?, Result=?  WHERE id==?";
         result = await this.daotr.run(sql,[req.body.newIdTestDescriptor, req.body.newDate, req.body.newResult, req.params.id],(error, rows) => {
             if (error) {
-                return response.status(503).json(ERROR_503);
+                return res.status(503).json(ERROR_503);
             }});
         return res.status(200).json();
 }
@@ -172,7 +182,7 @@ class TestResultController {
         let sql = "SELECT * FROM TEST_RESULTS WHERE rfid==? "
         const testarray = await this.daotr.all(sql,req.params.rfid,(error, rows) => {
             if (error) {
-                return response.status(503).json(ERROR_503);
+                return res.status(503).json(ERROR_503);
             }});
 
         //RFID doesn't exist
@@ -191,7 +201,7 @@ class TestResultController {
         sql = "DELETE FROM TEST_RESULTS WHERE rfid==? AND id==?";
         result = await this.daotr.run(sql,[req.params.rfid, req.params.id],(error, rows) => {
             if (error) {
-                return response.status(503).json(ERROR_503);
+                return res.status(503).json(ERROR_503);
             }});
         return res.status(204).json();
     }

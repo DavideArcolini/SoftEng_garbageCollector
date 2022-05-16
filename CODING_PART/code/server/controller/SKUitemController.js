@@ -39,9 +39,10 @@ class SKUitemController {
         }
 
         /* QUERYING DATABASE */
+        let result_SQL;
         try {
             const query_SQL = "SELECT * FROM SKUITEMS";
-            let result_SQL = await this.dao.all(query_SQL, (error, rows) => {
+            result_SQL = await this.dao.all(query_SQL, (error, rows) => {
                 if (error) {
                     return response.status(500).json(ERROR_500);
                 } 
@@ -93,9 +94,10 @@ class SKUitemController {
         
 
         /* QUERYING DATABASE */
+        let result_SQL;
         try {
             const query_SQL = "SELECT * FROM SKUITEMS WHERE SKUITEMS.SKUId == ? AND SKUITEMS.Available == 1";
-            let result_SQL = await this.dao.all(query_SQL, [target_id], (error, rows) => {
+            result_SQL = await this.dao.all(query_SQL, [target_id], (error, rows) => {
                 if (error) {
                     return response.status(500).json(ERROR_500);
                 } 
@@ -130,9 +132,10 @@ class SKUitemController {
         }
 
         /* QUERYING DATABASE */
+        let result_SQL;
         try {
             const query_SQL = "SELECT * FROM SKUITEMS WHERE SKUITEMS.RFID == ?";
-            let result_SQL = await this.dao.all(query_SQL, [target_rfid], (error, rows) => {
+            result_SQL = await this.dao.all(query_SQL, [target_rfid], (error, rows) => {
                 if (error) {
                     return response.status(500).json(ERROR_500);
                 } 

@@ -1,6 +1,13 @@
 "use strict";
 const dayjs = require( 'dayjs');
 
+/* SOME ERROR MESSAGES HERE */
+const ERROR_400 = {error: 'Bad request'};
+const ERROR_404 = {error: '404 Not Found'};
+const ERROR_422 = {error: 'Unprocessable Entity'};
+const ERROR_500 = {error: 'Internal Server Error'};
+const ERROR_503 = {error: 'Service Unavailable'};
+
 
 class RestockOrderController {
     constructor(dao) {
@@ -106,12 +113,13 @@ class RestockOrderController {
             return res.status(422).end();
         }
             try{
-            let sql = "SELECT id, issueDate, state, supplierId, SKUId, description, price, COUNT(*) as qty FROM RESTOCK_ORDERS WHERE id==? GROUP BY id, issueDate, state, supplierId, SKUId, description, price "
+            let sql = "SELECT id, issueDate, state, supplierId, SKUId, description, price, deliveryDate, COUNT(*) as qty FROM RESTOCK_ORDERS WHERE id==? GROUP BY id, issueDate, state, supplierId, SKUId, description, price "
             let response = await this.dao.all(sql,id);
             
             if(response[0]==null){
                 return res.status(404).end();
             }
+            
             let result = {id: response[0].id, issueDate: response[0].issueDate, state: response[0].state, supplierId: response[0].supplierId,  transportNote : {"deliveryDate" : response[0].deliveryDate}};
         
             let products = response.map( (x)=>{
@@ -119,6 +127,7 @@ class RestockOrderController {
                 delete x.issueDate
                 delete x.state
                 delete x.supplierId
+                delete x.deliveryDate
                 delete x.RFID
                 
                 return x;
@@ -190,13 +199,18 @@ class RestockOrderController {
         if( result.state!=="DELIVERED") {
             return res.status(422).end();
         }
-        for (const s of req.body.skuItems)
-        {
+        for (const s of req.body.skuItems) {
             
-            sql = "SELECT MIN(key) as min_id FROM RESTOCK_ORDERS WHERE id==? AND SKUId==? AND RFID IS NULL "
+            sql = `
+                SELECT MIN(key) as min_id 
+                FROM RESTOCK_ORDERS 
+                WHERE id = (?) AND SKUId = (?) AND RFID IS NULL `
             let pid= await this.dao.get(sql,[id,s.SKUId]);
             
-            sql = "UPDATE RESTOCK_ORDERS SET RFID=? WHERE SKUId==? AND id==? AND key == ?"
+            sql = `
+                UPDATE RESTOCK_ORDERS 
+                SET RFID = (?) 
+                WHERE SKUId = (?) AND id = (?) AND key = (?)`
             await this.dao.run(sql,[s.rfid, s.SKUId, id, pid.min_id])
            
         }
@@ -233,6 +247,7 @@ class RestockOrderController {
         }
 
     }
+    
     getReturnItems = async(req,res) => {
         let id = req.params.id;
     
@@ -254,16 +269,16 @@ class RestockOrderController {
             result = await this.dao.all(sql,id) ;
             
             result = await result.filter(async (x)=>{
-                //const response = await fetch("/api/skuitems/"+x.RFID+"/testResults");
+                
                 sql = "SELECT rfid, Result FROM TEST_RESULTS WHERE rfid==?"
-                //const TestResults = await response.json();
+                
                 let TestResults = await this.dao.all(sql,[x.RFID]);
-                //if (response.ok) {
+                
 
-                if(TestResults.filter((x)=>x.Result==false).length()!=0){
+                if(TestResults.filter((x)=>x.Result==false).length!=0 ){
                     return x;
                 }
-                //}
+               
             })
             
             
