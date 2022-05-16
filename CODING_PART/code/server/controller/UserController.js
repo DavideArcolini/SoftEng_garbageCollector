@@ -1,5 +1,8 @@
 "use strict";
 
+const bcrypt        = require('bcrypt');
+const saltRounds    = 10;
+
 class UserController {
     types = ['customer','qualityEmployee','clerk','deliveryEmployee','supplier'];
     regex =
@@ -13,16 +16,15 @@ class UserController {
     }
     constructor(dao) {
         this.dao = dao
-        //uncomment for the first run
-        //this.dao.run("INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)", [this.manager.username, this.manager.name, this.manager.surname, this.manager.type, this.manager.password])
     }
 
     newUser = async (req, res) => {
         try {
             const sql = "INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
             let data = req.body;
-
+        
             let control = await this.dao.get("SELECT username FROM USERS where username = (?)", data.username)
+            
             if (Object.keys(req.body).length === 0 || (data.type == "manager") || (data.type == "administrator") || (data.password.length < 8) || !this.regex.test(data.username)) {
                 return res.status(422).json({error: "Empty Body request"});
             }
@@ -30,7 +32,12 @@ class UserController {
                 return res.status(409).json({message: "User already exists"})
             }
             else {
-                await this.dao.run(sql, [data.username, data.name, data.surname, data.password, data.type])
+                let hash = await bcrypt.hash(data.password, saltRounds);
+                await this.dao.run(sql, [data.username, data.name, data.surname, hash, data.type], (error) => {
+                    if (error) {
+                        console.log(error);
+                    }
+                });
                 return res.status(201).json("ok")
             }
         }
@@ -90,16 +97,20 @@ class UserController {
         const sql = `
         SELECT * 
         FROM USERS 
-        WHERE username=(?) AND password=(?);
+        WHERE username=(?)
         `;
+        /* AND password=(?);*/
         let data = req.body;
+
         try{
-            let result = await this.dao.get(sql, [data.username, data.password]);
-            if (result == undefined) {
-                return res.status(401).json({message : "Wrong username and/or password"});
+            let result = await this.dao.get(sql, [data.username]);
+
+            if (result) {
+                let validPass = await bcrypt.compare(data.password, result.password);
+                validPass ? res.status(200).json({id: result.id, username: result.username, name: result.name}) : res.status(401).json({message : "Wrong username and/or password"});
             }
             else {
-                return res.status(200).json(result);
+                return res.status(401).json({message : "Wrong username and/or password"});
             }
         } catch(error) {
             return res.status(500).json("error");
