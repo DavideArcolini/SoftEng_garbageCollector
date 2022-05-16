@@ -39,13 +39,18 @@ class SKUitemController {
         }
 
         /* QUERYING DATABASE */
-        const query_SQL = "SELECT * FROM SKUITEMS";
-        let result_SQL = await this.dao.all(query_SQL, (error, rows) => {
-            if (error) {
-                return response.status(500).json(ERROR_500);
-            } 
-        });
-
+        try {
+            const query_SQL = "SELECT * FROM SKUITEMS";
+            let result_SQL = await this.dao.all(query_SQL, (error, rows) => {
+                if (error) {
+                    return response.status(500).json(ERROR_500);
+                } 
+            });
+        } catch (error) {
+            console.log(error);
+            return response.status(500).json(ERROR_500);
+        }
+        
         /* RETURNING RESULT */
         return response.status(200).json(result_SQL);
     }
@@ -71,24 +76,35 @@ class SKUitemController {
         }
 
         /* CHECK IF SKU EXISTS */
-        const query_retrieveSKU_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
-        let result_retrieveSKU_SQL = await this.dao.all(query_retrieveSKU_SQL, [target_id], (error) => {
-            if (error) {
-                return response.status(500).json(ERROR_500);
+        try {
+            const query_retrieveSKU_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
+            let result_retrieveSKU_SQL = await this.dao.all(query_retrieveSKU_SQL, [target_id], (error) => {
+                if (error) {
+                    return response.status(500).json(ERROR_500);
+                }
+            });
+            if (result_retrieveSKU_SQL.length == 0) {
+                return response.status(404).json(ERROR_404);
             }
-        });
-        if (result_retrieveSKU_SQL.length == 0) {
-            return response.status(404).json(ERROR_404);
+        } catch (error) {
+            console.log(error);
+            return response.status(500).json(ERROR_500);
         }
+        
 
         /* QUERYING DATABASE */
-        const query_SQL = "SELECT * FROM SKUITEMS WHERE SKUITEMS.SKUId == ? AND SKUITEMS.Available == 1";
-        let result_SQL = await this.dao.all(query_SQL, [target_id], (error, rows) => {
-            if (error) {
-                return response.status(500).json(ERROR_500);
-            } 
-        });
-
+        try {
+            const query_SQL = "SELECT * FROM SKUITEMS WHERE SKUITEMS.SKUId == ? AND SKUITEMS.Available == 1";
+            let result_SQL = await this.dao.all(query_SQL, [target_id], (error, rows) => {
+                if (error) {
+                    return response.status(500).json(ERROR_500);
+                } 
+            });
+        } catch (error) {
+            console.log(error);
+            return response.status(500).json(ERROR_500);
+        }
+        
         /* RETURNING RESULT */
         return response.status(200).json(result_SQL);
     }
@@ -114,12 +130,17 @@ class SKUitemController {
         }
 
         /* QUERYING DATABASE */
-        const query_SQL = "SELECT * FROM SKUITEMS WHERE SKUITEMS.RFID == ?";
-        let result_SQL = await this.dao.all(query_SQL, [target_rfid], (error, rows) => {
-            if (error) {
-                return response.status(500).json(ERROR_500);
-            } 
-        });
+        try {
+            const query_SQL = "SELECT * FROM SKUITEMS WHERE SKUITEMS.RFID == ?";
+            let result_SQL = await this.dao.all(query_SQL, [target_rfid], (error, rows) => {
+                if (error) {
+                    return response.status(500).json(ERROR_500);
+                } 
+            });
+        } catch (error) {
+            console.log(error);
+            return response.status(500).json(ERROR_500);
+        }
 
         /* RETURNING RESULT */
         return (result_SQL.length === 0) ? response.status(404).json(ERROR_404) : response.status(200).json(result_SQL);
@@ -158,26 +179,34 @@ class SKUitemController {
         }
 
         /* CHECKING IF SKU ACTUALLY EXISTS */
-        const query_retrieveSKU_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
-        let result_retrieveSKU_SQL = await this.dao.all(query_retrieveSKU_SQL, [data.SKUId], (error) => {
-            if (error) {
-                return response.status(503).json(ERROR_503);
+        try {
+            const query_retrieveSKU_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
+            let result_retrieveSKU_SQL = await this.dao.all(query_retrieveSKU_SQL, [data.SKUId], (error) => {
+                if (error) {
+                    return response.status(503).json(ERROR_503);
+                }
+            });
+            if (result_retrieveSKU_SQL.length === 0) {
+                return response.status(404).json(ERROR_404);
             }
-        });
-        if (result_retrieveSKU_SQL.length === 0) {
-            console.log("[DEBUG] SKU.id does not exist in database");
-            return response.status(404).json(ERROR_404);
+        } catch (error) {
+            console.log(error);
+            return response.status(503).json(ERROR_503);
         }
 
-        /* CHECKING IF RFID ALREADY PRESENT IN THE DATABASE???? */
-
         /* QUERYING DATABASE */
-        const query_SQL = "INSERT INTO SKUITEMS (RFID, SKUId, Available, DateOfStock) VALUES (?, ?, 0, ?)";
-        await this.dao.run(query_SQL, [data.RFID, data.SKUId, ((data.DateOfStock === undefined) ? "" : data.DateOfStock)], (error) => {
-            if (error) {
-                return response.status(503).json(ERROR_503);
-            }
-        });
+        try {
+            const query_SQL = "INSERT INTO SKUITEMS (RFID, SKUId, Available, DateOfStock) VALUES (?, ?, 0, ?)";
+            await this.dao.run(query_SQL, [data.RFID, data.SKUId, ((data.DateOfStock === undefined) ? "" : data.DateOfStock)], (error) => {
+                if (error) {
+                    return response.status(503).json(ERROR_503);
+                }
+            });
+        } catch (error) {
+            console.log(error);
+            return response.status(503).json(ERROR_503);
+        }
+        
 
         /* RETURNING RESULT */
         return response.status(201).json();
@@ -215,26 +244,38 @@ class SKUitemController {
 
 
         /* QUERYING DATABASE */
-        const query_SQL = "SELECT * FROM SKUITEMS WHERE SKUITEMS.RFID == ?";
-        let result_SQL = await this.dao.all(query_SQL, [target_rfid], (error, rows) => {
-            if (error) {
-                return response.status(503).json(ERROR_503);
+        try {
+            const query_SQL = "SELECT * FROM SKUITEMS WHERE SKUITEMS.RFID == ?";
+            let result_SQL = await this.dao.all(query_SQL, [target_rfid], (error, rows) => {
+                if (error) {
+                    return response.status(503).json(ERROR_503);
+                }
+            });
+            if (result_SQL.length === 0) {
+                return response.status(404).json(ERROR_404);
             }
-        });
-        if (result_SQL.length === 0) {
-            return response.status(404).json(ERROR_404);
+        } catch (error) {
+            console.log(error);
+            return response.status(503).json(ERROR_503);
         }
+        
 
         /* IF EVERYTHING IS FINE, UPDATE THE NEW SKUItem */
-        const update_SQL = "UPDATE SKUITEMS \
-                            SET RFID = ?, Available = ?, DateOfStock = ? \
-                            WHERE SKUITEMS.RFID==?";
-        await this.dao.run(update_SQL, [data.newRFID, data.newAvailable, data.newDateOfStock, target_rfid], (error) => {
-            if (error) {
-                return response.status(500).json(ERROR_500);
-            }
-        })
-
+        try {
+            const update_SQL = "UPDATE SKUITEMS \
+                                SET RFID = ?, Available = ?, DateOfStock = ? \
+                                WHERE SKUITEMS.RFID==?";
+            await this.dao.run(update_SQL, [data.newRFID, data.newAvailable, data.newDateOfStock, target_rfid], (error) => {
+                if (error) {
+                    return response.status(500).json(ERROR_500);
+                }
+            });
+        } catch (error) {
+            console.log(error);
+            return response.status(500).json(ERROR_500);
+        }
+        
+        /* RETURN RESULT ON SUCCESS */
         return response.status(200).json();
     }
     
@@ -259,14 +300,20 @@ class SKUitemController {
         }
 
         /* QUERYING DATABASE */
-        const query_SQL = "DELETE FROM SKUITEMS WHERE SKUITEMS.RFID == ?";
-        await this.dao.run(query_SQL, [target_rfid], (error) => {
-            if (error) {
-                return response.status(503).json(ERROR_503);
-            }
-        });
+        try {
+            const query_SQL = "DELETE FROM SKUITEMS WHERE SKUITEMS.RFID == ?";
+            await this.dao.run(query_SQL, [target_rfid], (error) => {
+                if (error) {
+                    return response.status(503).json(ERROR_503);
+                }
+            });
+        } catch (error) {
+            console.log(error);
+            return response.status(503).json(ERROR_503);
+        }
+        
 
-        /* RETURNING */
+        /* RETURNING RESULT ON SUCCESS */
         return response.status(204).json();
     }
 

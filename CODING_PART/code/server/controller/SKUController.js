@@ -479,7 +479,6 @@ class SKUController {
 
             /* CHECKING TEST DESCRIPTOR */
             if (result_retrieveSKU_SQL[0].testDescriptors !== undefined) {
-                console.log("[DEBUG] cannot remove SKU: there are associated testDescriptor...");
                 return response.status(422).json(ERROR_422);
             }
 
@@ -501,7 +500,6 @@ class SKUController {
                 }
             });
             if (result_retrieveSKUitem_SQL.length !== 0) {
-                console.log("[DEBUG] cannot remove SKU: there are associated SKUitem...");
                 return response.status(422).json(ERROR_422);
             }
         } catch (error) {
