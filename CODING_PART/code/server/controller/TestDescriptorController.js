@@ -13,7 +13,7 @@ class TestDescriptorController {
         const sql = "SELECT * FROM TEST_DESCRIPTORS GROUP BY id";
         const result = await this.daotd.all(sql,(error, rows) => {
             if (error) {
-                return response.status(503).json(ERROR_503);
+                return response.status(500).json(ERROR_500);
             }});
         
         return res.status(200).json(result);
@@ -32,7 +32,7 @@ class TestDescriptorController {
         let sql = "SELECT * FROM TEST_DESCRIPTORS WHERE id==? "
         let result = await this.daotd.all(sql,req.params.id,(error, rows) => {
             if (error) {
-                return response.status(503).json(ERROR_503);
+                return response.status(500).json(ERROR_500);
             }});
 
         //ID doesn't exist
