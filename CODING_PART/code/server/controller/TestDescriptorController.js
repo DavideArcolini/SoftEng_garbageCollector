@@ -11,7 +11,10 @@ class TestDescriptorController {
 
         //search on DB
         const sql = "SELECT * FROM TEST_DESCRIPTORS GROUP BY id";
-        const result = await this.daotd.all(sql);
+        const result = await this.daotd.all(sql,(error, rows) => {
+            if (error) {
+                return response.status(503).json(ERROR_503);
+            }});
         
         return res.status(200).json(result);
     }
@@ -27,7 +30,10 @@ class TestDescriptorController {
 
         //Find the ID
         let sql = "SELECT * FROM TEST_DESCRIPTORS WHERE id==? "
-        let result = await this.daotd.all(sql,req.params.id);
+        let result = await this.daotd.all(sql,req.params.id,(error, rows) => {
+            if (error) {
+                return response.status(503).json(ERROR_503);
+            }});
 
         //ID doesn't exist
         if(result[0]==undefined){
@@ -49,7 +55,10 @@ class TestDescriptorController {
         
         //See if SKUId exist
         let sql ="SELECT * FROM SKUITEMS WHERE SKUid==?"
-        let result = await this.daotd.all(sql,req.params.id);
+        let result = await this.daotd.all(sql,req.params.id,(error, rows) => {
+            if (error) {
+                return response.status(503).json(ERROR_503);
+            }});
 
         //SKUID doesn't exist
         if(result[0]==undefined){
@@ -58,7 +67,10 @@ class TestDescriptorController {
 
         //database immission
         sql = "INSERT INTO TEST_DESCRIPTORS(name, procedureDescription, idSKU) VALUES(?,?,?)";
-        await this.daotd.run(sql,[req.body.name, req.body.procedureDescription, req.body.idSKU]);
+        await this.daotd.run(sql,[req.body.name, req.body.procedureDescription, req.body.idSKU],(error, rows) => {
+            if (error) {
+                return response.status(503).json(ERROR_503);
+            }});
 
         return res.status(201).json();
 
@@ -75,7 +87,10 @@ class TestDescriptorController {
         
         //See if SKUId exist
         let sql ="SELECT * FROM SKUITEMS WHERE SKUid==?"
-        let result = await this.daotd.all(sql,req.body.newIdSKU);
+        let result = await this.daotd.all(sql,req.body.newIdSKU,(error, rows) => {
+            if (error) {
+                return response.status(503).json(ERROR_503);
+            }});
 
         //SKUID doesn't exist
         if(result[0]==undefined){
@@ -84,14 +99,20 @@ class TestDescriptorController {
         
         //Find the ID
         sql = "SELECT * FROM TEST_DESCRIPTORS WHERE id==?";
-        result = await this.daotd.all(sql,req.params.id);
+        result = await this.daotd.all(sql,req.params.id,(error, rows) => {
+            if (error) {
+                return response.status(503).json(ERROR_503);
+            }});
         if(result[0]==undefined){
             return res.status(404).json();
         }
 
         //Update the object if found
         sql = "UPDATE TEST_DESCRIPTORS SET name=?, procedureDescription=?, idSKU=?  WHERE id==?";
-        result = await this.daotd.run(sql,[req.body.newName, req.body.newProcedureDescription, req.body.newIdSKU, req.params.id]);
+        result = await this.daotd.run(sql,[req.body.newName, req.body.newProcedureDescription, req.body.newIdSKU, req.params.id],(error, rows) => {
+            if (error) {
+                return response.status(503).json(ERROR_503);
+            }});
         return res.status(200).json();
 }
 
@@ -106,7 +127,10 @@ class TestDescriptorController {
 
         //Find the ID to check if exist
         let sql = "SELECT * FROM TEST_DESCRIPTORS WHERE id==? "
-        let result = await this.daotd.all(sql,req.params.id);
+        let result = await this.daotd.all(sql,req.params.id,(error, rows) => {
+            if (error) {
+                return response.status(503).json(ERROR_503);
+            }});
 
         //ID doesn't exist
         if(result[0]==undefined){
@@ -115,7 +139,10 @@ class TestDescriptorController {
 
         // delete
         sql = "DELETE FROM TEST_DESCRIPTORS WHERE id==?";
-        result = await this.daotd.run(sql,req.params.id);
+        result = await this.daotd.run(sql,req.params.id,(error, rows) => {
+            if (error) {
+                return response.status(503).json(ERROR_503);
+            }});
         return res.status(204).json();
     }
   
