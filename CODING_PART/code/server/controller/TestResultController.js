@@ -22,7 +22,7 @@ class TestResultController {
     getTestResultById = async (req, res) => {
 
         //Validation
-        if(/^[0-9]+$/.test(req.params.id)===false || /^[0-9]+$/.test(req.params.rfid)===false){
+        if(/^[0-9]+$/.test(req.params.id)===false ){
             return res.status(422).json();
         }
 
@@ -52,7 +52,7 @@ class TestResultController {
     createTestResult = async (req, res) => {
         
         //Validation
-        if ( /^[0-9]+$/.test(req.body.idTestDescriptor)===false || /^[0-9]+$/.test(req.body.rfid)===false  ) {
+        if ( /^[0-9]+$/.test(req.body.idTestDescriptor)===false ) {
             return res.status(422).json();           
           }
         
@@ -87,7 +87,7 @@ class TestResultController {
     modifyTestResult = async(req,res) => {
 
         //Validation
-        if(/^[0-9]+$/.test(req.params.id)===false ||/^[0-9]+$/.test(req.params.rfid)===false|| req.body.newIdTestDescriptor===undefined || req.body.newDate===undefined || req.body.newResult===undefined){
+        if(/^[0-9]+$/.test(req.params.id)===false || req.body.newIdTestDescriptor===undefined || req.body.newDate===undefined || req.body.newResult===undefined){
             return res.status(422).json();
         }
 
@@ -137,7 +137,7 @@ class TestResultController {
     deleteTestResult = async (req, res) => {
 
         //Validation
-        if(/^[0-9]+$/.test(req.params.id)===false||/^[0-9]+$/.test(req.params.rfid)===false){
+        if(/^[0-9]+$/.test(req.params.id)===false){
             return res.status(422).json();
         }
 
