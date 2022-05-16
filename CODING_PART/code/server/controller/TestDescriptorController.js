@@ -20,24 +20,21 @@ class TestDescriptorController {
 
     getTestDescriptorById = async (req, res) => {
 
-        //control id by function test (already in js)
+        //Validation
         if(/^[0-9]+$/.test(req.params.id)===false){
             return res.status(422).json();
         }
 
         //Find the ID
-        const sql = "SELECT * FROM TEST_DESCRIPTORS WHERE id==? "
-        const objectfinded = await this.daotd.all(sql,req.params.id);
-        console.log(JSON.stringify(objectfinded));
+        let sql = "SELECT * FROM TEST_DESCRIPTORS WHERE id==? "
+        let result = await this.daotd.all(sql,req.params.id);
 
         //ID doesn't exist
-        if(objectfinded==null){
+        if(result[0]==undefined){
             return res.status(404).json();
         }
 
         //create and deliver json file
-        const result = {id: objectfinded.id, name: objectfinded.name, procedureDescription: objectfinded.procedureDescription, idSKU: objectfinded.idSKU };
-        console.log("RESULT : "+ JSON.stringify(result))
         return res.status(200).json(result);
     }
 
@@ -45,24 +42,23 @@ class TestDescriptorController {
 
     createTestDescriptor = async (req, res) => {
         
-        //control the validation of the input
+        //Validation
         if ( req.body.name===undefined || req.body.idSKU===undefined || req.body.procedureDescription===undefined) {
             return res.status(422).json();           
           }
         
-        //aggiungere se idSKU non esiste-> errore 404 DUBBIO
+        //See if SKUId exist
+        let sql ="SELECT * FROM SKUITEMS WHERE SKUid==?"
+        let result = await this.daotd.all(sql,req.params.id);
 
-
-        //creation id
-        let sql = "SELECT MAX(id) as id FROM TEST_DESCRIPTORS"
-        const max_id = await this.daotd.get(sql); 
-        let id=1;
-        if(max_id.id!==null)
-            id = max_id.id+1;
+        //SKUID doesn't exist
+        if(result[0]==undefined){
+            return res.status(404).json();
+        }
 
         //database immission
-        sql = "INSERT INTO TEST_DESCRIPTORS(id, name, procedureDescription, idSKU) VALUES(?,?,?,?)";
-        await this.daotd.run(sql,[id, req.body.name, req.body.procedureDescription, req.body.idSKU]);
+        sql = "INSERT INTO TEST_DESCRIPTORS(name, procedureDescription, idSKU) VALUES(?,?,?)";
+        await this.daotd.run(sql,[req.body.name, req.body.procedureDescription, req.body.idSKU]);
 
         return res.status(201).json();
 
@@ -72,16 +68,24 @@ class TestDescriptorController {
 
     modifyTestDescriptor = async(req,res) => {
 
-        //control id by function test (already in js)
+        //Validation
         if(/^[0-9]+$/.test(req.params.id)===false || req.body.newName===undefined || req.body.newIdSKU===undefined || req.body.newProcedureDescription===undefined){
             return res.status(422).json();
         }
-        //aggiungere se idSKU non esiste-> errore 404
+        
+        //See if SKUId exist
+        let sql ="SELECT * FROM SKUITEMS WHERE SKUid==?"
+        let result = await this.daotd.all(sql,req.body.newIdSKU);
+
+        //SKUID doesn't exist
+        if(result[0]==undefined){
+            return res.status(404).json();
+        }
         
         //Find the ID
-        let sql = "SELECT * TEST_DESCRIPTORS WHERE id==?";
-        let result = await this.daotd.get(sql,req.params.id);
-        if(result==null){
+        sql = "SELECT * FROM TEST_DESCRIPTORS WHERE id==?";
+        result = await this.daotd.all(sql,req.params.id);
+        if(result[0]==undefined){
             return res.status(404).json();
         }
 
@@ -95,14 +99,23 @@ class TestDescriptorController {
 
     deleteTestDescriptor = async (req, res) => {
 
-        //control id by function test (already in js)
+        //Validation
         if(/^[0-9]+$/.test(req.params.id)===false){
             return res.status(422).json();
         }
 
+        //Find the ID to check if exist
+        let sql = "SELECT * FROM TEST_DESCRIPTORS WHERE id==? "
+        let result = await this.daotd.all(sql,req.params.id);
 
-        const sql = "DELETE FROM TEST_DESCRIPTORS WHERE id==?";
-        const result = await this.daotd.run(sql,req.params.id);
+        //ID doesn't exist
+        if(result[0]==undefined){
+            return res.status(404).json();
+        }
+
+        // delete
+        sql = "DELETE FROM TEST_DESCRIPTORS WHERE id==?";
+        result = await this.daotd.run(sql,req.params.id);
         return res.status(204).json();
     }
   
