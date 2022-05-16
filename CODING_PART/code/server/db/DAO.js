@@ -437,7 +437,7 @@ class DAO {
 
   newTableI() {
     return new Promise((res, rej)=>{//id, description, price, SKUId, supplierId
-        const sql = "CREATE TABLE IF NOT EXISTS ITEMS(id INTEGER PRIMARY KEY AUTOINCREMENT, description VARCHAR, price FLOAT, SKUId INTEGER, supplierId INTEGER)";
+        const sql = "CREATE TABLE IF NOT EXISTS ITEMS(id INTEGER, description VARCHAR, price FLOAT, SKUId INTEGER, supplierId INTEGER, PRIMARY KEY(id,supplierId))";
         this.db.run(sql, (err)=>{
             if (err) {
                 rej(err);
