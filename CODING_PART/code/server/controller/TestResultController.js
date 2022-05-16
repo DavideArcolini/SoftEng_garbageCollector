@@ -14,7 +14,7 @@ class TestResultController {
         const sql = "SELECT * FROM TEST_RESULTS WHERE rfid==?";
         const result = await this.daotr.all(sql,req.params.rfid,(error, rows) => {
             if (error) {
-                return response.status(503).json(ERROR_503);
+                return response.status(500).json(ERROR_500);
             }});
         
         return res.status(200).json(result);
@@ -33,7 +33,7 @@ class TestResultController {
         const sql = "SELECT * FROM TEST_RESULTS WHERE rfid==? "
         const testarray = await this.daotr.all(sql,req.params.rfid,(error, rows) => {
             if (error) {
-                return response.status(503).json(ERROR_503);
+                return response.status(500).json(ERROR_500);
             }});
 
         //RFID doesn't exist
