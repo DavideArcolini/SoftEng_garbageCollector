@@ -7,6 +7,28 @@ const ERROR_422 = {error: 'Unprocessable Entity'};
 const ERROR_500 = {error: 'Internal Server Error'};
 const ERROR_503 = {error: 'Service Unavailable'};
 
+/**
+ * 
+ * @param {DAO} dao 
+ * @param {integer} idSKU 
+ * @returns an array containing the ids of the Test Descriptors associated to the idSKU passed as parameters
+ */
+async function retrieveTestDescriptor(dao, idSKU) {
+    const query_RetrieveTestDescriptor_SQL = "SELECT TD.id FROM TEST_DESCRIPTORS TD WHERE TD.idSKU == ?";
+    var result_RetrieveTestDescriptor_SQL = await dao.all(query_RetrieveTestDescriptor_SQL, [idSKU], (error) => {
+        if (error) {
+            return resolve.status(500).json(ERROR_500);
+        }
+    });
+
+    var result = [];
+    result_RetrieveTestDescriptor_SQL.map((element) => {
+        result.push(element.id);
+    })
+
+    return result;
+}
+
 class SKUController {
 
     /**
@@ -38,16 +60,21 @@ class SKUController {
             return resolve.status(400).json(ERROR_400);
         }
 
-        /* QUERYING DATABASE */
-        const query_SQL = "SELECT * FROM SKUS";
-        let result_SQL = await this.dao.all(query_SQL, (error, rows) => {
+        /* QUERYING SKU DATABASE */
+        const query_RetrieveSKU_SQL = "SELECT * FROM SKUS";
+        let result_RetrieveSKU_SQL = await this.dao.all(query_RetrieveSKU_SQL, (error, rows) => {
             if (error) {
                 return resolve.status(500).json(ERROR_500);
             } 
         });
 
+        /* QUERYING TEST DESCRIPTOR DATABASE */
+        for (let item of result_RetrieveSKU_SQL) {
+            item.testDescriptors = await retrieveTestDescriptor(this.dao, item.id);
+        }
+
         /* RETURNING RESULT */
-        return resolve.status(200).json(result_SQL);
+        return resolve.status(200).json(result_RetrieveSKU_SQL);
     }
 
     /**
@@ -69,20 +96,23 @@ class SKUController {
             return resolve.status(422).json(ERROR_422);
         }
 
-        /* QUERYING DATABASE */
-        const query_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
-        let result_SQL = await this.dao.get(query_SQL, [target_id], (error, rows) => {
+        /* QUERYING SKU DATABASE */
+        const query_RetrieveSKU_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
+        let result_RetrieveSKU_SQL = await this.dao.all(query_RetrieveSKU_SQL, [target_id], (error, rows) => {
             if (error) {
                 return resolve.status(500).json(error_500);
             }
         });
 
         /* CHECKING RESULT */
-        if (result_SQL.length === 0) {
+        if (result_RetrieveSKU_SQL.length === 0) {
             return resolve.status(404).json(ERROR_404);
-        } else {
-            return resolve.status(200).json(result_SQL);
-        }
+        } 
+
+        /* QUERYING TEST DESCRIPTOR DATABASE */
+        result_RetrieveSKU_SQL[0].testDescriptors = await retrieveTestDescriptor(this.dao, result_RetrieveSKU_SQL[0].id);
+
+        return resolve.status(200).json(result_RetrieveSKU_SQL[0]);
     }
 
     /**
