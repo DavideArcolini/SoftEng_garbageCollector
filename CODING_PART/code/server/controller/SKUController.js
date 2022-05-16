@@ -56,7 +56,7 @@ class SKUController {
     getStoredSKUs = async (request, response) => {
         
         /* CHECKING INPUT */
-        if (Object.keys(request.body).length !== 0) {       /* BODY SHOULD BE EMPTY */
+        if (Object.keys(request.body).length !== 0) {       
             return response.status(400).json(ERROR_400);
         }
 
@@ -196,7 +196,7 @@ class SKUController {
             const query_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
             result_SQL = await this.dao.all(query_SQL, [target_id], (error, rows) => {
                 if (error) {
-                    return response.status(500).json(ERROR_500);
+                    return response.status(503).json(ERROR_503);
                 }
             });
 
@@ -241,7 +241,7 @@ class SKUController {
                                         WHERE id==?";
                 await this.dao.run(updateSKU_SQL, [data.newDescription, data.newWeight, data.newVolume, data.newNotes, result_SQL[0].position, data.newPrice, data.newAvailableQuantity, target_id], (error) => {
                     if (error) {
-                        return response.status(500).json(ERROR_500);
+                        return response.status(503).json(ERROR_503);
                     }
                 });
 
@@ -250,7 +250,7 @@ class SKUController {
                                             WHERE positionID==?";
                 await this.dao.run(updatePosition_SQL, [(newWeight * newAvailableQuantity), (newVolume * newAvailableQuantity), result_SQL[0].position], (error) => {
                     if (error) {
-                        return response.status(500).json(ERROR_500);
+                        return response.status(503).json(ERROR_503);
                     }
                 });
             } catch (error) {
@@ -263,7 +263,7 @@ class SKUController {
                                 WHERE id==?";
             await this.dao.run(update_SQL, [data.newDescription, data.newWeight, data.newVolume, data.newNotes, data.newPrice, data.newAvailableQuantity, target_id], (error) => {
                 if (error) {
-                    return response.status(500).json(ERROR_500);
+                    return response.status(503).json(ERROR_503);
                 }
             });
         }

@@ -12,7 +12,6 @@ router.put("/users/:username", uc.editUser);
 router.delete("/users/:username/:type", uc.deleteUser);
 
 /* MANAGER  */
-router.get("/managerSessions", uc.getStoredUsers);
 router.post("/managerSessions", uc.getUser);
 
 /* CUSTOMER */
