@@ -17,7 +17,7 @@ async function retrieveTestDescriptor(dao, idSKU) {
     const query_RetrieveTestDescriptor_SQL = "SELECT TD.id FROM TEST_DESCRIPTORS TD WHERE TD.idSKU == ?";
     var result_RetrieveTestDescriptor_SQL = await dao.all(query_RetrieveTestDescriptor_SQL, [idSKU], (error) => {
         if (error) {
-            return resolve.status(500).json(ERROR_500);
+            return [ -1 ];
         }
     });
 
@@ -51,30 +51,33 @@ class SKUController {
      *        API: GET /api/skus
      * =================================
      * @param {callback} request 
-     * @param {callback} resolve 
+     * @param {callback} response 
      */
-    getStoredSKUs = async (request, resolve) => {
+    getStoredSKUs = async (request, response) => {
         
         /* CHECKING INPUT */
         if (Object.keys(request.body).length !== 0) {       /* BODY SHOULD BE EMPTY */
-            return resolve.status(400).json(ERROR_400);
+            return response.status(400).json(ERROR_400);
         }
 
         /* QUERYING SKU DATABASE */
         const query_RetrieveSKU_SQL = "SELECT * FROM SKUS";
         let result_RetrieveSKU_SQL = await this.dao.all(query_RetrieveSKU_SQL, (error, rows) => {
             if (error) {
-                return resolve.status(500).json(ERROR_500);
+                return response.status(500).json(ERROR_500);
             } 
         });
 
         /* QUERYING TEST DESCRIPTOR DATABASE */
         for (let item of result_RetrieveSKU_SQL) {
             item.testDescriptors = await retrieveTestDescriptor(this.dao, item.id);
+            if (item.testDescriptors === [ -1 ]) {
+                return response.status(500).json(ERROR_500);
+            }
         }
 
         /* RETURNING RESULT */
-        return resolve.status(200).json(result_RetrieveSKU_SQL);
+        return response.status(200).json(result_RetrieveSKU_SQL);
     }
 
     /**
@@ -83,36 +86,39 @@ class SKUController {
      *          API: GET /api/skus/:id
      * ==========================================
      * @param {callback} request 
-     * @param {callback} resolve 
+     * @param {callback} response 
      */
-    getStoredSKUById = async (request, resolve) => {
+    getStoredSKUById = async (request, response) => {
 
         let target_id = request.params.id;
 
         /* CHECK INPUT */
         if (Object.keys(request.body).length !== 0) {           /* BODY SHOULD BE EMPTY */
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         } else if (/^[0-9]+$/.test(target_id) === false) {      /* HEADER PARAMETER SHOULD BE A NUMBER */
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         }
 
         /* QUERYING SKU DATABASE */
         const query_RetrieveSKU_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
         let result_RetrieveSKU_SQL = await this.dao.all(query_RetrieveSKU_SQL, [target_id], (error, rows) => {
             if (error) {
-                return resolve.status(500).json(error_500);
+                return response.status(500).json(error_500);
             }
         });
 
         /* CHECKING RESULT */
         if (result_RetrieveSKU_SQL.length === 0) {
-            return resolve.status(404).json(ERROR_404);
+            return response.status(404).json(ERROR_404);
         } 
 
         /* QUERYING TEST DESCRIPTOR DATABASE */
         result_RetrieveSKU_SQL[0].testDescriptors = await retrieveTestDescriptor(this.dao, result_RetrieveSKU_SQL[0].id);
+        if (result_RetrieveSKU_SQL[0].testDescriptors === [ -1 ]) {
+            return response.status(500).json(ERROR_500);
+        }
 
-        return resolve.status(200).json(result_RetrieveSKU_SQL[0]);
+        return response.status(200).json(result_RetrieveSKU_SQL[0]);
     }
 
     /**
@@ -122,29 +128,29 @@ class SKUController {
      *            API: POST /api/sku
      * ==========================================
      * @param {callback} request 
-     * @param {callback} resolve 
+     * @param {callback} response 
      */
-    newSKU = async (request, resolve) => {
+    newSKU = async (request, response) => {
         
         const data = request.body;
 
         /* CHECKING USER INPUT */
         if (Object.keys(request.body).length === 0) {
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         } else if (data.description === undefined || data.weight === undefined || data.volume === undefined || data.notes === undefined || data.price === undefined || data.availableQuantity === undefined) {
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         }
 
         /* QUERYING DATABASE */
         const query_SQL = "INSERT INTO SKUS (DESCRIPTION, WEIGHT, VOLUME, NOTES, PRICE, AVAILABLEQUANTITY) VALUES (?, ?, ?, ?, ?, ?)";
         await this.dao.run(query_SQL, [data.description, data.weight, data.volume, data.notes, data.price, data.availableQuantity], (error) => {
             if (error) {
-                return resolve.status(503).json(ERROR_503);
+                return response.status(503).json(ERROR_503);
             }
         });
 
         /* RETURNING RESULT */
-        return resolve.status(201).json();
+        return response.status(201).json();
     }
 
     /**
@@ -155,9 +161,9 @@ class SKUController {
      *                              API: PUT /api/sku/:id
      * ====================================================================================
      * @param {callback} request 
-     * @param {callback} resolve 
+     * @param {callback} response 
      */
-    editSKU = async (request, resolve) => {
+    editSKU = async (request, response) => {
 
         const target_id = request.params.id;
         const data = request.body;
@@ -171,11 +177,11 @@ class SKUController {
          *      - Request body: all data should be defined --> return: ERROR_422 (Unprocessable entity)
          */        
         if (/^[0-9]+$/.test(target_id) === false) {      
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         } else if (data.length === 0) {                  
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         } else if (data.newDescription === undefined || data.newWeight === undefined || data.newVolume === undefined || data.newNotes === undefined || data.newPrice === undefined || data.newAvailableQuantity === undefined ) {
-            return resolve.status(422).json(ERROR_422);    
+            return response.status(422).json(ERROR_422);    
         }
 
 
@@ -190,17 +196,17 @@ class SKUController {
             const query_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
             result_SQL = await this.dao.all(query_SQL, [target_id], (error, rows) => {
                 if (error) {
-                    return resolve.status(500).json(ERROR_500);
+                    return response.status(500).json(ERROR_500);
                 }
             });
 
             /* CHECKING RESULT */
             if (result_SQL.length === 0) {
-                return resolve.status(404).json(ERROR_404);
+                return response.status(404).json(ERROR_404);
             }        
         } catch (error) {
             console.log(error);
-            return resolve.status(503).json(ERROR_503);
+            return response.status(503).json(ERROR_503);
         }
     
 
@@ -211,11 +217,11 @@ class SKUController {
                 const query_retrievePosition_SQL = "SELECT * FROM POSITIONS WHERE POSITIONS.positionID == ?"
                 var result_retrievePosition_SQL = await this.dao.all(query_retrievePosition_SQL, [result_SQL[0].position], (error) => {
                     if (error) {
-                        return resolve.status(503).json();
+                        return response.status(503).json();
                     }
                 });
                 if (result_retrievePosition_SQL.length === 0) {
-                    return resolve.status(503).json(ERROR_503);
+                    return response.status(503).json(ERROR_503);
                 }
 
                 // check constraint about maxVolume and maxWeight of that position
@@ -226,7 +232,7 @@ class SKUController {
                 const newAvailableQuantity = data.newAvailableQuantity;
 
                 if ((newWeight * newAvailableQuantity) > maxWeight || (newVolume * newAvailableQuantity) > maxVolume) {
-                    return resolve.status(422).json(ERROR_422);
+                    return response.status(422).json(ERROR_422);
                 }
 
                 //          update sku and update position
@@ -235,7 +241,7 @@ class SKUController {
                                         WHERE id==?";
                 await this.dao.run(updateSKU_SQL, [data.newDescription, data.newWeight, data.newVolume, data.newNotes, result_SQL[0].position, data.newPrice, data.newAvailableQuantity, target_id], (error) => {
                     if (error) {
-                        return resolve.status(500).json(ERROR_500);
+                        return response.status(500).json(ERROR_500);
                     }
                 });
 
@@ -244,12 +250,12 @@ class SKUController {
                                             WHERE positionID==?";
                 await this.dao.run(updatePosition_SQL, [(newWeight * newAvailableQuantity), (newVolume * newAvailableQuantity), result_SQL[0].position], (error) => {
                     if (error) {
-                        return resolve.status(500).json(ERROR_500);
+                        return response.status(500).json(ERROR_500);
                     }
                 });
             } catch (error) {
                 console.log(error);
-                return resolve.status(503).json(ERROR_503);
+                return response.status(503).json(ERROR_503);
             }
         } else {
             const update_SQL = "UPDATE SKUS \
@@ -257,13 +263,13 @@ class SKUController {
                                 WHERE id==?";
             await this.dao.run(update_SQL, [data.newDescription, data.newWeight, data.newVolume, data.newNotes, data.newPrice, data.newAvailableQuantity, target_id], (error) => {
                 if (error) {
-                    return resolve.status(500).json(ERROR_500);
+                    return response.status(500).json(ERROR_500);
                 }
             });
         }
         
         /*  RETURN RESULT ON SUCCESS */
-        return resolve.status(200).json();
+        return response.status(200).json();
     }
 
 
@@ -275,9 +281,9 @@ class SKUController {
      *                          API: PUT /api/sku/:id/position
      * ====================================================================================
      * @param {callback} request 
-     * @param {callback} resolve 
+     * @param {callback} response 
      */
-    addOrEditPositionSKU = async (request, resolve) => {
+    addOrEditPositionSKU = async (request, response) => {
 
         const target_id = request.params.id;
         const positionID = request.body.position;
@@ -295,11 +301,11 @@ class SKUController {
          *      - Request body: length of parameters --> return: ERROR_422 (Unprocessable entity)
          */       
         if (/^[0-9]+$/.test(target_id) === false) {    
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         } else if (request.body.length === 0) {                    
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         } else if (positionID === undefined || positionID.length !== 12) {
-            return resolve.status(422).json(ERROR_422);    
+            return response.status(422).json(ERROR_422);    
         }
 
         /* CHECK CONSTRAINT: position is already assigned to a sku? */
@@ -307,16 +313,16 @@ class SKUController {
             const query_positionAssigned_SQL = "SELECT * FROM SKUS WHERE SKUS.position == ?";
             const result_positionAssigned_SQL = await this.dao.all(query_positionAssigned_SQL, [positionID], (error) => {
                 if (error) {
-                    return resolve.status(503).json(ERROR_503);
+                    return response.status(503).json(ERROR_503);
                 }
             });
             if (result_positionAssigned_SQL.length !== 0) {
                 console.log("[DEBUG] Oh no");
-                return resolve.status(422).json(ERROR_422);
+                return response.status(422).json(ERROR_422);
             }
         } catch (error) {
             console.log(error);
-            return resolve.status(503).json(ERROR_503);
+            return response.status(503).json(ERROR_503);
         }
         
 
@@ -326,11 +332,11 @@ class SKUController {
             const querySKU_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
             resultSKU_SQL = await this.dao.all(querySKU_SQL, [target_id], (error, rows) => {
                 if (error) {
-                    return resolve.status(503).json(ERROR_503);
+                    return response.status(503).json(ERROR_503);
                 }
             });
             if (resultSKU_SQL.length === 0) {                              
-                return resolve.status(404).json(ERROR_404);
+                return response.status(404).json(ERROR_404);
             }
 
             /* CHECK IF IT HAS A POSITION ALREADY */
@@ -341,7 +347,7 @@ class SKUController {
 
         } catch (error) {
             console.log(error);
-            return resolve.status(503).json(ERROR_503);
+            return response.status(503).json(ERROR_503);
         }
         
 
@@ -351,15 +357,15 @@ class SKUController {
             const queryPosition_SQL = "SELECT * FROM POSITIONS WHERE POSITIONS.positionID == ?";
             resultPosition_SQL = await this.dao.all(queryPosition_SQL, [positionID], (error, rows) => {
                 if (error) {
-                    return resolve.status(503).json(ERROR_503);
+                    return response.status(503).json(ERROR_503);
                 }
             });
             if (resultPosition_SQL.length === 0) {                              
-                return resolve.status(404).json(ERROR_404);
+                return response.status(404).json(ERROR_404);
             }
         } catch (error) {
             console.log(error);
-            return resolve.status(503).json(ERROR_503);
+            return response.status(503).json(ERROR_503);
         }
         
 
@@ -375,7 +381,7 @@ class SKUController {
 
         /* CHECK CONSTRAINT: volume and weight are fine? */
         if (occupiedWeight + (skuWeight * availableQuantity) > maxWeight || occupiedVolume + (skuVolume * availableQuantity) > maxVolume) {
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         }
 
         /* IF EVERYTHING IS FINE, UPDATE THE NEW POSITION, RESET THE OLD POSITION AND UPDATE THE SKU */
@@ -385,12 +391,12 @@ class SKUController {
                                    WHERE id==?";
             await this.dao.run(updateSKU_SQL, [positionID, target_id], (error) => {
                 if (error) {
-                    return resolve.status(503).json(ERROR_503);
+                    return response.status(503).json(ERROR_503);
                 }
             });
         } catch (error) {
             console.log(error);
-            return resolve.status(503).json(ERROR_503);
+            return response.status(503).json(ERROR_503);
         }
         
 
@@ -400,12 +406,12 @@ class SKUController {
                                         WHERE positionID == ?";
             await this.dao.run(updatePosition_SQL, [(occupiedWeight + (skuWeight * availableQuantity)), (occupiedVolume + (skuVolume * availableQuantity)), positionID], (error) => {
                 if (error) {
-                    return resolve.status(503).json(ERROR_503);
+                    return response.status(503).json(ERROR_503);
                 }
             });
         } catch (error) {
             console.log(error);
-            return resolve.status(503).json(ERROR_503);
+            return response.status(503).json(ERROR_503);
         }
         
 
@@ -416,17 +422,17 @@ class SKUController {
                                            WHERE positionID == ?";
                 await this.dao.run(resetPosition_SQL, [oldPositionID], (error) => {
                     if (error) {
-                        return resolve.status(503).json(ERROR_503);
+                        return response.status(503).json(ERROR_503);
                     }
                 });
             } catch (error) {
                 console.log(error);
-                return resolve.status(503).json(ERROR_503);
+                return response.status(503).json(ERROR_503);
             }
         }
 
         /* RETURN RESULT ON SUCCESS */
-        return resolve.status(200).json();
+        return response.status(200).json();
     }
 
 
@@ -436,9 +442,9 @@ class SKUController {
      *        API: DELETE /api/skus/:id
      * ==========================================
      * @param {callback} request 
-     * @param {callback} resolve 
+     * @param {callback} response 
      */
-    deleteSKU = async (request, resolve) => {
+    deleteSKU = async (request, response) => {
 
         let target_id = request.params.id;
 
@@ -450,9 +456,9 @@ class SKUController {
          *      - Request body: empty --> return: ERROR_422 (Unprocessable entity)
          */ 
         if (Object.keys(request.body).length !== 0) {           
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         } else if (/^[0-9]+$/.test(target_id) === false) {      /* HEADER PARAMETER SHOULD BE A NUMBER */
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         }
 
         /* ------------ CHECK IF SKU IS ASSOCIATED TO SKUITEMS OR TESTDESCRIPTOR ----------------*/
@@ -467,14 +473,14 @@ class SKUController {
             const query_retrieveSKU_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
             const result_retrieveSKU_SQL = await this.dao.all(query_retrieveSKU_SQL, [target_id], (error) => {
                 if (error) {
-                    return resolve.status(503).json(ERROR_503);
+                    return response.status(503).json(ERROR_503);
                 }
             });
 
             /* CHECKING TEST DESCRIPTOR */
             if (result_retrieveSKU_SQL[0].testDescriptors !== undefined) {
                 console.log("[DEBUG] cannot remove SKU: there are associated testDescriptor...");
-                return resolve.status(422).json(ERROR_422);
+                return response.status(422).json(ERROR_422);
             }
 
             /* CHECKING POSITION AND UPDATE */
@@ -482,7 +488,7 @@ class SKUController {
                 const query_updatePosition_SQL = "UPDATE POSITIONS SET occupiedWeight = 0, occupiedVolume = 0 WHERE positionID == ?";
                 await this.dao.run(query_updatePosition_SQL, [result_retrieveSKU_SQL[0].position], (error) => {
                     if (error) {
-                        return resolve.status(503).json(ERROR_503);
+                        return response.status(503).json(ERROR_503);
                     }
                 })
             }
@@ -491,28 +497,28 @@ class SKUController {
             const query_retrieveSKUitem_SQL = "SELECT * FROM SKUITEMS WHERE SKUITEMS.SKUId == ?";
             const result_retrieveSKUitem_SQL = await this.dao.all(query_retrieveSKUitem_SQL, [target_id], (error) => {
                 if (error) {
-                    return resolve.status(503).json(ERROR_503);
+                    return response.status(503).json(ERROR_503);
                 }
             });
             if (result_retrieveSKUitem_SQL.length !== 0) {
                 console.log("[DEBUG] cannot remove SKU: there are associated SKUitem...");
-                return resolve.status(422).json(ERROR_422);
+                return response.status(422).json(ERROR_422);
             }
         } catch (error) {
             console.log(error);
-            return resolve.status(503).json(ERROR_503);
+            return response.status(503).json(ERROR_503);
         }
         
         /* -------------- REMOVING SKU FROM THE LIST -------------- */
         const query_SQL = "DELETE FROM SKUS WHERE SKUS.id == ?";
         await this.dao.run(query_SQL, [target_id], (error) => {
             if (error) {
-                return resolve.status(503).json(ERROR_503);
+                return response.status(503).json(ERROR_503);
             }
         });
 
         /* RETURNING */
-        return resolve.status(204).json();
+        return response.status(204).json();
     }
 
 }

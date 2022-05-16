@@ -31,9 +31,9 @@ class PositionController {
      *         API: GET /api/positions 
      * =========================================
      * @param {callback} request 
-     * @param {callback} resolve 
+     * @param {callback} response 
      */
-    getPositions = async (request, resolve) => {
+    getPositions = async (request, response) => {
         
         /**
          *  VALIDATING USER INPUT
@@ -42,7 +42,7 @@ class PositionController {
          *      - Request body: empty --> return: ERROR_400 (bad request)
          */
         if (Object.keys(request.body).length !== 0) {   
-            return resolve.status(400).json(ERROR_400);
+            return response.status(400).json(ERROR_400);
         }
 
         /**
@@ -55,15 +55,15 @@ class PositionController {
             const query_SQL = "SELECT * FROM POSITIONS";
             let result_SQL = await this.dao.all(query_SQL, (error, rows) => {
                 if (error) {
-                    return resolve.status(500).json(ERROR_500);
+                    return response.status(500).json(ERROR_500);
                 } 
             });
 
             /* RETURNING RESULT */
-            return resolve.status(200).json(result_SQL);
+            return response.status(200).json(result_SQL);
         } catch (error) {
             console.log(error);
-            return resolve.status(500).json(ERROR_500);
+            return response.status(500).json(ERROR_500);
         }
         
     }
@@ -75,9 +75,9 @@ class PositionController {
      *                 API: POST /api/position
      * =========================================================
      * @param {callback} request 
-     * @param {callback} resolve 
+     * @param {callback} response 
      */
-    newPosition = async (request, resolve) => {
+    newPosition = async (request, response) => {
         
         const data = request.body;
         data.po
@@ -93,15 +93,15 @@ class PositionController {
          *      - Request body: aisleID, row and col should be string of digits --> return: ERROR_422 (Unprocessable entity)
          */
         if (Object.keys(request.body).length === 0) {
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         } else if (data.positionID === undefined || data.aisleID === undefined || data.row === undefined || data.col === undefined || data.maxWeight === undefined || data.maxVolume === undefined) {
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         } else if (data.aisleID.length !== 4 || data.row.length !== 4 || data.col.length !== 4) {
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         } else if (data.positionID !== data.aisleID + data.row + data.col) {
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         } else if (/^[0-9]+$/.test(data.aisleID) === false || /^[0-9]+$/.test(data.row) === false || /^[0-9]+$/.test(data.col) === false) {
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         }
 
         /**
@@ -115,15 +115,15 @@ class PositionController {
             
             await this.dao.run(query_SQL, [data.positionID, data.aisleID, data.row, data.col, data.maxWeight, data.maxVolume], (error) => {
                 if (error) {
-                    return resolve.status(503).json(ERROR_503);
+                    return response.status(503).json(ERROR_503);
                 }
             });
 
             /* RETURNING RESULT */
-            return resolve.status(201).json();
+            return response.status(201).json();
         } catch (error) {
             console.log(error);
-            return resolve.status(503).json(ERROR_503);
+            return response.status(503).json(ERROR_503);
         }
     }
 
@@ -133,9 +133,9 @@ class PositionController {
      *      API: PUT /api/position/:positionID
      * ==========================================
      * @param {callback} request 
-     * @param {callback} resolve 
+     * @param {callback} response 
      */
-    editPosition = async (request, resolve) => {
+    editPosition = async (request, response) => {
 
         const target_id = request.params.positionID;
         const data = request.body;
@@ -151,15 +151,15 @@ class PositionController {
          *      - Request body: aisleID, row and col should be string of digits --> return: ERROR_422 (Unprocessable entity)
          */      
         if (/^[0-9]+$/.test(target_id) === false || target_id.length !== 12) {         
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         } else if (data.length === 0) {                                                
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         } else if (data.newAisleID === undefined || data.newRow === undefined || data.newCol === undefined || data.newMaxWeight === undefined || data.newMaxVolume === undefined || data.newOccupiedWeight === undefined || data.newOccupiedVolume === undefined) {
-            return resolve.status(422).json(ERROR_422);    
+            return response.status(422).json(ERROR_422);    
         } else if (data.newAisleID.length !== 4 || data.newRow.length !== 4 || data.newCol.length !== 4) {
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         } else if (/^[0-9]+$/.test(data.newAisleID) === false || /^[0-9]+$/.test(data.newRow) === false || /^[0-9]+$/.test(data.newCol) === false) {
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         }
 
 
@@ -174,22 +174,22 @@ class PositionController {
             const query_SQL = "SELECT * FROM POSITIONS WHERE POSITIONS.positionID == ?";
             let result_SQL = await this.dao.all(query_SQL, [target_id], (error, rows) => {
                 if (error) {
-                    return resolve.status(503).json(ERROR_503);
+                    return response.status(503).json(ERROR_503);
                 }
             });
             if (result_SQL.length === 0) {
-                return resolve.status(404).json(ERROR_404);
+                return response.status(404).json(ERROR_404);
             }
         } catch (error) {
             console.log(error);
-            return resolve.status(503).json(ERROR_503);
+            return response.status(503).json(ERROR_503);
         }
 
         /* -------------- CHECKING CONSTRAINTS IF POSITION IS ASSOCIATED TO SKU -------------- */
         const query_retrieveSKU_SQL = "SELECT * FROM SKUS WHERE SKUS.position == ?";
         const result_retrieveSKU_SQL = await this.dao.all(query_retrieveSKU_SQL, [target_id], (error) => {
             if (error) {
-                return resolve.status(503).json(ERROR_503);
+                return response.status(503).json(ERROR_503);
             }
         });
         if (result_retrieveSKU_SQL.length !== 0) {
@@ -201,7 +201,7 @@ class PositionController {
 
             if ((weight * availableQuantity) > data.newMaxWeight || (volume * availableQuantity) > data.newMaxVolume) {
                 console.log("[DEBUG] some constraints are failed");
-                return resolve.status(503).json(ERROR_503);
+                return response.status(503).json(ERROR_503);
             }
         }
         
@@ -220,15 +220,15 @@ class PositionController {
                                 WHERE positionID==?";
             await this.dao.run(update_SQL, [newPositionID, data.newAisleID, data.newRow, data.newCol, data.newMaxWeight, data.newMaxVolume, data.newOccupiedWeight, data.newOccupiedVolume, target_id], (error) => {
                 if (error) {
-                    return resolve.status(503).json(ERROR_503);
+                    return response.status(503).json(ERROR_503);
                 }
             });
 
             /* RETURN RESULT */
-            return resolve.status(200).json();
+            return response.status(200).json();
         } catch (error) {
             console.log(error);
-            return resolve.status(503).json(ERROR_503);
+            return response.status(503).json(ERROR_503);
         }
     }
 
@@ -239,9 +239,9 @@ class PositionController {
      *           API: PUT /api/position/:positionID/changeID
      * =======================================================================
      * @param {callback} request 
-     * @param {callback} resolve 
+     * @param {callback} response 
      */
-    editPositionID = async (request, resolve) => {
+    editPositionID = async (request, response) => {
 
         const target_id = request.params.positionID;
         const newPositionID = request.body.newPositionID;
@@ -256,11 +256,11 @@ class PositionController {
          *      - Request body: length of parameters --> return: ERROR_422 (Unprocessable entity)
          */       
         if (/^[0-9]+$/.test(target_id) === false || target_id.length !== 12) {         
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         } else if (request.body.length === 0) {                                          
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         } else if (newPositionID === undefined || newPositionID.length != 12) {
-            return resolve.status(422).json(ERROR_422);    
+            return response.status(422).json(ERROR_422);    
         }
 
 
@@ -275,15 +275,15 @@ class PositionController {
             const query_SQL = "SELECT * FROM POSITIONS WHERE POSITIONS.positionID == ?";
             let result_SQL = await this.dao.all(query_SQL, [target_id], (error, rows) => {
                 if (error) {
-                    return resolve.status(503).json(ERROR_503);
+                    return response.status(503).json(ERROR_503);
                 }
             });
             if (result_SQL.length === 0) {
-                return resolve.status(404).json(ERROR_404);
+                return response.status(404).json(ERROR_404);
             }
         } catch (error) {
             console.log(error);
-            return resolve.status(503).json(ERROR_503);
+            return response.status(503).json(ERROR_503);
         }
         
 
@@ -300,13 +300,13 @@ class PositionController {
                                 WHERE positionID==?";
             await this.dao.run(update_SQL, [newPositionID, newAisleID, newRow, newCol, target_id], (error) => {
                 if (error) {
-                    return resolve.status(503).json(ERROR_503);
+                    return response.status(503).json(ERROR_503);
                 }
             });
             
         } catch (error) {
             console.log(error);
-            return resolve.status(503).json(ERROR_503);
+            return response.status(503).json(ERROR_503);
         }
 
         /* FETCH SKU WITH THE OLD POSITION AND UPDATE */
@@ -314,7 +314,7 @@ class PositionController {
             const query_retrieveSKU_SQL = "SELECT * FROM SKUS WHERE SKUS.position == ?";
             let result_retrieveSKU_SQL = await this.dao.all(query_retrieveSKU_SQL, [target_id], (error, rows) => {
                 if (error) {
-                    return resolve.status(503).json(ERROR_503);
+                    return response.status(503).json(ERROR_503);
                 }
             });
 
@@ -325,17 +325,17 @@ class PositionController {
                                              WHERE position == ?";
                 await this.dao.run(query_updateSKU_SQL, [newPositionID, target_id], (error) => {
                     if (error) {
-                        return resolve.status(503).json(ERROR_503);
+                        return response.status(503).json(ERROR_503);
                     }
                 });
             }
         } catch (error) {
             console.log(error);
-            return resolve.status(503).json(ERROR_503);
+            return response.status(503).json(ERROR_503);
         }
 
         /* RETURNING RESULT ON SUCCESS */
-        return resolve.status(200).json();
+        return response.status(200).json();
     }
 
 
@@ -345,9 +345,9 @@ class PositionController {
      *      API: DELETE /api/position/:id
      * ==========================================
      * @param {callback} request 
-     * @param {callback} resolve 
+     * @param {callback} response 
      */
-    deletePosition = async (request, resolve) => {
+    deletePosition = async (request, response) => {
 
         let target_id = request.params.positionID;
 
@@ -360,9 +360,9 @@ class PositionController {
          *      - Request header: length of parameters --> return: ERROR_422 (Unprocessable entity)
          */ 
         if (Object.keys(request.body).length !== 0) {           
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         } else if (/^[0-9]+$/.test(target_id) === false || target_id.length !== 12) {      
-            return resolve.status(422).json(ERROR_422);
+            return response.status(422).json(ERROR_422);
         }
 
         /**
@@ -377,7 +377,7 @@ class PositionController {
             const query_SQL = "DELETE FROM POSITIONS WHERE POSITIONS.positionID == ?";
             await this.dao.run(query_SQL, [target_id], (error) => {
                 if (error) {
-                    return resolve.status(503).json(ERROR_503);
+                    return response.status(503).json(ERROR_503);
                 }
             });   
 
@@ -385,15 +385,15 @@ class PositionController {
             const query_updateSKU_SQL = "UPDATE SKUS SET position = ? WHERE position == ?";
             await this.dao.run(query_updateSKU_SQL, [null, target_id], (error) => {
                 if (error) {
-                    return resolve.status(503).json(ERROR_503);
+                    return response.status(503).json(ERROR_503);
                 }
             });
 
             /* RETURNING */
-            return resolve.status(204).json();
+            return response.status(204).json();
         } catch (error) {
             console.log(error);
-            return resolve.status(503).json(ERROR_503);
+            return response.status(503).json(ERROR_503);
         }
     }
 }
