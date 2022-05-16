@@ -59,14 +59,14 @@ class ItemController {
         
         //Search if supplier already sell another item with same id
         sql = "SELECT * FROM ITEMS WHERE Id == ? AND supplierId == ?"
-        let search = await this.daoi.get(sql,[req.body.id,req.body.supplierId]);
+        let search = await this.daoi.all(sql,[req.body.id,req.body.supplierId]);
         if(search[0]!==undefined ){  
             return res.status(422).json();
         } 
 
         //Search if supplier already sell another item with same SKUId
-        sql = "SELECT * FROM ITEMS WHERE Id == ? AND supplierId == ?"
-        search = await this.daoi.get(sql,[req.body.SKUId,req.body.supplierId]);
+        sql = "SELECT * FROM ITEMS WHERE SKUId == ? AND supplierId == ?"
+        search = await this.daoi.all(sql,[req.body.SKUId,req.body.supplierId]);
         if(search[0]!==undefined ){  
             return res.status(422).json();
         } 
