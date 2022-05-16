@@ -8,7 +8,7 @@ class ItemController {
 
 
     
-    getItems = async (req, res) =>{   //   /api/items
+    getItems = async (req, res) =>{ 
 
         //search on DB
         const sql = "SELECT * FROM ITEMS";
@@ -19,18 +19,18 @@ class ItemController {
 
 
 
-    getItemById = async (req, res) => { // /api/items/:id
+    getItemById = async (req, res) => { 
 
         //control id by function test (already in js)
-        if(/^[0-9]+$/.test(req.params.id)===false){
+        if(/^[0-9]+$/.test(req.params.id)===false|| /^[0-9]+$/.test(req.params.supplierId)===false){
             return res.status(422).json();
         }
 
-        //Find the ID
-        let sql = "SELECT * FROM ITEMS WHERE id==? "
-        let result = await this.daoi.all(sql,req.params.id);
+        //Find the item
+        let sql = "SELECT * FROM ITEMS WHERE id==? AND supplierId==?  "
+        let result = await this.daoi.all(sql,[req.params.id, req.params.supplierId]);
 
-        //ID doesn't exist
+        //Item doesn't exist
         if(result[0]==undefined){
             return res.status(404).json();
         }
@@ -41,9 +41,9 @@ class ItemController {
 
 
 
-    createItem = async (req, res) => {///api/item
+    createItem = async (req, res) => {
         
-        //control the validation of the input
+        //Validation
         if (req.body.id===undefined || req.body.description===undefined || req.body.price===undefined || req.body.SKUId===undefined || req.body.supplierId===undefined) {
             return res.status(404).json();           
           }
@@ -81,18 +81,18 @@ class ItemController {
 
 
 
-    modifyItem = async(req,res) => { //     /api/item/:id
+    modifyItem = async(req,res) => { 
 
-        //control id by function test (already in js)
-        if(/^[0-9]+$/.test(req.params.id)===false){
+        //Validation
+        if(/^[0-9]+$/.test(req.params.id)===false|| /^[0-9]+$/.test(req.params.supplierId)===false){
             return res.status(422).json();
         }
         
-        //Find the ID of the supplier
+        //Find if item exist
         let sql = "SELECT * FROM ITEMS WHERE id==? AND supplierId==? "
-        let result = await this.daoi.all(sql,[req.params.id,req.body.supplierId]);
+        let result = await this.daoi.all(sql,[req.params.id,req.params.supplierId]);
 
-        //ID doesn't exist
+        //Item doesn't exist
         if(result[0]==undefined){
             return res.status(404).json();
         }
@@ -100,17 +100,17 @@ class ItemController {
         //Update the object if found
         if(req.body.newDescription==null){
             sql = "UPDATE ITEMS SET  price=?  WHERE id==? AND supplierId==?";
-            result = await this.daoi.run(sql,[req.body.newPrice, req.params.id,req.body.supplierId]);
+            result = await this.daoi.run(sql,[req.body.newPrice, req.params.id,req.params.supplierId]);
             return res.status(200).json();
         }else if(req.body.newPrice==null){
             sql = "UPDATE ITEMS SET  description=?  WHERE id==?  AND supplierId==?";
-            result = await this.daoi.run(sql,[req.body.newDescription, req.params.id, req.body.supplierId]);
+            result = await this.daoi.run(sql,[req.body.newDescription, req.params.id, req.params.supplierId]);
             return res.status(200).json();
         }else if(req.body.newDescription==null && req.body.newPrice==null){
             return res.status(503).json();
         }else{
             sql = "UPDATE ITEMS SET  description=?, price=? WHERE id==?  AND supplierId==?";
-            result = await this.daoi.run(sql,[req.body.newDescription,req.body.newPrice, req.params.id, req.body.supplierId]);
+            result = await this.daoi.run(sql,[req.body.newDescription,req.body.newPrice, req.params.id, req.params.supplierId]);
             return res.status(200).json();
         }
 }
@@ -119,23 +119,23 @@ class ItemController {
 
     deleteItem = async (req, res) => {
 
-        //control id by function test (already in js)
-        if(/^[0-9]+$/.test(req.params.id)===false){
+        //Validation
+        if(/^[0-9]+$/.test(req.params.id)===false || /^[0-9]+$/.test(req.params.supplierId)===false ){
             return res.status(422).json();
         }
 
-        //Find the ID to check if exist
+        //Find if the item exist
         let sql = "SELECT * FROM ITEMS WHERE id==? AND supplierId==? "
-        let result = await this.daoi.all(sql,[req.params.id,req.body.supplierId]);
+        let result = await this.daoi.all(sql,[req.params.id,req.params.supplierId]);
 
-        //ID doesn't exist
+        //Item doesn't exist
         if(result[0]==undefined){
             return res.status(404).json();
         }
 
         //delete item
         sql = "DELETE FROM ITEMS WHERE id==? AND supplierId==?";
-        result = await this.daoi.run(sql,[req.params.id,req.body.supplierId]);
+        result = await this.daoi.run(sql,[req.params.id,req.params.supplierId]);
         return res.status(204).json();
     }
   
