@@ -25,7 +25,6 @@ async function retrieveTestDescriptor(dao, idSKU) {
     result_RetrieveTestDescriptor_SQL.map((element) => {
         result.push(element.id);
     })
-
     return result;
 }
 
@@ -457,7 +456,7 @@ class SKUController {
          */ 
         if (Object.keys(request.body).length !== 0) {           
             return response.status(422).json(ERROR_422);
-        } else if (/^[0-9]+$/.test(target_id) === false) {      /* HEADER PARAMETER SHOULD BE A NUMBER */
+        } else if (/^[0-9]+$/.test(target_id) === false) {      
             return response.status(422).json(ERROR_422);
         }
 
@@ -478,7 +477,21 @@ class SKUController {
             });
 
             /* CHECKING TEST DESCRIPTOR */
-            if (result_retrieveSKU_SQL[0].testDescriptors !== null) {
+            let result = await retrieveTestDescriptor(this.dao, result_retrieveSKU_SQL[0].id);
+            if (result.length !== 0) {
+                console.log("[DEBUG] cannot remove an SKU with associated test descriptors");
+                return response.status(422).json(ERROR_422);
+            }
+
+            /* CHECKING SKUITEMS */
+            const query_retrieveSKUitem_SQL = "SELECT * FROM SKUITEMS WHERE SKUITEMS.SKUId == ?";
+            const result_retrieveSKUitem_SQL = await this.dao.all(query_retrieveSKUitem_SQL, [target_id], (error) => {
+                if (error) {
+                    return response.status(503).json(ERROR_503);
+                }
+            });
+            if (result_retrieveSKUitem_SQL.length !== 0) {
+                console.log("[DEBUG] cannot removed an SKU with associated SKUitems")
                 return response.status(422).json(ERROR_422);
             }
 
@@ -491,29 +504,24 @@ class SKUController {
                     }
                 })
             }
-
-            /* CHECKING SKUITEMS */
-            const query_retrieveSKUitem_SQL = "SELECT * FROM SKUITEMS WHERE SKUITEMS.SKUId == ?";
-            const result_retrieveSKUitem_SQL = await this.dao.all(query_retrieveSKUitem_SQL, [target_id], (error) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
-            if (result_retrieveSKUitem_SQL.length !== 0) {
-                return response.status(422).json(ERROR_422);
-            }
         } catch (error) {
             console.log(error);
             return response.status(503).json(ERROR_503);
         }
         
         /* -------------- REMOVING SKU FROM THE LIST -------------- */
-        const query_SQL = "DELETE FROM SKUS WHERE SKUS.id == ?";
-        await this.dao.run(query_SQL, [target_id], (error) => {
-            if (error) {
-                return response.status(503).json(ERROR_503);
-            }
-        });
+        try {
+            const query_SQL = "DELETE FROM SKUS WHERE SKUS.id == ?";
+            await this.dao.run(query_SQL, [target_id], (error) => {
+                if (error) {
+                    return response.status(503).json(ERROR_503);
+                }
+            });
+        } catch (error) {
+            console.log(error);
+            return response.status(503).json(ERROR_503);
+        }
+        
 
         /* RETURNING */
         return response.status(204).json();
