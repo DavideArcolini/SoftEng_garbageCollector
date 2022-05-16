@@ -10,7 +10,7 @@ class ItemController {
     
     getItems = async (req, res) =>{   //   /api/items
 
-        //Search on DB
+        //search on DB
         const sql = "SELECT * FROM ITEMS";
         const result = await this.daoi.all(sql);
         
@@ -21,7 +21,7 @@ class ItemController {
 
     getItemById = async (req, res) => { // /api/items/:id
 
-        //Validation
+        //control id by function test (already in js)
         if(/^[0-9]+$/.test(req.params.id)===false){
             return res.status(422).json();
         }
@@ -43,8 +43,8 @@ class ItemController {
 
     createItem = async (req, res) => {///api/item
         
-        //Validation
-        if (req.body.description===undefined || req.body.price===undefined || req.body.SKUId===undefined || req.body.supplierId===undefined) {
+        //control the validation of the input
+        if (req.body.id===undefined || req.body.description===undefined || req.body.price===undefined || req.body.SKUId===undefined || req.body.supplierId===undefined) {
             return res.status(404).json();           
           }
 
@@ -57,16 +57,23 @@ class ItemController {
             return res.status(404).json();
         }
         
-        //Search if there is another item
-        sql = "SELECT * FROM ITEMS WHERE SKUId = ?"
-        const search = await this.daoi.get(sql,req.body.SKUId);
+        //Search if supplier already sell another item with same id
+        sql = "SELECT * FROM ITEMS WHERE Id == ? AND supplierId == ?"
+        let search = await this.daoi.get(sql,[req.body.id,req.body.supplierId]);
         if(search[0]!==undefined ){  
             return res.status(422).json();
         } 
 
-        //Database immission 
-        sql = "INSERT INTO ITEMS(description, price, SKUId, supplierId) VALUES(?,?,?,?)";
-        await this.daoi.run(sql,[req.body.description, req.body.price, req.body.SKUId, req.body.supplierId]);
+        //Search if supplier already sell another item with same SKUId
+        sql = "SELECT * FROM ITEMS WHERE Id == ? AND supplierId == ?"
+        search = await this.daoi.get(sql,[req.body.SKUId,req.body.supplierId]);
+        if(search[0]!==undefined ){  
+            return res.status(422).json();
+        } 
+
+        //database immission 
+        sql = "INSERT INTO ITEMS(id,description, price, SKUId, supplierId) VALUES(?,?,?,?,?)";
+        await this.daoi.run(sql,[req.body.id, req.body.description, req.body.price, req.body.SKUId, req.body.supplierId]);
 
         return res.status(201).json();
 
@@ -76,14 +83,14 @@ class ItemController {
 
     modifyItem = async(req,res) => { //     /api/item/:id
 
-        //Validation
+        //control id by function test (already in js)
         if(/^[0-9]+$/.test(req.params.id)===false){
             return res.status(422).json();
         }
         
-        //Find the ID
-        let sql = "SELECT * FROM ITEMS WHERE id==? "
-        let result = await this.daoi.all(sql,req.params.id);
+        //Find the ID of the supplier
+        let sql = "SELECT * FROM ITEMS WHERE id==? AND supplierId==? "
+        let result = await this.daoi.all(sql,[req.params.id,req.body.supplierId]);
 
         //ID doesn't exist
         if(result[0]==undefined){
@@ -92,18 +99,18 @@ class ItemController {
 
         //Update the object if found
         if(req.body.newDescription==null){
-            sql = "UPDATE ITEMS SET  price=?  WHERE id==?";
-            result = await this.daoi.run(sql,[req.body.newPrice, req.params.id]);
+            sql = "UPDATE ITEMS SET  price=?  WHERE id==? AND supplierId==?";
+            result = await this.daoi.run(sql,[req.body.newPrice, req.params.id,req.body.supplierId]);
             return res.status(200).json();
         }else if(req.body.newPrice==null){
-            sql = "UPDATE ITEMS SET  description=?  WHERE id==?";
-            result = await this.daoi.run(sql,[req.body.newDescription, req.params.id]);
+            sql = "UPDATE ITEMS SET  description=?  WHERE id==?  AND supplierId==?";
+            result = await this.daoi.run(sql,[req.body.newDescription, req.params.id, req.body.supplierId]);
             return res.status(200).json();
         }else if(req.body.newDescription==null && req.body.newPrice==null){
             return res.status(503).json();
         }else{
-            sql = "UPDATE ITEMS SET  description=?, price=? WHERE id==?";
-            result = await this.daoi.run(sql,[req.body.newDescription,req.body.newPrice, req.params.id]);
+            sql = "UPDATE ITEMS SET  description=?, price=? WHERE id==?  AND supplierId==?";
+            result = await this.daoi.run(sql,[req.body.newDescription,req.body.newPrice, req.params.id, req.body.supplierId]);
             return res.status(200).json();
         }
 }
@@ -112,23 +119,23 @@ class ItemController {
 
     deleteItem = async (req, res) => {
 
-        //Validation
+        //control id by function test (already in js)
         if(/^[0-9]+$/.test(req.params.id)===false){
             return res.status(422).json();
         }
 
         //Find the ID to check if exist
-        let sql = "SELECT * FROM ITEMS WHERE id==? "
-        let result = await this.daoi.all(sql,req.params.id);
+        let sql = "SELECT * FROM ITEMS WHERE id==? AND supplierId==? "
+        let result = await this.daoi.all(sql,[req.params.id,req.body.supplierId]);
 
         //ID doesn't exist
         if(result[0]==undefined){
             return res.status(404).json();
         }
 
-        //Delete item
-        sql = "DELETE FROM ITEMS WHERE id==?";
-        result = await this.daoi.run(sql,req.params.id);
+        //delete item
+        sql = "DELETE FROM ITEMS WHERE id==? AND supplierId==?";
+        result = await this.daoi.run(sql,[req.params.id,req.body.supplierId]);
         return res.status(204).json();
     }
   
