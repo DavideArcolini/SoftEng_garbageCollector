@@ -10,7 +10,7 @@ class ItemController {
     
     getItems = async (req, res) =>{   //   /api/items
 
-        //search on DB
+        //Search on DB
         const sql = "SELECT * FROM ITEMS";
         const result = await this.daoi.all(sql);
         
@@ -21,22 +21,21 @@ class ItemController {
 
     getItemById = async (req, res) => { // /api/items/:id
 
-        //control id by function test (already in js)
+        //Validation
         if(/^[0-9]+$/.test(req.params.id)===false){
             return res.status(422).json();
         }
 
         //Find the ID
-        const sql = "SELECT COUNT(*) AS c FROM ITEMS WHERE id==? "
-        const result = await this.daoi.all(sql,req.params.id);
+        let sql = "SELECT * FROM ITEMS WHERE id==? "
+        let result = await this.daoi.all(sql,req.params.id);
 
         //ID doesn't exist
-        if(result[0].c==0){
+        if(result[0]==undefined){
             return res.status(404).json();
         }
 
-        //create and deliver json file
-        console.log("RESULT : "+ JSON.stringify(result))
+        //deliver json file
         return res.status(200).json(result);
     }
 
@@ -44,19 +43,28 @@ class ItemController {
 
     createItem = async (req, res) => {///api/item
         
-        //control the validation of the input
+        //Validation
         if (req.body.description===undefined || req.body.price===undefined || req.body.SKUId===undefined || req.body.supplierId===undefined) {
             return res.status(404).json();           
           }
 
-        //search if there is another item
-        let sql = "SELECT COUNT(*) AS c FROM ITEMS WHERE SKUId = ?"
+        //See if SKUId exist
+        let sql ="SELECT * FROM SKUITEMS WHERE SKUid==?"
+        let result = await this.daotd.all(sql,req.params.id);
+
+        //SKUID doesn't exist
+        if(result[0]==undefined){
+            return res.status(404).json();
+        }
+        
+        //Search if there is another item
+        sql = "SELECT * FROM ITEMS WHERE SKUId = ?"
         const search = await this.daoi.get(sql,req.body.SKUId);
-        if(search[0].c!==0 ){  
+        if(search[0]!==undefined ){  
             return res.status(422).json();
         } 
 
-        //database immission 
+        //Database immission 
         sql = "INSERT INTO ITEMS(description, price, SKUId, supplierId) VALUES(?,?,?,?)";
         await this.daoi.run(sql,[req.body.description, req.body.price, req.body.SKUId, req.body.supplierId]);
 
@@ -68,17 +76,17 @@ class ItemController {
 
     modifyItem = async(req,res) => { //     /api/item/:id
 
-        //control id by function test (already in js)
+        //Validation
         if(/^[0-9]+$/.test(req.params.id)===false){
             return res.status(422).json();
         }
         
         //Find the ID
-        let sql = "SELECT  COUNT(*) AS c  FROM ITEMS WHERE id==? "
+        let sql = "SELECT * FROM ITEMS WHERE id==? "
         let result = await this.daoi.all(sql,req.params.id);
 
         //ID doesn't exist
-        if(result[0].c==0){
+        if(result[0]==undefined){
             return res.status(404).json();
         }
 
@@ -104,22 +112,21 @@ class ItemController {
 
     deleteItem = async (req, res) => {
 
-        //control id by function test (already in js)
+        //Validation
         if(/^[0-9]+$/.test(req.params.id)===false){
             return res.status(422).json();
         }
 
         //Find the ID to check if exist
-        let sql = "SELECT COUNT(*) AS c FROM ITEMS WHERE id==? "
+        let sql = "SELECT * FROM ITEMS WHERE id==? "
         let result = await this.daoi.all(sql,req.params.id);
-        console.log(result[0].c);
 
         //ID doesn't exist
-        if(result[0].c==0){
+        if(result[0]==undefined){
             return res.status(404).json();
         }
 
-        //delete item
+        //Delete item
         sql = "DELETE FROM ITEMS WHERE id==?";
         result = await this.daoi.run(sql,req.params.id);
         return res.status(204).json();
