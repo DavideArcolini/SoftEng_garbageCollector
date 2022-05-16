@@ -14,7 +14,7 @@ class ItemController {
         const sql = "SELECT * FROM ITEMS";
         const result = await this.daoi.all(sql,(error, rows) => {
             if (error) {
-                return response.status(503).json(ERROR_503);
+                return response.status(500).json(ERROR_500);
             }});
         
         return res.status(200).json(result);
@@ -33,7 +33,7 @@ class ItemController {
         let sql = "SELECT * FROM ITEMS WHERE id==? AND supplierId==?  "
         let result = await this.daoi.all(sql,[req.params.id, req.params.supplierId],(error, rows) => {
             if (error) {
-                return response.status(503).json(ERROR_503);
+                return response.status(500).json(ERROR_500);
             }});
 
         //Item doesn't exist
