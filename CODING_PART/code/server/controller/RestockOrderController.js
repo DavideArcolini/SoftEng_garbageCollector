@@ -16,9 +16,6 @@ class RestockOrderController {
 
     createRestockOrder = async (req, res) => {
 
-        if (req.body.issueDate===undefined || req.body.supplierId===undefined || req.body.products===undefined ) {
-            return res.status(422).end();           
-          }
         try{
             let sql = "SELECT MAX(id) as id FROM RESTOCK_ORDERS"
             let max_id = await this.dao.get(sql);
@@ -109,9 +106,6 @@ class RestockOrderController {
 
     getRestockOrderById = async (req, res) => {
         let id = req.params.id;
-        if(/^[0-9]+$/.test(id)===false){
-            return res.status(422).end();
-        }
             try{
             let sql = "SELECT id, issueDate, state, supplierId, SKUId, description, price, deliveryDate, COUNT(*) as qty FROM RESTOCK_ORDERS WHERE id==? GROUP BY id, issueDate, state, supplierId, SKUId, description, price "
             let response = await this.dao.all(sql,id);
@@ -151,9 +145,6 @@ class RestockOrderController {
 
     deleteRestockOrder = async (req, res) => {
         let id = req.params.id;
-        if(/^[0-9]+$/.test(id)===false){
-            return res.status(422).json();
-        }
         try{
         let sql = "DELETE FROM RESTOCK_ORDERS WHERE id==?";
         let _ = await this.dao.run(sql,id);
@@ -165,9 +156,6 @@ class RestockOrderController {
   
     modifyRestockOrderState = async(req,res) => {
         let id = req.params.id;
-        if(/^[0-9]+$/.test(id)===false || req.body.newState===undefined){
-            return res.status(422).end();
-        }
         try{
             let sql = "SELECT * FROM RESTOCK_ORDERS WHERE id==?";
             let result = await this.dao.get(sql,id);
@@ -185,10 +173,7 @@ class RestockOrderController {
 
     setSkuItems = async(req,res) => {
         let id = req.params.id;
-       
-        if(/^[0-9]+$/.test(id)===false || req.body.skuItems===undefined){
-            return res.status(422).end();
-        }
+
         try{
         let sql = "SELECT state FROM RESTOCK_ORDERS WHERE id==?";
         let result= await this.dao.get(sql,[id]);
@@ -224,9 +209,6 @@ class RestockOrderController {
 
     addTransportNote = async(req,res) => {
         let id = req.params.id;
-        if(/^[0-9]+$/.test(id)===false || req.body.transportNote===undefined){
-            return res.status(422).end();
-        }
         try{
             let sql = "SELECT state, issueDate FROM RESTOCK_ORDERS WHERE id==?";
             let result= await this.dao.get(sql,[id]);
@@ -251,9 +233,6 @@ class RestockOrderController {
     getReturnItems = async(req,res) => {
         let id = req.params.id;
     
-        if(/^[0-9]+$/.test(id)===false){
-            return res.status(422).end();
-        }
         try{
             let sql = "SELECT * FROM RESTOCK_ORDERS WHERE id==?";
             let result= await this.dao.get(sql,[id]);

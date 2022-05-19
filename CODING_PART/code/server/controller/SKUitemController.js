@@ -7,6 +7,18 @@ const ERROR_422 = {error: 'Unprocessable Entity'};
 const ERROR_500 = {error: 'Internal Server Error'};
 const ERROR_503 = {error: 'Service Unavailable'};
 
+
+/**
+ * CLASS:   SKUITEMS
+ * =================
+ * METHOD: 
+ *          - getSKUitems()         --> API: GET /api/skuitems 
+ *          - getSKUitemsBySKUId()  --> API: GET /api/skuitems/sku/:id
+ *          - getSKUitemsByRFID()   --> API: GET /api/skuitems/:rfid
+ *          - newSKUitem()          --> API: POST /api/skuitem
+ *          - editSKUitem()         --> API: PUT /api/skuitems/:rfid
+ *          - deleteSKUitem()       --> API: DELETE /api/skuitems/:rfid
+ */
 class SKUitemController {
 
     /**
@@ -18,10 +30,11 @@ class SKUitemController {
         this.dao.new;
     }
 
-
-
-
-    /* API */
+    /** 
+     *          + ------- +
+     *          |   API   |
+     *          + ------- +
+    */
 
     /**
      * Return an array containing all SKU items.
@@ -32,11 +45,6 @@ class SKUitemController {
      * @param {callback} response 
      */
     getSKUitems = async (request, response) => {
-        
-        /* CHECKING INPUT */
-        if (Object.keys(request.body).length !== 0) {       /* BODY SHOULD BE EMPTY */
-            return response.status(400).json(ERROR_400);
-        }
 
         /* QUERYING DATABASE */
         let result_SQL;
@@ -68,13 +76,6 @@ class SKUitemController {
     getSKUitemsBySKUId = async (request, response) => {
 
         const target_id = request.params.id;
-        
-        /* CHECKING INPUT */
-        if (Object.keys(request.body).length !== 0) {       /* BODY SHOULD BE EMPTY */
-            return response.status(400).json(ERROR_400);
-        } else if (/^[0-9]+$/.test(target_id) === false) {  /* HEADER PARAMETER SHOULD BE A NUMBER */
-            return response.status(400).json(ERROR_400);
-        }
 
         /* CHECK IF SKU EXISTS */
         try {
@@ -123,13 +124,6 @@ class SKUitemController {
     getSKUitemsByRFID = async (request, response) => {
 
         const target_rfid = request.params.rfid;
-        
-        /* CHECKING INPUT */
-        if (Object.keys(request.body).length !== 0) {       /* BODY SHOULD BE EMPTY */
-            return response.status(422).json(ERROR_422);
-        } else if (/^[0-9]+$/.test(target_rfid) === false || target_rfid.length !== 32) {  /* HEADER PARAMETER SHOULD BE A 32 DIGITS STRING */
-            return response.status(422).json(ERROR_422);
-        }
 
         /* QUERYING DATABASE */
         let result_SQL;
@@ -161,25 +155,6 @@ class SKUitemController {
     newSKUitem = async (request, response) => {
         
         const data = request.body;
-
-        /* CHECKING USER INPUT */
-        if (Object.keys(request.body).length === 0) {
-
-            /* BODY NOT EMPTY CONSTRAINT */
-            return response.status(422).json(ERROR_422);
-        } else if (data.RFID === undefined || data.SKUId === undefined) {
-
-            /* DATA DEFINED INSIDE THE BODY CONSTRAINT */
-            return response.status(422).json(ERROR_422);
-        } else if (data.RFID.length !== 32) {
-
-            /* PARAMETER LENGTH CONSTRAINT */
-            return response.status(422).json(ERROR_422);
-        } else if (data.newDateOfStock !== undefined && /^\d{4}\/\d{2}\/\d{2}$/.test(data.newDateOfStock) !== true &&  /^\d{4}\/\d{2}\/\d{2} \d{2}\:\d{2}$/.test(data.newDateOfStock) !== true) {
-
-            /* PARAMETER DOMAIN CONSTRAINT */
-            return response.status(422).json(ERROR_422);
-        }
 
         /* CHECKING IF SKU ACTUALLY EXISTS */
         try {
@@ -294,13 +269,6 @@ class SKUitemController {
     deleteSKUitem = async (request, response) => {
 
         let target_rfid = request.params.rfid;
-
-        /* CHECK INPUT */
-        if (Object.keys(request.body).length !== 0) {           /* BODY SHOULD BE EMPTY */
-            return response.status(422).json(ERROR_422);
-        } else if (/^[0-9]+$/.test(target_rfid) === false || target_rfid.length !== 32) {      /* HEADER PARAMETER SHOULD BE A NUMBER */
-            return response.status(422).json(ERROR_422);
-        }
 
         /* QUERYING DATABASE */
         try {

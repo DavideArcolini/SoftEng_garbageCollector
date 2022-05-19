@@ -31,11 +31,6 @@ class TestDescriptorController {
 
     getTestDescriptorById = async (req, res) => {
 
-        //Validation
-        if(/^[0-9]+$/.test(req.params.id)===false){
-            return res.status(422).json(ERROR_422);
-        }
-
         //Find the ID
         let sql = "SELECT * FROM TEST_DESCRIPTORS WHERE id==? "
         let result = await this.daotd.all(sql,req.params.id,(error, rows) => {
@@ -55,11 +50,6 @@ class TestDescriptorController {
 
 
     createTestDescriptor = async (req, res) => {
-        
-        //Validation
-        if ( req.body.name===undefined || req.body.idSKU===undefined || req.body.procedureDescription===undefined) {
-            return res.status(422).json(ERROR_422);           
-          }
         
         //See if SKUId exist
         let sql ="SELECT * FROM SKUITEMS WHERE SKUId==?"
@@ -87,11 +77,6 @@ class TestDescriptorController {
 
 
     modifyTestDescriptor = async(req,res) => {
-
-        //Validation
-        if(/^[0-9]+$/.test(req.params.id)===false || req.body.newName===undefined || req.body.newIdSKU===undefined || req.body.newProcedureDescription===undefined){
-            return res.status(422).json(ERROR_422);
-        }
         
         //See if SKUId exist
         let sql ="SELECT * FROM SKUITEMS WHERE SKUId==?"
@@ -127,11 +112,6 @@ class TestDescriptorController {
 
 
     deleteTestDescriptor = async (req, res) => {
-
-        //Validation
-        if(/^[0-9]+$/.test(req.params.id)===false){
-            return res.status(422).json(ERROR_422);
-        }
 
         //Find the ID to check if exist
         let sql = "SELECT * FROM TEST_DESCRIPTORS WHERE id==? "

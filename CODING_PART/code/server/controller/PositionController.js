@@ -1,12 +1,20 @@
 "use strict";
 
-/* SOME ERROR MESSAGES HERE */
-const ERROR_400 = {error: 'Bad request'};
+/* --------- ERROR MESSAGES --------- */
 const ERROR_404 = {error: '404 Not Found'};
-const ERROR_422 = {error: 'Unprocessable Entity'};
 const ERROR_500 = {error: 'Internal Server Error'};
 const ERROR_503 = {error: 'Service Unavailable'};
 
+/**
+ * CLASS:   POSITION
+ * =================
+ * METHOD: 
+ *          - getPositions()    --> API: GET /api/positions 
+ *          - newPositions()    --> API: POST /api/position
+ *          - editPosition()    --> API: PUT /api/position/:positionID
+ *          - editPositionID()  --> API: PUT /api/position/:positionID/changeID
+ *          - deletePosition()  --> API: DELETE /api/position/:id
+ */
 class PositionController {
 
     /**
@@ -34,16 +42,6 @@ class PositionController {
      * @param {callback} response 
      */
     getPositions = async (request, response) => {
-        
-        /**
-         *  VALIDATING USER INPUT
-         *  ---------------------
-         *  CONSTRAINTS:
-         *      - Request body: empty --> return: ERROR_400 (bad request)
-         */
-        if (Object.keys(request.body).length !== 0) {   
-            return response.status(400).json(ERROR_400);
-        }
 
         /**
          *  QUERYING DATABASE
@@ -80,29 +78,6 @@ class PositionController {
     newPosition = async (request, response) => {
         
         const data = request.body;
-        data.po
-
-        /**
-         *  VALIDATING USER INPUT
-         *  ---------------------
-         *  CONSTRAINTS:
-         *      - Request body: non-empty --> return: ERROR_422 (Unprocessable entity)
-         *      - Request body: all data should be defined --> return: ERROR_422 (Unprocessable entity)
-         *      - Request body: length of parameters --> return: ERROR_422 (Unprocessable entity)
-         *      - Request body: positionID matches others parameter --> return: ERROR_422 (Unprocessable entity)
-         *      - Request body: aisleID, row and col should be string of digits --> return: ERROR_422 (Unprocessable entity)
-         */
-        if (Object.keys(request.body).length === 0) {
-            return response.status(422).json(ERROR_422);
-        } else if (data.positionID === undefined || data.aisleID === undefined || data.row === undefined || data.col === undefined || data.maxWeight === undefined || data.maxVolume === undefined) {
-            return response.status(422).json(ERROR_422);
-        } else if (data.aisleID.length !== 4 || data.row.length !== 4 || data.col.length !== 4) {
-            return response.status(422).json(ERROR_422);
-        } else if (data.positionID !== data.aisleID + data.row + data.col) {
-            return response.status(422).json(ERROR_422);
-        } else if (/^[0-9]+$/.test(data.aisleID) === false || /^[0-9]+$/.test(data.row) === false || /^[0-9]+$/.test(data.col) === false) {
-            return response.status(422).json(ERROR_422);
-        }
 
         /**
          *  QUERYING DATABASE
@@ -139,29 +114,6 @@ class PositionController {
 
         const target_id = request.params.positionID;
         const data = request.body;
-
-        /**
-         *  VALIDATING USER INPUT
-         *  ---------------------
-         *  CONSTRAINTS:
-         *      - Request header: is should be a 12-digits string --> return: ERROR_422 (Unprocessable entity)
-         *      - Request body: non-empty --> return: ERROR_422 (Unprocessable entity)
-         *      - Request body: all data should be defined --> return: ERROR_422 (Unprocessable entity)
-         *      - Request body: length of parameters --> return: ERROR_422 (Unprocessable entity)
-         *      - Request body: aisleID, row and col should be string of digits --> return: ERROR_422 (Unprocessable entity)
-         */      
-        if (/^[0-9]+$/.test(target_id) === false || target_id.length !== 12) {         
-            return response.status(422).json(ERROR_422);
-        } else if (data.length === 0) {                                                
-            return response.status(422).json(ERROR_422);
-        } else if (data.newAisleID === undefined || data.newRow === undefined || data.newCol === undefined || data.newMaxWeight === undefined || data.newMaxVolume === undefined || data.newOccupiedWeight === undefined || data.newOccupiedVolume === undefined) {
-            return response.status(422).json(ERROR_422);    
-        } else if (data.newAisleID.length !== 4 || data.newRow.length !== 4 || data.newCol.length !== 4) {
-            return response.status(422).json(ERROR_422);
-        } else if (/^[0-9]+$/.test(data.newAisleID) === false || /^[0-9]+$/.test(data.newRow) === false || /^[0-9]+$/.test(data.newCol) === false) {
-            return response.status(422).json(ERROR_422);
-        }
-
 
         /**
          *  QUERYING DATABASE
@@ -245,24 +197,6 @@ class PositionController {
 
         const target_id = request.params.positionID;
         const newPositionID = request.body.newPositionID;
-
-        /**
-         *  VALIDATING USER INPUT
-         *  ---------------------
-         *  CONSTRAINTS:
-         *      - Request header: is should be a 12-digits string --> return: ERROR_422 (Unprocessable entity)
-         *      - Request body: non-empty --> return: ERROR_422 (Unprocessable entity)
-         *      - Request body: all data should be defined --> return: ERROR_422 (Unprocessable entity)
-         *      - Request body: length of parameters --> return: ERROR_422 (Unprocessable entity)
-         */       
-        if (/^[0-9]+$/.test(target_id) === false || target_id.length !== 12) {         
-            return response.status(422).json(ERROR_422);
-        } else if (request.body.length === 0) {                                          
-            return response.status(422).json(ERROR_422);
-        } else if (newPositionID === undefined || newPositionID.length != 12) {
-            return response.status(422).json(ERROR_422);    
-        }
-
 
         /**
          *  QUERYING DATABASE
@@ -350,20 +284,6 @@ class PositionController {
     deletePosition = async (request, response) => {
 
         let target_id = request.params.positionID;
-
-        /**
-         *  VALIDATING USER INPUT
-         *  ---------------------
-         *  CONSTRAINTS:
-         *      - Request body: empty --> return: ERROR_422 (Unprocessable entity)
-         *      - Request header: is should be a 12-digits string --> return: ERROR_422 (Unprocessable entity)
-         *      - Request header: length of parameters --> return: ERROR_422 (Unprocessable entity)
-         */ 
-        if (Object.keys(request.body).length !== 0) {           
-            return response.status(422).json(ERROR_422);
-        } else if (/^[0-9]+$/.test(target_id) === false || target_id.length !== 12) {      
-            return response.status(422).json(ERROR_422);
-        }
 
         /**
          *  QUERYING DATABASE

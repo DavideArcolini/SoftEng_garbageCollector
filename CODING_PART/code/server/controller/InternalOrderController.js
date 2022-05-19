@@ -123,9 +123,6 @@ class InternalOrderController {
 
     getInternalOrderById = async (req, res) => {
         let id = req.params.id;
-        if(/^[0-9]+$/.test(id)===false){
-            return res.status(422).json();
-        }
         try{
             let sql = "SELECT id, issueDate, state, customerId, SKUId, description, price, COUNT(*) as qty FROM INTERNAL_ORDERS WHERE id==? GROUP BY id, issueDate, state, customerId, SKUId, description, price "
             let response = await this.dao.all(sql,id);
@@ -163,9 +160,6 @@ class InternalOrderController {
 
     modifyInternalOrderState = async(req,res) => {
         let id = req.params.id;
-        if(/^[0-9]+$/.test(id)===false || req.body.newState===undefined || (req.body.newState==="COMPLETED" && req.body.products===undefined)){
-            return res.status(422).end();
-        }
         try{
             let sql = "SELECT * FROM INTERNAL_ORDERS WHERE id==?";
             let result = await this.dao.get(sql,id);
@@ -195,9 +189,6 @@ class InternalOrderController {
 
 deleteInternalOrder = async (req, res) => {
     let id = req.params.id;
-    if(/^[0-9]+$/.test(id)===false){
-        return res.status(422).end();
-    }
     try{
         let sql = "DELETE FROM INTERNAL_ORDERS WHERE id==?";
         let _ = await this.dao.run(sql,id);

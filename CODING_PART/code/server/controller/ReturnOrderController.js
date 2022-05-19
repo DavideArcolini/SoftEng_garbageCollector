@@ -46,9 +46,6 @@ class ReturnOrderController {
 
     getReturnOrderById = async (req, res) => {
         let id = req.params.id;
-        if(/^[0-9]+$/.test(id)===false){
-            return res.status(422).end();
-        }
         try{
             let sql = "SELECT id, returnDate, restockOrderId, SKUId, description, price, RFID FROM RETURN_ORDERS WHERE id==? GROUP BY id, returnDate, restockOrderId, SKUId, description, price,RFID"
             let response = await this.daorto.all(sql,id);
@@ -94,9 +91,6 @@ class ReturnOrderController {
    
 deleteReturnOrder = async (req, res) => {
     let id = req.params.id;
-    if(/^[0-9]+$/.test(id)===false){
-        return res.status(422).end();
-    }
     try{
         let sql = "DELETE FROM RETURN_ORDERS WHERE id==?";
         let _ = await this.daorto.run(sql,id);

@@ -32,10 +32,6 @@ class ItemController {
     getItemById = async (req, res) => { 
 
         try {
-            //control id by function test (already in js)
-            if(/^[0-9]+$/.test(req.params.id)===false|| /^[0-9]+$/.test(req.params.supplierId)===false){
-                return res.status(422).json();
-            }
 
             //Find the item
             //let sql = "SELECT * FROM ITEMS WHERE id==? AND supplierId==?  "
@@ -62,10 +58,6 @@ class ItemController {
     createItem = async (req, res) => {
         
         try {
-            //Validation
-            if (req.body.id===undefined || req.body.description===undefined || req.body.price===undefined || req.body.SKUId===undefined || req.body.supplierId===undefined) {
-                return res.status(404).json();           
-            }
             
             //See if SKUId exist
             let sql ="SELECT * FROM SKUITEMS WHERE SKUId=(?)"
@@ -137,10 +129,6 @@ class ItemController {
 
     modifyItem = async(req,res) => { 
         try{
-            //Validation
-            if(/^[0-9]+$/.test(req.params.id)===false /*|| /^[0-9]+$/.test(req.params.supplierId)===false*/){
-                return res.status(422).json();
-            }
             
             //Find if item exist
             let sql = "SELECT * FROM ITEMS WHERE id=?"
@@ -176,10 +164,6 @@ class ItemController {
 
     deleteItem = async (req, res) => {
         try{
-            //Validation
-            if(/^[0-9]+$/.test(req.params.id)===false /*|| /^[0-9]+$/.test(req.params.supplierId)===false */){
-                return res.status(422).json();
-            }
 
             //Find if the item exist
             let sql = "SELECT * FROM ITEMS WHERE id=(?)"

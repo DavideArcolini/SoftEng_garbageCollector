@@ -28,6 +28,17 @@ async function retrieveTestDescriptor(dao, idSKU) {
     return result;
 }
 
+/**
+ * CLASS:   SKU
+ * =================
+ * METHOD: 
+ *          - getStoredSKUs()        --> API: GET /api/skus
+ *          - getStoredSKUById()     --> API: GET /api/skus/:id
+ *          - newSKU()               --> API: POST /api/sku
+ *          - editSKU()              --> API: PUT /api/sku/:id
+ *          - addOrEditPositionSKU() --> API: PUT /api/sku/:id/position
+ *          - deleteSKU()            --> API: DELETE /api/skus/:id
+ */
 class SKUController {
 
     /**
@@ -39,10 +50,11 @@ class SKUController {
         this.dao.new;
     }
 
-
-
-    
-    /* API */
+    /** 
+     *          + ------- +
+     *          |   API   |
+     *          + ------- +
+    */
 
     /**
      * Get all the SKUs in the database.
@@ -53,11 +65,6 @@ class SKUController {
      * @param {callback} response 
      */
     getStoredSKUs = async (request, response) => {
-        
-        /* CHECKING INPUT */
-        if (Object.keys(request.body).length !== 0) {       
-            return response.status(400).json(ERROR_400);
-        }
 
         /* QUERYING SKU DATABASE */
         const query_RetrieveSKU_SQL = "SELECT * FROM SKUS";
@@ -90,13 +97,6 @@ class SKUController {
     getStoredSKUById = async (request, response) => {
 
         let target_id = request.params.id;
-
-        /* CHECK INPUT */
-        if (Object.keys(request.body).length !== 0) {           /* BODY SHOULD BE EMPTY */
-            return response.status(422).json(ERROR_422);
-        } else if (/^[0-9]+$/.test(target_id) === false) {      /* HEADER PARAMETER SHOULD BE A NUMBER */
-            return response.status(422).json(ERROR_422);
-        }
 
         /* QUERYING SKU DATABASE */
         const query_RetrieveSKU_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
@@ -133,13 +133,6 @@ class SKUController {
         
         const data = request.body;
 
-        /* CHECKING USER INPUT */
-        if (Object.keys(request.body).length === 0) {
-            return response.status(422).json(ERROR_422);
-        } else if (data.description === undefined || data.weight === undefined || data.volume === undefined || data.notes === undefined || data.price === undefined || data.availableQuantity === undefined) {
-            return response.status(422).json(ERROR_422);
-        }
-
         /* QUERYING DATABASE */
         const query_SQL = "INSERT INTO SKUS (DESCRIPTION, WEIGHT, VOLUME, NOTES, PRICE, AVAILABLEQUANTITY) VALUES (?, ?, ?, ?, ?, ?)";
         await this.dao.run(query_SQL, [data.description, data.weight, data.volume, data.notes, data.price, data.availableQuantity], (error) => {
@@ -166,23 +159,6 @@ class SKUController {
 
         const target_id = request.params.id;
         const data = request.body;
-
-        /**
-         *  VALIDATING USER INPUT
-         *  ---------------------
-         *  CONSTRAINTS:
-         *      - Request header: id should be a number --> return: ERROR_422 (Unprocessable entity)
-         *      - Request body: non-empty --> return: ERROR_422 (Unprocessable entity)
-         *      - Request body: all data should be defined --> return: ERROR_422 (Unprocessable entity)
-         */        
-        if (/^[0-9]+$/.test(target_id) === false) {      
-            return response.status(422).json(ERROR_422);
-        } else if (data.length === 0) {                  
-            return response.status(422).json(ERROR_422);
-        } else if (data.newDescription === undefined || data.newWeight === undefined || data.newVolume === undefined || data.newNotes === undefined || data.newPrice === undefined || data.newAvailableQuantity === undefined ) {
-            return response.status(422).json(ERROR_422);    
-        }
-
 
         /**
          *  QUERYING DATABASE
@@ -289,23 +265,6 @@ class SKUController {
 
         var needToEdit = false;
         var oldPositionID = null;
-
-        /**
-         *  VALIDATING USER INPUT
-         *  ---------------------
-         *  CONSTRAINTS:
-         *      - Request header: id should be a number --> return: ERROR_422 (Unprocessable entity)
-         *      - Request body: non-empty --> return: ERROR_422 (Unprocessable entity)
-         *      - Request body: all data should be defined --> return: ERROR_422 (Unprocessable entity)
-         *      - Request body: length of parameters --> return: ERROR_422 (Unprocessable entity)
-         */       
-        if (/^[0-9]+$/.test(target_id) === false) {    
-            return response.status(422).json(ERROR_422);
-        } else if (request.body.length === 0) {                    
-            return response.status(422).json(ERROR_422);
-        } else if (positionID === undefined || positionID.length !== 12) {
-            return response.status(422).json(ERROR_422);    
-        }
 
         /* CHECK CONSTRAINT: position is already assigned to a sku? */
         try {
@@ -446,19 +405,6 @@ class SKUController {
     deleteSKU = async (request, response) => {
 
         let target_id = request.params.id;
-
-        /**
-         *  VALIDATING USER INPUT
-         *  ---------------------
-         *  CONSTRAINTS:
-         *      - Request header: id should be a number --> return: ERROR_422 (Unprocessable entity)
-         *      - Request body: empty --> return: ERROR_422 (Unprocessable entity)
-         */ 
-        if (Object.keys(request.body).length !== 0) {           
-            return response.status(422).json(ERROR_422);
-        } else if (/^[0-9]+$/.test(target_id) === false) {      
-            return response.status(422).json(ERROR_422);
-        }
 
         /* ------------ CHECK IF SKU IS ASSOCIATED TO SKUITEMS OR TESTDESCRIPTOR ----------------*/
         /**

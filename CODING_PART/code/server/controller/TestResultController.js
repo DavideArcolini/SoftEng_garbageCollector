@@ -32,11 +32,6 @@ class TestResultController {
 
     getTestResultById = async (req, res) => {
 
-        //Validation
-        if(/^[0-9]+$/.test(req.params.id)===false ){
-            return res.status(422).json();
-        }
-
         //Find the RFID
         const sql = "SELECT * FROM TEST_RESULTS WHERE rfid==? "
         const testarray = await this.daotr.all(sql,req.params.rfid,(error, rows) => {
@@ -64,11 +59,6 @@ class TestResultController {
 
 
     createTestResult = async (req, res) => {
-        
-        //Validation
-        if ( /^[0-9]+$/.test(req.body.idTestDescriptor)===false ) {
-            return res.status(422).json();           
-          }
         
         //Control of RFID
         let sql ="SELECT * FROM SKUITEMS WHERE RFID==?"
@@ -110,11 +100,6 @@ class TestResultController {
 
 
     modifyTestResult = async(req,res) => {
-
-        //Validation
-        if(/^[0-9]+$/.test(req.params.id)===false || req.body.newIdTestDescriptor===undefined || req.body.newDate===undefined || req.body.newResult===undefined){
-            return res.status(422).json();
-        }
 
         //Control of RFID
         let sql ="SELECT * FROM SKUITEMS WHERE RFID==?"
@@ -172,11 +157,6 @@ class TestResultController {
 
 
     deleteTestResult = async (req, res) => {
-
-        //Validation
-        if(/^[0-9]+$/.test(req.params.id)===false){
-            return res.status(422).json();
-        }
 
         //Find the RFID
         let sql = "SELECT * FROM TEST_RESULTS WHERE rfid==? "
