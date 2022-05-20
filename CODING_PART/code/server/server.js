@@ -1,7 +1,9 @@
 'use strict';
 
+const morgan = require("morgan");
+
 /* ---------- IMPORTS ---------- */
-const router_USER           = require("./router/UserRouter");
+const router_USER           = require("./router/new_routers/user_router");
 const router_SKU            = require("./router/SKURouter");
 const router_Position       = require("./router/PositionRouter");
 const router_SKUitem        = require("./router/SKUitemRouter");
@@ -17,6 +19,7 @@ const express     = require('express');
 const app         = new express();
 const PORT        = 3002;
 app.use(express.json());
+app.use(morgan('dev'));
 
 /* ---------- ENABLING ROUTER TO DISPATCH API ---------- */
 app.use("/api", router_USER);                                     /* USER                   */

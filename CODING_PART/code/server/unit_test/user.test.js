@@ -1,12 +1,12 @@
 const dao = require("./mockDB/mock_user_dao");
-const UserController = require("../controller/UserController");
-const user = new UserController(dao);
+const UserService = require("../service/users");
+const user = new UserService(dao);
 const bcrypt        = require('bcrypt');
 
 describe('get users', () => {
     beforeEach( () => {
-        dao.getStoredUsers.mockReset();
-        dao.getStoredUsers.mockReturnValue([{
+        dao.getAllUsers.mockReset();
+        dao.getAllUsers.mockReturnValue([{
             id: 2,
             name: "Pippo",
             surname: "Franco",
@@ -14,9 +14,9 @@ describe('get users', () => {
             type: "customer"
         }])
     })
-
+    
     test('get users', async() => {
-        let res = await user.getStoredUsers();
+        let res = await user.getUsers();
 
         expect(res.body).toEqual([{
             id: 2,

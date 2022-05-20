@@ -50,7 +50,7 @@ class UserController {
     getStoredUsers = async (req, res) =>{
             const sql = "SELECT * FROM USERS WHERE type <> (?)";
             let result = await this.dao.all(sql, "manager");
-
+            console.log(result)
             let final = result.map((e) => {
                 let user = e.username.split("@");
                 let email = user[0].concat(`@${e.type}.ezwh.com`);
