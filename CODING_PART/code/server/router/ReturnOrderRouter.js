@@ -75,8 +75,18 @@ router.post(
             return true;
         }),
         body('products').custom((value) => {                                            /* [FROM API.md]: products is an array of objects to be validated   */
-            console.log(value);
-            /* TODO: IMPLEMENT HERE VALIDATION OF PRODUCTS */
+            value.forEach((product) => {
+                if (isNaN(product.SKUId)) {
+                    throw new Error('Invalid product value');
+                } else if (/^[\u0000-\u007f]*$/.test(product.description) === false || product.description instanceof String) {
+                    throw new Error('Invalid product value');
+                } else if (isNaN(product.price) || product.price < 0) {
+                    throw new Error('Invalid product value');
+                } else if (product.RFID.length != 32 || /^[0-9]+$/.test(product.RFID) === false) {
+                    throw new Error('Invalid skuItem value');
+                }
+            });
+            return true;
         }),
         body('restockOrderId').isNumeric()                                               /* [FROM API.md]: restockOrderId is a numeric value                     */
     ],

@@ -116,7 +116,18 @@ router.post(
         }),
         body('products').custom((value) => {                                            /* [FROM API.md]: products is an array of objects to be validated   */
             console.log(value);
-            /* TODO: IMPLEMENT HERE VALIDATION OF ARRAY */
+            value.forEach((product) => {
+                if (isNaN(product.SKUId)) {
+                    throw new Error('Invalid product value');
+                } else if (/^[\u0000-\u007f]*$/.test(product.description) === false  || product.description instanceof String) {
+                    throw new Error('Invalid product value');
+                } else if (isNaN(product.price) || product.price < 0) {
+                    throw new Error('Invalid product value');
+                } else if (isNaN(product.qty) || product.qty < 0) {
+                    throw new Error('Invalid product value');
+                }
+            });
+            return true;
         }),
         body('customerId').isNumeric()                                                  /* [FROM API.md]: customerID is a numeric value                     */
     ],
@@ -146,8 +157,15 @@ router.put(
         }),
         body().custom(value => {
             if (value.products !== undefined) {
-                /* TODO: IMPLEMENT HERE VALIDATION OF ARRAY */    
+                value.products.forEach((product) => {
+                    if (isNaN(product.SkuID)) {
+                        throw new Error('Invalid product value');
+                    } else if (product.RFID.length != 32 || /^[0-9]+$/.test(product.RFID) === false) {
+                        throw new Error('Invalid product value');
+                    }
+                });
             }
+            return true;
         })
     ],
     validationHandler,

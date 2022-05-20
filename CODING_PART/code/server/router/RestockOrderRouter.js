@@ -115,8 +115,18 @@ router.post(
             return true;
         }),
         body('products').custom((value) => {                                            /* [FROM API.md]: products is an array of objects to be validated   */
-            console.log(value);
-            /* TODO: IMPLEMENT HERE VALIDATION OF ARRAY */
+            value.forEach((product) => {
+                if (isNaN(product.SKUId)) {
+                    throw new Error('Invalid product value');
+                } else if (/^[\u0000-\u007f]*$/.test(product.description) === false || product.description instanceof String) {
+                    throw new Error('Invalid product value');
+                } else if (isNaN(product.price) || product.price < 0) {
+                    throw new Error('Invalid product value');
+                } else if (isNaN(product.qty) || product.qty < 0) {
+                    throw new Error('Invalid product value');
+                }
+            });
+            return true;
         }),
         body('supplierId').isNumeric()                                                  /* [FROM API.md]: supplierId is a numeric value                     */
     ],
@@ -141,7 +151,7 @@ router.put(
             return true;
         }),
         body().custom(value => {                                                        /* [FROM API.md]: newState should be a valid value                                      */
-            const STATES = ['DELIVERED'/*, 'STATE2', 'STATE3' */];
+            const STATES = ['ISSUED', 'DELIVERY', 'DELIVERED', 'TESTED', 'COMPLETEDRETURN', 'COMPLETED'];
             for (let s of STATES) {
                 if (s === value.newState) {
                     return true;
@@ -172,7 +182,15 @@ router.put(
             return true;
         }),
         body().custom(value => {                                                        /* [FROM API.md]: skuItems is an array of objects to be validated                       */
-            /* TODO: IMPLEMENT HERE VALIDATION OF ARRAY */
+            value.skuItems.forEach((skuItem) => {
+                console.log(skuItem);
+                if (isNaN(skuItem.SKUId)) {
+                    throw new Error('Invalid skuItem value');
+                } else if (skuItem.rfid.length != 32 || /^[0-9]+$/.test(skuItem.rfid) === false) {
+                    throw new Error('Invalid skuItem value');
+                }
+            });
+            return true;
         })
     ],
     validationHandler,
@@ -196,7 +214,10 @@ router.put(
             return true;
         }),
         body().custom(value => {                                                        /* [FROM API.md]: transportNote is a object to be validated                             */
-            /* TODO: IMPLEMENT HERE VALIDATION OF transportNote */
+            if (/^\d{4}\/\d{2}\/\d{2}$/.test(value.transportNote.deliveryDate) === false) {
+                throw new Error("Invalid date format");
+            }
+            return true;
         })
     ], 
     validationHandler,
