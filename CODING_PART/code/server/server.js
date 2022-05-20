@@ -3,7 +3,7 @@
 const morgan = require("morgan");
 
 /* ---------- IMPORTS ---------- */
-const router_USER           = require("./router/new_routers/user_router");
+const router_USER           = require("./router/UserRouter");
 const router_SKU            = require("./router/SKURouter");
 const router_Position       = require("./router/PositionRouter");
 const router_SKUitem        = require("./router/SKUitemRouter");

@@ -157,11 +157,27 @@ router.delete(
 );
 
 /* SESSIONS */
-router.post("/supplierSessions", uc.getUser);
+router.post("/managerSessions", async(req, res) => {
+    //uc.getUser
+    if (Object.keys(req.body).length === 0) {
+        return res.status(422).json({error: `Empty body request`});
+    }
+    const user = await uc.getUser(req.body.username, req.body.password);
+    console.log(user)
+    if(user.message) {
+        return res.status(401).json(user.message);
+    }
+    else if (user) {
+        return res.status(200).json(user)
+    }
+    else {
+        return res.status(500).json("error");
+    }
+});
 router.post("/deliveryEmployeeSessions", uc.getUser);
 router.post("/qualityEmployeeSessions", uc.getUser);
 router.post("/clerkSessions", uc.getUser);
 router.post("/customerSessions", uc.getUser);
-router.post("/managerSessions", uc.getUser);
+router.post("/supplierSessions", uc.getUser);
 
 module.exports = router;

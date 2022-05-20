@@ -1,5 +1,5 @@
 const dao = require("./mockDB/mock_user_dao");
-const UserService = require("../service/users");
+const UserService = require("../../../service/users");
 const user = new UserService(dao);
 const bcrypt        = require('bcrypt');
 

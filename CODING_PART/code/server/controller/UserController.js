@@ -90,27 +90,25 @@ class UserController {
         return res.status(200).json(final);
     }
 
-    getUser = async(req, res) => {
+    getUser = async(username, password) => {
         const sql = `
         SELECT * 
         FROM USERS 
         WHERE username=(?)
         `;
         /* AND password=(?);*/
-        let data = req.body;
-
         try{
-            let result = await this.dao.get(sql, [data.username]);
-
+            let result = await this.dao.get(sql, username);
             if (result) {
-                let validPass = await bcrypt.compare(data.password, result.password);
-                validPass ? res.status(200).json({id: result.id, username: result.username, name: result.name}) : res.status(401).json({message : "Wrong username and/or password"});
+                let validPass = await bcrypt.compare(password, result.password);
+                return validPass ? {id: result.id, username: result.username, name: result.name} : {message : "Wrong username and/or password"};
             }
             else {
-                return res.status(401).json({message : "Wrong username and/or password"});
+                return;
             }
-        } catch(error) {
-            return res.status(500).json("error");
+        }
+        catch(e){
+            console.log(e)
         }
     }
 
