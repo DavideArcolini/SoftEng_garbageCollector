@@ -48,9 +48,6 @@ class UserController {
     }
 
     getStoredUsers = async (req, res) =>{
-            if (Object.keys(req.body)) {
-
-            }
             const sql = "SELECT * FROM USERS WHERE type <> (?)";
             let result = await this.dao.all(sql, "manager");
 
