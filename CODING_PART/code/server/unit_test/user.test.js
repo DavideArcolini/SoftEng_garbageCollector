@@ -123,6 +123,7 @@ getUser({username: "manager1@ezwh.com", password: "testpassword"}, {
 });
 
 //  401
+//  wrong password
 getUser({username: "manager1@ezwh.com", password: "pippopluto"}, 
 {
     id: 1,
@@ -132,6 +133,9 @@ getUser({username: "manager1@ezwh.com", password: "pippopluto"},
     type: "manager",
     password: "testpassword"
 }, 401);
+//  wrong username
+getUser({username: "customer1@ezwh.com", password: "testpassword"}, 
+    undefined, 401);
 
 //  500
 getUser(undefined, 
@@ -148,12 +152,70 @@ getUser(undefined,
  *            PUT /api/users/:username
  *  =================================================
  */
+//  200
 editUser({
     "oldType" : "clerk",
     "newType" : "qualityEmployee"
     },
     "user1@ezwh.com",
+    {username: "user1@ezwh.com"},
     200
+)
+
+//  422
+//  empty body
+editUser({},
+    "user1@ezwh.com",
+    {username: "user1@ezwh.com"},
+    422
+)
+//  modify a manager
+editUser({
+    "oldType" : "manager",
+    "newType" : "qualityEmployee"
+    },
+    "user1@ezwh.com",
+    {username: "user1@ezwh.com"},
+    422
+)
+
+//  upgrade to manager
+editUser({
+    "oldType" : "clerk",
+    "newType" : "manager"
+    },
+    "user1@ezwh.com",
+    {username: "user1@ezwh.com"},
+    422
+)
+
+//  wrong username format
+editUser({
+    "oldType" : "clerk",
+    "newType" : "qualityEmployee"
+    },
+    "user1",
+    {username: "user1@ezwh.com"},
+    422
+)
+
+//  404
+//  user not found
+editUser({
+    "oldType" : "clerk",
+    "newType" : "qualityEmployee"
+    },
+    "user1@ezwh.com",
+    undefined,
+    404
+)
+
+//  503
+//  user not found
+editUser(undefined,
+    "user1@ezwh.com",
+    {username: "user1@ezwh.com"},
+    503
 )
 
 /**
@@ -170,17 +232,42 @@ deleteUser(
 )
 
 //  422
+//  can't delete manager
 deleteUser(
     {type: "manager", username : "manager1@ezwh.com"},
     {type: "manager", username : "manager1@ezwh.com"},
+    422
+)
+//  wrong username
+deleteUser(
+    {type: "customer", username : "customer1"},
+    {type: "customer", username : "customer1"},
+    422
+)
+//  user don't exists
+deleteUser(
+    {type: "customer", username : "customer1@ezwh.com"},
+    undefined,
     422
 )
 
+//  503
 deleteUser(
-    {type: "customer", username : "customer1"},
-    {type: "customer", username : "customer1"},
-    422
+    undefined,
+    {type: "customer", username : "customer1@ezwh.com"},
+    503
 )
+
+/**
+ * API:
+ *            POST /logout
+ *  =================================================
+ */
+//  200
+logout({}, 200);
+
+//  500
+logout(undefined, 500)
 
 /*
     Definitions of testing functions
@@ -244,17 +331,23 @@ function getSuppliers(expected){
 function getUser(req, to_test, expected){
     describe('login', ()=> {
         beforeEach(async () => {
-            const salt = await bcrypt.genSalt(10);
-            const hash = await bcrypt.hash(to_test.password, salt);
             dao.get.mockReset();
-            dao.get.mockReturnValue({
-                id: 1,
-                username: to_test.username,
-                name: to_test.name,
-                surname: to_test.surname,
-                type: to_test.type,
-                password: hash
-            })
+            if (to_test){
+                const salt = await bcrypt.genSalt(10);
+                const hash = await bcrypt.hash(to_test.password, salt);
+                dao.get.mockReset();
+                dao.get.mockReturnValue({
+                    id: 1,
+                    username: to_test.username,
+                    name: to_test.name,
+                    surname: to_test.surname,
+                    type: to_test.type,
+                    password: hash
+                })
+            }
+            else {
+                dao.get.mockReturnValue(to_test)
+            }
         })
 
         test('get user', async () => {
@@ -264,14 +357,12 @@ function getUser(req, to_test, expected){
     })
 }
 
-function editUser(req, username, expected) {
+function editUser(req, username, to_test, expected) {
     describe('edit user',() => {
         beforeEach(async () => {
             dao.get.mockReset();
             dao.run.mockReset();
-            dao.get.mockReturnValue({
-                username: "user1@ezwh.com"
-            })
+            dao.get.mockReturnValue(to_test)
         })
 
         test('edit user', async ()=> {
@@ -291,6 +382,16 @@ function deleteUser(req, to_test, expected) {
 
         test('delete user', async ()=> {
             let res = await user.deleteUser(req);
+            expect(res).toEqual(expected);
+        })
+    })
+}
+
+function logout(req, expected) {
+    describe('logout', () => {
+        
+        test('logout', async() => {
+            let res = await user.logout(req);
             expect(res).toEqual(expected);
         })
     })

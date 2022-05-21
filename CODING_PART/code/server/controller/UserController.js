@@ -86,18 +86,20 @@ class UserController {
 
     getUser = async(req) => {
         const sql = `
-        SELECT * 
+        SELECT username 
         FROM USERS 
         WHERE username=(?)
         `;
         /* AND password=(?);*/
         try{
+            console.log(req.username)
             let result = await this.dao.get(sql, req.username);
-
+            console.log(result)
             if (result) {
                 let validPass = await bcrypt.compare(req.password, result.password);
                 return validPass ? {id: result.id, username: result.username, name: result.name} : 401;
             }
+            else {return 401}
         }
         catch(e){
             return 500;
@@ -132,15 +134,15 @@ class UserController {
     }
 
     deleteUser = async (req) => {
-        let type = req.type;
-        let username = req.username;
-        let user = req.username.split("@")[0].concat("@ezwh.com");
-        const sql = `
-        DELETE from USERS
-        WHERE username = (?) AND type = (?)
-        `;
-
         try {
+            let type = req.type;
+            let username = req.username;
+            let user = req.username.split("@")[0].concat("@ezwh.com");
+            const sql = `
+            DELETE from USERS
+            WHERE username = (?) AND type = (?)
+            `;
+        
             let res = await this.dao.get("SELECT username FROM USERS WHERE username = (?)", user)
             if((type == "manager") || !this.regex.test(username) || res === undefined) {
                 return 422;
@@ -154,13 +156,13 @@ class UserController {
         }
     }
 
-    logout = (req, res) => {
-        try {
-            return res.status(200).json({message:"logged out"});
+    logout = async (req) => {
+        
+        if (req) {return 200}
+        else {
+            return 500
         }
-        catch(error){
-            return res.status(500).json({message: "error"})
-        }
+        
     }
 }
 
