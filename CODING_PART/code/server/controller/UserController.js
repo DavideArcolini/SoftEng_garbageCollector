@@ -18,18 +18,18 @@ class UserController {
         this.dao = dao
     }
 
-    newUser = async (req, res) => {
+    newUser = async (req) => {
         try {
             const sql = "INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
-            let data = req.body;
+            let data = req;
         
             let control = await this.dao.get("SELECT username FROM USERS where username = (?)", data.username)
             
             if (Object.keys(req.body).length === 0 || (data.type == "manager") || (data.type == "administrator") || (data.password.length < 8) || !this.regex.test(data.username)) {
                 return res.status(422).json({error: "validation of request body failed or attempt to create manager or administrator accounts"});
             }
-            else if (control != undefined) {
-                return res.status(409).json({message: "User already exists"})
+            if (control != undefined) {
+                return 409;
             }
             else {
                 let hash = await bcrypt.hash(data.password, saltRounds);
@@ -38,16 +38,16 @@ class UserController {
                         console.log(error);
                     }
                 });
-                return res.status(201).json("ok")
+                return 201;
             }
         }
         catch(error) {
-            return res.status(503).json({message : "Service unavailable"});
+            return 503;
         }
         
     }
 
-    getStoredUsers = async (req, res) =>{
+    getStoredUsers = async () =>{
             const sql = "SELECT * FROM USERS WHERE type <> (?)";
             let result = await this.dao.all(sql, "manager");
             console.log(result)
@@ -64,13 +64,11 @@ class UserController {
 
                 return json;
             })
-            return res.status(200).json(final);
+            return final;
+            //return res.status(200).json(final);
     }
 
     getSuppliers = async (req, res) => {
-        if (Object.keys(req.body)) {
-
-        }
         const sql = "SELECT * FROM USERS WHERE type <> (?) and type = \"supplier\"";
         let result = await this.dao.all(sql, "manager");
 
@@ -87,7 +85,7 @@ class UserController {
 
             return json;
         })
-        return res.status(200).json(final);
+        return final;
     }
 
     getUser = async(username, password) => {
@@ -99,6 +97,7 @@ class UserController {
         /* AND password=(?);*/
         try{
             let result = await this.dao.get(sql, username);
+            console.log(result)
             if (result) {
                 let validPass = await bcrypt.compare(password, result.password);
                 return validPass ? {id: result.id, username: result.username, name: result.name} : {message : "Wrong username and/or password"};

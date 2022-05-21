@@ -3,6 +3,7 @@ const UserController = require("../controller/UserController");
 const user = new UserController(dao);
 const bcrypt        = require('bcrypt');
 
+
 describe('get users', () => {
     beforeEach( () => {
         dao.all.mockReset();
@@ -18,7 +19,7 @@ describe('get users', () => {
     test('get users', async() => {
         let res = await user.getStoredUsers();
         console.log(res)
-        expect(res.body).toEqual([{
+        expect(res).toEqual([{
             id: 2,
             name: "Pippo",
             surname: "Franco",
@@ -28,8 +29,35 @@ describe('get users', () => {
     })
 })
 
+describe('get suppliers', () => {
+    beforeEach( () => {
+        dao.all.mockReset();
+        dao.all.mockReturnValue([{
+            id: 2,
+            name: "Pippo",
+            surname: "Franco",
+            username: "user1@supplier.ezwh.com",
+            type: "supplier"
+        }])
+    })
+    
+    test('get users', async() => {
+        let res = await user.getSuppliers();
+        console.log(res)
+        expect(res).toEqual([{
+            id: 2,
+            name: "Pippo",
+            surname: "Franco",
+            email: "user1@supplier.ezwh.com",
+            type: "supplier"
+        }])
+    })
+})
+
 describe('login', ()=> {
-    beforeEach(() => {
+    beforeEach(async () => {
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash("testpassword", salt);
         dao.get.mockReset();
         dao.get.mockReturnValue({
             id: 1,
@@ -37,7 +65,7 @@ describe('login', ()=> {
             name: "Dave",
             surname: "Grohl",
             type: "manager",
-            password: "testpassword"
+            password: hash
         })
     })
 

@@ -29,7 +29,15 @@ router.get(
         })
     ],
     validationHandler,
-    uc.getSuppliers
+    async(req, res) => {
+        try {
+            const users = await getSuppliers();
+            return res.status(200).json(users);
+        } catch (error) {
+            res.status(500).json({message: "Internal server error"});
+        }
+        
+    }
 );
 
 /**
@@ -48,7 +56,15 @@ router.get(
         })
     ],
     validationHandler,
-    uc.getStoredUsers
+    async(req, res) => {
+        try {
+            const users = await getStoredUsers();
+            return res.status(200).json(users);
+        } catch (error) {
+            res.status(500).json({message: "Internal server error"});
+        }
+        
+    }
 );
 
 /**
@@ -86,7 +102,23 @@ router.post(
         })
     ],
     validationHandler,
-    uc.newUser
+    async(req, res) => {
+        if (Object.keys(req.body).length === 0 || (data.type == "manager") || (data.type == "administrator") || (data.password.length < 8) || !this.regex.test(data.username)) {
+            return res.status(422).json({error: "validation of request body failed or attempt to create manager or administrator accounts"});
+        }
+        const isOk = await uc.newUser(req.body);
+        if(isOk === 201) {
+            return res.status(201).json("ok")
+        }
+        else if (isOk === 409) {
+            return res.status(409).json({message: "User already exists"})
+        }
+        else {
+            return res.status(503).json({message : "Service unavailable"});
+        }
+        
+    }
+    //uc.newUser
 );
 
 /**
