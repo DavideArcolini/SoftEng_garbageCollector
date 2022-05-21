@@ -14,7 +14,7 @@ const bcrypt        = require('bcrypt');
  *  =================================================
  */
 //  201
-newUser({
+newUser("insert ok", {
     username:"supplier1@ezwh.com",
     name : "Voldemort",
     surname: "You-Know-Who",
@@ -24,7 +24,7 @@ newUser({
 
 //  422 
 //  inserting manager
-newUser({
+newUser("inserting manager", {
     username:"supplier1@ezwh.com",
     name : "Voldemort",
     surname: "You-Know-Who",
@@ -33,7 +33,7 @@ newUser({
 }, undefined, 422);
 
 //  inserting administrator
-newUser({
+newUser("inserting admin", {
     username:"supplier1@ezwh.com",
     name : "Voldemort",
     surname: "You-Know-Who",
@@ -42,7 +42,7 @@ newUser({
 }, undefined, 422);
 
 //  inserting password.length < 8
-newUser({
+newUser("inserting password.length < 8", {
     username:"supplier1@ezwh.com",
     name : "Voldemort",
     surname: "You-Know-Who",
@@ -51,7 +51,7 @@ newUser({
 }, undefined, 422);
 
 //  inserting wrong username
-newUser({
+newUser("inserting wrong username", {
     username:"supplier1",
     name : "Voldemort",
     surname: "You-Know-Who",
@@ -60,10 +60,10 @@ newUser({
 }, undefined, 422);
 
 //  inserting empty body
-newUser({}, undefined, 422);
+newUser("inserting empty body", {}, undefined, 422);
 
 //  409
-newUser({
+newUser("user already exists", {
     username:"supplier1@ezwh.com",
     name : "Voldemort",
     surname: "You-Know-Who",
@@ -74,7 +74,7 @@ newUser({
 , 409);
 
 //  503
-newUser(undefined, undefined, 503);
+newUser("bad request", undefined, undefined, 503);
 
 /**
  * API:
@@ -108,7 +108,7 @@ getSuppliers([{
  *  =================================================
  */
 //  ok
-getUser({username: "manager1@ezwh.com", password: "testpassword"}, {
+getUser("return ok", {username: "manager1@ezwh.com", password: "testpassword"}, {
     id: 1,
     username: "manager1@ezwh.com",
     name: "Dave",
@@ -124,7 +124,7 @@ getUser({username: "manager1@ezwh.com", password: "testpassword"}, {
 
 //  401
 //  wrong password
-getUser({username: "manager1@ezwh.com", password: "pippopluto"}, 
+getUser("wrong password", {username: "manager1@ezwh.com", password: "pippopluto"}, 
 {
     id: 1,
     username: "manager1@ezwh.com",
@@ -134,11 +134,11 @@ getUser({username: "manager1@ezwh.com", password: "pippopluto"},
     password: "testpassword"
 }, 401);
 //  wrong username
-getUser({username: "customer1@ezwh.com", password: "testpassword"}, 
+getUser("wrong username",{username: "customer1@ezwh.com", password: "testpassword"}, 
     undefined, 401);
 
 //  500
-getUser(undefined, 
+getUser("bad request", undefined, 
 {
     id: 1,
     username: "manager1@ezwh.com",
@@ -146,14 +146,14 @@ getUser(undefined,
     surname: "Grohl",
     type: "manager",
     password: "testpassword"
-}, 500);
+}, undefined);
 /**
  * API:
  *            PUT /api/users/:username
  *  =================================================
  */
 //  200
-editUser({
+editUser("edited ok",{
     "oldType" : "clerk",
     "newType" : "qualityEmployee"
     },
@@ -164,13 +164,13 @@ editUser({
 
 //  422
 //  empty body
-editUser({},
+editUser("empty body",{},
     "user1@ezwh.com",
     {username: "user1@ezwh.com"},
     422
 )
 //  modify a manager
-editUser({
+editUser("trying to modify a manager",{
     "oldType" : "manager",
     "newType" : "qualityEmployee"
     },
@@ -180,7 +180,7 @@ editUser({
 )
 
 //  upgrade to manager
-editUser({
+editUser("trying to upgrade to manager",{
     "oldType" : "clerk",
     "newType" : "manager"
     },
@@ -190,7 +190,7 @@ editUser({
 )
 
 //  wrong username format
-editUser({
+editUser("wrong username format",{
     "oldType" : "clerk",
     "newType" : "qualityEmployee"
     },
@@ -201,7 +201,7 @@ editUser({
 
 //  404
 //  user not found
-editUser({
+editUser("user not found",{
     "oldType" : "clerk",
     "newType" : "qualityEmployee"
     },
@@ -211,8 +211,7 @@ editUser({
 )
 
 //  503
-//  user not found
-editUser(undefined,
+editUser("bad request", undefined,
     "user1@ezwh.com",
     {username: "user1@ezwh.com"},
     503
@@ -226,6 +225,7 @@ editUser(undefined,
 
 //  204
 deleteUser(
+    "deleted ok",
     {type: "customer", username : "customer1@ezwh.com"},
     {type: "customer", username : "customer1@ezwh.com"},
     204
@@ -234,18 +234,22 @@ deleteUser(
 //  422
 //  can't delete manager
 deleteUser(
+    "trying to delete a manager",
     {type: "manager", username : "manager1@ezwh.com"},
     {type: "manager", username : "manager1@ezwh.com"},
     422
 )
 //  wrong username
 deleteUser(
+    "wrong username",
     {type: "customer", username : "customer1"},
     {type: "customer", username : "customer1"},
     422
 )
-//  user don't exists
+//  user doesn't exists
 deleteUser(
+
+    "user doesn't exists",
     {type: "customer", username : "customer1@ezwh.com"},
     undefined,
     422
@@ -253,6 +257,7 @@ deleteUser(
 
 //  503
 deleteUser(
+    "bad request",
     undefined,
     {type: "customer", username : "customer1@ezwh.com"},
     503
@@ -273,7 +278,7 @@ logout(undefined, 500)
     Definitions of testing functions
     =================================================
 */
-function newUser(req, to_test, expected) {
+function newUser(name, req, to_test, expected) {
     describe('new user', () => {
         beforeEach( () => {
             dao.get.mockReset();
@@ -281,7 +286,7 @@ function newUser(req, to_test, expected) {
             dao.get.mockReturnValue(to_test)
         })
         
-        test('new user', async() => {
+        test(name, async() => {
             let res = await user.newUser(req);
             expect(res).toEqual(expected);
         })
@@ -328,7 +333,7 @@ function getSuppliers(expected){
     })
 }
 
-function getUser(req, to_test, expected){
+function getUser(name, req, to_test, expected){
     describe('login', ()=> {
         beforeEach(async () => {
             dao.get.mockReset();
@@ -350,14 +355,14 @@ function getUser(req, to_test, expected){
             }
         })
 
-        test('get user', async () => {
+        test(name, async () => {
             let res = await user.getUser(req);
             expect(res).toEqual(expected)
         })
     })
 }
 
-function editUser(req, username, to_test, expected) {
+function editUser(name, req, username, to_test, expected) {
     describe('edit user',() => {
         beforeEach(async () => {
             dao.get.mockReset();
@@ -365,14 +370,14 @@ function editUser(req, username, to_test, expected) {
             dao.get.mockReturnValue(to_test)
         })
 
-        test('edit user', async ()=> {
+        test(name, async ()=> {
             let res = await user.editUser(req, username);
             expect(res).toEqual(expected);
         })
     })
 }
 
-function deleteUser(req, to_test, expected) {
+function deleteUser(name, req, to_test, expected) {
     describe('delete user',() => {
         beforeEach( async () => {
             dao.get.mockReset();
@@ -380,7 +385,7 @@ function deleteUser(req, to_test, expected) {
             dao.get.mockReturnValue(to_test)
         })
 
-        test('delete user', async ()=> {
+        test(name, async ()=> {
             let res = await user.deleteUser(req);
             expect(res).toEqual(expected);
         })
