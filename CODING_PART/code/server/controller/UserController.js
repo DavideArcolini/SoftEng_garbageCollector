@@ -1,5 +1,8 @@
 "use strict";
 
+const bcrypt        = require('bcrypt');
+const saltRounds    = 10;
+
 class UserController {
     types = ['customer','qualityEmployee','clerk','deliveryEmployee','supplier'];
     regex =
@@ -13,25 +16,28 @@ class UserController {
     }
     constructor(dao) {
         this.dao = dao
-        console.log(this.manager)
-        //uncomment for the first run
-        //this.dao.run("INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)", [this.manager.username, this.manager.name, this.manager.surname, this.manager.type, this.manager.password])
     }
 
     newUser = async (req, res) => {
         try {
             const sql = "INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
             let data = req.body;
-
+        
             let control = await this.dao.get("SELECT username FROM USERS where username = (?)", data.username)
+            
             if (Object.keys(req.body).length === 0 || (data.type == "manager") || (data.type == "administrator") || (data.password.length < 8) || !this.regex.test(data.username)) {
-                return res.status(422).json({error: "Empty Body request"});
+                return res.status(422).json({error: "validation of request body failed or attempt to create manager or administrator accounts"});
             }
             else if (control != undefined) {
                 return res.status(409).json({message: "User already exists"})
             }
             else {
-                await this.dao.run(sql, [data.username, data.name, data.surname, data.password, data.type])
+                let hash = await bcrypt.hash(data.password, saltRounds);
+                await this.dao.run(sql, [data.username, data.name, data.surname, hash, data.type], (error) => {
+                    if (error) {
+                        console.log(error);
+                    }
+                });
                 return res.status(201).json("ok")
             }
         }
@@ -42,12 +48,9 @@ class UserController {
     }
 
     getStoredUsers = async (req, res) =>{
-            if (Object.keys(req.body)) {
-
-            }
             const sql = "SELECT * FROM USERS WHERE type <> (?)";
             let result = await this.dao.all(sql, "manager");
-
+            console.log(result)
             let final = result.map((e) => {
                 let user = e.username.split("@");
                 let email = user[0].concat(`@${e.type}.ezwh.com`);
@@ -87,25 +90,25 @@ class UserController {
         return res.status(200).json(final);
     }
 
-    getUser = async(req, res) => {
+    getUser = async(username, password) => {
         const sql = `
         SELECT * 
         FROM USERS 
-        WHERE username=(?) AND password=(?);
+        WHERE username=(?)
         `;
-        let data = req.body;
-        console.log(data)
+        /* AND password=(?);*/
         try{
-            let result = await this.dao.get(sql, [data.username, data.password]);
-            if (result == undefined) {
-                return res.status(401).json({message : "Wrong username and/or password"});
+            let result = await this.dao.get(sql, username);
+            if (result) {
+                let validPass = await bcrypt.compare(password, result.password);
+                return validPass ? {id: result.id, username: result.username, name: result.name} : {message : "Wrong username and/or password"};
             }
             else {
-                console.log(result)
-                return res.status(200).json(result);
+                return;
             }
-        } catch(error) {
-            return res.status(500).json("error");
+        }
+        catch(e){
+            console.log(e)
         }
     }
 
@@ -121,7 +124,7 @@ class UserController {
         
         try {
             let control = await this.dao.get("SELECT * FROM USERS WHERE username=(?)", [user])
-            console.log(control)
+
             if ((Object.keys(data).length == 0) || (data.oldType=="manager" || data.oldType == "administrator") || (data.newType == "manager" || data.newType == "administrator") || !this.regex.test(req.params.username)) {
                 return res.status(422).json({error: "Validation failed"});
             }

@@ -30,7 +30,7 @@ class DAO {
         // this.dropTablePositions();
         // this.dropTableSKUItems();
         // this.dropTableTD();
-        // this.dropTableTR();
+        //this.dropTableTR();
         // this.dropTableI();
     }
 
@@ -232,7 +232,7 @@ class DAO {
     */
     newTableRO() {
       return new Promise((res, rej)=>{
-          const sql = "CREATE TABLE IF NOT EXISTS RESTOCK_ORDERS(key INTEGER PRIMARY KEY AUTOINCREMENT, id INTEGER, issueDate DATE, state VARCHAR, supplierId INTEGER, deliveryDate DATE, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR)";
+          const sql = "CREATE TABLE IF NOT EXISTS RESTOCK_ORDERS(key INTEGER PRIMARY KEY AUTOINCREMENT, id INTEGER, issueDate DATE, state VARCHAR, supplierId INTEGER, deliveryDate DATE, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR) ";
           this.db.run(sql, (err)=>{
               if (err) {
                   rej(err);
@@ -296,7 +296,7 @@ class DAO {
     */
   newTableIO() {
     return new Promise((res, rej)=>{
-        const sql = "CREATE TABLE IF NOT EXISTS INTERNAL_ORDERS(key INTEGER PRIMARY KEY AUTOINCREMENT, id INTEGER, issueDate DATE, state VARCHAR, customerId INTEGER, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR )";
+        const sql = "CREATE TABLE IF NOT EXISTS INTERNAL_ORDERS(key INTEGER PRIMARY KEY AUTOINCREMENT, id INTEGER, issueDate DATE, state VARCHAR, customerId INTEGER, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR ) ";
         this.db.run(sql, (err)=>{
             if (err) {
                 rej(err);
@@ -327,16 +327,16 @@ class DAO {
   *  - dropTableUser(): drop the users table.
   */
   newTableUsers() {
-      return new Promise((res, rej)=>{
-          const sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR)";
-          this.db.run(sql, (err)=>{
-              if (err) {
-                  rej(err);
-                  return;
-              }
-              res(this.lastID);
-          });
+    return new Promise((res, rej)=>{
+      const sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR)";
+      this.db.run(sql, (err)=>{
+        if (err) {
+          rej(err);
+            return;
+          }
+        res(this.lastID);
       });
+    });
   }
   
   dropTableUsers() {
@@ -349,7 +349,7 @@ class DAO {
           }
           res(this.lastID);
       });
-  });
+    });
   }
 
   
@@ -402,7 +402,7 @@ class DAO {
 
   newTableTR() {
     return new Promise((res, rej)=>{
-        const sql = "CREATE TABLE IF NOT EXISTS TEST_RESULTS(id INTEGER PRIMARY KEY AUTOINCREMENT, rfid INTEGER, idTestDescriptor VARCHAR, Date DATE, Result BOOLEAN)";
+        const sql = "CREATE TABLE IF NOT EXISTS TEST_RESULTS(id INTEGER PRIMARY KEY AUTOINCREMENT, rfid VARCHAR, idTestDescriptor VARCHAR, Date DATE, Result BOOLEAN)";
         this.db.run(sql, (err)=>{
             if (err) {
                 rej(err);
@@ -437,7 +437,7 @@ class DAO {
 
   newTableI() {
     return new Promise((res, rej)=>{//id, description, price, SKUId, supplierId
-        const sql = "CREATE TABLE IF NOT EXISTS ITEMS(id INTEGER PRIMARY KEY AUTOINCREMENT, description VARCHAR, price FLOAT, SKUId INTEGER, supplierId INTEGER)";
+        const sql = "CREATE TABLE IF NOT EXISTS ITEMS(id INTEGER, description VARCHAR, price FLOAT, SKUId INTEGER, supplierId INTEGER, PRIMARY KEY(id,supplierId))";
         this.db.run(sql, (err)=>{
             if (err) {
                 rej(err);
