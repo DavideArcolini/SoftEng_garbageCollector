@@ -19,14 +19,14 @@ class UserController {
     }
 
     newUser = async (req) => {
+        let data = req;
         try {
             const sql = "INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
-            let data = req;
-        
-            let control = await this.dao.get("SELECT username FROM USERS where username = (?)", data.username)
-            
-            if (Object.keys(req.body).length === 0 || (data.type == "manager") || (data.type == "administrator") || (data.password.length < 8) || !this.regex.test(data.username)) {
-                return res.status(422).json({error: "validation of request body failed or attempt to create manager or administrator accounts"});
+            //let data = req;
+            let control = await this.dao.get("SELECT * FROM USERS where username = (?)", data.username)
+            //console.log(data)
+            if (Object.keys(data).length === 0 || (data.type == "manager") || (data.type == "administrator") || (data.password.length < 8) || !this.regex.test(data.username)) {
+                return 422;
             }
             if (control != undefined) {
                 return 409;
@@ -50,7 +50,7 @@ class UserController {
     getStoredUsers = async () =>{
             const sql = "SELECT * FROM USERS WHERE type <> (?)";
             let result = await this.dao.all(sql, "manager");
-            console.log(result)
+
             let final = result.map((e) => {
                 let user = e.username.split("@");
                 let email = user[0].concat(`@${e.type}.ezwh.com`);
@@ -68,7 +68,7 @@ class UserController {
             //return res.status(200).json(final);
     }
 
-    getSuppliers = async (req, res) => {
+    getSuppliers = async () => {
         const sql = "SELECT * FROM USERS WHERE type <> (?) and type = \"supplier\"";
         let result = await this.dao.all(sql, "manager");
 
@@ -97,7 +97,7 @@ class UserController {
         /* AND password=(?);*/
         try{
             let result = await this.dao.get(sql, username);
-            console.log(result)
+
             if (result) {
                 let validPass = await bcrypt.compare(password, result.password);
                 return validPass ? {id: result.id, username: result.username, name: result.name} : {message : "Wrong username and/or password"};
