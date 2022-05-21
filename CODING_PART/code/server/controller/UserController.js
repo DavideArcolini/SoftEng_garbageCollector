@@ -24,10 +24,10 @@ class UserController {
             const sql = "INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
             //let data = req;
             let control = await this.dao.get("SELECT username FROM USERS where username = (?)", data.username)
-
+            /*
             if (Object.keys(data).length === 0 || (data.type == "manager") || (data.type == "administrator") || (data.password.length < 8) || !this.regex.test(data.username)) {
                 return 422;
-            }
+            }*/
             if (control != undefined) {
                 return 409;
             }
@@ -119,11 +119,11 @@ class UserController {
         
         try {
             let control = await this.dao.get("SELECT username FROM USERS WHERE username=(?)", [user])
-
+/*
             if ((Object.keys(req).length == 0) || (req.oldType=="manager" || req.oldType == "administrator") || (req.newType == "manager" || req.newType == "administrator") || !this.regex.test(username)) {
                 return 422
             }
-            else if ((!this.types.includes(req.oldType)) || (!this.types.includes(req.newType)) || (control == undefined)) {
+            else */if ((!this.types.includes(req.oldType)) || (!this.types.includes(req.newType)) || (control == undefined)) {
                 return 404
             }
             else {
@@ -146,13 +146,13 @@ class UserController {
             `;
         
             let res = await this.dao.get("SELECT username FROM USERS WHERE username = (?) AND type = (?)", [user, type])
-            if((type == "manager") || !this.regex.test(username) || res === undefined) {
+            /*if((type == "manager") || !this.regex.test(username) || res === undefined) {
                 return 422;
-            }
-            else {
+            }*/
+            //else {
                 await this.dao.run(sql, [user, type]);
                 return 204
-            }
+            //}
         } catch (error) {
             return 503
         }

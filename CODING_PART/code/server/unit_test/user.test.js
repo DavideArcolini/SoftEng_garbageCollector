@@ -24,6 +24,7 @@ newUser("insert ok", {
 
 //  422 
 //  inserting manager
+/*
 newUser("inserting manager", {
     username:"supplier1@ezwh.com",
     name : "Voldemort",
@@ -61,7 +62,7 @@ newUser("inserting wrong username", {
 
 //  inserting empty body
 newUser("inserting empty body", {}, undefined, 422);
-
+*/
 //  409
 newUser("user already exists", {
     username:"supplier1@ezwh.com",
@@ -161,7 +162,7 @@ editUser("edited ok",{
     {username: "user1@ezwh.com"},
     200
 )
-
+/*
 //  422
 //  empty body
 editUser("empty body",{},
@@ -198,7 +199,7 @@ editUser("wrong username format",{
     {username: "user1@ezwh.com"},
     422
 )
-
+*/
 //  404
 //  user not found
 editUser("user not found",{
@@ -230,7 +231,7 @@ deleteUser(
     {type: "customer", username : "customer1@ezwh.com"},
     204
 )
-
+/*
 //  422
 //  can't delete manager
 deleteUser(
@@ -254,7 +255,7 @@ deleteUser(
     undefined,
     422
 )
-
+*/
 //  503
 deleteUser(
     "bad request",

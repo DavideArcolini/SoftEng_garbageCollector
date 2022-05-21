@@ -106,10 +106,10 @@ router.post(
         const isOk = await uc.newUser(req.body);
         if(isOk === 201) {
             return res.status(201).json("ok")
-        }
+        }/*
         else if (isOk === 422 ){
             return res.status(422).json({error: "validation of request body failed or attempt to create manager or administrator accounts"});
-        }
+        }*/
         else if (isOk === 409) {
             return res.status(409).json({message: "User already exists"})
         }
@@ -160,11 +160,11 @@ router.put(
     validationHandler,
     async(req, res) => {
         let result = await uc.editUser(req.body, req.params.username);
-
+/*
         if(result===422) {
             return res.status(422).json({error: "Validation failed"});
         }
-        else if(result===404) {
+        else */if(result===404) {
             res.status(404).json({error : "Not found"});
         }
         else if(result===200) {
@@ -204,10 +204,10 @@ router.delete(
     async(req, res) => {
         try {
             let result = await uc.deleteUser(req.params);
-            if(result === 422) {
+            /*if(result === 422) {
                 return res.status(422).json({message : "validation of username or of type failed or attempt to delete a manager/administrator"});
             }
-            else if (result === 204) {
+            else */if (result === 204) {
                 return res.status(204).json({message:"success"});
             }
             else {
