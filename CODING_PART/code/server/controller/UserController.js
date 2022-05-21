@@ -23,8 +23,8 @@ class UserController {
         try {
             const sql = "INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
             //let data = req;
-            let control = await this.dao.get("SELECT * FROM USERS where username = (?)", data.username)
-            //console.log(data)
+            let control = await this.dao.get("SELECT username FROM USERS where username = (?)", data.username)
+
             if (Object.keys(data).length === 0 || (data.type == "manager") || (data.type == "administrator") || (data.password.length < 8) || !this.regex.test(data.username)) {
                 return 422;
             }
@@ -33,11 +33,7 @@ class UserController {
             }
             else {
                 let hash = await bcrypt.hash(data.password, saltRounds);
-                await this.dao.run(sql, [data.username, data.name, data.surname, hash, data.type], (error) => {
-                    if (error) {
-                        console.log(error);
-                    }
-                });
+                await this.dao.run(sql, [data.username, data.name, data.surname, hash, data.type]);
                 return 201;
             }
         }
@@ -88,7 +84,7 @@ class UserController {
         return final;
     }
 
-    getUser = async(username, password) => {
+    getUser = async(req) => {
         const sql = `
         SELECT * 
         FROM USERS 
@@ -96,68 +92,65 @@ class UserController {
         `;
         /* AND password=(?);*/
         try{
-            let result = await this.dao.get(sql, username);
+            let result = await this.dao.get(sql, req.username);
 
             if (result) {
-                let validPass = await bcrypt.compare(password, result.password);
-                return validPass ? {id: result.id, username: result.username, name: result.name} : {message : "Wrong username and/or password"};
-            }
-            else {
-                return;
+                let validPass = await bcrypt.compare(req.password, result.password);
+                return validPass ? {id: result.id, username: result.username, name: result.name} : 401;
             }
         }
         catch(e){
-            console.log(e)
+            return 500;
         }
     }
 
-    editUser = async(req, res) => {
+    editUser = async(req, username) => {
         const sql = `
             UPDATE USERS
             SET
                 type = (?)
             WHERE username = (?) AND type = (?)
         `;
-        let data = req.body;
-        let user = req.params.username.split("@")[0].concat("@ezwh.com");
+        let user = username.split("@")[0].concat("@ezwh.com");
         
         try {
-            let control = await this.dao.get("SELECT * FROM USERS WHERE username=(?)", [user])
+            let control = await this.dao.get("SELECT username FROM USERS WHERE username=(?)", [user])
 
-            if ((Object.keys(data).length == 0) || (data.oldType=="manager" || data.oldType == "administrator") || (data.newType == "manager" || data.newType == "administrator") || !this.regex.test(req.params.username)) {
-                return res.status(422).json({error: "Validation failed"});
+            if ((Object.keys(req).length == 0) || (req.oldType=="manager" || req.oldType == "administrator") || (req.newType == "manager" || req.newType == "administrator") || !this.regex.test(username)) {
+                return 422
             }
-            else if ((!this.types.includes(data.oldType)) || (!this.types.includes(data.newType)) || (control == undefined)) {
-                return res.status(404).json({error : "Not found"});
+            else if ((!this.types.includes(req.oldType)) || (!this.types.includes(req.newType)) || (control == undefined)) {
+                return 404
             }
             else {
-                await this.dao.run(sql, [data.newType, user , data.oldType]);
-                return res.status(200).json("ok");
+                await this.dao.run(sql, [req.newType, user , req.oldType]);
+                return 200
             }
         } catch (error) {
-            return res.status(503).json("error");
+            return 503
         }
     }
 
-    deleteUser = async (req,res) => {
-        let type = req.params.type;
-        let username = req.params.username;
-        let user = req.params.username.split("@")[0].concat("@ezwh.com");
+    deleteUser = async (req) => {
+        let type = req.type;
+        let username = req.username;
+        let user = req.username.split("@")[0].concat("@ezwh.com");
         const sql = `
         DELETE from USERS
         WHERE username = (?) AND type = (?)
         `;
 
         try {
-            if((type == "manager") || !this.regex.test(username)) {
-                return res.status(422).json({message : "validation of username or of type failed or attempt to delete a manager/administrator"});
+            let res = await this.dao.get("SELECT username FROM USERS WHERE username = (?)", user)
+            if((type == "manager") || !this.regex.test(username) || res === undefined) {
+                return 422;
             }
             else {
                 await this.dao.run(sql, [user, type]);
-                return res.status(204).json({message:"success"});
+                return 204
             }
         } catch (error) {
-            return res.status(503).json("error");
+            return 503
         }
     }
 

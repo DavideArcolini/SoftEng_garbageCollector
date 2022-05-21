@@ -158,7 +158,23 @@ router.put(
         })
     ],
     validationHandler,
-    uc.editUser
+    async(req, res) => {
+        let result = await uc.editUser(req.body, req.params.username);
+
+        if(result===422) {
+            return res.status(422).json({error: "Validation failed"});
+        }
+        else if(result===404) {
+            res.status(404).json({error : "Not found"});
+        }
+        else if(result===200) {
+            return res.status(200).json("ok");
+        }
+        else {
+            return res.status(503).json("error");
+        }
+    }
+    //uc.editUser
 );
 
 
@@ -185,7 +201,25 @@ router.delete(
         })
     ],
     validationHandler,
-    uc.deleteUser
+    async(req, res) => {
+        try {
+            let result = await uc.deleteUser(req.params);
+            if(result === 422) {
+                return res.status(422).json({message : "validation of username or of type failed or attempt to delete a manager/administrator"});
+            }
+            else if (result === 204) {
+                return res.status(204).json({message:"success"});
+            }
+            else {
+                return res.status(503).json("error");
+            }
+        } catch (error) {
+            return res.status(503).json("error");
+        }
+        
+        
+    }
+    //uc.deleteUser
 );
 
 /* SESSIONS */
@@ -194,10 +228,10 @@ router.post("/managerSessions", async(req, res) => {
     if (Object.keys(req.body).length === 0) {
         return res.status(422).json({error: `Empty body request`});
     }
-    const user = await uc.getUser(req.body.username, req.body.password);
+    const user = await uc.getUser(req.body);
     console.log(user)
-    if(user.message) {
-        return res.status(401).json(user.message);
+    if(user === 401) {
+        return res.status(401).json({message : "Wrong username and/or password"});
     }
     else if (user) {
         return res.status(200).json(user)
