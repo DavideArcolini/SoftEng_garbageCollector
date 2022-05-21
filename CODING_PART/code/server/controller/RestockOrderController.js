@@ -14,7 +14,7 @@ class RestockOrderController {
         this.dao = dao
     }
 
-    createRestockOrder = async (req, res) => {
+    createRestockOrder = async (issueDate,supplierId,products) => {
 
         try{
             let sql = "SELECT MAX(id) as id FROM RESTOCK_ORDERS"
@@ -22,22 +22,24 @@ class RestockOrderController {
             let id=1;
             if(max_id.id!==null)
                 id = max_id.id+1;
-            let data = req.body;
+            //let data = req.body;
         
-            req.body.products.forEach(async (prod)=>
+            products.forEach(async (prod)=>
             {
                 await Promise.all([...Array(parseInt(prod.qty))].map(async () => {
                    
                     sql = "INSERT INTO RESTOCK_ORDERS(id, issueDate, state, supplierId, SKUId, description, price) VALUES(?,?,?,?,?,?,?)"
-                    await this.dao.run(sql,[id, data.issueDate, "ISSUED", data.supplierId, prod.SKUId, prod.description, prod.price])
+                    await this.dao.run(sql,[id, issueDate, "ISSUED", supplierId, prod.SKUId, prod.description, prod.price])
                 }));
 
             })
             
-            return res.status(201).end();
+            //return res.status(201).end();
+            return id;
         }
         catch(error){
-            return res.status(503).end();
+            //return res.status(503).end();
+            throw error;
 
         }
         
@@ -47,7 +49,7 @@ class RestockOrderController {
   
    
 
-    getRestockOrders = async (req, res) =>{
+    getRestockOrders = async () =>{
         try{
             let sql = "SELECT id, issueDate, state, supplierId, deliveryDate FROM RESTOCK_ORDERS GROUP BY id";
             let result = await this.dao.all(sql);
@@ -70,13 +72,15 @@ class RestockOrderController {
                 }
                 return x;
             }));
-            return res.status(200).json(result);
+            //return res.status(200).json(result);
+            return result;
         }catch(error){
-            return res.status(500).end();
+            //return res.status(500).end();
+            throw error;
         }
     }
 
-    getRestockOrdersIssued = async (req, res) =>{
+    getRestockOrdersIssued = async () =>{
         try{
             let sql = "SELECT id, issueDate, state, supplierId, deliveryDate FROM RESTOCK_ORDERS WHERE state==? GROUP BY id";
             let result = await this.dao.all(sql,["ISSUED"]);
@@ -98,20 +102,23 @@ class RestockOrderController {
 
                 return x;
             }));
-            return res.status(200).json(result);
+            //return res.status(200).json(result);
+            return result;
     }catch(error){
-        return res.status(500).end();
+        //return res.status(500).end();
+        throw error;
     }
     }
 
-    getRestockOrderById = async (req, res) => {
-        let id = req.params.id;
+    getRestockOrderById = async (id) => {
+        //let id = req.params.id;
             try{
             let sql = "SELECT id, issueDate, state, supplierId, SKUId, description, price, deliveryDate, COUNT(*) as qty FROM RESTOCK_ORDERS WHERE id==? GROUP BY id, issueDate, state, supplierId, SKUId, description, price "
             let response = await this.dao.all(sql,id);
-            
-            if(response[0]==null){
-                return res.status(404).end();
+            console.log(response);
+            if(response ===undefined || response[0]==null){
+                //return res.status(404).end();
+                return {message: "Not Found"};
             }
             
             let result = {id: response[0].id, issueDate: response[0].issueDate, state: response[0].state, supplierId: response[0].supplierId,  transportNote : {"deliveryDate" : response[0].deliveryDate}};
@@ -127,64 +134,73 @@ class RestockOrderController {
                 return x;
                 
     }) ;
-            result = {...result , products : products };   
+            result = {...result , products : Array.from(products) };   
             sql = "SELECT SKUId, RFID FROM RESTOCK_ORDERS WHERE id==? AND RFID IS NOT NULL"
             result = {...result , skuItems : await this.dao.all(sql,id) };
 
             if(result.state==="ISSUED"){
                 delete result.transportNote;
             }
-            result.products = result.products.map((x)=> JSON.parse(JSON.stringify(x)));
+           // result.products = result.products.map((x)=> JSON.parse(JSON.stringify(x)));
             
-            return res.status(200).json(result);
+            //return res.status(200).json(result);
+            console.log(result);
+            return result;
         }catch(error){
-            return res.status(503).end();
+            //return res.status(503).end();
+            throw error;
         }
       
     }
 
-    deleteRestockOrder = async (req, res) => {
-        let id = req.params.id;
+    deleteRestockOrder = async (id) => {
+        //let id = req.params.id;
         try{
         let sql = "DELETE FROM RESTOCK_ORDERS WHERE id==?";
         let _ = await this.dao.run(sql,id);
-        return res.status(204).end();
+        //return res.status(204).end();
+        return id;
         }catch(error){
-            res.status(503).end();
+            //res.status(503).end();
+            throw error;
         }
     }
   
-    modifyRestockOrderState = async(req,res) => {
-        let id = req.params.id;
+    modifyRestockOrderState = async(id,newState) => {
+        //let id = req.params.id;
         try{
             let sql = "SELECT * FROM RESTOCK_ORDERS WHERE id==?";
             let result = await this.dao.get(sql,id);
             if(result==null){
-                return res.status(404).end();
+                return {message: "Not Found"};
             }
             sql = "UPDATE RESTOCK_ORDERS SET state=? WHERE id==?";
-            result = await this.dao.run(sql,[req.body.newState,id]);
-            return res.status(200).end();
+            result = await this.dao.run(sql,[newState,id]);
+            return id;
+           // return res.status(200).end();
         }catch(error){
-            return res.status(503).end();
+           // return res.status(503).end();
+            throw error;
         }
 
 }
 
-    setSkuItems = async(req,res) => {
-        let id = req.params.id;
+    setSkuItems = async(id,skuItems) => {
+        //let id = req.params.id;
 
         try{
         let sql = "SELECT state FROM RESTOCK_ORDERS WHERE id==?";
         let result= await this.dao.get(sql,[id]);
         if(result==null){
-            return res.status(404).end();
+            //return res.status(404).end();
+            return {message: "Not Found"};
         }
 
         if( result.state!=="DELIVERED") {
-            return res.status(422).end();
+            //return res.status(422).end();
+            return {unprocessable: "Cannot put skuItems"}
         }
-        for (const s of req.body.skuItems) {
+        for (const s of skuItems) {
             
             sql = `
                 SELECT MIN(key) as min_id 
@@ -200,48 +216,56 @@ class RestockOrderController {
            
         }
 
-        return res.status(200).end();
+        //return res.status(200).end();
+        return id;
     }catch(error){
-        return res.status(503).end();
+        //return res.status(503).end();
+        throw error;
     }
 
     }
 
-    addTransportNote = async(req,res) => {
-        let id = req.params.id;
+    addTransportNote = async(id,transportNote) => {
+        //let id = req.params.id;
         try{
             let sql = "SELECT state, issueDate FROM RESTOCK_ORDERS WHERE id==?";
             let result= await this.dao.get(sql,[id]);
             if(result==null){
-                return res.status(404).end();
+                //return res.status(404).end();
+                return {message: "Not Found"}; 
             }
 
-            if(result.state!=="DELIVERY" || dayjs(req.body.transportNote.deliveryDate).isBefore(dayjs(result.issueDate))) {
-                return res.status(422).end();
+            if(result.state!=="DELIVERY" || dayjs(transportNote.deliveryDate).isBefore(dayjs(result.issueDate))) {
+                //return res.status(422).end();
+                return {unprocessable: "Cannot put transport note"}
             }
         
             sql = "UPDATE RESTOCK_ORDERS SET deliveryDate=? WHERE id==?"
-            await this.dao.run(sql,[req.body.transportNote.deliveryDate,id]);
+            await this.dao.run(sql,[transportNote.deliveryDate,id]);
 
-            return res.status(200).end();
+            //return res.status(200).end();
+            return id;
         }catch(error){
-            return res.status(503).end();
+            //return res.status(503).end();
+            throw error;
         }
 
     }
     
-    getReturnItems = async(req,res) => {
-        let id = req.params.id;
+    getReturnItems = async(id) => {
+       // let id = req.params.id;
     
         try{
             let sql = "SELECT * FROM RESTOCK_ORDERS WHERE id==?";
             let result= await this.dao.get(sql,[id]);
             if(result==null){
-                return res.status(404).end();
+                //return res.status(404).end();
+                return {message: "Not Found"}; 
             }
 
             if(result.state!=="COMPLETEDRETURN") {
-                return res.status(422).end();
+                //return res.status(422).end();
+                return {unprocessable: "Cannot get return Items"}
             }
 
             sql = "SELECT SKUId, RFID FROM RESTOCK_ORDERS WHERE id==? AND RFID IS NOT NULL"
@@ -254,7 +278,7 @@ class RestockOrderController {
                 let TestResults = await this.dao.all(sql,[x.RFID]);
                 
 
-                if(TestResults.filter((x)=>x.Result==false).length!=0 ){
+                if(TestResults!==undefined && TestResults.filter((x)=>x.Result==false).length!=0 ){
                     return x;
                 }
                
@@ -262,9 +286,11 @@ class RestockOrderController {
             
             
 
-            return res.status(200).json(result);
+            //return res.status(200).json(result);
+            return result;
     }catch(error){
-        return res.status(500).end();
+        //return res.status(500).end();
+        throw error;
     }
     }
 

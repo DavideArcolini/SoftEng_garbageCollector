@@ -28,7 +28,14 @@ router.get(
         })
     ],
     validationHandler,
-    ioc.getInternalOrders
+    async(req,res)=>{
+        try{
+        const result = await ioc.getInternalOrders();
+        return res.status(200).json(result);
+        }catch(error){
+            return res.status(500).end();
+        }
+    } 
 );
 
 /**
@@ -47,7 +54,14 @@ router.get(
         })
     ],
     validationHandler,
-    ioc.getInternalOrdersIssued
+    async(req,res)=>{
+        try{
+        const result = await ioc.getInternalOrdersIssued();
+        return res.status(200).json(result);
+        }catch(error){
+            return res.status(500).end();
+        }
+    } 
 );
 
  /**
@@ -66,7 +80,14 @@ router.get(
         })
     ],
     validationHandler,
-    ioc.getInternalOrdersAccepted
+    async(req,res)=>{
+        try{
+        const result = await ioc.getInternalOrdersAccepted();
+        return res.status(200).json(result);
+        }catch(error){
+            return res.status(500).end();
+        }
+    } 
 );
 
 /**
@@ -86,7 +107,17 @@ router.get(
         })
     ],
     validationHandler,
-    ioc.getInternalOrderById
+    async(req,res)=>{
+        try{
+        const io = await ioc.getInternalOrderById(req.params.id);
+        if(io.message){
+            return res.status(404).end();
+        }
+        return res.status(200).json(io);
+        }catch(error){
+            return res.status(503).end();
+        }
+    } 
 );
 
 
@@ -132,7 +163,14 @@ router.post(
         body('customerId').isNumeric()                                                  /* [FROM API.md]: customerID is a numeric value                     */
     ],
     validationHandler,
-    ioc.createInternalOrder
+    async(req,res)=>{
+        try{
+        await ioc.createInternalOrder(req.body.issueDate,req.body.customerId,req.body.products);
+        return res.status(201).end();
+        }catch(error){
+            return res.status(503).end();
+        }
+    }
 );
 
 /**
@@ -169,7 +207,18 @@ router.put(
         })
     ],
     validationHandler,
-    ioc.modifyInternalOrderState
+    async(req,res)=>{
+        try{
+        let io = await ioc.modifyInternalOrderState(req.params.id,req.body.newState,req.body.products);
+
+        if(io.message){
+            return res.status(404).end();
+        }
+        return res.status(200).end();
+        }catch(error){
+            return res.status(503).end();
+        }
+    }
 );
 
 /**
@@ -189,7 +238,14 @@ router.delete(
         })
     ],
     validationHandler,
-    ioc.deleteInternalOrder
+    async(req,res)=>{
+        try{
+        await ioc.deleteInternalOrder(req.params.id);
+        return res.status(204).end();
+        }catch(error){
+            return res.status(503).end();
+        }
+    } 
 );
 
 module.exports = router;

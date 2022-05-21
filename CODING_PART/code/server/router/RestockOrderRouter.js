@@ -7,7 +7,7 @@ const dao = new DAO();
 const roc = new ROController(dao);
 
 const { validationHandler } = require("../validator/validationHandler");
-const { param }             = require('express-validator');
+const { param, Result }             = require('express-validator');
 const { header }            = require('express-validator');
 const { body }              = require('express-validator');
 const { ValidationHalt } = require('express-validator/src/base');
@@ -28,7 +28,14 @@ router.get(
         })
     ],
     validationHandler,
-    roc.getRestockOrders
+    async(req,res)=>{
+        try{
+        const ro = await roc.getRestockOrders();
+        return res.status(200).json(ro);
+        }catch(error){
+            return res.status(500).end();
+        }
+    } 
 );
 
 /**
@@ -47,7 +54,14 @@ router.get(
         })
     ],
     validationHandler,
-    roc.getRestockOrdersIssued
+    async(req,res)=>{
+        try{
+        const ro = await roc.getRestockOrders();
+        return res.status(200).json(ro);
+        }catch(error){
+            return res.status(500).end();
+        }
+    } 
 );
 
 /**
@@ -66,8 +80,18 @@ router.get(
             return true;
         })
     ],
-    validationHandler,
-    roc.getRestockOrderById
+    validationHandler, async(req,res)=>{
+        try{
+        const ro = await roc.getRestockOrderById(req.params.id);
+        if(ro.message){
+            return res.status(404).end();
+        }
+        return res.status(200).json(ro);
+        }catch(error){
+            return res.status(503).end();
+        }
+    } 
+    
 );
 
 /**
@@ -87,7 +111,19 @@ router.get(
         })
     ],
     validationHandler,
-    roc.getReturnItems
+    async(req,res)=>{
+        try{
+        let result = await roc.getReturnItems(req.params.id);
+        if(result.message){
+            return res.status(404).end();
+        }else if(result.unprocessable){
+            return res.status(422).end();
+        }
+        return res.status(200).end();
+        }catch(error){
+            return res.status(500).end();
+        }
+    } 
 );
 
 
@@ -131,7 +167,14 @@ router.post(
         body('supplierId').isNumeric()                                                  /* [FROM API.md]: supplierId is a numeric value                     */
     ],
     validationHandler,
-    roc.createRestockOrder
+    async(req,res)=>{
+        try{
+        await roc.createRestockOrder(req.body.issueDate,req.body.supplierId,req.body.products);
+        return res.status(201).end();
+        }catch(error){
+            return res.status(503).end();
+        }
+    } 
 );
 
 /**
@@ -162,7 +205,18 @@ router.put(
         body('newState').isAscii().isUppercase()                                        /* [FROM API.md]: newState is an ASCII string in uppercase                              */
     ],
     validationHandler,
-    roc.modifyRestockOrderState
+    async(req,res)=>{
+        try{
+        const ro = await roc.modifyRestockOrderState(req.params.id,req.body.newState);
+        if(ro.message){
+            return res.status(404).end();
+        }
+        return res.status(200).end();
+        }catch(error){
+            return res.status(503).end();
+        }
+    } 
+    
 );
 
 /**
@@ -194,7 +248,19 @@ router.put(
         })
     ],
     validationHandler,
-    roc.setSkuItems
+    async(req,res)=>{
+        try{
+        await roc.setSkuItems(req.params.id,req.body.skuItems);
+        if(result.message){
+            return res.status(404).end();
+        }else if(result.unprocessable){
+            return res.status(422).end();
+        }
+        return res.status(200).end();
+        }catch(error){
+            return res.status(503).end();
+        }
+    } 
 );
 
 /**
@@ -221,7 +287,19 @@ router.put(
         })
     ], 
     validationHandler,
-    roc.addTransportNote
+    async(req,res)=>{
+        try{
+        let result = await roc.addTransportNote(req.params.id,req.body.transportNote);
+        if(result.message){
+            return res.status(404).end();
+        }else if(result.unprocessable){
+            return res.status(422).end();
+        }
+        return res.status(200).end();
+        }catch(error){
+            return res.status(503).end();
+        }
+    } 
 );
 
 /**
@@ -241,7 +319,14 @@ router.delete(
         })
     ],
     validationHandler,
-    roc.deleteRestockOrder
+    async(req,res)=>{
+        try{
+        await roc.deleteRestockOrder(req.params.id);
+        return res.status(204).end();
+        }catch(error){
+            return res.status(503).end();
+        }
+    } 
 );
 
 
