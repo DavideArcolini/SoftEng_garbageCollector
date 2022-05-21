@@ -44,6 +44,7 @@ class UserController {
     }
 
     getStoredUsers = async () =>{
+        try {
             const sql = "SELECT * FROM USERS WHERE type <> (?)";
             let result = await this.dao.all(sql, "manager");
 
@@ -61,6 +62,9 @@ class UserController {
                 return json;
             })
             return final;
+        } catch (error) {
+            
+        }
             //return res.status(200).json(final);
     }
 
@@ -86,15 +90,13 @@ class UserController {
 
     getUser = async(req) => {
         const sql = `
-        SELECT username 
+        SELECT * 
         FROM USERS 
         WHERE username=(?)
         `;
         /* AND password=(?);*/
         try{
-            console.log(req.username)
             let result = await this.dao.get(sql, req.username);
-            console.log(result)
             if (result) {
                 let validPass = await bcrypt.compare(req.password, result.password);
                 return validPass ? {id: result.id, username: result.username, name: result.name} : 401;
@@ -102,7 +104,7 @@ class UserController {
             else {return 401}
         }
         catch(e){
-            return 500;
+            return;
         }
     }
 
@@ -143,7 +145,7 @@ class UserController {
             WHERE username = (?) AND type = (?)
             `;
         
-            let res = await this.dao.get("SELECT username FROM USERS WHERE username = (?)", user)
+            let res = await this.dao.get("SELECT username FROM USERS WHERE username = (?) AND type = (?)", [user, type])
             if((type == "manager") || !this.regex.test(username) || res === undefined) {
                 return 422;
             }

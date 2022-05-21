@@ -31,7 +31,7 @@ router.get(
     validationHandler,
     async(req, res) => {
         try {
-            const users = await getSuppliers();
+            const users = await uc.getSuppliers();
             return res.status(200).json(users);
         } catch (error) {
             res.status(500).json({message: "Internal server error"});
@@ -58,7 +58,7 @@ router.get(
     validationHandler,
     async(req, res) => {
         try {
-            const users = await getStoredUsers();
+            const users = await uc.getStoredUsers();
             return res.status(200).json(users);
         } catch (error) {
             res.status(500).json({message: "Internal server error"});
@@ -103,12 +103,12 @@ router.post(
     ],
     validationHandler,
     async(req, res) => {
-        if (Object.keys(req.body).length === 0 || (data.type == "manager") || (data.type == "administrator") || (data.password.length < 8) || !this.regex.test(data.username)) {
-            return res.status(422).json({error: "validation of request body failed or attempt to create manager or administrator accounts"});
-        }
         const isOk = await uc.newUser(req.body);
         if(isOk === 201) {
             return res.status(201).json("ok")
+        }
+        else if (isOk === 422 ){
+            return res.status(422).json({error: "validation of request body failed or attempt to create manager or administrator accounts"});
         }
         else if (isOk === 409) {
             return res.status(409).json({message: "User already exists"})
@@ -229,7 +229,7 @@ router.post("/managerSessions", async(req, res) => {
         return res.status(422).json({error: `Empty body request`});
     }
     const user = await uc.getUser(req.body);
-    console.log(user)
+    
     if(user === 401) {
         return res.status(401).json({message : "Wrong username and/or password"});
     }
@@ -240,11 +240,91 @@ router.post("/managerSessions", async(req, res) => {
         return res.status(500).json("error");
     }
 });
-router.post("/deliveryEmployeeSessions", uc.getUser);
-router.post("/qualityEmployeeSessions", uc.getUser);
-router.post("/clerkSessions", uc.getUser);
-router.post("/customerSessions", uc.getUser);
-router.post("/supplierSessions", uc.getUser);
+router.post("/deliveryEmployeeSessions", async(req, res) => {
+    //uc.getUser
+    if (Object.keys(req.body).length === 0) {
+        return res.status(422).json({error: `Empty body request`});
+    }
+    const user = await uc.getUser(req.body);
+    
+    if(user === 401) {
+        return res.status(401).json({message : "Wrong username and/or password"});
+    }
+    else if (user) {
+        return res.status(200).json(user)
+    }
+    else {
+        return res.status(500).json("error");
+    }
+});
+router.post("/qualityEmployeeSessions", async(req, res) => {
+    //uc.getUser
+    if (Object.keys(req.body).length === 0) {
+        return res.status(422).json({error: `Empty body request`});
+    }
+    const user = await uc.getUser(req.body);
+    
+    if(user === 401) {
+        return res.status(401).json({message : "Wrong username and/or password"});
+    }
+    else if (user) {
+        return res.status(200).json(user)
+    }
+    else {
+        return res.status(500).json("error");
+    }
+});
+router.post("/clerkSessions", async(req, res) => {
+    //uc.getUser
+    if (Object.keys(req.body).length === 0) {
+        return res.status(422).json({error: `Empty body request`});
+    }
+    const user = await uc.getUser(req.body);
+    
+    if(user === 401) {
+        return res.status(401).json({message : "Wrong username and/or password"});
+    }
+    else if (user) {
+        return res.status(200).json(user)
+    }
+    else {
+        return res.status(500).json("error");
+    }
+});
+router.post("/customerSessions", async(req, res) => {
+    //uc.getUser
+    if (Object.keys(req.body).length === 0) {
+        return res.status(422).json({error: `Empty body request`});
+    }
+    const user = await uc.getUser(req.body);
+    
+    if(user === 401) {
+        return res.status(401).json({message : "Wrong username and/or password"});
+    }
+    else if (user) {
+        return res.status(200).json(user)
+    }
+    else {
+        return res.status(500).json("error");
+    }
+});
+router.post("/supplierSessions", async(req, res) => {
+    //uc.getUser
+    if (Object.keys(req.body).length === 0) {
+        return res.status(422).json({error: `Empty body request`});
+    }
+    const user = await uc.getUser(req.body);
+    
+    if(user === 401) {
+        return res.status(401).json({message : "Wrong username and/or password"});
+    }
+    else if (user) {
+        return res.status(200).json(user)
+    }
+    else {
+        return res.status(500).json("error");
+    }
+});
 
 /**
  * API:
