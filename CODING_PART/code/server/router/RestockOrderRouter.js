@@ -56,7 +56,7 @@ router.get(
     validationHandler,
     async(req,res)=>{
         try{
-        const ro = await roc.getRestockOrders();
+        const ro = await roc.getRestockOrdersIssued();
         return res.status(200).json(ro);
         }catch(error){
             return res.status(500).end();

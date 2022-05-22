@@ -20,7 +20,7 @@ class RestockOrderController {
             let sql = "SELECT MAX(id) as id FROM RESTOCK_ORDERS"
             let max_id = await this.dao.get(sql);
             let id=1;
-            if(max_id.id!==null)
+            if(max_id !==undefined && max_id.id!==null)
                 id = max_id.id+1;
             //let data = req.body;
         
