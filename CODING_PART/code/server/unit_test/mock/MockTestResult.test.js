@@ -35,7 +35,7 @@ getTestResults(1,[{
 getTestResults(undefined,[], 404, {rfid: "1"})
 
 //200 there aren't result
-getTestResults(1,[], 200, {rfid: "1"})
+getTestResults(1,[], [], {rfid: "1"})
 
 //500
 getTestResults(1,1, 500, undefined)

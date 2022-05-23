@@ -12,7 +12,7 @@ class TestDescriptorController {
         try{
 
             const sql = "SELECT * FROM TEST_DESCRIPTORS GROUP BY id";
-            const result = await this.daotd.all(sql);
+            const result = await this.daotd.all(sql,);
             if(result[0]==undefined){
                 throw(error);
             }else{
