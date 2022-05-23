@@ -1,5 +1,5 @@
-const dao = require("./mockDB/mock_dao");
-const UserController = require("../controller/UserController");
+const dao = require("../test_DB/mock_dao");
+const UserController = require("../../controller/UserController");
 const user = new UserController(dao);
 const bcrypt        = require('bcrypt');
 
@@ -22,47 +22,6 @@ newUser("insert ok", {
     password :"testpassword"
 }, undefined, 201);
 
-//  422 
-//  inserting manager
-/*
-newUser("inserting manager", {
-    username:"supplier1@ezwh.com",
-    name : "Voldemort",
-    surname: "You-Know-Who",
-    type: "manager",
-    password :"testpassword"
-}, undefined, 422);
-
-//  inserting administrator
-newUser("inserting admin", {
-    username:"supplier1@ezwh.com",
-    name : "Voldemort",
-    surname: "You-Know-Who",
-    type: "administrator",
-    password :"testpassword"
-}, undefined, 422);
-
-//  inserting password.length < 8
-newUser("inserting password.length < 8", {
-    username:"supplier1@ezwh.com",
-    name : "Voldemort",
-    surname: "You-Know-Who",
-    type: "supplier",
-    password :"test"
-}, undefined, 422);
-
-//  inserting wrong username
-newUser("inserting wrong username", {
-    username:"supplier1",
-    name : "Voldemort",
-    surname: "You-Know-Who",
-    type: "supplier",
-    password :"testpassword"
-}, undefined, 422);
-
-//  inserting empty body
-newUser("inserting empty body", {}, undefined, 422);
-*/
 //  409
 newUser("user already exists", {
     username:"supplier1@ezwh.com",
@@ -162,44 +121,6 @@ editUser("edited ok",{
     {username: "user1@ezwh.com"},
     200
 )
-/*
-//  422
-//  empty body
-editUser("empty body",{},
-    "user1@ezwh.com",
-    {username: "user1@ezwh.com"},
-    422
-)
-//  modify a manager
-editUser("trying to modify a manager",{
-    "oldType" : "manager",
-    "newType" : "qualityEmployee"
-    },
-    "user1@ezwh.com",
-    {username: "user1@ezwh.com"},
-    422
-)
-
-//  upgrade to manager
-editUser("trying to upgrade to manager",{
-    "oldType" : "clerk",
-    "newType" : "manager"
-    },
-    "user1@ezwh.com",
-    {username: "user1@ezwh.com"},
-    422
-)
-
-//  wrong username format
-editUser("wrong username format",{
-    "oldType" : "clerk",
-    "newType" : "qualityEmployee"
-    },
-    "user1",
-    {username: "user1@ezwh.com"},
-    422
-)
-*/
 //  404
 //  user not found
 editUser("user not found",{
@@ -231,31 +152,7 @@ deleteUser(
     {type: "customer", username : "customer1@ezwh.com"},
     204
 )
-/*
-//  422
-//  can't delete manager
-deleteUser(
-    "trying to delete a manager",
-    {type: "manager", username : "manager1@ezwh.com"},
-    {type: "manager", username : "manager1@ezwh.com"},
-    422
-)
-//  wrong username
-deleteUser(
-    "wrong username",
-    {type: "customer", username : "customer1"},
-    {type: "customer", username : "customer1"},
-    422
-)
-//  user doesn't exists
-deleteUser(
 
-    "user doesn't exists",
-    {type: "customer", username : "customer1@ezwh.com"},
-    undefined,
-    422
-)
-*/
 //  503
 deleteUser(
     "bad request",
