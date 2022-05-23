@@ -274,7 +274,23 @@ router.post("/qualityEmployeeSessions", async(req, res) => {
         return res.status(500).json("error");
     }
 });
-router.post("/clerkSessions", async(req, res) => {
+router.post("/clerkSessions", 
+[
+    header('Content-Type').equals('application/json'),                      /* [FROM API.md]: Request header has a line: Content-Type: application/json.            */
+    body().custom(value => {                                                /* [FROM API.md]: all parameters should be defined (no optional parameters)             */
+        if (value.username === undefined ||
+            value.password === undefined) {
+                throw new Error('Missing parameters');
+            }
+        return true;
+    }),
+    body('username').isEmail(),                                                 /* [FROM API.md]: username is an email                                                  */
+    body('password').isLength({min: 8})/*.isStrongPassword()*/,                 /* [FROM API.md]: password is AT LEAST 8 characters                                     */
+    /* enable it to implement strongPassword authentication  */
+    
+],
+validationHandler,
+async(req, res) => {
     //uc.getUser
     if (Object.keys(req.body).length === 0) {
         return res.status(422).json({error: `Empty body request`});
