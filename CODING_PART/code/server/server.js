@@ -19,7 +19,7 @@ const express     = require('express');
 const app         = new express();
 const PORT        = 3001;
 app.use(express.json());
-app.use(morgan('dev'));
+//app.use(morgan('dev'));
 
 /* ---------- ENABLING ROUTER TO DISPATCH API ---------- */
 app.use("/api", router_USER);                                     /* USER                   */

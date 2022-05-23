@@ -105,7 +105,7 @@ router.post(
     async(req, res) => {
         const isOk = await uc.newUser(req.body);
         if(isOk === 201) {
-            return res.status(201).json("ok")
+            return res.status(201).json({message: "ok"})
         }
         else if (isOk === 409) {
             return res.status(409).json({message: "User already exists"})
@@ -357,7 +357,7 @@ async(req, res) => {
         return res.status(200).json(user)
     }
     else {
-        return res.status(500).json("error");
+        return res.status(500).json({message: "error"});
     }
 });
 

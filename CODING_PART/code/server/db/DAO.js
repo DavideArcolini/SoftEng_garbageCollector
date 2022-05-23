@@ -1,6 +1,8 @@
 "use strict";
 
 const sqlite = require('sqlite3');
+const bcrypt        = require('bcrypt');
+const saltRounds    = 10;
 
 class DAO {
     static db;
@@ -327,9 +329,26 @@ class DAO {
   *  - dropTableUser(): drop the users table.
   */
   newTableUsers() {
-    return new Promise((res, rej)=>{
-      const sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR, PRIMARY KEY(id)) ";
+    return new Promise(async (res, rej)=>{
+      let sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR, PRIMARY KEY(id)) ";
       this.db.run(sql, (err)=>{
+        if (err) {
+          rej(err);
+            return;
+          }
+        res(this.lastID);
+      });
+
+      let manager = {
+        username: "manager1@ezwh.com",
+        name: "Dave",
+        surname: "Grohl",
+        type: "manager",
+        password: "testpassword"
+      }
+      sql = "INSERT OR IGNORE INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
+      let hash = await bcrypt.hash(manager.password, saltRounds);
+      this.db.run(sql, [manager.username, manager.name, manager.surname, hash, manager.type], (err)=>{
         if (err) {
           rej(err);
             return;
@@ -352,7 +371,18 @@ class DAO {
     });
   }
 
-  
+  deleteAllUsers() {
+    return new Promise((res, rej) => {
+      const sql = "DELETE FROM USERS";
+      this.db.run(sql, (err)=>{
+          if (err) {
+              rej(err);
+              return;
+          }
+          res(this.lastID);
+      });
+    });
+  }
 
 
  /**

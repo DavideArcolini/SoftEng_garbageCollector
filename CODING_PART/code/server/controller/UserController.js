@@ -3,14 +3,6 @@
 const bcrypt        = require('bcrypt');
 const saltRounds    = 10;
 
-let manager = {
-    username: "manager1@ezwh.com",
-    name: "Dave",
-    surname: "Grohl",
-    type: "manager",
-    password: "testpassword"
-}
-
 class UserController {
     types = ['customer','qualityEmployee','clerk','deliveryEmployee','supplier'];
     regex =
