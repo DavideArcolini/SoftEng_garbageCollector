@@ -19,7 +19,7 @@ describe('get user', () => {
     /*newUser(201, 'mmz', 'Maurizio', "Morisio", "admin");
     newUser(422);*/
     
-    beforeEach(async() => {
+    before(async() => {
         await agent.post('/api/newUser')
         .send(usr)
         .then(function (res) {
@@ -27,6 +27,7 @@ describe('get user', () => {
         })
     });
     getUser('getting user data from the system', 200, {
+        id: 2,
         username: "test@ezwh.com",
         name: "Test",
         password: "testpassword"
@@ -35,12 +36,14 @@ describe('get user', () => {
     getUser('empty body', 422, {})
 
     getUser('bad username format', 422, {
+        id: 2,
         username: "tes",
         name: "Test",
         password: "testpassword"
     });
 
     getUser('bad password format', 422, {
+        id:2,
         username: "tes",
         name: "Test",
         password: "test"
@@ -48,25 +51,29 @@ describe('get user', () => {
 
     //  401
     getUser('not found: wrong username', 401, {
+        id:2,
         username: "tes@ezwh.com",
         name: "Test",
         password: "testpassword"
     }, 401)
 
     getUser('not found: wrong password', 401, {
+        id:2,
         username: "test@ezwh.com",
         name: "Test",
         password: "tespassword"
     })
 
 
-    afterEach(async() => {
+    after(async() => {
         await agent.delete(`/api/users/${usr.username}/${usr.type}`);
     })
 });
 
 describe('new user', () => {
+    //  201
     newUser('user created', 201, usr);
+
     //  422
     newUser('empty body', 422, {});
     newUser('wrong username format', 422, {
@@ -111,17 +118,6 @@ describe('modify permissions', () =>{
     
 })
 
-/*
-newUser(201, {
-    username: "test@ezwh.com",
-    name: "Test",
-    surname: "To Test",
-    password: "testpassword",
-    type: "clerk"
-})
-*/
-
-
 function newUser(name, expectedHTTPStatus, usr) {
     it(name, function (done) {
         if (usr !== undefined) {
@@ -133,7 +129,7 @@ function newUser(name, expectedHTTPStatus, usr) {
                     else if (expectedHTTPStatus===201) {res.body.message.should.equal("ok")}
                     else{}
                     done();
-                });
+                }).catch(done);
         } else {
             agent.post('/api/newUser') //we are not sending any data
                 .then(function (res) {
@@ -152,21 +148,22 @@ function getUser(name, expectedHTTPStatus, usr) {
             .send({username: usr.username, password: usr.password})
             .then(function (r) {
                 r.should.have.status(expectedHTTPStatus);
+                r.body.id.should.equal(2);
                 r.body.name.should.equal(usr.name);
                 r.body.username.should.equal(usr.username);
                 done();
-            });
+            }).catch(done);
         }
         else {
             agent.post('/api/clerkSessions')
             .send({username: usr.username, password: usr.password})
             .then(function (r) {
                 r.should.have.status(expectedHTTPStatus);
+                if(expectedHTTPStatus === 422) {r.body.error.should.equal('Unprocessable Entity')}
+                else if(expectedHTTPStatus === 401) {r.body.message.should.equal("Wrong username and/or password")}
+                else {r.body.message.should.equal("error")}
                 done();
-            });
+            }).catch(done);
         }
     })
 }
-
-
-

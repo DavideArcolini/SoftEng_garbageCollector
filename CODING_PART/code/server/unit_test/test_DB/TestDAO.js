@@ -352,7 +352,7 @@ class DAO {
     });
   }
 
-  deleteAll() {
+  deleteAllUsers() {
     return new Promise((res, rej) => {
       const sql = "DELETE FROM USERS";
       this.db.run(sql, (err)=>{

@@ -62,7 +62,7 @@ describe('get users', () => {
             `;
         await dao.run(sql, ["ciccio1@ezwh.com", "customer"])
         await dao.run(sql, ["joe@ezwh.com", "clerk"]) */
-        await dao.deleteAll()
+        await dao.deleteAllUsers()
     })
 }) 
 
@@ -73,7 +73,7 @@ describe('get users', () => {
  */
 describe('get suppliers', () => {
     beforeAll( async () => {
-        await dao.deleteAll()
+        await dao.deleteAllUsers()
         const salt = await bcrypt.genSalt(10);
         await dao.run("INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)",
         [
@@ -111,7 +111,7 @@ describe('get suppliers', () => {
     ]);
 
     afterAll(async() => {
-        await dao.deleteAll()
+        await dao.deleteAllUsers()
         /* const sql = `
             DELETE from USERS
             WHERE username = (?) AND type = (?)
@@ -153,7 +153,7 @@ describe('get suppliers', () => {
             WHERE username = (?) AND type = (?)
             `;
         await dao.run(sql, ["clerk1@ezwh.com", "clerk"]) */
-        await dao.deleteAll()
+        await dao.deleteAllUsers()
     })
     
 })
@@ -166,7 +166,7 @@ describe('get suppliers', () => {
 
 describe('get user', () => {
     beforeAll(async() => {
-        await dao.deleteAll()
+        await dao.deleteAllUsers()
         let to_test = { 
             username: "mj@ezwh.com", 
             name: "Mary",
@@ -195,7 +195,7 @@ describe('get user', () => {
             WHERE username = (?) AND type = (?)
             `;
         await dao.run(sql, ["mj@ezwh.com", "supplier"]) */
-        await dao.deleteAll()
+        await dao.deleteAllUsers()
     })
 })
 
@@ -206,7 +206,7 @@ describe('get user', () => {
  */
 describe('edit user', () => {
     beforeAll(async() => {
-        await dao.deleteAll()
+        await dao.deleteAllUsers()
         let to_test = { 
             username: "mj@ezwh.com", 
             name: "Mary",
@@ -242,7 +242,7 @@ describe('edit user', () => {
             WHERE username = (?) AND type = (?)
             `;
         await dao.run(sql, ["mj@ezwh.com", "qualityEmployee"]) */
-        await dao.deleteAll()
+        await dao.deleteAllUsers()
     })
 })
 
@@ -253,7 +253,7 @@ describe('edit user', () => {
  */
 describe('delete user', () => {
     beforeAll(async() => {
-        await dao.deleteAll()
+        await dao.deleteAllUsers()
         let to_test = { 
             username: "mj@ezwh.com", 
             name: "Mary",
