@@ -139,7 +139,7 @@ class InternalOrderController {
         try{
             let sql = "SELECT id, issueDate, state, customerId, SKUId, description, price, COUNT(*) as qty FROM INTERNAL_ORDERS WHERE id==? GROUP BY id, issueDate, state, customerId, SKUId, description, price "
             let response = await this.dao.all(sql,id);
-            console.log(response);
+           // console.log(response);
             if(response.length==0){
                 //return res.status(404).json();
                 return {message: "Not Found"}; 
@@ -164,12 +164,12 @@ class InternalOrderController {
 
                 sql = "SELECT SKUId, description, price, RFID FROM INTERNAL_ORDERS WHERE id==?"
                 result = {...result , products : await this.dao.all(sql,id)};
-                console.log(result);
+                //console.log(result);
                 return result;
             }
             
             //return res.status(200).json(result);
-            console.log(result);
+           // console.log(result);
             return result;
         }catch(error){
             //return res.status(500).end();
@@ -182,7 +182,7 @@ class InternalOrderController {
         try{
             let sql = "SELECT * FROM INTERNAL_ORDERS WHERE id==?";
             let result = await this.dao.get(sql,id);
-            console.log(result);
+           // console.log(result);
             if(result==null){
                // return res.status(404).end();
                return {message: "Not Found"}; 

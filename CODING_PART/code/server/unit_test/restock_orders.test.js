@@ -116,12 +116,12 @@ describe('get restock orders', () => {
               }
           ]).mockReturnValueOnce(
             [{
-                id: 2,
-                SKUId: 1,
-                description: null,
-                price: 0.01,
-                qty: 1,
-              }]
+              id: 2,
+              SKUId: 12,
+              description: 'a product',
+              price: 10.99,
+              qty: 3
+            }]
           ).mockReturnValueOnce([
             {
                
@@ -135,29 +135,29 @@ describe('get restock orders', () => {
               description: 'a product',
               price: 10.99,
               qty: 3
-            },
-            {
-              id: 33,
-              SKUId: 180,
-              description: 'another product',
-              price: 11.99,
-              qty: 2
             }
-          ]).mockReturnValueOnce([])
+          ]).mockReturnValueOnce([
+            {
+               
+              SKUId: 1,
+              RFID: '00000000000000000000000000000001'
+            }
+          ])
     })
 
     
     test('get restock orders', async() => {
         let res = await RO.getRestockOrders();
-        console.log(res)
+        console.log(res.length)
         expect(res.length).toEqual([{
-            id: 2,
-            issueDate: '2022/5/12 17:44',
-            state: 'COMPLETEDRETURN',
-            supplierId: 7,
-            transportNote: { deliveryDate: '2022/5/12 17:46' },
-            products: [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ],
-            skuItems: [ { SKUId: 1, RFID: '00000000000000000000000000000001' } ]
+          id: 2,
+          issueDate: '2022/5/12 17:44',
+          state: 'COMPLETEDRETURN',
+          supplierId: 1,
+          products: [
+            { SKUId: 12, description: 'a product', price: 10.99, qty: 3 }
+          ],
+          skuItems: [ { SKUId: 1, RFID: '00000000000000000000000000000001' } ]
           },
           {
             id: 33,
@@ -165,15 +165,9 @@ describe('get restock orders', () => {
             state: 'ISSUED',
             supplierId: 1,
             products: [
-              { SKUId: 12, description: 'a product', price: 10.99, qty: 3 },
-              {
-                SKUId: 180,
-                description: 'another product',
-                price: 11.99,
-                qty: 2
-              }
+              { SKUId: 12, description: 'a product', price: 10.99, qty: 3 }
             ],
-            skuItems: []
+            skuItems: [ { SKUId: 1, RFID: '00000000000000000000000000000001' } ]
           }].length);
         
     })
