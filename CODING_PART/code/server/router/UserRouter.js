@@ -128,6 +128,12 @@ router.put(
     [
         param('username').isEmail(),                                            /* [FROM API.md]: username is an email                                                  */
         header('Content-Type').equals('application/json'),                      /* [FROM API.md]: Request header has a line: Content-Type: application/json.            */
+        body().custom(value => {                                                /* [FROM API.md]: body should be empty                                                  */
+            if (Object.keys(value).length === 0) {
+                throw new Error('Body should not be empty');
+            }
+            return true;
+        }),
         body().custom(value => {                                                /* [FROM API.md]: all parameters should be defined (no optional parameters)             */
             if (value.oldType === undefined ||
                 value.newType === undefined) {
@@ -157,18 +163,15 @@ router.put(
     validationHandler,
     async(req, res) => {
         let result = await uc.editUser(req.body, req.params.username);
-/*
-        if(result===422) {
-            return res.status(422).json({error: "Validation failed"});
-        }
-        else */if(result===404) {
-            res.status(404).json({error : "Not found"});
+        
+        if(result===404) {
+            res.status(404).json({error : "Not Found"});
         }
         else if(result===200) {
-            return res.status(200).json("ok");
+            return res.status(200).json({message: "ok"});
         }
         else {
-            return res.status(503).json("error");
+            return res.status(503).json({error: "Service Unavailable"});
         }
     }
     //uc.editUser
@@ -201,17 +204,15 @@ router.delete(
     async(req, res) => {
         try {
             let result = await uc.deleteUser(req.params);
-            /*if(result === 422) {
-                return res.status(422).json({message : "validation of username or of type failed or attempt to delete a manager/administrator"});
-            }
-            else */if (result === 204) {
+            
+            if (result === 204) {
                 return res.status(204).json({message:"success"});
             }
             else {
-                return res.status(503).json("error");
+                return res.status(503).json({error: "Service Unavailable"});
             }
         } catch (error) {
-            return res.status(503).json("error");
+            return res.status(503).json({error: "Service Unavailable"});
         }
         
         

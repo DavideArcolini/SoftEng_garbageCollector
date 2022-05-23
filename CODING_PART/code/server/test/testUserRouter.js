@@ -14,10 +14,39 @@ let usr = {
     type: "clerk"
 }
 
-describe('get user', () => {
+let users = [
+    {
+        username: "test@ezwh.com",
+        name: "Test",
+        surname: "To Test",
+        password: "testpassword",
+        type: "clerk"
+    },
+    {
+        username: "supplier1@ezwh.com",
+        name: "Rosario",
+        surname: "Sorbello",
+        password: "testpassword",
+        type: "supplier"
+    }];
+let return_users = JSON.stringify([
+    {
+        email: "test@clerk.ezwh.com",
+        id: 2,
+        name: "Test",
+        surname: "To Test",
+        type: "clerk"
+    },
+    {
+        email: "supplier1@supplier.ezwh.com",
+        id: 3,
+        name: "Rosario",
+        surname: "Sorbello",
+        type: "supplier"
+    }
+])
 
-    /*newUser(201, 'mmz', 'Maurizio', "Morisio", "admin");
-    newUser(422);*/
+describe('get user', () => {
     
     before(async() => {
         await agent.post('/api/newUser')
@@ -112,10 +141,43 @@ describe('new user', () => {
  *  =================================================
  */
 describe('modify permissions', () =>{
-    beforeEach(async() => {
+    before(async() => {
+        await agent.post('/api/newUser')
+        .send(usr)
+        .then(function (res) {
+            res.should.have.status(201);
+        })
+    });
 
-    })
+    editUser("edited", 200, {oldType: "clerk", newType: "supplier"}, usr.username);
+
+    //  422
+    editUser("empty body", 422, {}, usr.username);
+    editUser("cannot modify manager rights", 422, {oldType: "manager", newType: "supplier"}, "manager1@ezwh.com");
+    editUser("cannot upgrade to manager", 422, {oldType: "clerk", newType: "manager"}, usr.username);
+    editUser("is not email", 422, {oldType: "clerk", newType: "supplier"}, "manager")
+
+    //  404
+    editUser("user not found", 404, {oldType: "clerk", newType: "supplier"}, "pincopallino@ezwh.com");
+
+    after(async() => {await agent.delete(`/api/users/${usr.username}/supplier`);})
     
+})
+
+describe('delete user', () => {
+    before(async() => {
+        await agent.post('/api/newUser')
+        .send(usr)
+        .then(function (res) {
+            res.should.have.status(201);
+        })
+    });
+
+    deleteUser("wrong user", 422, {username: "pippo", type: "clerk"});
+    deleteUser("trying to delete a manager", 422, {username:"manager1@ezwh.com", type: "manager"});
+    deleteUser("empty params", 422, {})
+    deleteUser("deleted", 204, {username: usr.username, type: usr.type})
+
 })
 
 function newUser(name, expectedHTTPStatus, usr) {
@@ -165,5 +227,42 @@ function getUser(name, expectedHTTPStatus, usr) {
                 done();
             }).catch(done);
         }
+    })
+}
+
+function editUser(name, expectedHTTPStatus, body_req, param_req){
+    it(name, function (done) {
+        if(body_req){
+            agent.put('/api/users/' + param_req)
+                .send(body_req)
+                .then(function (r) {
+                    r.should.have.status(expectedHTTPStatus);
+                    if(expectedHTTPStatus === 200) {r.body.message.should.equal("ok")}
+                    else if(expectedHTTPStatus === 422) {r.body.error.should.equal('Unprocessable Entity')}
+                    else if(expectedHTTPStatus === 404) {r.body.error.should.equal("Not Found")}
+                    else {r.body.error.should.equal("Service Unavailable")}
+                    done();
+                }).catch(done);
+        }
+        else {
+            agent.put('/api/users/' + param_req)
+            .then(function (r) {
+                r.should.have.status(expectedHTTPStatus);
+                r.body.error.should.equal('Unprocessable Entity');
+            })
+        }
+    })
+}
+
+function deleteUser(name, expectedHTTPStatus, param_req){
+    it(name, function (done) {
+        agent.delete(`/api/users/${param_req.username}/${param_req.type}`)
+            .then(function (r) {
+                r.should.have.status(expectedHTTPStatus);
+                if(expectedHTTPStatus === 204) {/* r.body.message.should.equal("success") */}
+                else if(expectedHTTPStatus === 422) {r.body.error.should.equal('Unprocessable Entity')}
+                else {r.body.error.should.equal("Service Unavailable")}
+                done();
+            }).catch(done);
     })
 }
