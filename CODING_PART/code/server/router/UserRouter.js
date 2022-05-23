@@ -106,10 +106,7 @@ router.post(
         const isOk = await uc.newUser(req.body);
         if(isOk === 201) {
             return res.status(201).json("ok")
-        }/*
-        else if (isOk === 422 ){
-            return res.status(422).json({error: "validation of request body failed or attempt to create manager or administrator accounts"});
-        }*/
+        }
         else if (isOk === 409) {
             return res.status(409).json({message: "User already exists"})
         }
@@ -223,60 +220,14 @@ router.delete(
 );
 
 /* SESSIONS */
-router.post("/managerSessions", async(req, res) => {
-    //uc.getUser
-    if (Object.keys(req.body).length === 0) {
-        return res.status(422).json({error: `Empty body request`});
-    }
-    const user = await uc.getUser(req.body);
-    
-    if(user === 401) {
-        return res.status(401).json({message : "Wrong username and/or password"});
-    }
-    else if (user) {
-        return res.status(200).json(user)
-    }
-    else {
-        return res.status(500).json("error");
-    }
-});
-router.post("/deliveryEmployeeSessions", async(req, res) => {
-    //uc.getUser
-    if (Object.keys(req.body).length === 0) {
-        return res.status(422).json({error: `Empty body request`});
-    }
-    const user = await uc.getUser(req.body);
-    
-    if(user === 401) {
-        return res.status(401).json({message : "Wrong username and/or password"});
-    }
-    else if (user) {
-        return res.status(200).json(user)
-    }
-    else {
-        return res.status(500).json("error");
-    }
-});
-router.post("/qualityEmployeeSessions", async(req, res) => {
-    //uc.getUser
-    if (Object.keys(req.body).length === 0) {
-        return res.status(422).json({error: `Empty body request`});
-    }
-    const user = await uc.getUser(req.body);
-    
-    if(user === 401) {
-        return res.status(401).json({message : "Wrong username and/or password"});
-    }
-    else if (user) {
-        return res.status(200).json(user)
-    }
-    else {
-        return res.status(500).json("error");
-    }
-});
-router.post("/clerkSessions", 
-[
+router.post("/managerSessions",[
     header('Content-Type').equals('application/json'),                      /* [FROM API.md]: Request header has a line: Content-Type: application/json.            */
+    body().custom(value => {                                                /* [FROM API.md]: body should be empty                                                  */
+            if (Object.keys(value).length === 0) {
+                throw new Error('Body should not be empty');
+            }
+            return true;
+    }),
     body().custom(value => {                                                /* [FROM API.md]: all parameters should be defined (no optional parameters)             */
         if (value.username === undefined ||
             value.password === undefined) {
@@ -291,10 +242,6 @@ router.post("/clerkSessions",
 ],
 validationHandler,
 async(req, res) => {
-    //uc.getUser
-    if (Object.keys(req.body).length === 0) {
-        return res.status(422).json({error: `Empty body request`});
-    }
     const user = await uc.getUser(req.body);
     
     if(user === 401) {
@@ -307,11 +254,29 @@ async(req, res) => {
         return res.status(500).json("error");
     }
 });
-router.post("/customerSessions", async(req, res) => {
-    //uc.getUser
-    if (Object.keys(req.body).length === 0) {
-        return res.status(422).json({error: `Empty body request`});
-    }
+
+router.post("/deliveryEmployeeSessions", [
+    header('Content-Type').equals('application/json'),                      /* [FROM API.md]: Request header has a line: Content-Type: application/json.            */
+    body().custom(value => {                                                /* [FROM API.md]: body should be empty                                                  */
+            if (Object.keys(value).length === 0) {
+                throw new Error('Body should not be empty');
+            }
+            return true;
+    }),
+    body().custom(value => {                                                /* [FROM API.md]: all parameters should be defined (no optional parameters)             */
+        if (value.username === undefined ||
+            value.password === undefined) {
+                throw new Error('Missing parameters');
+            }
+        return true;
+    }),
+    body('username').isEmail(),                                                 /* [FROM API.md]: username is an email                                                  */
+    body('password').isLength({min: 8})/*.isStrongPassword()*/,                 /* [FROM API.md]: password is AT LEAST 8 characters                                     */
+    /* enable it to implement strongPassword authentication  */
+    
+],
+validationHandler,
+async(req, res) => {
     const user = await uc.getUser(req.body);
     
     if(user === 401) {
@@ -324,11 +289,135 @@ router.post("/customerSessions", async(req, res) => {
         return res.status(500).json("error");
     }
 });
-router.post("/supplierSessions", async(req, res) => {
-    //uc.getUser
-    if (Object.keys(req.body).length === 0) {
-        return res.status(422).json({error: `Empty body request`});
+
+router.post("/qualityEmployeeSessions", [
+    header('Content-Type').equals('application/json'),                      /* [FROM API.md]: Request header has a line: Content-Type: application/json.            */
+    body().custom(value => {                                                /* [FROM API.md]: body should be empty                                                  */
+            if (Object.keys(value).length === 0) {
+                throw new Error('Body should not be empty');
+            }
+            return true;
+    }),
+    body().custom(value => {                                                /* [FROM API.md]: all parameters should be defined (no optional parameters)             */
+        if (value.username === undefined ||
+            value.password === undefined) {
+                throw new Error('Missing parameters');
+            }
+        return true;
+    }),
+    body('username').isEmail(),                                                 /* [FROM API.md]: username is an email                                                  */
+    body('password').isLength({min: 8})/*.isStrongPassword()*/,                 /* [FROM API.md]: password is AT LEAST 8 characters                                     */
+    /* enable it to implement strongPassword authentication  */
+    
+],
+validationHandler,
+async(req, res) => {
+    const user = await uc.getUser(req.body);
+    
+    if(user === 401) {
+        return res.status(401).json({message : "Wrong username and/or password"});
     }
+    else if (user) {
+        return res.status(200).json(user)
+    }
+    else {
+        return res.status(500).json("error");
+    }
+});
+
+router.post("/clerkSessions", 
+[
+    header('Content-Type').equals('application/json'),                      /* [FROM API.md]: Request header has a line: Content-Type: application/json.            */
+    body().custom(value => {                                                /* [FROM API.md]: body should be empty                                                  */
+            if (Object.keys(value).length === 0) {
+                throw new Error('Body should not be empty');
+            }
+            return true;
+    }),
+    body().custom(value => {                                                /* [FROM API.md]: all parameters should be defined (no optional parameters)             */
+        if (value.username === undefined ||
+            value.password === undefined) {
+                throw new Error('Missing parameters');
+            }
+        return true;
+    }),
+    body('username').isEmail(),                                                 /* [FROM API.md]: username is an email                                                  */
+    body('password').isLength({min: 8})/*.isStrongPassword()*/,                 /* [FROM API.md]: password is AT LEAST 8 characters                                     */
+    /* enable it to implement strongPassword authentication  */
+    
+],
+validationHandler,
+async(req, res) => {
+    const user = await uc.getUser(req.body);
+    
+    if(user === 401) {
+        return res.status(401).json({message : "Wrong username and/or password"});
+    }
+    else if (user) {
+        return res.status(200).json(user)
+    }
+    else {
+        return res.status(500).json("error");
+    }
+});
+
+router.post("/customerSessions", [
+    header('Content-Type').equals('application/json'),                      /* [FROM API.md]: Request header has a line: Content-Type: application/json.            */
+    body().custom(value => {                                                /* [FROM API.md]: body should be empty                                                  */
+            if (Object.keys(value).length === 0) {
+                throw new Error('Body should not be empty');
+            }
+            return true;
+    }),
+    body().custom(value => {                                                /* [FROM API.md]: all parameters should be defined (no optional parameters)             */
+        if (value.username === undefined ||
+            value.password === undefined) {
+                throw new Error('Missing parameters');
+            }
+        return true;
+    }),
+    body('username').isEmail(),                                                 /* [FROM API.md]: username is an email                                                  */
+    body('password').isLength({min: 8})/*.isStrongPassword()*/,                 /* [FROM API.md]: password is AT LEAST 8 characters                                     */
+    /* enable it to implement strongPassword authentication  */
+    
+],
+validationHandler,
+async(req, res) => {
+    const user = await uc.getUser(req.body);
+    
+    if(user === 401) {
+        return res.status(401).json({message : "Wrong username and/or password"});
+    }
+    else if (user) {
+        return res.status(200).json(user)
+    }
+    else {
+        return res.status(500).json("error");
+    }
+});
+
+router.post("/supplierSessions", [
+    header('Content-Type').equals('application/json'),                      /* [FROM API.md]: Request header has a line: Content-Type: application/json.            */
+    body().custom(value => {                                                /* [FROM API.md]: body should be empty                                                  */
+            if (Object.keys(value).length === 0) {
+                throw new Error('Body should not be empty');
+            }
+            return true;
+    }),
+    body().custom(value => {                                                /* [FROM API.md]: all parameters should be defined (no optional parameters)             */
+        if (value.username === undefined ||
+            value.password === undefined) {
+                throw new Error('Missing parameters');
+            }
+        return true;
+    }),
+    body('username').isEmail(),                                                 /* [FROM API.md]: username is an email                                                  */
+    body('password').isLength({min: 8})/*.isStrongPassword()*/,                 /* [FROM API.md]: password is AT LEAST 8 characters                                     */
+    /* enable it to implement strongPassword authentication  */
+    
+],
+validationHandler,
+async(req, res) => {
     const user = await uc.getUser(req.body);
     
     if(user === 401) {
