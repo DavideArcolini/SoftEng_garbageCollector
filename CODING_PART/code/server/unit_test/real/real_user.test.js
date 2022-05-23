@@ -56,12 +56,13 @@ describe('get users', () => {
     ])
 
     afterAll(async() => {
-        const sql = `
+        /* const sql = `
             DELETE from USERS
             WHERE username = (?) AND type = (?)
             `;
         await dao.run(sql, ["ciccio1@ezwh.com", "customer"])
-        await dao.run(sql, ["joe@ezwh.com", "clerk"])
+        await dao.run(sql, ["joe@ezwh.com", "clerk"]) */
+        await dao.deleteAll()
     })
 }) 
 
@@ -72,6 +73,7 @@ describe('get users', () => {
  */
 describe('get suppliers', () => {
     beforeAll( async () => {
+        await dao.deleteAll()
         const salt = await bcrypt.genSalt(10);
         await dao.run("INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)",
         [
@@ -109,12 +111,13 @@ describe('get suppliers', () => {
     ]);
 
     afterAll(async() => {
-        const sql = `
+        await dao.deleteAll()
+        /* const sql = `
             DELETE from USERS
             WHERE username = (?) AND type = (?)
             `;
         await dao.run(sql, ["mj@ezwh.com", "supplier"])
-        await dao.run(sql, ["peter@ezwh.com", "supplier"])
+        await dao.run(sql, ["peter@ezwh.com", "supplier"]) */
     })
 })
 
@@ -145,11 +148,12 @@ describe('get suppliers', () => {
     newUser("bad request", undefined, 503)
 
     afterAll(async() => {
-        const sql = `
+        /* const sql = `
             DELETE from USERS
             WHERE username = (?) AND type = (?)
             `;
-        await dao.run(sql, ["clerk1@ezwh.com", "clerk"])
+        await dao.run(sql, ["clerk1@ezwh.com", "clerk"]) */
+        await dao.deleteAll()
     })
     
 })
@@ -162,6 +166,7 @@ describe('get suppliers', () => {
 
 describe('get user', () => {
     beforeAll(async() => {
+        await dao.deleteAll()
         let to_test = { 
             username: "mj@ezwh.com", 
             name: "Mary",
@@ -185,11 +190,12 @@ describe('get user', () => {
     getUser("bad request", undefined, undefined);
 
     afterAll(async() => {
-        const sql = `
+        /* const sql = `
             DELETE from USERS
             WHERE username = (?) AND type = (?)
             `;
-        await dao.run(sql, ["mj@ezwh.com", "supplier"])
+        await dao.run(sql, ["mj@ezwh.com", "supplier"]) */
+        await dao.deleteAll()
     })
 })
 
@@ -200,6 +206,7 @@ describe('get user', () => {
  */
 describe('edit user', () => {
     beforeAll(async() => {
+        await dao.deleteAll()
         let to_test = { 
             username: "mj@ezwh.com", 
             name: "Mary",
@@ -230,11 +237,12 @@ describe('edit user', () => {
     "mj@ezwh.com", 503)
 
     afterAll(async() => {
-        const sql = `
+        /* const sql = `
             DELETE from USERS
             WHERE username = (?) AND type = (?)
             `;
-        await dao.run(sql, ["mj@ezwh.com", "qualityEmployee"])
+        await dao.run(sql, ["mj@ezwh.com", "qualityEmployee"]) */
+        await dao.deleteAll()
     })
 })
 
@@ -245,6 +253,7 @@ describe('edit user', () => {
  */
 describe('delete user', () => {
     beforeAll(async() => {
+        await dao.deleteAll()
         let to_test = { 
             username: "mj@ezwh.com", 
             name: "Mary",
