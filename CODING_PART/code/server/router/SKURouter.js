@@ -14,6 +14,12 @@ const router            = express.Router();
 const dao               = new DAO();
 const skuController     = new SKUController(dao);
 
+/* --------- ERROR MESSAGES --------- */
+const ERROR_404 = {error: '404 Not Found'};
+const ERROR_500 = {error: 'Internal Server Error'};
+const ERROR_503 = {error: 'Service Unavailable'};
+
+
 /**
  * API:
  *               GET /api/skus
@@ -30,7 +36,15 @@ router.get(
         })
     ],
     validationHandler,
-    skuController.getStoredSKUs
+    async (request, response) => {
+        try {
+            const result = await skuController.getStoredSKUs();
+            return response.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return response.status(500).json(ERROR_500);
+        }
+    }
 );
 
 /**
@@ -50,7 +64,15 @@ router.get(
         })
     ],
     validationHandler,
-    skuController.getStoredSKUById
+    async (request, response) => {
+        try {
+            const result = await skuController.getStoredSKUById(request.params);
+            return response.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return response.status(500).json(ERROR_500);
+        }
+    }
 );
 
 /**
@@ -76,12 +98,20 @@ router.post(
         body('description').isAscii(),                          /* [FROM API.md]: description is a string reasonably of ascii characters                     */
         body('weight').isFloat({gt: 0}),                        /* [FROM API.md]: weight is a float value reasonably greater than 0                          */
         body('volume').isFloat({gt: 0}),                        /* [FROM API.md]: volume is a float value reasonably greater than 0                          */
-        body('notes').isAscii(),                                /* [FROM API.md]: notes is a string reasonably of ascii characters                           */
+        body('notes').isString().isAscii(),                     /* [FROM API.md]: notes is a string reasonably of ascii characters                           */
         body('price').isFloat({gt: 0}),                         /* [FROM API.md]: price is a float value reasonably greater than 0                           */
         body('availableQuantity').isInt({gt: -1}),              /* [FROM API.md]: availableQuantity is a float value reasonably greater than or equal to 0   */
     ], 
     validationHandler,
-    skuController.newSKU
+    async (request, response) => {
+        try {
+            const result = await skuController.newSKU(request.body);
+            return response.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return response.status(503).json(ERROR_503);
+        }
+    }
 );
 
 /**
@@ -113,7 +143,15 @@ router.put(
         body('newAvailableQuantity').isInt({gt: -1}),              /* [FROM API.md]: availableQuantity is a float value reasonably greater than or equal to 0   */
     ],
     validationHandler,
-    skuController.editSKU
+    async (request, response) => {
+        try {
+            const result = await skuController.editSKU(request.params, request.body);
+            return response.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return response.status(503).json(ERROR_503);
+        }
+    }
 );
 
 
@@ -136,7 +174,15 @@ router.put(
         body('position').isLength({min: 12, max: 12}).isNumeric()        /* [FROM API.md]: description is a string reasonably of ascii characters                     */
     ],
     validationHandler,
-    skuController.addOrEditPositionSKU
+    async (request, response) => {
+        try {
+            const result = await skuController.addOrEditPositionSKU(request.params, request.body);
+            return response.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return response.status(503).json(ERROR_503);
+        }
+    }
 );
 
 
@@ -157,7 +203,15 @@ router.put(
         })
     ],
     validationHandler,
-    skuController.deleteSKU
+    async (request, response) => {
+        try {
+            const result = await skuController.deleteSKU(request.params);
+            return response.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return response.status(503).json(ERROR_503);
+        }
+    }
 );
 
 

@@ -8,11 +8,17 @@ const { validationHandler } = require("../validator/validationHandler");
 const { param }             = require('express-validator');
 const { header }            = require('express-validator');
 const { body }              = require('express-validator');
+const { response, request } = require("express");
 
 /* INITIALIZATION */
 const router                = express.Router();
 const dao                   = new DAO();
 const positionController    = new PositionController(dao);
+
+/* --------- ERROR MESSAGES --------- */
+const ERROR_404 = {error: '404 Not Found'};
+const ERROR_500 = {error: 'Internal Server Error'};
+const ERROR_503 = {error: 'Service Unavailable'};
 
 /**
  * API:
@@ -30,7 +36,15 @@ router.get(
         })
     ],
     validationHandler,
-    positionController.getPositions);
+    async (request, response) => {
+        try {
+            const positions = await positionController.getPositions();
+            return response.status(200).json(positions);
+        } catch (error) {
+            console.log(error);
+            return response.status(500).json(ERROR_500);
+        }
+    });
 
 /**
  * API:
@@ -66,7 +80,15 @@ router.post(
         body('maxVolume').isInt({gt: 0})                                        /* [FROM API.md]: maxVolume is an integer value reasonably greater than zero            */
     ],
     validationHandler,
-    positionController.newPosition
+    async (request, response) => {
+        try {
+            const result = await positionController.newPosition(request.body);
+            return response.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return response.status(503).json(ERROR_503);
+        }
+    }
 );
 
 /**
@@ -96,11 +118,20 @@ router.put(
         body('newCol').isLength({min: 4, max: 4}).isNumeric(),                     /* [FROM API.md]: col is a 4 digits string                                              */
         body('newMaxWeight').isInt({gt: 0}),                                       /* [FROM API.md]: maxWeight is an integer value reasonably greater than zero            */
         body('newMaxVolume').isInt({gt: 0}),                                       /* [FROM API.md]: maxVolume is an integer value reasonably greater than zero            */
-        body('newOccupiedWeight').isInt({gt: 0}),                                  /* [FROM API.md]: occupiedWeight is an integer value reasonably greater than zero       */
-        body('newOccupiedVolume').isInt({gt: 0})                                   /* [FROM API.md]: occupiedVolume is an integer value reasonably greater than zero       */
+        body('newOccupiedWeight').isInt({gt: -1}),                                  /* [FROM API.md]: occupiedWeight is an integer value reasonably greater than zero       */
+        body('newOccupiedVolume').isInt({gt: -1})                                   /* [FROM API.md]: occupiedVolume is an integer value reasonably greater than zero       */
     ],
     validationHandler,
-    positionController.editPosition);
+    async (request, response) => {
+        try {
+            const result = await positionController.editPosition(request.params, request.body);
+            return response.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error); 
+            return response.status(503).json(ERROR_503);
+        }
+    }
+);
 
 /**
  * API:
@@ -121,7 +152,16 @@ router.put(
         body('newPositionID').isLength({min: 12, max: 12}).isNumeric()          /* [FROM API.md]: aisleID is a 4 digits string                                          */
     ],
     validationHandler,
-    positionController.editPositionID);
+    async (request, response) => {
+        try {
+            const result = await positionController.editPositionID(request.params, request.body);
+            return response.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return response.status(503).json(ERROR_503);
+        }
+    }
+);
 
 /**
  * API:
@@ -140,7 +180,16 @@ router.delete(
         })
     ],
     validationHandler, 
-    positionController.deletePosition);
+    async (request, response) => {
+        try {
+            const result = await positionController.deletePosition(request.params);
+            return response.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return response.status(503).json(ERROR_503);
+        }
+    }
+);
 
 
 module.exports = router;
