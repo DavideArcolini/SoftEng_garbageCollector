@@ -437,7 +437,7 @@ class TestDAO {
 
   newTableI() {
     return new Promise((res, rej)=>{//id, description, price, SKUId, supplierId
-        const sql = "CREATE TABLE IF NOT EXISTS ITEMS(id INTEGER, description VARCHAR, price FLOAT, SKUId INTEGER, supplierId INTEGER, PRIMARY KEY(id,supplierId))";
+        const sql = "CREATE TABLE IF NOT EXISTS ITEMS(id INTEGER, description VARCHAR, price FLOAT, SKUId INTEGER, supplierId INTEGER, PRIMARY KEY(id)";
         this.db.run(sql, (err)=>{
             if (err) {
                 rej(err);
