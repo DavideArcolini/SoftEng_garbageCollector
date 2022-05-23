@@ -1,32 +1,12 @@
 "use strict";
 
 /* SOME ERROR MESSAGES HERE */
-const ERROR_400 = {error: 'Bad request'};
-const ERROR_404 = {error: '404 Not Found'};
-const ERROR_422 = {error: 'Unprocessable Entity'};
-const ERROR_500 = {error: 'Internal Server Error'};
-const ERROR_503 = {error: 'Service Unavailable'};
+const ERROR_400 = 'Bad request';
+const ERROR_404 = 'Not Found';
+const ERROR_422 = 'Unprocessable Entity';
+const ERROR_500 = 'Internal Server Error';
+const ERROR_503 = 'Service Unavailable';
 
-/**
- * 
- * @param {DAO} dao 
- * @param {integer} idSKU 
- * @returns an array containing the ids of the Test Descriptors associated to the idSKU passed as parameters
- */
-async function retrieveTestDescriptor(dao, idSKU) {
-    const query_RetrieveTestDescriptor_SQL = "SELECT TD.id FROM TEST_DESCRIPTORS TD WHERE TD.idSKU == ?";
-    var result_RetrieveTestDescriptor_SQL = await dao.all(query_RetrieveTestDescriptor_SQL, [idSKU], (error) => {
-        if (error) {
-            return [ -1 ];
-        }
-    });
-
-    var result = [];
-    result_RetrieveTestDescriptor_SQL.map((element) => {
-        result.push(element.id);
-    })
-    return result;
-}
 
 /**
  * CLASS:   SKU
@@ -50,6 +30,28 @@ class SKUController {
         this.dao.new;
     }
 
+    /**
+     * 
+     * @param {DAO} dao 
+     * @param {integer} idSKU 
+     * @returns an array containing the ids of the Test Descriptors associated to the idSKU passed as parameters
+     */
+    retrieveTestDescriptor = async (dao, idSKU) => {
+        const query_RetrieveTestDescriptor_SQL = "SELECT TD.id FROM TEST_DESCRIPTORS TD WHERE TD.idSKU == ?";
+        let result_RetrieveTestDescriptor_SQL;
+        try {
+            result_RetrieveTestDescriptor_SQL = await dao.all(query_RetrieveTestDescriptor_SQL, [idSKU]);
+        } catch (error) {
+            throw new TypeError('retrieveTestDescriptor failed')
+        }
+
+        var result = [];
+        result_RetrieveTestDescriptor_SQL.map((element) => {
+            result.push(element.id);
+        })
+        return result;
+    }
+
     /** 
      *          + ------- +
      *          |   API   |
@@ -61,29 +63,33 @@ class SKUController {
      * ---------------------------------
      *        API: GET /api/skus
      * =================================
-     * @param {callback} request 
-     * @param {callback} response 
      */
-    getStoredSKUs = async (request, response) => {
+    getStoredSKUs = async () => {
 
         /* QUERYING SKU DATABASE */
         const query_RetrieveSKU_SQL = "SELECT * FROM SKUS";
-        let result_RetrieveSKU_SQL = await this.dao.all(query_RetrieveSKU_SQL, (error, rows) => {
-            if (error) {
-                return response.status(500).json(ERROR_500);
-            } 
-        });
+        let result_RetrieveSKU_SQL;
+        try {
+            result_RetrieveSKU_SQL = await this.dao.all(query_RetrieveSKU_SQL);
+        } catch (error) {
+            // console.log(error);
+            throw new TypeError('Internal Server Error');
+        }
 
         /* QUERYING TEST DESCRIPTOR DATABASE */
         for (let item of result_RetrieveSKU_SQL) {
-            item.testDescriptors = await retrieveTestDescriptor(this.dao, item.id);
-            if (item.testDescriptors === [ -1 ]) {
-                return response.status(500).json(ERROR_500);
+            try {
+                item.testDescriptors = await this.retrieveTestDescriptor(this.dao, item.id);
+            } catch (error) {
+                throw error;
             }
         }
 
         /* RETURNING RESULT */
-        return response.status(200).json(result_RetrieveSKU_SQL);
+        return {
+            code: 200,
+            message: result_RetrieveSKU_SQL
+        };
     }
 
     /**
@@ -91,33 +97,41 @@ class SKUController {
      * ------------------------------------------
      *          API: GET /api/skus/:id
      * ==========================================
-     * @param {callback} request 
-     * @param {callback} response 
+     * @param {request.params} params
      */
-    getStoredSKUById = async (request, response) => {
+    getStoredSKUById = async (params) => {
 
-        let target_id = request.params.id;
+        let target_id = params.id;
 
         /* QUERYING SKU DATABASE */
         const query_RetrieveSKU_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
-        let result_RetrieveSKU_SQL = await this.dao.all(query_RetrieveSKU_SQL, [target_id], (error, rows) => {
-            if (error) {
-                return response.status(500).json(error_500);
-            }
-        });
+        let result_RetrieveSKU_SQL;
+        try {
+            result_RetrieveSKU_SQL = await this.dao.all(query_RetrieveSKU_SQL, [target_id]);
+        } catch (error) {
+            // console.log(error);
+            throw new TypeError('Internal Server Error');
+        }
 
         /* CHECKING RESULT */
         if (result_RetrieveSKU_SQL.length === 0) {
-            return response.status(404).json(ERROR_404);
+            return {
+                code: 404,
+                message: ERROR_404
+            };
         } 
 
         /* QUERYING TEST DESCRIPTOR DATABASE */
-        result_RetrieveSKU_SQL[0].testDescriptors = await retrieveTestDescriptor(this.dao, result_RetrieveSKU_SQL[0].id);
-        if (result_RetrieveSKU_SQL[0].testDescriptors === [ -1 ]) {
-            return response.status(500).json(ERROR_500);
+        try {
+            result_RetrieveSKU_SQL[0].testDescriptors = await this.retrieveTestDescriptor(this.dao, result_RetrieveSKU_SQL[0].id);
+        } catch (error) {
+            throw error;
         }
 
-        return response.status(200).json(result_RetrieveSKU_SQL[0]);
+        return {
+            code: 200,
+            message: result_RetrieveSKU_SQL[0]
+        };
     }
 
     /**
@@ -126,23 +140,24 @@ class SKUController {
      * ------------------------------------------
      *            API: POST /api/sku
      * ==========================================
-     * @param {callback} request 
-     * @param {callback} response 
+     * @param {request.body} body
      */
-    newSKU = async (request, response) => {
-        
-        const data = request.body;
+    newSKU = async (body) => {
 
         /* QUERYING DATABASE */
         const query_SQL = "INSERT INTO SKUS (DESCRIPTION, WEIGHT, VOLUME, NOTES, PRICE, AVAILABLEQUANTITY) VALUES (?, ?, ?, ?, ?, ?)";
-        await this.dao.run(query_SQL, [data.description, data.weight, data.volume, data.notes, data.price, data.availableQuantity], (error) => {
-            if (error) {
-                return response.status(503).json(ERROR_503);
-            }
-        });
-
+        try {
+            await this.dao.run(query_SQL, [body.description, body.weight, body.volume, body.notes, body.price, body.availableQuantity]);
+        } catch (error) {
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
+        }
+        
         /* RETURNING RESULT */
-        return response.status(201).json();
+        return {
+            code: 201,
+            message: "CREATED"
+        };
     }
 
     /**
@@ -152,13 +167,13 @@ class SKUController {
      * ------------------------------------------------------------------------------------
      *                              API: PUT /api/sku/:id
      * ====================================================================================
-     * @param {callback} request 
-     * @param {callback} response 
+     * @param {request.params} params 
+     * @param {request.body} body 
      */
-    editSKU = async (request, response) => {
+    editSKU = async (params, body) => {
 
-        const target_id = request.params.id;
-        const data = request.body;
+        const target_id = params.id;
+        const data = body;
 
         /**
          *  QUERYING DATABASE
@@ -169,34 +184,29 @@ class SKUController {
         var result_SQL;
         try {
             const query_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
-            result_SQL = await this.dao.all(query_SQL, [target_id], (error, rows) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
+            result_SQL = await this.dao.all(query_SQL, [target_id]);
 
             /* CHECKING RESULT */
             if (result_SQL.length === 0) {
-                return response.status(404).json(ERROR_404);
+                return {
+                    code: 404, 
+                    message: ERROR_404
+                };
             }        
         } catch (error) {
-            console.log(error);
-            return response.status(503).json(ERROR_503);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
         }
     
-
         /* HERE COMPUTE SOME COMPUTATIONS FOR THE POSITION */
         if (result_SQL[0].position !== null) {
             
             try {
                 const query_retrievePosition_SQL = "SELECT * FROM POSITIONS WHERE POSITIONS.positionID == ?"
-                var result_retrievePosition_SQL = await this.dao.all(query_retrievePosition_SQL, [result_SQL[0].position], (error) => {
-                    if (error) {
-                        return response.status(503).json();
-                    }
-                });
+                var result_retrievePosition_SQL = await this.dao.all(query_retrievePosition_SQL, [result_SQL[0].position]);
                 if (result_retrievePosition_SQL.length === 0) {
-                    return response.status(503).json(ERROR_503);
+                    throw new TypeError('Service Unavailable');
+
                 }
 
                 // check constraint about maxVolume and maxWeight of that position
@@ -207,44 +217,52 @@ class SKUController {
                 const newAvailableQuantity = data.newAvailableQuantity;
 
                 if ((newWeight * newAvailableQuantity) > maxWeight || (newVolume * newAvailableQuantity) > maxVolume) {
-                    return response.status(422).json(ERROR_422);
+                    return {
+                        code: 422,
+                        message: ERROR_422 
+                    };
                 }
 
-                //          update sku and update position
+                // update sku and update position
                 const updateSKU_SQL = "UPDATE SKUS \
                                         SET description = ?, weight = ?, volume = ?, notes = ?, position = ?, price = ?, availableQuantity = ?  \
                                         WHERE id==?";
-                await this.dao.run(updateSKU_SQL, [data.newDescription, data.newWeight, data.newVolume, data.newNotes, result_SQL[0].position, data.newPrice, data.newAvailableQuantity, target_id], (error) => {
-                    if (error) {
-                        return response.status(503).json(ERROR_503);
-                    }
-                });
+                try {
+                    await this.dao.run(updateSKU_SQL, [data.newDescription, data.newWeight, data.newVolume, data.newNotes, result_SQL[0].position, data.newPrice, data.newAvailableQuantity, target_id]);
+                } catch (error) {
+                    // console.log(error);
+                    throw new TypeError('Service Unavailable');
+                }
 
                 const updatePosition_SQL = "UPDATE POSITIONS \
                                             SET occupiedWeight = ?, occupiedVolume = ?  \
                                             WHERE positionID==?";
-                await this.dao.run(updatePosition_SQL, [(newWeight * newAvailableQuantity), (newVolume * newAvailableQuantity), result_SQL[0].position], (error) => {
-                    if (error) {
-                        return response.status(503).json(ERROR_503);
-                    }
-                });
+                try {
+                    await this.dao.run(updatePosition_SQL, [(newWeight * newAvailableQuantity), (newVolume * newAvailableQuantity), result_SQL[0].position]);
+                } catch (error) {
+                    // console.log(error);
+                    throw new TypeError('Service Unavailable');
+                }
             } catch (error) {
-                console.log(error);
-                return response.status(503).json(ERROR_503);
+                throw new TypeError('Service Unavailable');
             }
         } else {
             const update_SQL = "UPDATE SKUS \
                                 SET description = ?, weight = ?, volume = ?, notes = ?, price = ?, availableQuantity = ?  \
                                 WHERE id==?";
-            await this.dao.run(update_SQL, [data.newDescription, data.newWeight, data.newVolume, data.newNotes, data.newPrice, data.newAvailableQuantity, target_id], (error) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
+            try {
+                await this.dao.run(update_SQL, [data.newDescription, data.newWeight, data.newVolume, data.newNotes, data.newPrice, data.newAvailableQuantity, target_id]);
+            } catch (error) {
+                // console.log(error);
+                throw new TypeError('Service Unavailable');
+            }
         }
-        
+
         /*  RETURN RESULT ON SUCCESS */
-        return response.status(200).json();
+        return {
+            code: 200,
+            message: "OK"
+        }
     }
 
 
@@ -255,13 +273,13 @@ class SKUController {
      * ------------------------------------------------------------------------------------
      *                          API: PUT /api/sku/:id/position
      * ====================================================================================
-     * @param {callback} request 
-     * @param {callback} response 
+     * @param {request.params} params 
+     * @param {request.body} body 
      */
-    addOrEditPositionSKU = async (request, response) => {
+    addOrEditPositionSKU = async (params, body) => {
 
-        const target_id = request.params.id;
-        const positionID = request.body.position;
+        const target_id = params.id;
+        const positionID = body.position;
 
         var needToEdit = false;
         var oldPositionID = null;
@@ -269,32 +287,28 @@ class SKUController {
         /* CHECK CONSTRAINT: position is already assigned to a sku? */
         try {
             const query_positionAssigned_SQL = "SELECT * FROM SKUS WHERE SKUS.position == ?";
-            const result_positionAssigned_SQL = await this.dao.all(query_positionAssigned_SQL, [positionID], (error) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
+            const result_positionAssigned_SQL = await this.dao.all(query_positionAssigned_SQL, [positionID]);
             if (result_positionAssigned_SQL.length !== 0) {
-                console.log("[DEBUG] Oh no");
-                return response.status(422).json(ERROR_422);
+                return {
+                    code: 422, 
+                    message: ERROR_422
+                };
             }
         } catch (error) {
-            console.log(error);
-            return response.status(503).json(ERROR_503);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
         }
         
-
         /* QUERYING DATABASE TO RETRIEVE SKU */
         var resultSKU_SQL = null;
         try {
             const querySKU_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
-            resultSKU_SQL = await this.dao.all(querySKU_SQL, [target_id], (error, rows) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
+            resultSKU_SQL = await this.dao.all(querySKU_SQL, [target_id]);
             if (resultSKU_SQL.length === 0) {                              
-                return response.status(404).json(ERROR_404);
+                return {
+                    code: 404, 
+                    message: ERROR_404
+                };
             }
 
             /* CHECK IF IT HAS A POSITION ALREADY */
@@ -302,30 +316,26 @@ class SKUController {
                 needToEdit = true;
                 oldPositionID = resultSKU_SQL[0].position;
             }
-
         } catch (error) {
-            console.log(error);
-            return response.status(503).json(ERROR_503);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
         }
         
-
         /* QUERYING DATABASE TO RETRIEVE POSITION */
         var resultPosition_SQL = null;
         try {
             const queryPosition_SQL = "SELECT * FROM POSITIONS WHERE POSITIONS.positionID == ?";
-            resultPosition_SQL = await this.dao.all(queryPosition_SQL, [positionID], (error, rows) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
+            resultPosition_SQL = await this.dao.all(queryPosition_SQL, [positionID]);
             if (resultPosition_SQL.length === 0) {                              
-                return response.status(404).json(ERROR_404);
+                return {
+                    code: 404,
+                    message: ERROR_404
+                };
             }
         } catch (error) {
-            console.log(error);
-            return response.status(503).json(ERROR_503);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
         }
-        
 
         /* PARSING QUERY RESULT */
         const maxWeight = resultPosition_SQL[0].maxWeight;
@@ -339,7 +349,10 @@ class SKUController {
 
         /* CHECK CONSTRAINT: volume and weight are fine? */
         if (occupiedWeight + (skuWeight * availableQuantity) > maxWeight || occupiedVolume + (skuVolume * availableQuantity) > maxVolume) {
-            return response.status(422).json(ERROR_422);
+            return {
+                code: 422,
+                message: ERROR_422
+            };
         }
 
         /* IF EVERYTHING IS FINE, UPDATE THE NEW POSITION, RESET THE OLD POSITION AND UPDATE THE SKU */
@@ -347,29 +360,20 @@ class SKUController {
             const updateSKU_SQL = "UPDATE SKUS \
                                    SET position = ?  \
                                    WHERE id==?";
-            await this.dao.run(updateSKU_SQL, [positionID, target_id], (error) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
+            await this.dao.run(updateSKU_SQL, [positionID, target_id]);
         } catch (error) {
-            console.log(error);
-            return response.status(503).json(ERROR_503);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
         }
         
-
         try {
             const updatePosition_SQL = "UPDATE POSITIONS \
                                         SET occupiedWeight = ?, occupiedVolume = ? \
                                         WHERE positionID == ?";
-            await this.dao.run(updatePosition_SQL, [(occupiedWeight + (skuWeight * availableQuantity)), (occupiedVolume + (skuVolume * availableQuantity)), positionID], (error) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
+            await this.dao.run(updatePosition_SQL, [(occupiedWeight + (skuWeight * availableQuantity)), (occupiedVolume + (skuVolume * availableQuantity)), positionID]);
         } catch (error) {
-            console.log(error);
-            return response.status(503).json(ERROR_503);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
         }
         
 
@@ -378,33 +382,30 @@ class SKUController {
                 const resetPosition_SQL = "UPDATE POSITIONS \
                                            SET occupiedWeight = 0, occupiedVolume = 0 \
                                            WHERE positionID == ?";
-                await this.dao.run(resetPosition_SQL, [oldPositionID], (error) => {
-                    if (error) {
-                        return response.status(503).json(ERROR_503);
-                    }
-                });
+                await this.dao.run(resetPosition_SQL, [oldPositionID]);
             } catch (error) {
-                console.log(error);
-                return response.status(503).json(ERROR_503);
+                // console.log(error);
+                throw new TypeError('Service Unavailable');
             }
         }
 
         /* RETURN RESULT ON SUCCESS */
-        return response.status(200).json();
+        return {
+            code: 200,
+            message: "OK"
+        };
     }
-
 
     /**
      * Delete an SKU given its identifier ID
      * ------------------------------------------
      *        API: DELETE /api/skus/:id
      * ==========================================
-     * @param {callback} request 
-     * @param {callback} response 
+     * @param {request.params} params
      */
-    deleteSKU = async (request, response) => {
+    deleteSKU = async (params) => {
 
-        let target_id = request.params.id;
+        let target_id = params.id;
 
         /* ------------ CHECK IF SKU IS ASSOCIATED TO SKUITEMS OR TESTDESCRIPTOR ----------------*/
         /**
@@ -416,61 +417,52 @@ class SKUController {
         try {
 
             const query_retrieveSKU_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
-            const result_retrieveSKU_SQL = await this.dao.all(query_retrieveSKU_SQL, [target_id], (error) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
+            const result_retrieveSKU_SQL = await this.dao.all(query_retrieveSKU_SQL, [target_id]);
 
             /* CHECKING TEST DESCRIPTOR */
-            let result = await retrieveTestDescriptor(this.dao, result_retrieveSKU_SQL[0].id);
+            let result = await this.retrieveTestDescriptor(this.dao, result_retrieveSKU_SQL[0].id);
             if (result.length !== 0) {
-                console.log("[DEBUG] cannot remove an SKU with associated test descriptors");
-                return response.status(422).json(ERROR_422);
+                return {
+                    code: 422,
+                    message: ERROR_422
+                };
             }
 
             /* CHECKING SKUITEMS */
             const query_retrieveSKUitem_SQL = "SELECT * FROM SKUITEMS WHERE SKUITEMS.SKUId == ?";
-            const result_retrieveSKUitem_SQL = await this.dao.all(query_retrieveSKUitem_SQL, [target_id], (error) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
+            const result_retrieveSKUitem_SQL = await this.dao.all(query_retrieveSKUitem_SQL, [target_id]);
             if (result_retrieveSKUitem_SQL.length !== 0) {
-                console.log("[DEBUG] cannot removed an SKU with associated SKUitems")
-                return response.status(422).json(ERROR_422);
+                return {
+                    code: 422,
+                    message: ERROR_422
+                };
             }
 
             /* CHECKING POSITION AND UPDATE */
             if (result_retrieveSKU_SQL[0].position !== null) {
                 const query_updatePosition_SQL = "UPDATE POSITIONS SET occupiedWeight = 0, occupiedVolume = 0 WHERE positionID == ?";
-                await this.dao.run(query_updatePosition_SQL, [result_retrieveSKU_SQL[0].position], (error) => {
-                    if (error) {
-                        return response.status(503).json(ERROR_503);
-                    }
-                })
+                await this.dao.run(query_updatePosition_SQL, [result_retrieveSKU_SQL[0].position]);
             }
         } catch (error) {
-            console.log(error);
-            return response.status(503).json(ERROR_503);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
         }
         
         /* -------------- REMOVING SKU FROM THE LIST -------------- */
         try {
             const query_SQL = "DELETE FROM SKUS WHERE SKUS.id == ?";
-            await this.dao.run(query_SQL, [target_id], (error) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
+            await this.dao.run(query_SQL, [target_id]);
         } catch (error) {
-            console.log(error);
-            return response.status(503).json(ERROR_503);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
         }
         
 
         /* RETURNING */
-        return response.status(204).json();
+        return {
+            code: 204, 
+            message: "NO CONTENT"
+        };
     }
 
 }

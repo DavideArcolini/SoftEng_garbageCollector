@@ -1,11 +1,6 @@
 "use strict";
 
-/* SOME ERROR MESSAGES HERE */
-const ERROR_400 = {error: 'Bad request'};
-const ERROR_404 = {error: '404 Not Found'};
-const ERROR_422 = {error: 'Unprocessable Entity'};
-const ERROR_500 = {error: 'Internal Server Error'};
-const ERROR_503 = {error: 'Service Unavailable'};
+const ERROR_404 = "Not Found";
 
 
 /**
@@ -41,27 +36,24 @@ class SKUitemController {
      * -----------------------------------------
      *          API: GET /api/skuitems
      * =========================================
-     * @param {callback} request 
-     * @param {callback} response 
      */
-    getSKUitems = async (request, response) => {
+    getSKUitems = async () => {
 
         /* QUERYING DATABASE */
         let result_SQL;
         try {
             const query_SQL = "SELECT * FROM SKUITEMS";
-            result_SQL = await this.dao.all(query_SQL, (error, rows) => {
-                if (error) {
-                    return response.status(500).json(ERROR_500);
-                } 
-            });
+            result_SQL = await this.dao.all(query_SQL);
         } catch (error) {
-            console.log(error);
-            return response.status(500).json(ERROR_500);
+            // console.log(error);
+            throw new TypeError('Internal Server Error');
         }
         
         /* RETURNING RESULT */
-        return response.status(200).json(result_SQL);
+        return {
+            code: 200,
+            message: result_SQL
+        };
     }
 
     /**
@@ -70,27 +62,25 @@ class SKUitemController {
      * --------------------------------------------------------------
      *               API: GET /api/skuitems/sku/:id
      * ==============================================================
-     * @param {callback} request 
-     * @param {callback} response 
+     * @param {request.params} params
      */
-    getSKUitemsBySKUId = async (request, response) => {
+    getSKUitemsBySKUId = async (params) => {
 
-        const target_id = request.params.id;
+        const target_id = params.id;
 
         /* CHECK IF SKU EXISTS */
         try {
             const query_retrieveSKU_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
-            let result_retrieveSKU_SQL = await this.dao.all(query_retrieveSKU_SQL, [target_id], (error) => {
-                if (error) {
-                    return response.status(500).json(ERROR_500);
-                }
-            });
-            if (result_retrieveSKU_SQL.length == 0) {
-                return response.status(404).json(ERROR_404);
+            let result_retrieveSKU_SQL = await this.dao.all(query_retrieveSKU_SQL, [target_id]);
+            if (result_retrieveSKU_SQL.length === 0) {
+                return {
+                    code: 404,
+                    message: ERROR_404
+                };
             }
         } catch (error) {
-            console.log(error);
-            return response.status(500).json(ERROR_500);
+            // console.log(error);
+            throw new TypeError('Internal Server Error');
         }
         
 
@@ -98,18 +88,17 @@ class SKUitemController {
         let result_SQL;
         try {
             const query_SQL = "SELECT * FROM SKUITEMS WHERE SKUITEMS.SKUId == ? AND SKUITEMS.Available == 1";
-            result_SQL = await this.dao.all(query_SQL, [target_id], (error, rows) => {
-                if (error) {
-                    return response.status(500).json(ERROR_500);
-                } 
-            });
+            result_SQL = await this.dao.all(query_SQL, [target_id]);
         } catch (error) {
-            console.log(error);
-            return response.status(500).json(ERROR_500);
+            // console.log(error);
+            throw new TypeError('Internal Server Error');
         }
         
         /* RETURNING RESULT */
-        return response.status(200).json(result_SQL);
+        return {
+            code: 200,
+            message: result_SQL
+        };
     }
    
 
@@ -118,29 +107,24 @@ class SKUitemController {
      * --------------------------------------
      *     API: GET /api/skuitems/:rfid
      * ======================================
-     * @param {callback} request 
-     * @param {callback} response 
+     * @param {request.params} params 
      */
-    getSKUitemsByRFID = async (request, response) => {
+    getSKUitemsByRFID = async (params) => {
 
-        const target_rfid = request.params.rfid;
+        const target_rfid = params.rfid;
 
         /* QUERYING DATABASE */
         let result_SQL;
         try {
             const query_SQL = "SELECT * FROM SKUITEMS WHERE SKUITEMS.RFID == ?";
-            result_SQL = await this.dao.all(query_SQL, [target_rfid], (error, rows) => {
-                if (error) {
-                    return response.status(500).json(ERROR_500);
-                } 
-            });
+            result_SQL = await this.dao.all(query_SQL, [target_rfid]);
         } catch (error) {
-            console.log(error);
-            return response.status(500).json(ERROR_500);
+            // console.log(error);
+            throw new TypeError('Internal Server Error');
         }
 
         /* RETURNING RESULT */
-        return (result_SQL.length === 0) ? response.status(404).json(ERROR_404) : response.status(200).json(result_SQL);
+        return (result_SQL.length === 0) ? {code: 404, message: ERROR_404} : {code: 200, message: result_SQL};
     }
 
 
@@ -149,45 +133,39 @@ class SKUitemController {
      * ---------------------------------------------------------
      *                 API: POST /api/skuitem
      * =========================================================
-     * @param {callback} request 
-     * @param {callback} response 
+     * @param {request.body} body 
      */
-    newSKUitem = async (request, response) => {
-        
-        const data = request.body;
+    newSKUitem = async (body) => {
 
         /* CHECKING IF SKU ACTUALLY EXISTS */
         try {
             const query_retrieveSKU_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
-            let result_retrieveSKU_SQL = await this.dao.all(query_retrieveSKU_SQL, [data.SKUId], (error) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
+            let result_retrieveSKU_SQL = await this.dao.all(query_retrieveSKU_SQL, [body.SKUId]);
             if (result_retrieveSKU_SQL.length === 0) {
-                return response.status(404).json(ERROR_404);
+                return {
+                    code: 404,
+                    message: ERROR_404
+                };
             }
         } catch (error) {
-            console.log(error);
-            return response.status(503).json(ERROR_503);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
         }
 
         /* QUERYING DATABASE */
         try {
             const query_SQL = "INSERT INTO SKUITEMS (RFID, SKUId, Available, DateOfStock) VALUES (?, ?, 0, ?)";
-            await this.dao.run(query_SQL, [data.RFID, data.SKUId, ((data.DateOfStock === undefined) ? "" : data.DateOfStock)], (error) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
+            await this.dao.run(query_SQL, [body.RFID, body.SKUId, ((body.DateOfStock === undefined) ? "" : body.DateOfStock)]);
         } catch (error) {
-            console.log(error);
-            return response.status(503).json(ERROR_503);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
         }
         
-
         /* RETURNING RESULT */
-        return response.status(201).json();
+        return {
+            code: 201,
+            message: "CREATED"
+        };
     }
 
     /**
@@ -195,46 +173,27 @@ class SKUitemController {
      * ------------------------------------------------------------------------
      *                    API: PUT /api/skuitems/:rfid
      * ========================================================================
-     * @param {callback} request 
-     * @param {callback} response 
+     * @param {request.params} params 
+     * @param {request.body} body
      */
-    editSKUitem = async (request, response) => {
+    editSKUitem = async (params, body) => {
 
-        const target_rfid = request.params.rfid;
-        const data = request.body;
-
-        /* CHECKING USER INPUT */        
-        if (/^[0-9]+$/.test(target_rfid) === false || target_rfid.length !== 32) {         /* HEADER PARAMETER SHOULD BE A 32 DIGITS STRING */
-            return response.status(422).json(ERROR_422);
-        } else if (data.length === 0) {                                                 /* BODY SHOULD NOT BE EMPTY */
-            return response.status(422).json(ERROR_422);
-        } else if (data.newRFID === undefined || data.newAvailable === undefined || data.newDateOfStock === undefined) {
-            return response.status(422).json(ERROR_422);    
-        } else if (data.newDateOfStock !== undefined && /^\d{4}\/\d{2}\/\d{2}$/.test(data.newDateOfStock) !== true &&  /^\d{4}\/\d{2}\/\d{2} \d{2}\:\d{2}$/.test(data.newDateOfStock) !== true) {
-
-            /* CHECKING DateOfSTOCK FORMAT */
-            return response.status(422).json(ERROR_422);
-        } else if (data.newAvailable !== 1 && data.newAvailable !== 0) {
-
-            /* CHECKING Available FORMAT */
-            return response.status(422).json(ERROR_422);
-        }
-
+        const target_rfid = params.rfid;
+        const data = body;
 
         /* QUERYING DATABASE */
         try {
             const query_SQL = "SELECT * FROM SKUITEMS WHERE SKUITEMS.RFID == ?";
-            let result_SQL = await this.dao.all(query_SQL, [target_rfid], (error, rows) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
+            let result_SQL = await this.dao.all(query_SQL, [target_rfid]);
             if (result_SQL.length === 0) {
-                return response.status(404).json(ERROR_404);
+                return {
+                    code: 404,
+                    message: ERROR_404
+                };
             }
         } catch (error) {
-            console.log(error);
-            return response.status(503).json(ERROR_503);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
         }
         
 
@@ -243,18 +202,17 @@ class SKUitemController {
             const update_SQL = "UPDATE SKUITEMS \
                                 SET RFID = ?, Available = ?, DateOfStock = ? \
                                 WHERE SKUITEMS.RFID==?";
-            await this.dao.run(update_SQL, [data.newRFID, data.newAvailable, data.newDateOfStock, target_rfid], (error) => {
-                if (error) {
-                    return response.status(500).json(ERROR_500);
-                }
-            });
+            await this.dao.run(update_SQL, [data.newRFID, data.newAvailable, data.newDateOfStock, target_rfid]);
         } catch (error) {
-            console.log(error);
-            return response.status(500).json(ERROR_500);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
         }
         
         /* RETURN RESULT ON SUCCESS */
-        return response.status(200).json();
+        return {
+            code: 200,
+            message: "OK"
+        };
     }
     
 
@@ -263,29 +221,26 @@ class SKUitemController {
      * ------------------------------------------
      *      API: DELETE /api/skuitems/:rfid
      * ==========================================
-     * @param {callback} request 
-     * @param {callback} response 
+     * @param {request.params} params 
      */
-    deleteSKUitem = async (request, response) => {
+    deleteSKUitem = async (params) => {
 
-        let target_rfid = request.params.rfid;
+        let target_rfid = params.rfid;
 
         /* QUERYING DATABASE */
         try {
             const query_SQL = "DELETE FROM SKUITEMS WHERE SKUITEMS.RFID == ?";
-            await this.dao.run(query_SQL, [target_rfid], (error) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
+            await this.dao.run(query_SQL, [target_rfid]);
         } catch (error) {
-            console.log(error);
-            return response.status(503).json(ERROR_503);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
         }
         
-
         /* RETURNING RESULT ON SUCCESS */
-        return response.status(204).json();
+        return {
+            code: 204,
+            message: "NO CONTENT"
+        };
     }
 
 }

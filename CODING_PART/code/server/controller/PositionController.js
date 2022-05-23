@@ -1,9 +1,10 @@
 "use strict";
 
 /* --------- ERROR MESSAGES --------- */
-const ERROR_404 = {error: '404 Not Found'};
-const ERROR_500 = {error: 'Internal Server Error'};
-const ERROR_503 = {error: 'Service Unavailable'};
+const ERROR_404 = 'Not Found';
+const ERROR_422 = 'Unprocessable Entity';
+const ERROR_500 = 'Internal Server Error';
+const ERROR_503 = 'Service Unavailable';
 
 /**
  * CLASS:   POSITION
@@ -38,10 +39,8 @@ class PositionController {
      * -----------------------------------------
      *         API: GET /api/positions 
      * =========================================
-     * @param {callback} request 
-     * @param {callback} response 
      */
-    getPositions = async (request, response) => {
+    getPositions = async () => {
 
         /**
          *  QUERYING DATABASE
@@ -51,17 +50,13 @@ class PositionController {
          */
         try {
             const query_SQL = "SELECT * FROM POSITIONS";
-            let result_SQL = await this.dao.all(query_SQL, (error, rows) => {
-                if (error) {
-                    return response.status(500).json(ERROR_500);
-                } 
-            });
+            let result_SQL = await this.dao.all(query_SQL);
 
             /* RETURNING RESULT */
-            return response.status(200).json(result_SQL);
+            return result_SQL;
         } catch (error) {
-            console.log(error);
-            return response.status(500).json(ERROR_500);
+            // console.log(error);
+            throw new TypeError('Internal Server Error');
         }
         
     }
@@ -72,12 +67,9 @@ class PositionController {
      * ---------------------------------------------------------
      *                 API: POST /api/position
      * =========================================================
-     * @param {callback} request 
-     * @param {callback} response 
+     * @param {request.body} body
      */
-    newPosition = async (request, response) => {
-        
-        const data = request.body;
+    newPosition = async (body) => {
 
         /**
          *  QUERYING DATABASE
@@ -87,18 +79,16 @@ class PositionController {
          */
         try {
             const query_SQL = "INSERT INTO POSITIONS (POSITIONID, AISLEID, ROW, COL, MAXWEIGHT, MAXVOLUME, OCCUPIEDWEIGHT, OCCUPIEDVOLUME) VALUES (?, ?, ?, ?, ?, ?, 0, 0)";
-            
-            await this.dao.run(query_SQL, [data.positionID, data.aisleID, data.row, data.col, data.maxWeight, data.maxVolume], (error) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
+            await this.dao.run(query_SQL, [body.positionID, body.aisleID, body.row, body.col, body.maxWeight, body.maxVolume]);
 
             /* RETURNING RESULT */
-            return response.status(201).json();
+            return {
+                code: 201,
+                message: "CREATED"
+            };
         } catch (error) {
-            console.log(error);
-            return response.status(503).json(ERROR_503);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
         }
     }
 
@@ -107,13 +97,12 @@ class PositionController {
      * ------------------------------------------
      *      API: PUT /api/position/:positionID
      * ==========================================
-     * @param {callback} request 
-     * @param {callback} response 
+     * @param {request.params} params
+     * @param {request.body} body 
      */
-    editPosition = async (request, response) => {
+    editPosition = async (params, body) => {
 
-        const target_id = request.params.positionID;
-        const data = request.body;
+        const target_id = params.positionID;
 
         /**
          *  QUERYING DATABASE
@@ -124,26 +113,27 @@ class PositionController {
          */
         try {
             const query_SQL = "SELECT * FROM POSITIONS WHERE POSITIONS.positionID == ?";
-            let result_SQL = await this.dao.all(query_SQL, [target_id], (error, rows) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
+            let result_SQL = await this.dao.all(query_SQL, [target_id]);
             if (result_SQL.length === 0) {
-                return response.status(404).json(ERROR_404);
+                return {
+                    code: 404,
+                    message: ERROR_404
+                };
             }
         } catch (error) {
-            console.log(error);
-            return response.status(503).json(ERROR_503);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
         }
 
         /* -------------- CHECKING CONSTRAINTS IF POSITION IS ASSOCIATED TO SKU -------------- */
         const query_retrieveSKU_SQL = "SELECT * FROM SKUS WHERE SKUS.position == ?";
-        const result_retrieveSKU_SQL = await this.dao.all(query_retrieveSKU_SQL, [target_id], (error) => {
-            if (error) {
-                return response.status(503).json(ERROR_503);
-            }
-        });
+        let result_retrieveSKU_SQL
+        try {
+            result_retrieveSKU_SQL = await this.dao.all(query_retrieveSKU_SQL, [target_id]);   
+        } catch (error) {
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
+        }
         if (result_retrieveSKU_SQL.length !== 0) {
 
             /* RETRIEVING VOLUME AND WEIGHT PARAMETERS */
@@ -151,14 +141,16 @@ class PositionController {
             const volume = result_retrieveSKU_SQL[0].volume;
             const availableQuantity = result_retrieveSKU_SQL[0].availableQuantity;
 
-            if ((weight * availableQuantity) > data.newMaxWeight || (volume * availableQuantity) > data.newMaxVolume) {
-                console.log("[DEBUG] some constraints are failed");
-                return response.status(503).json(ERROR_503);
+            if ((weight * availableQuantity) > body.newMaxWeight || (volume * availableQuantity) > body.newMaxVolume) {
+                return {
+                    code: 422,
+                    message: ERROR_422
+                }
             }
         }
         
         /* COMPUTING NEW positionID GIVEN THE NEW PARAMETERS */
-        const newPositionID = data.newAisleID + data.newRow + data.newCol;
+        const newPositionID = body.newAisleID + body.newRow + body.newCol;
 
         /**
          *  IF EVERYTHING IS FINE, UPDATE THE NEW POSITION  
@@ -170,17 +162,16 @@ class PositionController {
             const update_SQL = "UPDATE POSITIONS \
                                 SET positionID = ?, aisleID = ?, row = ?, col = ?, maxWeight = ?, maxVolume = ?, occupiedWeight = ?, occupiedVolume = ?  \
                                 WHERE positionID==?";
-            await this.dao.run(update_SQL, [newPositionID, data.newAisleID, data.newRow, data.newCol, data.newMaxWeight, data.newMaxVolume, data.newOccupiedWeight, data.newOccupiedVolume, target_id], (error) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
-
+            await this.dao.run(update_SQL, [newPositionID, body.newAisleID, body.newRow, body.newCol, body.newMaxWeight, body.newMaxVolume, body.newOccupiedWeight, body.newOccupiedVolume, target_id]);
+            
             /* RETURN RESULT */
-            return response.status(200).json();
+            return {
+                code: 200,
+                message: "OK"
+            }
         } catch (error) {
-            console.log(error);
-            return response.status(503).json(ERROR_503);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
         }
     }
 
@@ -190,13 +181,13 @@ class PositionController {
      * -----------------------------------------------------------------------
      *           API: PUT /api/position/:positionID/changeID
      * =======================================================================
-     * @param {callback} request 
-     * @param {callback} response 
+     * @param {request.params} params
+     * @param {request.body} body
      */
-    editPositionID = async (request, response) => {
+    editPositionID = async (params, body) => {
 
-        const target_id = request.params.positionID;
-        const newPositionID = request.body.newPositionID;
+        const target_id = params.positionID;
+        const newPositionID = body.newPositionID;
 
         /**
          *  QUERYING DATABASE
@@ -207,17 +198,16 @@ class PositionController {
          */
         try {
             const query_SQL = "SELECT * FROM POSITIONS WHERE POSITIONS.positionID == ?";
-            let result_SQL = await this.dao.all(query_SQL, [target_id], (error, rows) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
+            let result_SQL = await this.dao.all(query_SQL, [target_id]);
             if (result_SQL.length === 0) {
-                return response.status(404).json(ERROR_404);
+                return {
+                    code: 404,
+                    message: ERROR_404
+                }
             }
         } catch (error) {
-            console.log(error);
-            return response.status(503).json(ERROR_503);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
         }
         
 
@@ -232,58 +222,47 @@ class PositionController {
             const update_SQL = "UPDATE POSITIONS \
                                 SET positionID = ?, aisleID = ?, row = ?, col = ? \
                                 WHERE positionID==?";
-            await this.dao.run(update_SQL, [newPositionID, newAisleID, newRow, newCol, target_id], (error) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
-            
+            await this.dao.run(update_SQL, [newPositionID, newAisleID, newRow, newCol, target_id]);
         } catch (error) {
-            console.log(error);
-            return response.status(503).json(ERROR_503);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
         }
 
         /* FETCH SKU WITH THE OLD POSITION AND UPDATE */
         try {
             const query_retrieveSKU_SQL = "SELECT * FROM SKUS WHERE SKUS.position == ?";
-            let result_retrieveSKU_SQL = await this.dao.all(query_retrieveSKU_SQL, [target_id], (error, rows) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
+            let result_retrieveSKU_SQL = await this.dao.all(query_retrieveSKU_SQL, [target_id]);
 
             /* UPDATE POSITION IF THERE ACTUALLY IS A SKU ASSOCIATED WITH THE POSITION */
             if (result_retrieveSKU_SQL.length !== 0) {
                 const query_updateSKU_SQL = "UPDATE SKUS    \
                                              SET position = ?  \
                                              WHERE position == ?";
-                await this.dao.run(query_updateSKU_SQL, [newPositionID, target_id], (error) => {
-                    if (error) {
-                        return response.status(503).json(ERROR_503);
-                    }
-                });
+                await this.dao.run(query_updateSKU_SQL, [newPositionID, target_id]);
             }
         } catch (error) {
-            console.log(error);
-            return response.status(503).json(ERROR_503);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
         }
 
         /* RETURNING RESULT ON SUCCESS */
-        return response.status(200).json();
+        return {
+            code: 200,
+            message: "OK"
+        }
     }
 
 
     /**
      * Delete a position given its identifier ID
      * ------------------------------------------
-     *      API: DELETE /api/position/:id
+     *      DELETE /api/position/:positionID
      * ==========================================
-     * @param {callback} request 
-     * @param {callback} response 
+     * @param {request.params} params 
      */
-    deletePosition = async (request, response) => {
+    deletePosition = async (params) => {
 
-        let target_id = request.params.positionID;
+        let target_id = params.positionID;
 
         /**
          *  QUERYING DATABASE
@@ -295,25 +274,21 @@ class PositionController {
 
             /* REMOVING POSITION */
             const query_SQL = "DELETE FROM POSITIONS WHERE POSITIONS.positionID == ?";
-            await this.dao.run(query_SQL, [target_id], (error) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });   
+            await this.dao.run(query_SQL, [target_id]);   
 
             /* UPDATING SKU */
             const query_updateSKU_SQL = "UPDATE SKUS SET position = ? WHERE position == ?";
-            await this.dao.run(query_updateSKU_SQL, [null, target_id], (error) => {
-                if (error) {
-                    return response.status(503).json(ERROR_503);
-                }
-            });
+            await this.dao.run(query_updateSKU_SQL, [null, target_id]);
 
-            /* RETURNING */
-            return response.status(204).json();
         } catch (error) {
-            console.log(error);
-            return response.status(503).json(ERROR_503);
+            // console.log(error);
+            throw new TypeError('Service Unavailable');
+        }
+
+        /* RETURNING */
+        return {
+            code: 204,
+            message: "NO CONTENT"
         }
     }
 }
