@@ -232,6 +232,7 @@ class RestockOrderController {
             let result= await this.dao.get(sql,[id]);
             if(result==null){
                 //return res.status(404).end();
+                console.log('here ok')
                 return {message: "Not Found"}; 
             }
 
@@ -287,6 +288,9 @@ class RestockOrderController {
             
 
             //return res.status(200).json(result);
+            if(result==null){
+                return []
+            }
             return result;
     }catch(error){
         //return res.status(500).end();
