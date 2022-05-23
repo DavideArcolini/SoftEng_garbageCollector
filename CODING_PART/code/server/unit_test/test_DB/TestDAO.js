@@ -2,37 +2,37 @@
 
 const sqlite = require('sqlite3');
 
-class TestDAO {
-  static db;
-  constructor() {
-      this.db = new sqlite.Database("ezwh_tests", (err)=>{
-          if(err) throw err;
-      });
+class DAO {
+    static db;
+    constructor() {
+        this.db = new sqlite.Database("ezwh_tests.db", (err)=>{
+            if(err) throw err;
+        });
 
-      /* ----- TABLES CREATION ----- */
-      this.newTableUsers();
-      this.newTablePositions();
-      this.newTableSKUS();
-      this.newTableSKUItems();
-      this.newTableTD();
-      this.newTableTR();
-      this.newTableI();
-      this.newTableRO();
-      this.newTableIO();
-      this.newTableRTO();
+        /* ----- TABLES CREATION ----- */
+        this.newTableUsers();
+        this.newTablePositions();
+        this.newTableSKUS();
+        this.newTableSKUItems();
+        this.newTableTD();
+        this.newTableTR();
+        this.newTableI();
+        this.newTableRO();
+        this.newTableIO();
+        this.newTableRTO();
 
-      /* ----- TABLES DELETION ----- */
-      // this.dropTableUsers();
-      // this.dropTableRO();
-      // this.dropTableIO();
-      // this.dropTableRTO();
-      // this.dropTableSKUS();
-      // this.dropTablePositions();
-      // this.dropTableSKUItems();
-      // this.dropTableTD();
-      //this.dropTableTR();
-      // this.dropTableI();
-  }
+        /* ----- TABLES DELETION ----- */
+        // this.dropTableUsers();
+        // this.dropTableRO();
+        // this.dropTableIO();
+        // this.dropTableRTO();
+        // this.dropTableSKUS();
+        // this.dropTablePositions();
+        // this.dropTableSKUItems();
+        // this.dropTableTD();
+        //this.dropTableTR();
+        // this.dropTableI();
+    }
 
     /**
      *  + --------------------------------------------- +
@@ -112,7 +112,7 @@ class TestDAO {
                                 position                VARCHAR,                          \
                                 price                   FLOAT,                            \
                                 availableQuantity       INTEGER,                          \
-                                PRIMARY KEY(id AUTOINCREMENT),                            \
+                                PRIMARY KEY(id),                            \
                                 FOREIGN KEY(position) REFERENCES POSITIONS(positionID)    )";
 
         this.db.run(query_SQL, (error) => {
@@ -232,7 +232,7 @@ class TestDAO {
     */
     newTableRO() {
       return new Promise((res, rej)=>{
-          const sql = "CREATE TABLE IF NOT EXISTS RESTOCK_ORDERS(key INTEGER PRIMARY KEY AUTOINCREMENT, id INTEGER, issueDate DATE, state VARCHAR, supplierId INTEGER, deliveryDate DATE, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR) ";
+          const sql = "CREATE TABLE IF NOT EXISTS RESTOCK_ORDERS(key INTEGER PRIMARY KEY, id INTEGER, issueDate DATE, state VARCHAR, supplierId INTEGER, deliveryDate DATE, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR) ";
           this.db.run(sql, (err)=>{
               if (err) {
                   rej(err);
@@ -264,7 +264,7 @@ class TestDAO {
     */
   newTableRTO() {
     return new Promise((res, rej)=>{
-        const sql = "CREATE TABLE IF NOT EXISTS RETURN_ORDERS(key INTEGER PRIMARY KEY AUTOINCREMENT, id INTEGER, returnDate DATE,restockOrderId  INTEGER, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR )";
+        const sql = "CREATE TABLE IF NOT EXISTS RETURN_ORDERS(key INTEGER PRIMARY KEY, id INTEGER, returnDate DATE,restockOrderId  INTEGER, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR )";
         this.db.run(sql, (err)=>{
             if (err) {
                 rej(err);
@@ -296,7 +296,7 @@ class TestDAO {
     */
   newTableIO() {
     return new Promise((res, rej)=>{
-        const sql = "CREATE TABLE IF NOT EXISTS INTERNAL_ORDERS(key INTEGER PRIMARY KEY AUTOINCREMENT, id INTEGER, issueDate DATE, state VARCHAR, customerId INTEGER, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR ) ";
+        const sql = "CREATE TABLE IF NOT EXISTS INTERNAL_ORDERS(key INTEGER PRIMARY KEY, id INTEGER, issueDate DATE, state VARCHAR, customerId INTEGER, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR ) ";
         this.db.run(sql, (err)=>{
             if (err) {
                 rej(err);
@@ -326,9 +326,9 @@ class TestDAO {
   *  - newTableUser(): create the users table, if it does not already exist.
   *  - dropTableUser(): drop the users table.
   */
-  async newTableUsers() {
+  newTableUsers() {
     return new Promise((res, rej)=>{
-      const sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR)";
+      const sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR, PRIMARY KEY(id)) ";
       this.db.run(sql, (err)=>{
         if (err) {
           rej(err);
@@ -339,7 +339,7 @@ class TestDAO {
     });
   }
   
-  async dropTableUsers() {
+  dropTableUsers() {
     return new Promise((res, rej) => {
       const sql = "DROP TABLE IF EXISTS USERS";
       this.db.run(sql, (err)=>{
@@ -367,7 +367,7 @@ class TestDAO {
  
   newTableTD() {
     return new Promise((res, rej)=>{
-        const sql = "CREATE TABLE IF NOT EXISTS TEST_DESCRIPTORS(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, procedureDescription VARCHAR, idSKU INTEGER)";
+        const sql = "CREATE TABLE IF NOT EXISTS TEST_DESCRIPTORS(id INTEGER PRIMARY KEY, name VARCHAR, procedureDescription VARCHAR, idSKU INTEGER)";
         this.db.run(sql, (err)=>{
             if (err) {
                 rej(err);
@@ -402,7 +402,7 @@ class TestDAO {
 
   newTableTR() {
     return new Promise((res, rej)=>{
-        const sql = "CREATE TABLE IF NOT EXISTS TEST_RESULTS(id INTEGER PRIMARY KEY AUTOINCREMENT, rfid VARCHAR, idTestDescriptor VARCHAR, Date DATE, Result BOOLEAN)";
+        const sql = "CREATE TABLE IF NOT EXISTS TEST_RESULTS(id INTEGER PRIMARY KEY, rfid VARCHAR, idTestDescriptor VARCHAR, Date DATE, Result BOOLEAN)";
         this.db.run(sql, (err)=>{
             if (err) {
                 rej(err);
@@ -462,8 +462,9 @@ class TestDAO {
   });
   }
 
-
-    
 }
 
-module.exports = TestDAO;
+
+
+
+module.exports = DAO;

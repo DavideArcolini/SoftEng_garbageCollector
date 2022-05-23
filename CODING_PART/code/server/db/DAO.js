@@ -5,7 +5,7 @@ const sqlite = require('sqlite3');
 class DAO {
     static db;
     constructor() {
-        this.db = new sqlite.Database("ezwh_db", (err)=>{
+        this.db = new sqlite.Database("ezwh.db", (err)=>{
             if(err) throw err;
         });
 
@@ -112,7 +112,7 @@ class DAO {
                                 position                VARCHAR,                          \
                                 price                   FLOAT,                            \
                                 availableQuantity       INTEGER,                          \
-                                PRIMARY KEY(id AUTOINCREMENT),                            \
+                                PRIMARY KEY(id),                            \
                                 FOREIGN KEY(position) REFERENCES POSITIONS(positionID)    )";
 
         this.db.run(query_SQL, (error) => {
@@ -232,7 +232,7 @@ class DAO {
     */
     newTableRO() {
       return new Promise((res, rej)=>{
-          const sql = "CREATE TABLE IF NOT EXISTS RESTOCK_ORDERS(key INTEGER PRIMARY KEY AUTOINCREMENT, id INTEGER, issueDate DATE, state VARCHAR, supplierId INTEGER, deliveryDate DATE, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR) ";
+          const sql = "CREATE TABLE IF NOT EXISTS RESTOCK_ORDERS(key INTEGER PRIMARY KEY, id INTEGER, issueDate DATE, state VARCHAR, supplierId INTEGER, deliveryDate DATE, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR) ";
           this.db.run(sql, (err)=>{
               if (err) {
                   rej(err);
@@ -264,7 +264,7 @@ class DAO {
     */
   newTableRTO() {
     return new Promise((res, rej)=>{
-        const sql = "CREATE TABLE IF NOT EXISTS RETURN_ORDERS(key INTEGER PRIMARY KEY AUTOINCREMENT, id INTEGER, returnDate DATE,restockOrderId  INTEGER, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR )";
+        const sql = "CREATE TABLE IF NOT EXISTS RETURN_ORDERS(key INTEGER PRIMARY KEY, id INTEGER, returnDate DATE,restockOrderId  INTEGER, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR )";
         this.db.run(sql, (err)=>{
             if (err) {
                 rej(err);
@@ -296,7 +296,7 @@ class DAO {
     */
   newTableIO() {
     return new Promise((res, rej)=>{
-        const sql = "CREATE TABLE IF NOT EXISTS INTERNAL_ORDERS(key INTEGER PRIMARY KEY AUTOINCREMENT, id INTEGER, issueDate DATE, state VARCHAR, customerId INTEGER, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR ) ";
+        const sql = "CREATE TABLE IF NOT EXISTS INTERNAL_ORDERS(key INTEGER PRIMARY KEY, id INTEGER, issueDate DATE, state VARCHAR, customerId INTEGER, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR ) ";
         this.db.run(sql, (err)=>{
             if (err) {
                 rej(err);
@@ -328,7 +328,7 @@ class DAO {
   */
   newTableUsers() {
     return new Promise((res, rej)=>{
-      const sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR)";
+      const sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR, PRIMARY KEY(id)) ";
       this.db.run(sql, (err)=>{
         if (err) {
           rej(err);
@@ -367,7 +367,7 @@ class DAO {
  
   newTableTD() {
     return new Promise((res, rej)=>{
-        const sql = "CREATE TABLE IF NOT EXISTS TEST_DESCRIPTORS(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, procedureDescription VARCHAR, idSKU INTEGER)";
+        const sql = "CREATE TABLE IF NOT EXISTS TEST_DESCRIPTORS(id INTEGER PRIMARY KEY, name VARCHAR, procedureDescription VARCHAR, idSKU INTEGER)";
         this.db.run(sql, (err)=>{
             if (err) {
                 rej(err);
@@ -402,7 +402,7 @@ class DAO {
 
   newTableTR() {
     return new Promise((res, rej)=>{
-        const sql = "CREATE TABLE IF NOT EXISTS TEST_RESULTS(id INTEGER PRIMARY KEY AUTOINCREMENT, rfid VARCHAR, idTestDescriptor VARCHAR, Date DATE, Result BOOLEAN)";
+        const sql = "CREATE TABLE IF NOT EXISTS TEST_RESULTS(id INTEGER PRIMARY KEY, rfid VARCHAR, idTestDescriptor VARCHAR, Date DATE, Result BOOLEAN)";
         this.db.run(sql, (err)=>{
             if (err) {
                 rej(err);
