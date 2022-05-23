@@ -1,6 +1,6 @@
-const DAO = require("./mockDB/testDao");
+const DAO = require("../test_DB/TestDAO");
 const dao= new DAO();
-const TestResultController = require("../controller/TestResultController");
+const TestResultController = require("../../controller/TestResultController");
 const tr = new TestResultController(dao);
 
 

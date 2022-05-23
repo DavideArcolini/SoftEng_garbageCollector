@@ -1,5 +1,5 @@
-const dao = require("./mockDB/mock_dao");
-const TestDescriptorController = require("../controller/TestDescriptorController");
+const dao = require("../test_DB/mock_dao");
+const TestDescriptorController = require("../../controller/TestDescriptorController");
 const td = new TestDescriptorController(dao);
 
 

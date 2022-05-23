@@ -1,5 +1,5 @@
-const dao = require("./mockDB/mock_dao");
-const TestResultController = require("../controller/TestResultController");
+const dao = require("../test_DB/mock_dao");
+const TestResultController = require("../../controller/TestResultController");
 const tr = new TestResultController(dao);
 
 
@@ -31,11 +31,11 @@ getTestResults(1,[{
     Result: false
 }],{rfid: "1"})
 
-//404 Result doesn't exist
+//404 rfid doesn't exist
 getTestResults(undefined,[], 404, {rfid: "1"})
 
-//404 Result doesn't exist
-getTestResults(1,[], 404, {rfid: "1"})
+//200 there aren't result
+getTestResults(1,[], 200, {rfid: "1"})
 
 //500
 getTestResults(1,1, 500, undefined)

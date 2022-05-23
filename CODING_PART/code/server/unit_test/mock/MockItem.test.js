@@ -1,5 +1,5 @@
-const dao = require("./mockDB/mock_dao");
-const ItemController = require("../controller/ItemController");
+const dao = require("../test_DB/mock_dao");
+const ItemController = require("../../controller/ItemController");
 const i = new ItemController(dao);
 
 
