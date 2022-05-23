@@ -27,7 +27,14 @@ router.get(
         })
     ],
     validationHandler,
-    rtoc.getReturnOrders
+    async(req,res)=>{
+        try{
+        const result = await rtoc.getReturnOrders();
+        return res.status(200).json(result);
+        }catch(error){
+            return res.status(500).end();
+        }
+    } 
 );
 
 
@@ -48,7 +55,17 @@ router.get(
         })  
     ],
     validationHandler,
-    rtoc.getReturnOrderById
+    async(req,res)=>{
+        try{
+        const result = await rtoc.getReturnOrderById(req.params.id);
+        if(result.message){
+            return res.status(404).end();
+        }
+        return res.status(200).json(result);
+        }catch(error){
+            return res.status(500).end();
+        }
+    } 
 );
 
 /**
@@ -91,7 +108,17 @@ router.post(
         body('restockOrderId').isNumeric()                                               /* [FROM API.md]: restockOrderId is a numeric value                     */
     ],
     validationHandler,
-    rtoc.createReturnOrder
+    async(req,res)=>{
+        try{
+        let result = await rtoc.createReturnOrder(req.body.returnDate,req.body.restockOrderId,req.body.products);
+        if(result.unprocessableEntity){
+            return res.status(422).end();
+        }
+        return res.status(201).end();
+        }catch(error){
+            return res.status(503).end();
+        }
+    }
 );
 
 /**
@@ -111,7 +138,14 @@ router.delete(
         })
     ],
     validationHandler,
-    rtoc.deleteReturnOrder
+    async(req,res)=>{
+        try{
+        await rtoc.deleteReturnOrder(req.params.id);
+        return res.status(204).end();
+        }catch(error){
+            return res.status(503).end();
+        }
+    } 
 );
 
 
