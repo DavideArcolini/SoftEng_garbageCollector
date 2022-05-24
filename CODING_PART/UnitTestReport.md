@@ -26,7 +26,77 @@ Version:
     <Jest tests  must be in code/server/unit_test  >
 
 ## **Class UserController**
-### **Class *UserController* - method *name***
+### **Class *UserController* - method *newUser***
+
+**Criteria for method *newUser*:**
+	
+ - req is not empty
+ - req.username not already in db
+
+**Predicates for method *newUser*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| req not empty |Valid|
+|          | undefined |
+|user not already in db | Yes |
+|          | No |
+|          | undefined |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|          |                 |
+|          |                 |
+
+
+
+**Combination of predicates**:
+
+
+| Criteria 1 | Criteria 2 | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|
+| Valid | Yes | Valid |User not in db, it can be inserted correctly | newUser("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, 201) -> passed; |
+| Valid | No | Invalid | User already exists, cannot be inserted in db | newUser("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, 201) <br><br>newUser("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, 409) -> failed |
+| undefined | undefined | Invalid | Trying to pass an empty body request, throw an error 503 | newUser("bad request", undefined, 503)-> failed |
+
+**Criteria for method *getUser*:**
+
+ - Username exists
+ - Password valid
+ - req not empty
+
+**Predicates for method *getUser*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Username exists | Yes |
+|          | No |
+| Password valid | Yes |
+|          | No |
+| req not empty | Valid |
+|| undefined |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|          |                 |
+|          |                 |
+
+
+
+**Combination of predicates**:
+
+
+| Criteria 1 | Criteria 2 | Criteria 3 | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|
+|||||||
+|||||||
+|||||||
+|||||||
+|||||||
 
 **Criteria for method *name*:**
 	
@@ -34,8 +104,12 @@ Version:
  - 
  - 
 
-**Predicates for method *name*:**
 
+
+
+
+**Predicates for method *name*:**
+s
 | Criteria | Predicate |
 | -------- | --------- |
 |          |           |
@@ -84,7 +158,7 @@ Version:
 
 
 **Predicates for method *name*:**
-
+s
 | Criteria | Predicate |
 | -------- | --------- |
 |          |           |
