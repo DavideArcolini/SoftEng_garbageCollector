@@ -144,7 +144,7 @@ router.post(
                 }
             return true;
         }),
-        body('issueDate').custom((value) => {                                           /* [FROM API.md]: issueDate is in the format "YYYY/MM/DD HH:MM"     */
+       body('issueDate').custom((value) => {                                           /* [FROM API.md]: issueDate is in the format "YYYY/MM/DD HH:MM"     */
             if (/^\d{4}\/\d{2}\/\d{2} \d{2}\:\d{2}$/.test(value) !== true) {
                 throw new Error('Invalid DateOfStock format');
             }
@@ -169,6 +169,7 @@ router.post(
     validationHandler,
     async(req,res)=>{
         try{
+            console.log(JSON.stringify(req.body))
         await roc.createRestockOrder(req.body.issueDate,req.body.supplierId,req.body.products);
         return res.status(201).end();
         }catch(error){
@@ -240,7 +241,7 @@ router.put(
                 console.log(skuItem);
                 if (isNaN(skuItem.SKUId)) {
                     throw new Error('Invalid skuItem value');
-                } else if (skuItem.rfid.length != 32 || /^[0-9]+$/.test(skuItem.rfid) === false) {
+                } else if (skuItem.rfid.length != 32 ) {
                     throw new Error('Invalid skuItem value');
                 }
             });
@@ -250,7 +251,7 @@ router.put(
     validationHandler,
     async(req,res)=>{
         try{
-        await roc.setSkuItems(req.params.id,req.body.skuItems);
+        let result = await roc.setSkuItems(req.params.id,req.body.skuItems);
         if(result.message){
             return res.status(404).end();
         }else if(result.unprocessable){

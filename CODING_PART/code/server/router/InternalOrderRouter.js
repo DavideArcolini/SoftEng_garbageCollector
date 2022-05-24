@@ -165,7 +165,7 @@ router.post(
     validationHandler,
     async(req,res)=>{
         try{
-        await ioc.createInternalOrder(req.body.issueDate,req.body.customerId,req.body.products);
+        await ioc.createInternalOrder(req.body.issueDate,req.body.products,req.body.customerId,);
         return res.status(201).end();
         }catch(error){
             return res.status(503).end();

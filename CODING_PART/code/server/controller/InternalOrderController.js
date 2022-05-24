@@ -17,14 +17,15 @@ class InternalOrderController {
         let max_id = await this.dao.get(sql);
         
         let id=1;
-        if(max_id.id!==null)
+        if(max_id !==null && max_id.id!==null)
             id = max_id.id+1;
+       
         
        // let data = req.body;
         
         for (const prod of products)
         {
-            
+           
             await Promise.all([...Array(parseInt(prod.qty))].map(async () => {
                 sql = "INSERT INTO INTERNAL_ORDERS(id, issueDate, state, customerId, SKUId, description, price) VALUES(?,?,?,?,?,?,?)"
                 await this.dao.run(sql,[id, issueDate,"ISSUED", customerId, prod.SKUId, prod.description, prod.price])
@@ -33,6 +34,7 @@ class InternalOrderController {
         }
 
         //return res.status(201).end()
+       
         return id;
     }catch(error){
         //return res.status(500).end();
