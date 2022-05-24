@@ -15,8 +15,6 @@ chai.should();
 /* ------------ INITIALIZATION ------------ */
 const app = require('../server');
 var agent = chai.request.agent(app);
-let ID_TO_TEST= 1;
-let ID_NOT_FOUND = 10000;
 
 /**
  *  + ------------------------------------------------ +
@@ -31,26 +29,56 @@ let ID_NOT_FOUND = 10000;
  * =================================================
  */
 
- function createReturnOrder(req,expectedStatus){
+ function createReturnOrder(){
     describe('create return order',()=>{
-  
+
     it('create return order',async()=>{
-  
+      let req = {
+        returnDate:"2021/11/29 09:33",
+        products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                    {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+        restockOrderId : 1
+    };
       await agent.post('/api/returnOrder/').send(req).then(function(res){
-        res.should.have.status(expectedStatus);
-        //done();
-   
+        res.should.have.status(201);
+  
         })
       })
+      it('create return order',async()=>{
+        let req = {
+          returnDate:"2021/11/29 09:33",
+          products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                      {SKUId:180,description:"another product",price:-11.99,RFID:"12345678901234567890123456789038"}],
+          restockOrderId : 1
+      };
+        await agent.post('/api/returnOrder/').send(req).then(function(res){
+          res.should.have.status(422);
+    
+          })
+        })
+
+        after(async()=>{
+
+          await agent.get('/api/returnOrders/').then(async(res)=>{
+            res.should.have.status(200);
+            res.should.to.be.json;
+            res.body.should.be.a('array');
+            let id = res.body[res.body.length-1].id;
+            //console.log(id);
+            console.log(id+'deleted')
+           await agent.delete('/api/returnOrder/'+id).then(function(res){
+            res.should.have.status(204);})
+           
+        })
+      })
+
+
+
+
     });
   }
-  createReturnOrder({
-    returnDate:"2021/11/29 09:33",
-    products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
-                {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
-    restockOrderId : 1
-},201);
-  createReturnOrder({returnDate: '2022/05/12 17:44', restockOrderId: 7, products: [ { SKUId: 1, description: 'a product', price: -0.01, rfid: "12345678901234567890123456789016" } ]},422);
+  createReturnOrder();
+  
 
 /**
  * API:
@@ -59,6 +87,27 @@ let ID_NOT_FOUND = 10000;
  */
  function getReturnOrders(expectedStatus){
     describe('get return orders',()=>{
+
+      before(async() => {
+        let req = {
+          returnDate:"2021/11/29 09:33",
+          products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                      {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+          restockOrderId : 1
+      };
+        await agent.post('/api/returnOrder/').send(req).then(function(res){
+          res.should.have.status(201);
+        })
+        req = {
+          returnDate:"2021/11/29 09:33",
+          products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                      {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+          restockOrderId : 1
+      };
+        await agent.post('/api/returnOrder/').send(req).then(function(res){
+          res.should.have.status(201);
+        })
+    });
   
     it('get return orders',async()=>{
   
@@ -71,6 +120,22 @@ let ID_NOT_FOUND = 10000;
             //done();
         })
     })
+    after(async()=>{
+
+      await agent.get('/api/returnOrders/').then(async(res)=>{
+        res.should.have.status(200);
+        res.should.to.be.json;
+        res.body.should.be.a('array');
+        let id = res.body[res.body.length-1].id;
+        console.log(id+'deleted')
+      await agent.delete('/api/returnOrder/'+id).then(function(res){
+        res.should.have.status(204);})
+        id = id-1;
+        console.log(id+'deleted')
+        await agent.delete('/api/returnOrder/'+id).then(function(res){
+          res.should.have.status(204);})
+    })
+  })
   });
   }
 getReturnOrders(200);
@@ -81,23 +146,81 @@ getReturnOrders(200);
  * =================================================
  */
 
-   function getReturnOrderById(req,expectedStatus){
+   function getReturnOrderById(){
     describe('get return order by id',()=>{
+      before(async() => {
+        let req = {
+          returnDate:"2021/11/29 09:33",
+          products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                      {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+          restockOrderId : 1
+      };
+        await agent.post('/api/returnOrder/').send(req).then(function(res){
+          res.should.have.status(201);
+        })
+        req = {
+          returnDate:"2021/11/29 09:33",
+          products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                      {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+          restockOrderId : 1
+      };
+        await agent.post('/api/returnOrder/').send(req).then(function(res){
+          res.should.have.status(201);
+        })
+    });
       
-  
     it('get return order by id',async()=>{
-  
-        await agent.get('/api/returnOrders/'+req).then(function(res){
-            res.should.have.status(expectedStatus);
+      await agent.get('/api/returnOrders/').then(async(res)=>{
+        res.should.have.status(200);
+        res.should.to.be.json;
+        res.body.should.be.a('array');
+        let id = res.body[res.body.length-1].id;
+        await agent.get('/api/returnOrders/'+id).then(function(res){
+            res.should.have.status(200);
             
         })
     })
+  })
+  it('get return order by id- not found',async()=>{
+    await agent.get('/api/returnOrders/').then(async(res)=>{
+      res.should.have.status(200);
+      res.should.to.be.json;
+      res.body.should.be.a('array');
+      let id = res.body[res.body.length-1].id+100;
+      await agent.get('/api/returnOrders/'+id).then(function(res){
+          res.should.have.status(404);
+          
+      })
+  })
+})
+it('get return order by id- unprocessable',async()=>{
+  let id='a';
+    await agent.get('/api/returnOrders/'+id).then(function(res){
+        res.should.have.status(422);
+        
+})
+})
+    after(async()=>{
+
+      await agent.get('/api/returnOrders/').then(async(res)=>{
+        res.should.have.status(200);
+        res.should.to.be.json;
+        res.body.should.be.a('array');
+        let id = res.body[res.body.length-1].id;
+        console.log(id+'deleted')
+      await agent.delete('/api/returnOrder/'+id).then(function(res){
+        res.should.have.status(204);})
+        id = id-1;
+        console.log(id+'deleted')
+        await agent.delete('/api/returnOrder/'+id).then(function(res){
+          res.should.have.status(204);})
+    })
+  })
   });
   }
 
-  getReturnOrderById(2,200);
-  getReturnOrderById(3,200);
-  getReturnOrderById(ID_NOT_FOUND,404);
+  getReturnOrderById();
+  
 
     /**
  * API:
@@ -106,14 +229,58 @@ getReturnOrders(200);
  */
      function deleteReturnOrder(id,expectedStatus){
         describe('delete return order',()=>{
-      
+          before(async() => {
+            let req = {
+              returnDate:"2021/11/29 09:33",
+              products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                          {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+              restockOrderId : 1
+          };
+            await agent.post('/api/returnOrder/').send(req).then(function(res){
+              res.should.have.status(201);
+            })
+            req = {
+              returnDate:"2021/11/29 09:33",
+              products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                          {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+              restockOrderId : 1
+          };
+            await agent.post('/api/returnOrder/').send(req).then(function(res){
+              res.should.have.status(201);
+            })
+        });
+
         it('delete return order',async()=>{
-      
+          await agent.get('/api/returnOrders/').then(async(res)=>{
+            res.should.have.status(200);
+            res.should.to.be.json;
+            res.body.should.be.a('array');
+            let id = res.body[res.body.length-1].id;
+            console.log(id+'deleted')
           await agent.delete('/api/returnOrder/'+id).then(function(res){
-            res.should.have.status(expectedStatus);
-      
+            res.should.have.status(204);
+          })
             })
           })
+          it('delete return order',async()=>{
+            await agent.get('/api/returnOrders/').then(async(res)=>{
+              res.should.have.status(200);
+              res.should.to.be.json;
+              res.body.should.be.a('array');
+              let id = res.body[res.body.length-1].id;
+              console.log(id+'deleted')
+            await agent.delete('/api/returnOrder/'+id).then(function(res){
+              res.should.have.status(204);
+            })
+              })
+            })
+            it('delete return order',async()=>{
+              let id='a';
+              await agent.delete('/api/returnOrder/'+id).then(function(res){
+                res.should.have.status(422);
+              })
+            })
+              
         });
       }
-deleteReturnOrder(7,204);
+deleteReturnOrder();

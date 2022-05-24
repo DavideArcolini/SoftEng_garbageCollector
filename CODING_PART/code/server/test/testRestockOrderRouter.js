@@ -15,8 +15,7 @@ chai.should();
 /* ------------ INITIALIZATION ------------ */
 const app = require('../server');
 var agent = chai.request.agent(app);
-let ID_TO_TEST= 1;
-let ID_NOT_FOUND = 10000;
+
 /**
  *  + ------------------------------------------------ +
  *  |                                                  |
@@ -29,22 +28,122 @@ let ID_NOT_FOUND = 10000;
  *          POST /api/restockOrder
  * ==========================================================
  */
- function createRestockOrder(req,expectedStatus){
+/**
+ * API:
+ *         GET /api/restockOrders/:id
+ * =================================================
+ */
+
+ function getRestockOrderById(){
+  describe('get restock order by id',()=>{
+     before(async() => {
+        await agent.post('/api/restockOrder/')
+        .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+        .then(function (res) {
+            res.should.have.status(201);
+        })
+        await agent.post('/api/restockOrder/')
+        .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+        .then(function (res) {
+            res.should.have.status(201);
+        })
+    });
+
+  it('get restock order by id',async()=>{
+    await agent.get('/api/restockOrders/').then(async(res)=>{
+      res.should.have.status(200);
+      res.should.to.be.json;
+      res.body.should.be.a('array');
+      let id = res.body[res.body.length-1].id;
+      await agent.get('/api/restockOrders/'+id).then(function(res){
+          res.should.have.status(200);
+      })
+
+  })
+})  
+it('get restock order by id - NOT FOUND',async()=>{
+  await agent.get('/api/restockOrders/').then(async(res)=>{
+    res.should.have.status(200);
+    res.should.to.be.json;
+    res.body.should.be.a('array');
+    let id = res.body[res.body.length-1].id+100;
+    await agent.get('/api/restockOrders/'+id).then(function(res){
+        res.should.have.status(404);
+    })
+
+})
+
+
+})
+it('get restock order by id - UNPROCESSABLE ENTITY',async()=>{
+
+    await agent.get('/api/restockOrders/'+'a').then(function(res){
+        res.should.have.status(422);
+    })
+  
+})
+    after(async()=>{
+
+      await agent.get('/api/restockOrders/').then(async(res)=>{
+        res.should.have.status(200);
+        res.should.to.be.json;
+        res.body.should.be.a('array');
+        let id = res.body[res.body.length-1].id;
+        console.log(id+'deleted')
+      await agent.delete('/api/restockOrder/'+id).then(function(res){
+        res.should.have.status(204);})
+        id = id-1;
+        console.log(id+'deleted')
+        await agent.delete('/api/restockOrder/'+id).then(function(res){
+          res.should.have.status(204);})
+    })
+  })
+});
+}
+
+getRestockOrderById();
+
+ function createRestockOrder(){
   describe('create restock order',()=>{
 
   it('create restock order',async()=>{
+    let req = {issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]};
 
     await agent.post('/api/restockOrder/').send(req).then(function(res){
-      res.should.have.status(expectedStatus);
+      res.should.have.status(201);
       //done();
  
       })
     })
+    it('create restock order - UNPROCESSABLE ENTITY',async()=>{
+      let req = {issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: -0.01, qty: 1 } ]};
+
+      await agent.post('/api/restockOrder/').send(req).then(function(res){
+        res.should.have.status(422);
+        //done();
+   
+        })
+      })
+    after(async()=>{
+
+      await agent.get('/api/restockOrders/').then(async(res)=>{
+        res.should.have.status(200);
+        res.should.to.be.json;
+        res.body.should.be.a('array');
+        let id = res.body[res.body.length-1].id;
+        //console.log(id);
+        console.log(id+'deleted')
+       await agent.delete('/api/restockOrder/'+id).then(function(res){
+        res.should.have.status(204);})
+        //id = res.body[res.body.length-2].id;
+       
+    })
+  })
   });
 }
-createRestockOrder({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]},201);
-createRestockOrder({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: -0.01, qty: 1 } ]},422);
-
+//createRestockOrder({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]},201);
+//createRestockOrder({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: -0.01, qty: 1 } ]},422);
+createRestockOrder();
   
 
 /**
@@ -54,6 +153,20 @@ createRestockOrder({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { 
  */
  function getRestockOrders(expectedStatus){
   describe('get restock orders',()=>{
+
+    before(async() => {
+      await agent.post('/api/restockOrder/')
+      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+      .then(function (res) {
+          res.should.have.status(201);
+      })
+      await agent.post('/api/restockOrder/')
+      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+      .then(function (res) {
+          res.should.have.status(201);
+      })
+  });
+
 
   it('get restock orders',async()=>{
 
@@ -66,6 +179,22 @@ createRestockOrder({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { 
           //done();
       })
   })
+  after(async()=>{
+
+    await agent.get('/api/restockOrders/').then(async(res)=>{
+      res.should.have.status(200);
+      res.should.to.be.json;
+      res.body.should.be.a('array');
+      let id = res.body[res.body.length-1].id;
+      console.log(id+'deleted')
+     await agent.delete('/api/restockOrder/'+id).then(function(res){
+      res.should.have.status(204);})
+      id = id-1;
+      console.log(id+'deleted')
+      await agent.delete('/api/restockOrder/'+id).then(function(res){
+        res.should.have.status(204);})
+  })
+})
 });
 }
 getRestockOrders(200);
@@ -78,6 +207,19 @@ getRestockOrders(200);
  function getRestockOrdersIssued(expectedStatus){
   describe('get restock orders issued',()=>{
 
+    before(async() => {
+      await agent.post('/api/restockOrder/')
+      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+      .then(function (res) {
+          res.should.have.status(201);
+      })
+      await agent.post('/api/restockOrder/')
+      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+      .then(function (res) {
+          res.should.have.status(201);
+      })
+  });
+
   it('get restock orders issued',async()=>{
 
       await agent.get('/api/restockOrdersIssued/').then(function(res){
@@ -88,51 +230,95 @@ getRestockOrders(200);
           //done();
       })
   })
+  after(async()=>{
+
+    await agent.get('/api/restockOrders/').then(async(res)=>{
+      res.should.have.status(200);
+      res.should.to.be.json;
+      res.body.should.be.a('array');
+      let id = res.body[res.body.length-1].id;
+      console.log(id+'deleted')
+     await agent.delete('/api/restockOrder/'+id).then(function(res){
+      res.should.have.status(204);})
+      id = id-1;
+      console.log(id+'deleted')
+      await agent.delete('/api/restockOrder/'+id).then(function(res){
+        res.should.have.status(204);})
+  })
+})
 });
 }
 getRestockOrdersIssued(200);
-/**
- * API:
- *         GET /api/restockOrders/:id
- * =================================================
- */
 
- function getRestockOrderById(req,expectedStatus){
-  describe('get restock order by id',()=>{
-    
-
-  it('get restock order by id',async()=>{
-
-      await agent.get('/api/restockOrders/'+req).then(function(res){
-          res.should.have.status(expectedStatus);
-          //done();
-      })
-  })
-});
-}
-getRestockOrderById(3,200);
-getRestockOrderById(2,200);
-getRestockOrderById(ID_NOT_FOUND,404);
 
 /**
  * API:
  *          PUT /api/restockOrder/:id
  * ==========================================================
- */
- function modifyRestockOrderState(id,newState,expectedStatus){
+ **/
+ function modifyRestockOrderState(){
   describe('modify restock order state',()=>{
-
+    before(async() => {
+      await agent.post('/api/restockOrder/')
+      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+      .then(function (res) {
+          res.should.have.status(201);
+      })
+  });
   it('modify restock order state',async()=>{
+    await agent.get('/api/restockOrders/').then(async(res)=>{
+      res.should.have.status(200);
+      res.should.to.be.json;
+      res.body.should.be.a('array');
+      let id = res.body[res.body.length-1].id;
 
-    await agent.put('/api/restockOrder/'+id).send(newState).then(function(res){
-      res.should.have.status(expectedStatus);
+    await agent.put('/api/restockOrder/'+id).send({newState: 'DELIVERY'}).then(function(res){
+      res.should.have.status(200);
       })
     })
+  })
+
+  it('modify restock order state - NOT FOUND',async()=>{
+    await agent.get('/api/restockOrders/').then(async(res)=>{
+      res.should.have.status(200);
+      res.should.to.be.json;
+      res.body.should.be.a('array');
+      let id = res.body[res.body.length-1].id+100;
+
+    await agent.put('/api/restockOrder/'+id).send({newState: 'DELIVERY'}).then(function(res){
+      res.should.have.status(404);
+      })
+    })
+  })
+
+  it('modify restock order state',async()=>{
+    await agent.get('/api/restockOrders/').then(async(res)=>{
+      res.should.have.status(200);
+      res.should.to.be.json;
+      res.body.should.be.a('array');
+      let id = res.body[res.body.length-1].id;
+
+    await agent.put('/api/restockOrder/'+id).send({newState: 'UNDEFINED'}).then(function(res){
+      res.should.have.status(422);
+      })
+    })
+  })
+
+    after(async()=>{
+
+      await agent.get('/api/restockOrders/').then(async(res)=>{
+        res.should.have.status(200);
+        res.should.to.be.json;
+        res.body.should.be.a('array');
+        let id = res.body[res.body.length-1].id;
+        await agent.delete('/api/restockOrder/'+id).then(function(res){
+        res.should.have.status(204);})
+        
+    })
+  })
   });
 }
-modifyRestockOrderState(ID_TO_TEST,{newState: 'DELIVERY'},200);
-modifyRestockOrderState(ID_NOT_FOUND,{newState: 'DELIVERY'},404);
-modifyRestockOrderState(ID_TO_TEST,{},422);
+modifyRestockOrderState();
 
 
 /**
@@ -141,84 +327,276 @@ modifyRestockOrderState(ID_TO_TEST,{},422);
  * ==========================================================
  */
 
- function addTransportNote(id,transportNote,expectedStatus){
+ function addTransportNote(){
   describe('add transport note',()=>{
+    before(async() => {
+      await agent.post('/api/restockOrder/')
+      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+      .then(function (res) {
+          res.should.have.status(201);
+      })
+      await agent.get('/api/restockOrders/').then(async(res)=>{
+        res.should.have.status(200);
+        res.should.to.be.json;
+        res.body.should.be.a('array');
+        let id = res.body[res.body.length-1].id;
+  
+      await agent.put('/api/restockOrder/'+id).send({newState: 'DELIVERY'}).then(function(res){
+        res.should.have.status(200);
+        })
+      })
+   
+  });
 
   it('add transport note',async()=>{
-
-    await agent.put('/api/restockOrder/'+id+'/transportNote').send(transportNote).then(function(res){
-      res.should.have.status(expectedStatus);
+    await agent.get('/api/restockOrders/').then(async(res)=>{
+      res.should.have.status(200);
+      res.should.to.be.json;
+      res.body.should.be.a('array');
+      let id = res.body[res.body.length-1].id;
+    await agent.put('/api/restockOrder/'+id+'/transportNote').send({transportNote: { deliveryDate: '2023/12/29' }}).then(function(res){
+      res.should.have.status(200);
       })
     })
+  })
+  it('add transport note - NOT FOUND',async()=>{
+    await agent.get('/api/restockOrders/').then(async(res)=>{
+      res.should.have.status(200);
+      res.should.to.be.json;
+      res.body.should.be.a('array');
+      let id = res.body[res.body.length-1].id+100;
+    await agent.put('/api/restockOrder/'+id+'/transportNote').send({transportNote: { deliveryDate: '2023/12/29' }}).then(function(res){
+      res.should.have.status(404);
+      })
+    })
+  })
+
+  it('add transport note - UNPROCESSABLE',async()=>{
+    await agent.get('/api/restockOrders/').then(async(res)=>{
+      res.should.have.status(200);
+      res.should.to.be.json;
+      res.body.should.be.a('array');
+      let id = res.body[res.body.length-1].id;
+    await agent.put('/api/restockOrder/'+id+'/transportNote').send({transportNote: { deliveryDate: '2021/12/29' }}).then(function(res){
+      res.should.have.status(422);
+      })
+    })
+  })
+    after(async()=>{
+
+      await agent.get('/api/restockOrders/').then(async(res)=>{
+        res.should.have.status(200);
+        res.should.to.be.json;
+        res.body.should.be.a('array');
+        let id = res.body[res.body.length-1].id;
+      await agent.delete('/api/restockOrder/'+id).then(function(res){
+        res.should.have.status(204);})
+        
+    })
+  })
   });
 }
 
-addTransportNote(ID_TO_TEST,{transportNote: { deliveryDate: '2023/12/29' }},200);
-addTransportNote(ID_TO_TEST,{transportNote: { deliveryDate: '2021/12/29' }},422);
-addTransportNote(ID_NOT_FOUND,{transportNote: { deliveryDate: '2023/12/29' }},404);
+addTransportNote();
+
 
 /**
  * API:
  *          PUT /api/restockOrder/:id/skuItems
  * ==========================================================
  */
- function setSkuItems(id,skuItems,expectedStatus){
+ function setSkuItems(){
   describe('set skuItems',()=>{
+    before(async() => {
+      await agent.post('/api/restockOrder/')
+      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+      .then(function (res) {
+          res.should.have.status(201);
+      })
+      await agent.get('/api/restockOrders/').then(async(res)=>{
+        res.should.have.status(200);
+        res.should.to.be.json;
+        res.body.should.be.a('array');
+        let id = res.body[res.body.length-1].id;
+  
+      await agent.put('/api/restockOrder/'+id).send({newState: 'DELIVERED'}).then(function(res){
+        res.should.have.status(200);
+        })
+      })
+     
 
+  });
   it('set skuItems',async()=>{
-
-    await agent.put('/api/restockOrder/'+id+'/skuItems').send(skuItems).then(function(res){
-      res.should.have.status(expectedStatus);
+    await agent.get('/api/restockOrders/').then(async(res)=>{
+      res.should.have.status(200);
+      res.should.to.be.json;
+      res.body.should.be.a('array');
+      let id = res.body[res.body.length-1].id;
+      await agent.put('/api/restockOrder/'+id+'/skuItems').send({skuItems: [{SKUId: 1, rfid: "12345678901234567890123456789016"}]}).then(function(res){
+      res.should.have.status(200);
     
       })
     })
+   })
+
+   it('set skuItems-NOT FOUND',async()=>{
+    await agent.get('/api/restockOrders/').then(async(res)=>{
+      res.should.have.status(200);
+      res.should.to.be.json;
+      res.body.should.be.a('array');
+      let id = res.body[res.body.length-1].id+100;
+    await agent.put('/api/restockOrder/'+id+'/skuItems').send({skuItems: [{SKUId: 1, rfid: "12345678901234567890123456789016"}]}).then(function(res){
+      res.should.have.status(404);
+    
+      })
+    })
+   })
+
+   it('set skuItems- UNPROCESSABLE',async()=>{
+    await agent.get('/api/restockOrders/').then(async(res)=>{
+      res.should.have.status(200);
+      res.should.to.be.json;
+      res.body.should.be.a('array');
+      let id = res.body[res.body.length-1].id;
+      await agent.put('/api/restockOrder/'+id).send({newState: 'DELIVERY'}).then(async(res)=>{
+        res.should.have.status(200);
+      await agent.put('/api/restockOrder/'+id+'/skuItems').send({skuItems: [{SKUId: 1, rfid: "12345678901234567890123456789016"}]}).then(function(res){
+      res.should.have.status(422);
+      })
+      })
+    })
+   })
+
+    after(async()=>{
+
+      await agent.get('/api/restockOrders/').then(async(res)=>{
+        res.should.have.status(200);
+        res.should.to.be.json;
+        res.body.should.be.a('array');
+        let id = res.body[res.body.length-1].id;
+      await agent.delete('/api/restockOrder/'+id).then(function(res){
+        res.should.have.status(204);})
+        
+    })
+  })
   });
 }
-
-setSkuItems(ID_TO_TEST,{skuItems: [{SKUId: 1, rfid: "12345678901234567890123456789016"}]},422);
-modifyRestockOrderState(ID_TO_TEST,{newState: 'DELIVERED'},200);
-setSkuItems(ID_TO_TEST,{skuItems: [{SKUId: 1, rfid: "12345678901234567890123456789016"}]},200);
-setSkuItems(ID_NOT_FOUND,{skuItems: [{SKUId: 1, rfid: "12345678901234567890123456789016"}]},404);
+setSkuItems();
 /**
  * API:
  *          GET /api/restockOrders/:id/returnItems
  * ==========================================================
  */
 
- function getReturnItems(id,expectedStatus){
+ function getReturnItems(){
   describe('get return items',()=>{
 
-  it('get return items',async()=>{
+    before(async() => {
+      await agent.post('/api/restockOrder/')
+      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+      .then(function (res) {
+          res.should.have.status(201);
+      })
+      await agent.get('/api/restockOrders/').then(async(res)=>{
+        res.should.have.status(200);
+        res.should.to.be.json;
+        res.body.should.be.a('array');
+        let id = res.body[res.body.length-1].id;
+  
+      await agent.put('/api/restockOrder/'+id).send({newState: 'COMPLETEDRETURN'}).then(function(res){
+        res.should.have.status(200);
+        })
+      })
+  });
 
-    await agent.get('/api/restockOrders/'+id+'/returnItems').then(function(res){
-      res.should.have.status(expectedStatus);
+ 
+  it('get return items - NOT FOUND',async()=>{
+    await agent.get('/api/restockOrders/').then(async(res)=>{
+      res.should.have.status(200);
+      res.should.to.be.json;
+      res.body.should.be.a('array');
+      let id = res.body[res.body.length-1].id+100;
+      await agent.get('/api/restockOrders/'+id+'/returnItems').then(function(res){
+      res.should.have.status(404);
 
       })
     })
+  })
+  it('get return items',async()=>{
+    await agent.get('/api/restockOrders/').then(async(res)=>{
+      res.should.have.status(200);
+      res.should.to.be.json;
+      res.body.should.be.a('array');
+      let id = res.body[res.body.length-1].id;
+      await agent.get('/api/restockOrders/'+id+'/returnItems').then(function(res){
+      res.should.have.status(200);
+
+      })
+    })
+  })
+  it('get return items - UNPROCESSABLE',async()=>{
+    await agent.get('/api/restockOrders/').then(async(res)=>{
+      res.should.have.status(200);
+      res.should.to.be.json;
+      res.body.should.be.a('array');
+      let id = res.body[res.body.length-1].id;
+      await agent.put('/api/restockOrder/'+id).send({newState: 'DELIVERY'}).then(async(res)=>{
+        res.should.have.status(200);
+      await agent.get('/api/restockOrders/'+id+'/returnItems').then(function(res){
+      res.should.have.status(422);
+      })
+      })
+    })
+  })
+
+    after(async()=>{
+
+      await agent.get('/api/restockOrders/').then(async(res)=>{
+        res.should.have.status(200);
+        res.should.to.be.json;
+        res.body.should.be.a('array');
+        let id = res.body[res.body.length-1].id;
+        await agent.delete('/api/restockOrder/'+id).then(function(res){
+        res.should.have.status(204);})
+        
+    })
+  })
   });
 }
 
-getReturnItems(ID_TO_TEST,422);
-modifyRestockOrderState(ID_TO_TEST,{newState: 'COMPLETEDRETURN'},200);
-getReturnItems(ID_TO_TEST,200);
-getReturnItems(ID_NOT_FOUND,404);
+getReturnItems();
 
 /**
  * API:
  *          DELETE /api/restockOrder/:id
  * ==========================================================
  */
- function deleteRestockOrder(id,expectedStatus){
+ function deleteRestockOrder(){
   describe('delete restock order',()=>{
-
-  it('delete restock order',async()=>{
-
-    await agent.delete('/api/restockOrder/'+id).then(function(res){
-      res.should.have.status(expectedStatus);
-
+    before(async() => {
+      await agent.post('/api/restockOrder/')
+      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+      .then(function (res) {
+          res.should.have.status(201);
       })
-    })
   });
+  it('delete restock order',async()=>{
+    await agent.get('/api/restockOrders/').then(async(res)=>{
+      res.should.have.status(200);
+      res.should.to.be.json;
+      res.body.should.be.a('array');
+      let id = res.body[res.body.length-1].id;
+    await agent.delete('/api/restockOrder/'+id).then(function(res){
+      res.should.have.status(204);
+    })
+    })
+  })
+  it('delete restock order - UNPROCESSABLE',async()=>{
+    let id = 'a';
+    await agent.delete('/api/restockOrder/'+id).then(function(res){
+      res.should.have.status(422);
+    })
+    })
+});
 }
-deleteRestockOrder(81,204);
-deleteRestockOrder('a',422);
+deleteRestockOrder();
