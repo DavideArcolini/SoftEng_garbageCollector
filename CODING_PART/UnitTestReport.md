@@ -230,6 +230,398 @@ User already inserted:
 |||||||
 |||||||
 
+
+
+
+## **Class PositionController**
+### **Class *PositionController* - method *getPositions()***
+**Criteria for method *getPositions()*:**
+ - Database is reachable
+
+**Predicates for method *getPositions()*:**
+
+| Criteria              | Predicate |
+| :--------:            | :---------: |
+| Database is reachable | *true* |
+|                       | *false*|
+
+**Combination of predicates**:
+| Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* | valid |`getPositions_TEST()` terminates with <br>`{code: 200}`|`function` <br>`getPositions_TEST(describe_NAME, expectedResult)`|
+|*false*|invalid|`getPositions_TEST()` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}`|`function` <br>`getPositions_TEST(describe_NAME, expectedResult)`|
+
+### **Class *PositionController* - method *newPosition()***
+**Criteria for method *newPosition()*:**
+ - Database is reachable
+ - `positionID` is *unique* in the database
+
+**Predicates for method *newPosition()*:**
+| Criteria              | Predicate |
+| :--------:            | :---------: |
+| Database is reachable | *true* |
+|                       | *false*|
+| `positionID` is *unique* in the database|*true*|
+||*false*|
+
+**Combination of predicates**:
+| Database is reachable |`positionID` is *unique* in the database| Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* |*true*| valid |`newPosition_TEST()` terminates with <br>`{code: 201, message: "CREATED"}` |`function` <br>`newPosition_TEST(describe_NAME, request, expectedResult)`|
+| *true* |*false*| invalid |`newPosition_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`newPosition_TEST(describe_NAME, request, expectedResult)`|
+| *false* |*true*| invalid |`newPosition_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`newPosition_TEST(describe_NAME, request, expectedResult)`|
+| *false* |*false*| invalid |`newPosition_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`newPosition_TEST(describe_NAME, request, expectedResult)`|
+
+
+### **Class *PositionController* - method *editPosition()***
+**Criteria for method *editPosition()*:**
+ - Database is reachable
+ - `positionID` *exists* in the database
+ - **Position** associated to **SKU** satisfies `maxWeight` and `maxVolume` constraints
+
+**Predicates for method *editPosition()*:**
+ | Criteria              | Predicate |
+| :--------:            | :---------: |
+| Database is reachable | *true* |
+|                       | *false*|
+| `positionID` *exists* in the database|*true*|
+||*false*|
+|**Position** associated to **SKU** satisfies `maxWeight` and `maxVolume` constraints|*true*|
+||*false*|
+
+**Combination of predicates**:
+| Database is reachable |`positionID` *exists* in the database|**Position** associated to **SKU** satisfies `maxWeight` and `maxVolume` constraints| Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* |*true*|*true*| valid |`editPosition_TEST()` terminates with <br>`{code: 200, message: "OK"}` |`function` <br>`editPosition_TEST(describe_NAME, params, request, expectedResult)`|
+| *true* |*true*|*false*| invalid |`editPosition_TEST()` terminates with <br>`{code: 422, message: "Unprocessable Entity"}` |`function` <br>`editPosition_TEST(describe_NAME, params, request, expectedResult)`|
+| *true* |*false*|*/*| invalid |`editPosition_TEST()` terminates with <br>`{code: 404, message: "Not Found"}` |`function` <br>`editPosition_TEST(describe_NAME, params, request, expectedResult)`|
+| *false* |*/*|*/*| invalid |`editPosition_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}` |`function` <br>`editPosition_TEST(describe_NAME, params, request, expectedResult)`|
+
+
+### **Class *PositionController* - method *editPositionID()***
+**Criteria for method *editPositionID()*:**
+ - Database is reachable
+ - `positionID` *exists* in the database
+ - `newPositionID` is *unique* in the database
+
+**Predicates for method *editPositionID()*:**
+ | Criteria              | Predicate |
+| :--------:            | :---------: |
+| Database is reachable | *true* |
+|                       | *false*|
+| `positionID` *exists* in the database|*true*|
+||*false*|
+|`newPositionID` is *unique* in the database|*true*|
+||*false*|
+
+**Combination of predicates**:
+| Database is reachable |`positionID` *exists* in the database|`newPositionID` is *unique* in the database| Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* |*true*|*true*| valid |`editPositionID_TEST()` terminates with <br>`{code: 200, message: "OK"}` |`function` <br>`editPositionID_TEST(describe_NAME, params, request, expectedResult)`|
+| *true* |*true*|*false*| invalid |`editPositionID_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}` |`function` <br>`editPositionID_TEST(describe_NAME, params, request, expectedResult)`|
+| *true* |*false*|*/*| invalid |`editPositionID_TEST()` terminates with <br>`{code: 404, message: "Not Found"}` |`function` <br>`editPositionID_TEST(describe_NAME, params, request, expectedResult)`|
+| *false* |*/*|*/*| invalid |`editPositionID_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}` |`function` <br>`editPositionID_TEST(describe_NAME, params, request, expectedResult)`|
+
+
+### **Class *PositionController* - method *deletePosition()***
+**Criteria for method *deletePosition()*:**
+ - Database is reachable
+
+**Predicates for method *deletePosition()*:**
+ | Criteria              | Predicate |
+| :--------:            | :---------: |
+| Database is reachable | *true* |
+|                       | *false*|
+
+**Combination of predicates**:
+| Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* | valid |`deletePosition_TEST()` terminates with <br>`{code: 204, message: "NO CONTENT"}` |`function` <br>`deletePosition_TEST(describe_NAME, params, expectedResult)`|
+|*false*| valid |`deletePosition_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}` |`function` <br>`deletePosition_TEST(describe_NAME, params, expectedResult)`|
+
+
+
+## **Class SKUitemController**
+### **Class *SKUitemController* - method *getSKUitems()***
+**Criteria for method *getSKUitems()*:**
+ - Database is reachable
+
+**Predicates for method *getSKUitems()*:**
+
+| Criteria              | Predicate |
+| :--------:            | :---------: |
+| Database is reachable | *true* |
+|                       | *false*|
+
+**Combination of predicates**:
+| Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* | valid |`getSKUitems_TEST()` terminates with <br>`{code: 200}`|`function` <br>`getSKUitems_TEST(describe_NAME, expectedResult)`|
+|*false*| invalid |`getSKUitems_TEST()` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}` |`function` <br>`getSKUitems_TEST(describe_NAME, expectedResult)`|
+
+
+
+### **Class *SKUitemController* - method *getSKUitemsBySKUId()***
+**Criteria for method *getSKUitemsBySKUId()*:**
+ - Database is reachable
+ - `SKUid` *exists* in the database
+
+**Predicates for method *getSKUitemsBySKUId()*:**
+
+| Criteria              | Predicate |
+| :--------:            | :---------: |
+| Database is reachable | *true* |
+|                       | *false*|
+|`SKUid` *exists* in the database|*true*|
+||*false*|
+
+**Combination of predicates**:
+| Database is reachable |`SKUid` *exists* in the database| Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* | *true* | valid |`getSKUitemsBySKUId_TEST()` terminates with <br>`{code: 200}`|`function` <br>`getSKUitemsBySKUId_TEST(describe_NAME, params, expectedResult)`|
+| *true* | *false* | invalid |`getSKUitemsBySKUId_TEST()` terminates with <br>`{code: 404, message: "Not Found"}`|`function` <br>`getSKUitemsBySKUId_TEST(describe_NAME, params, expectedResult)`|
+| *false* | */* | invalid |`getSKUitemsBySKUId_TEST()` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}`|`function` <br>`getSKUitemsBySKUId_TEST(describe_NAME, params, expectedResult)`|
+
+
+
+### **Class *SKUitemController* - method *getSKUitemsByRFID()***
+**Criteria for method *getSKUitemsByRFID()*:**
+ - Database is reachable
+ - `RFID` *exists* in the database
+
+**Predicates for method *getSKUitemsByRFID()*:**
+
+| Criteria              | Predicate |
+| :--------:            | :---------: |
+| Database is reachable | *true* |
+|                       | *false*|
+|`RFID` *exists* in the database|*true*|
+||*false*|
+
+**Combination of predicates**:
+| Database is reachable |`RFID` *exists* in the database| Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* | *true* | valid |`getSKUitemsByRFID_TEST()` terminates with <br>`{code: 200}`|`function` <br>`getSKUitemsByRFID_TEST(describe_NAME, params, expectedResult)`|
+| *true* | *false* | invalid |`getSKUitemsByRFID_TEST()` terminates with <br>`{code: 404, message: "Not Found"}`|`function` <br>`getSKUitemsByRFID_TEST(describe_NAME, params, expectedResult)`|
+| *false* | */* | invalid |`getSKUitemsByRFID_TEST()` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}`|`function` <br>`getSKUitemsByRFID_TEST(describe_NAME, params, expectedResult)`|
+
+### **Class *SKUitemController* - method *newSKUitem()***
+**Criteria for method *newSKUitem()*:**
+ - Database is reachable
+ - `SKUid` *exists* in the database
+ - `RFID` is *unique* in the database
+
+**Predicates for method *newSKUitem()*:**
+
+| Criteria              | Predicate |
+| :--------:            | :---------: |
+| Database is reachable | *true* |
+|                       | *false*|
+|`SKUid` *exists* in the database|*true*|
+||*false*|
+|`RFID` is *unique* in the database|*true*|
+||*false*|
+
+**Combination of predicates**:
+| Database is reachable |`SKUid` *exists* in the database|`RFID` is *unique* in the database| Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* | *true* |*true*| valid |`newSKUitem_TEST()` terminates with <br>`{code: 201, message: "CREATED"}`|`function` <br>`newSKUitem_TEST(describe_NAME, request, expectedResult)`|
+| *true* | *true* |*false*| invalid |`newSKUitem_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`newSKUitem_TEST(describe_NAME, request, expectedResult)`|
+| *true* | *false* |*/*| invalid |`newSKUitem_TEST()` terminates with <br>`{code: 404, message: "Not Found"}`|`function` <br>`newSKUitem_TEST(describe_NAME, request, expectedResult)`|
+| *false* | */* |*/*| invalid |`newSKUitem_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`newSKUitem_TEST(describe_NAME, request, expectedResult)`|
+
+
+### **Class *SKUitemController* - method *editSKUitem()***
+**Criteria for method *editSKUitem()*:**
+ - Database is reachable
+ - `RFID` *exists* in the database
+
+**Predicates for method *editSKUitem()*:**
+
+| Criteria              | Predicate |
+| :--------:            | :---------: |
+| Database is reachable | *true* |
+|                       | *false*|
+|`RFID` *exists* in the database|*true*|
+||*false*|
+
+**Combination of predicates**:
+| Database is reachable |`RFID` *exists* in the database|Valid / Invalid| Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* | *true* | valid |`editSKUitem_TEST()` terminates with <br>`{code: 201, message: "CREATED"}`|`function` <br>`editSKUitem_TEST(describe_NAME, params, request, expectedResult)`|
+| *true* | *false* | invalid |`editSKUitem_TEST()` terminates with <br>`{code: 404, message: "Not Found"}`|`function` <br>`editSKUitem_TEST(describe_NAME, params, request, expectedResult)`|
+| *false* | */* | invalid |`editSKUitem_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`editSKUitem_TEST(describe_NAME, params, request, expectedResult)`|
+
+
+### **Class *SKUitemController* - method *deleteSKUitem()***
+**Criteria for method *deleteSKUitem()*:**
+ - Database is reachable
+
+**Predicates for method *deleteSKUitem()*:**
+
+| Criteria              | Predicate |
+| :--------:            | :---------: |
+| Database is reachable | *true* |
+|                       | *false*|
+
+**Combination of predicates**:
+| Database is reachable |Valid / Invalid| Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* | valid |`deleteSKUitem_TEST()` terminates with <br>`{code: 204, message: "No Content"}`|`function` <br>`deleteSKUitem_TEST(describe_NAME, params, expectedResult)`|
+| *false* | invalid |`deleteSKUitem_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`deleteSKUitem_TEST(describe_NAME, params, expectedResult)`|
+
+
+
+## **Class SKUController**
+### **Class *SKUController* - method *getStoredSKUs()***
+**Criteria for method *getStoredSKUs()*:**
+ - Database is reachable
+
+**Predicates for method *getStoredSKUs()*:**
+
+| Criteria              | Predicate |
+| :--------:            | :---------: |
+| Database is reachable | *true* |
+|                       | *false*|
+
+**Combination of predicates**:
+| Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* | valid |`getStoredSKUs_TEST()` terminates with <br>`{code: 200}`|`function` <br>`getStoredSKUs_TEST(describe_NAME, expectedResult)`|
+|*false*| invalid |`getStoredSKUs_TEST()` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}` |`function` <br>`getStoredSKUs_TEST(describe_NAME, expectedResult)`|
+
+### **Class *SKUController* - method *getStoredSKUById()***
+**Criteria for method *getStoredSKUById()*:**
+ - Database is reachable
+ - `SKUid` *exists* in the database
+
+**Predicates for method *getStoredSKUById()*:**
+
+| Criteria              | Predicate |
+| :--------:            | :---------: |
+| Database is reachable | *true* |
+|                       | *false*|
+|`SKUid` *exists* in the database|*true*|
+||*false*|
+
+**Combination of predicates**:
+| Database is reachable |`SKUid` *exists* in the database | Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* |*true*| valid |`getStoredSKUById_TEST()` terminates with <br>`{code: 200}`|`function` <br>`getStoredSKUById_TEST(describe_NAME, params, expectedResult)`|
+| *true* |*false*| invalid |`getStoredSKUById_TEST()` terminates with <br>`{code: 404, message: "Not Found"}`|`function` <br>`getStoredSKUById_TEST(describe_NAME, params, expectedResult)`|
+| *false* |*/*| invalid |`getStoredSKUById_TEST()` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}`|`function` <br>`getStoredSKUById_TEST(describe_NAME, params, expectedResult)`|
+
+
+### **Class *SKUController* - method *newSKU()***
+**Criteria for method *newSKU()*:**
+ - Database is reachable
+
+**Predicates for method *newSKU()*:**
+
+| Criteria              | Predicate |
+| :--------:            | :---------: |
+| Database is reachable | *true* |
+|                       | *false*|
+
+**Combination of predicates**:
+| Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* | valid |`newSKU_TEST()` terminates with <br>`{code: 201, message: "CREATED"}`|`function` <br>`newSKU_TEST(describe_NAME, request, expectedResult)`|
+| *false* | invalid |`newSKU_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Unprocessable Entity"}`|`function` <br>`newSKU_TEST(describe_NAME, request, expectedResult)`|
+
+
+
+### **Class *SKUController* - method *editSKU()***
+**Criteria for method *editSKU()*:**
+ - Database is reachable
+ - `SKUid` *exists* in the database
+ - **Position** associated to **SKU** satisfies `maxWeight` and `maxVolume` constraints
+
+**Predicates for method *editSKU()*:**
+
+| Criteria              | Predicate |
+| :--------:            | :---------: |
+| Database is reachable | *true* |
+|                       | *false*|
+|`SKUid` *exists* in the database|*true*|
+||*false*|
+|**Position** associated to **SKU** satisfies `maxWeight` and `maxVolume` constraints|*true*|
+||*false*|
+
+**Combination of predicates**:
+| Database is reachable |`SKUid` *exists* in the database |**Position** associated to **SKU** satisfies `maxWeight` and `maxVolume` constraints| Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* | *true* | *true* | valid |`editSKU_TEST()` terminates with <br>`{code: 200}`|`function` <br>`editSKU_TEST(describe_NAME, params, request, expectedResult)`|
+| *true* | *true* | *false* | invalid |`editSKU_TEST()` terminates with <br>`{code: 422, message: "Unprocessable Entity"}`|`function` <br>`editSKU_TEST(describe_NAME, params, request, expectedResult)`|
+| *true* | *false* | */* | invalid |`editSKU_TEST()` terminates with <br>`{code: 404, message: "Not Found"}`|`function` <br>`editSKU_TEST(describe_NAME, params, request, expectedResult)`|
+| *false* | */* | */* | invalid |`editSKU_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`editSKU_TEST(describe_NAME, params, request, expectedResult)`|
+
+
+### **Class *SKUController* - method *addOrEditPositionSKU()***
+**Criteria for method *addOrEditPositionSKU()*:**
+ - Database is reachable
+ - `positionID` is already assigned to **SKU**
+ - `SKUid` *exists* in the database
+ - `positionID` *exists* in the database
+ - **Position** associated to **SKU** satisfies `maxWeight` and `maxVolume` constraints
+
+**Predicates for method *editSKU()*:**
+
+| Criteria              | Predicate |
+| :--------:            | :---------: |
+| Database is reachable | *true* |
+|                       | *false*|
+|`positionID` is already assigned to **SKU**|*true*|
+||*false*|
+|`SKUid` *exists* in the database|*true*|
+||*false*|
+|`positionID` *exists* in the database|*true*|
+||*false*|
+|**Position** associated to **SKU** satisfies `maxWeight` and `maxVolume` constraints|*true*|
+||*false*|
+
+**Combination of predicates**:
+| Database is reachable |`positionID` is already assigned to **SKU** |`SKUid` *exists* in the database|`positionID` *exists* in the database|**Position** associated to **SKU** satisfies `maxWeight` and `maxVolume` constraints| Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* | *true* | *true* | *true* | *true* | valid |`addOrEditPositionSKU_TEST()` terminates with <br>`{code: 200}`|`function` <br>`addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResult)`|
+| *true* | *true* | *true* | *true* | *false* | invalid |`addOrEditPositionSKU_TEST()` terminates with <br>`{code: 422, message: "Unprocessable Entity"}`|`function` <br>`addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResult)`|
+| *true* | *true* | *true* | *false* | */* | invalid |`addOrEditPositionSKU_TEST()` terminates with <br>`{code: 404, message: "Not Found"}`|`function` <br>`addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResult)`|
+| *true* | *true* | *false* | */* | */* | invalid |`addOrEditPositionSKU_TEST()` terminates with <br>`{code: 404, message: "Not Found"}`|`function` <br>`addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResult)`|
+| *true* | */* | */* | */* | */* | invalid |`addOrEditPositionSKU_TEST()` terminates with <br>`{code: 422, message: "Unprocessable Entity"}`|`function` <br>`addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResult)`|
+| *false* | */* | */* | */* | */* | invalid |`addOrEditPositionSKU_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResult)`|
+
+### **Class *SKUController* - method *deleteSKU()***
+**Criteria for method *deleteSKU()*:**
+ - Database is reachable
+ - **SKU** is associated with **TestDescriptors**
+ - **SKU** is associated with **SKUItems**
+
+**Predicates for method *deleteSKU()*:**
+
+| Criteria              | Predicate |
+| :--------:            | :---------: |
+| Database is reachable | *true* |
+|                       | *false*|
+|**SKU** is associated with **TestDescriptors**|*true*|
+||*false*|
+|**SKU** is associated with **SKUItems**|*true*|
+||*false*|
+
+
+**Combination of predicates**:
+| Database is reachable |**SKU** is associated with **TestDescriptors** |**SKU** is associated with **SKUItems**| Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* | *false* | *false* | valid |`deleteSKU_TEST()` terminates with <br>`{code: 204, message: "No Content"}`|`function` <br>`deleteSKU_TEST(describe_NAME, params, expectedResult)`|
+| *true* | *true* | *false* | invalid |`deleteSKU_TEST()` terminates with <br>`{code: 422, message: "Unprocessable Entity"}`|`function` <br>`deleteSKU_TEST(describe_NAME, params, expectedResult)`|
+| *true* | *false* | *true* | invalid |`deleteSKU_TEST()` terminates with <br>`{code: 422, message: "Unprocessable Entity"}`|`function` <br>`deleteSKU_TEST(describe_NAME, params, expectedResult)`|
+| *true* | *false* | *false* | invalid |`deleteSKU_TEST()` terminates with <br>`{code: 422, message: "Unprocessable Entity"}`|`function` <br>`deleteSKU_TEST(describe_NAME, params, expectedResult)`|
+| *false* | */* | */* | invalid |`deleteSKU_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`deleteSKU_TEST(describe_NAME, params, expectedResult)`|
+
+
+
+
+
+
 ## **Class InternalOrderController**
 ### **Class *InternalOrderController* - method *name***
 
@@ -326,53 +718,7 @@ s
 |||||||
 |||||||
 
-## **Class PositionController**
-### **Class *PositionController* - method *name***
 
-
-
-**Criteria for method *name*:**
-	
-
- - 
- - 
-
-
-
-
-
-**Predicates for method *name*:**
-
-| Criteria | Predicate |
-| -------- | --------- |
-|          |           |
-|          |           |
-|          |           |
-|          |           |
-
-
-
-
-
-**Boundaries**:
-
-| Criteria | Boundary values |
-| -------- | --------------- |
-|          |                 |
-|          |                 |
-
-
-
-**Combination of predicates**:
-
-
-| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|-------|-------|
-|||||||
-|||||||
-|||||||
-|||||||
-|||||||
 
 ## **Class RestockOrderController**
 ### **Class *RestockOrderController* - method *name***
@@ -470,101 +816,6 @@ s
 |||||||
 |||||||
 
-## **Class SKUController**
-### **Class *SKUController* - method *name***
-
-
-
-**Criteria for method *name*:**
-	
-
- - 
- - 
-
-
-
-
-
-**Predicates for method *name*:**
-
-| Criteria | Predicate |
-| -------- | --------- |
-|          |           |
-|          |           |
-|          |           |
-|          |           |
-
-
-
-
-
-**Boundaries**:
-
-| Criteria | Boundary values |
-| -------- | --------------- |
-|          |                 |
-|          |                 |
-
-
-
-**Combination of predicates**:
-
-
-| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|-------|-------|
-|||||||
-|||||||
-|||||||
-|||||||
-|||||||
-
-## **Class SKUitemController**
-### **Class *SKUitemController* - method *name***
-
-
-
-**Criteria for method *name*:**
-	
-
- - 
- - 
-
-
-
-
-
-**Predicates for method *name*:**
-
-| Criteria | Predicate |
-| -------- | --------- |
-|          |           |
-|          |           |
-|          |           |
-|          |           |
-
-
-
-
-
-**Boundaries**:
-
-| Criteria | Boundary values |
-| -------- | --------------- |
-|          |                 |
-|          |                 |
-
-
-
-**Combination of predicates**:
-
-
-| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|-------|-------|
-|||||||
-|||||||
-|||||||
-|||||||
-|||||||
 
 ## **Class TestDescriptorController**
 ### **Class *TestDescriptorController* - method *name***
