@@ -109,9 +109,9 @@ class UserController {
                 type = (?)
             WHERE username = (?) AND type = (?)
         `;
-        let user = username.split("@")[0].concat("@ezwh.com");
         
         try {
+            let user = username.split("@")[0].concat("@ezwh.com");
             let control = await this.dao.get("SELECT username FROM USERS WHERE username=(?)", [user])
 
             if ((!this.types.includes(req.oldType)) || (!this.types.includes(req.newType)) || (control == undefined)) {
@@ -137,21 +137,14 @@ class UserController {
             `;
         
             let res = await this.dao.get("SELECT username FROM USERS WHERE username = (?) AND type = (?)", [user, type])
-            
+            if (!res) {
+                throws;
+            }
             await this.dao.run(sql, [user, type]);
             return 204
         } catch (error) {
             return 503
         }
-    }
-
-    logout = async (req) => {
-        
-        if (req) {return 200}
-        else {
-            return 500
-        }
-        
     }
 }
 

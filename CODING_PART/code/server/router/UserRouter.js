@@ -437,11 +437,12 @@ async(req, res) => {
  *            POST /logout
  *  =================================================
  */
-router.post("/logout", async(req, res) => {
+
+/* router.post("/logout", async(req, res) => {
     let result = await uc.logout(req);
 
     if(result===200) {return res.status(200).json({message:"logged out"});}
     else {res.status(500).json({message: "error"});}
-})
+}) */
 
 module.exports = router;

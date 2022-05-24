@@ -38,7 +38,7 @@ describe('get users', () => {
         ] )
     })
     
-    getStoredUsers("Get user ok", [
+    getStoredUsers_TEST("Get user ok", [
         {
             id: 1,
             email: "ciccio1@customer.ezwh.com", 
@@ -93,7 +93,7 @@ describe('get suppliers', () => {
         ] )
     })
 
-    getSuppliers("Get user ok", [
+    getSuppliers_TEST("Get user ok", [
         {
             id: 1,
             email: "mj@supplier.ezwh.com", 
@@ -123,12 +123,12 @@ describe('get suppliers', () => {
 
 /**
  * API:
- *            POST /api/newUser
+ *            POST /api/newUser_TEST
  *  =================================================
  */
 
  describe("new user", () => {
-    newUser("user ok", {
+    newUser_TEST("user ok", {
         username : "clerk1@ezwh.com",
         name: "Donald",
         surname: "Trump",
@@ -137,7 +137,7 @@ describe('get suppliers', () => {
     },
     201);
     
-    newUser("user already exists", {
+    newUser_TEST("user already exists", {
         username : "clerk1@ezwh.com",
         name: "Donald",
         surname: "Trump",
@@ -145,7 +145,7 @@ describe('get suppliers', () => {
         password: "testpassword",
     }, 409);
     
-    newUser("bad request", undefined, 503)
+    newUser_TEST("bad request", undefined, 503)
 
     afterAll(async() => {
         /* const sql = `
@@ -179,15 +179,15 @@ describe('get user', () => {
         await dao.run("INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)", [to_test.username, to_test.name, to_test.surname, hash, to_test.type])
     })
 
-    getUser("ok",
+    getUser_TEST("ok",
     {username: "mj@ezwh.com", password: "testpassword"},
     {id:1, username: "mj@ezwh.com", name: "Mary"})
 
-    getUser("wrong password", {id:1, username: "mj@ezwh.com", password: "ciaociao"}, 401);
+    getUser_TEST("wrong password", {id:1, username: "mj@ezwh.com", password: "ciaociao"}, 401);
 
-    getUser("wrong username", {id:1, username: "customer1@ezwh.com", password: "testpassword"}, 401);
+    getUser_TEST("wrong username", {id:1, username: "customer1@ezwh.com", password: "testpassword"}, 401);
 
-    getUser("bad request", undefined, undefined);
+    getUser_TEST("bad request", undefined, undefined);
 
     afterAll(async() => {
         /* const sql = `
@@ -220,21 +220,26 @@ describe('edit user', () => {
     })
 
     //  200
-    editUser("edited ok",
+    editUser_TEST("edited ok",
     {
         "oldType" : "clerk",
         "newType" : "qualityEmployee"
     },
     "mj@ezwh.com",200)
 
-    editUser("user not found",{
+    editUser_TEST("user not found",{
     "oldType" : "clerk",
     "newType" : "qualityEmployee"
     },
     "user2@ezwh.com",404)
 
-    editUser("bad request", undefined,
-    "mj@ezwh.com", 503)
+    editUser_TEST("bad request", undefined, "mj@ezwh.com", 503)
+
+    editUser_TEST("bad request", {
+        "oldType" : "clerk",
+        "newType" : "qualityEmployee"
+        },
+    undefined, 503)
 
     afterAll(async() => {
         /* const sql = `
@@ -266,8 +271,10 @@ describe('delete user', () => {
         await dao.run("INSERT OR IGNORE INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)", [to_test.username, to_test.name, to_test.surname, hash, to_test.type])
     })
 
-    deleteUser("bad request", undefined, 503)
-    deleteUser("deleted ok", {type: "supplier", username : "mj@ezwh.com"}, 204)
+    deleteUser_TEST("bad request", undefined, 503)
+    deleteUser_TEST("username not found", {type: "supplier", username : "pippo@ezwh.com"}, 503)
+    deleteUser_TEST("type didn't match with user", {type: "clerk", username : "mj@ezwh.com"}, 503)
+    deleteUser_TEST("deleted ok", {type: "supplier", username : "mj@ezwh.com"}, 204)
 })
 
 /*
@@ -275,42 +282,42 @@ describe('delete user', () => {
     =================================================
 */
 
-function getStoredUsers(name, expected) {
+function getStoredUsers_TEST(name, expected) {
     test(name, async() => {
         let res = await user.getStoredUsers();
         expect(res).toEqual(expected);
     })
 }
 
-function newUser(name, usr, expected) {
+function newUser_TEST(name, usr, expected) {
     test(name, async() => {
         let res = await user.newUser(usr);
         expect(res).toEqual(expected);
     })
 }
 
-function getSuppliers(name, expected){
+function getSuppliers_TEST(name, expected){
     test(name, async() => {
-        let res = await user.getStoredUsers();
+        let res = await user.getSuppliers();
         expect(res).toEqual(expected);
     })
 }
 
-function getUser(name, req, expected){
+function getUser_TEST(name, req, expected){
     test(name, async () => {
         let res = await user.getUser(req);
         expect(res).toEqual(expected)
     })
 }
 
-function editUser(name, req, username, expected) {
+function editUser_TEST(name, req, username, expected) {
     test(name, async ()=> {
         let res = await user.editUser(req, username);
         expect(res).toEqual(expected);
     })
 }
 
-function deleteUser(name, req, expected) {
+function deleteUser_TEST(name, req, expected) {
     test(name, async ()=> {
         let res = await user.deleteUser(req);
         expect(res).toEqual(expected);
