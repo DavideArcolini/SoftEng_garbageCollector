@@ -137,16 +137,14 @@ class UserController {
             `;
         
             let res = await this.dao.get("SELECT username FROM USERS WHERE username = (?) AND type = (?)", [user, type])
-            
+            if (!res) {
+                throws;
+            }
             await this.dao.run(sql, [user, type]);
             return 204
         } catch (error) {
             return 503
         }
-    }
-
-    logout = async (req) => {
-        return 200
     }
 }
 

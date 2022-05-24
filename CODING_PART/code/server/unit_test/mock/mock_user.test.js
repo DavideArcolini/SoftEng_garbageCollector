@@ -161,17 +161,6 @@ deleteUser(
     503
 )
 
-/**
- * API:
- *            POST /logout
- *  =================================================
- */
-//  200
-logout({}, 200);
-
-//  500
-logout(undefined, 500)
-
 /*
     Definitions of testing functions
     =================================================

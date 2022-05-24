@@ -11,11 +11,7 @@ Version:
 
 - [Black Box Unit Tests](#black-box-unit-tests)
 
-
-
-
 - [White Box Unit Tests](#white-box-unit-tests)
-
 
 # Black Box Unit Tests
 
@@ -26,12 +22,57 @@ Version:
     <Jest tests  must be in code/server/unit_test  >
 
 ## **Class UserController**
+
+### Class *UserController* - method **getStoredUsers**
+
+**Criteria for method **getStoredUsers:**
+
+- Database is reachable
+
+**Predicates for method *getStoredUsers*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Database is reachable | Yes |
+|                       | No|
+
+**Combination of predicates**:
+
+Please note: There are users in the database
+
+| Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|
+| Yes | Valid | `getStoredUsers_TEST()` terminates retrieving the expected list of users | `function`<br> getStoredUsers_TEST(name, expected) |
+| No | Invalid | `getStoredUsers_TEST()` catch 500 and terminates with that error| `function`<br> getStoredUsers_TEST(name, expected) |
+
+### Class *UserController* - method **getSuppliers**
+
+**Criteria for method **getSuppliers:**
+
+- Database is reachable
+
+**Predicates for method *getSuppliers*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Database is reachable | Yes |
+|                       | No|
+
+**Combination of predicates**:
+
+Please note: There are users in the database
+
+| Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|
+| Yes | Valid | `getSuppliers_TEST()` terminates retrieving the expected list of users | `function`<br> getSuppliers_TEST(name, expected) |
+| No | Invalid | `getSuppliers_TEST()` catch 500 and terminates with that error| `function`<br> getSuppliers_TEST(name, expected) |
+
 ### **Class *UserController* - method *newUser***
 
 **Criteria for method *newUser*:**
-	
- - req is not empty
- - username not already in db
+
+- req is not empty
+- `username` is *unique* in the database
 
 **Predicates for method *newUser*:**
 
@@ -39,61 +80,44 @@ Version:
 | -------- | --------- |
 | req not empty |Valid|
 |          | undefined |
-|user not already in db | Yes |
-|          | No |
+| `username` is *unique* in the database | True |
+|          | False |
 |          | undefined |
-
-**Boundaries**:
-
-| Criteria | Boundary values |
-| -------- | --------------- |
-|          |                 |
-|          |                 |
-
-
 
 **Combination of predicates**:
 
-
-| Criteria 1 | Criteria 2 | Valid / Invalid | Description of the test case | Jest test case |
+| req not empty | `username` is *unique* in the database | Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|
-| Valid | Yes | Valid | newUser() | newUser("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, 201) -> passed; |
-| Valid | No | Invalid | User already exists, cannot be inserted in db | newUser("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, 201) <br><br>newUser("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, 409) -> failed |
-| undefined | undefined | Invalid | Trying to pass an empty body request, throw an error 503 | newUser("bad request", undefined, 503)-> failed |
+| Valid | True | Valid | `newUser_TEST()` terminates with 201 | `function`<br>newUser_TEST("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, 201)|
+| Valid | False | Invalid | `newUser_TEST()` terminates with 409 | `function`<br>newUser_TEST("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, 201) <br><br>newUser_TEST("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, 409) |
+| undefined | undefined | Invalid | `newUser_TEST()` terminates with 503 | `function`<br>newUser_TEST("bad request", undefined, 503)|
 
 
 ### **Class *UserController* - method *getUser***
+
 **Criteria for method *getUser*:**
 
- - Username exists
- - Password valid
- - req not empty
+- `username` is *unique* in the database
+- Password valid
+- req not empty
 
 **Predicates for method *getUser*:**
 
 | Criteria | Predicate |
 | -------- | --------- |
-| Username exists | Yes |
-|          | No |
-|| undefined |
-| Password valid | Yes |
+| `username` is *unique* in the database | True |
+|          | False |
+|          | undefined |
+| `password` valid | Yes |
 |          | No |
 || undefined |
 | req not empty | Valid |
 || undefined |
 
-**Boundaries**:
-
-| Criteria | Boundary values |
-| -------- | --------------- |
-|          |                 |
-|          |                 |
-
-
-
 **Combination of predicates**
 
-User inserted:
+User already exists in the db:
+
 ```
 { 
     username: "mj@ezwh.com", 
@@ -103,89 +127,100 @@ User inserted:
     type: "supplier"
 }
 ```
-| Criteria 1 | Criteria 2 | Criteria 3 | Valid / Invalid | Description of the test case | Jest test case |
+
+| `username` is *unique* in the database | `password` valid | req not empty | Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|-------|
-| Yes | Yes | Yes | Valid | get id, name and surname of a user given its username and password | getUser("ok",<br>{username: "mj@ezwh.com",<br>password: "testpassword"},<br>{id:1,<br>username: "mj@ezwh.com",<br>name: "Mary"}) -> passed |
-| Yes | No | Yes | Invalid | password not match with the username | getUser("wrong password", {id:1, username: "mj@ezwh.com", password: "ciaociao"}, 401) -> failed|
-| No | Yes | Yes | Invalid | username in req not in db | getUser("wrong username", {id:1, username: "customer1@ezwh.com", password: "testpassword"}, 401) -> failed |
-| undefined | undefined | undefined | Invalid | passing to the function a undefined req | getUser("bad request", undefined, undefined) -> failed |
+| True | Yes | Yes | Valid | `getUser_TEST()` terminates returning the exact expected value | `function`<br>getUser_TEST("ok",<br>{username: "mj@ezwh.com",<br>password: "testpassword"},<br>{id:1,<br>username: "mj@ezwh.com",<br>name: "Mary"}) |
+| True | No | Yes | Invalid | `getUser_TEST()` terminates with 401 | `function`<br>getUser_TEST("wrong password", {id:1, username: "mj@ezwh.com", password: "ciaociao"}, 401) -> failed|
+| False | Yes | Yes | Invalid | `getUser_TEST()` terminates with 401 | `function`<br>getUser_TEST("wrong username", {id:1, username: "customer1@ezwh.com", password: "testpassword"}, 401) |
+| undefined | undefined | undefined | Invalid | `getUser_TEST()` terminates with `undefined`| `function`<br>getUser_TEST("bad request", undefined, undefined) |
 
 ### **Class *UserController* - method *editUser***
-**Criteria for method *editUser*:**
-	
- - Username exists 
- - req not empty
- - param not empty
 
-**Predicates for method *name*:**
+**Criteria for method *editUser*:**
+
+- `username` exists in the database
+- req not empty
+- param not empty
+
+**Predicates for method *editUser*:**
 
 | Criteria | Predicate |
 | -------- | --------- |
-| Username exists | Yes |
-|          | No |
+| `username` exists in the database | True |
+|          | False |
+|          | undefined |
 | req not empty | Yes |
 |          | No |
 | param not empty | Yes |
 |          | No |
 
-
-
-
-
-**Boundaries**:
-
-| Criteria | Boundary values |
-| -------- | --------------- |
-|          |                 |
-|          |                 |
-
-
-
 **Combination of predicates**:
 
-
-| Criteria 1 | Criteria 2 | Criteria 3 | Valid / Invalid | Description of the test case | Jest test case |
+| `username` exists in the database | req not empty | param not empty | Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|-------|
-| Yes | Yes | Yes | Valid |  | editUser("edited ok", {<br>"oldType" : "clerk",<br>"newType" : "qualityEmployee"},<br>"mj@ezwh.com",200) -> passed |
-| No | Yes | Yes | Invalid |  | editUser("user not found",{<br>"oldType" : "clerk",<br>"newType" : "qualityEmployee"},<br>"user2@ezwh.com",404) -> failed|
-|||||||
-|||||||
-|||||||
-|||||||
+| True | Yes | Yes | Valid | `editUser_TEST()` terminates with 200 | `function`<br>editUser_TEST("edited ok", {<br>"oldType" : "clerk",<br>"newType" : "qualityEmployee"},<br>"mj@ezwh.com",200) |
+| False | Yes | Yes | Invalid | `editUser_TEST()` terminates with 404 | `function`<br>editUser_TEST("user not found",{<br>"oldType" : "clerk",<br>"newType" : "qualityEmployee"},<br>"user2@ezwh.com",404) |
+| undefined | No | No | Invalid | `editUser_TEST()` terminates with 503 | `function`<br>editUser_TEST("bad request", undefined, "mj@ezwh.com", 503)|
+| undefined | No | No | Invalid |`editUser_TEST()` terminates with 503 | `function`<br>editUser_TEST("bad request", {"oldType" : "clerk",<br>"newType" : "qualityEmployee"},<br>undefined, 503) |
 
-**Criteria for method *name*:**
-	
- - 
- - 
+### **Class *UserController* - method *deleteUser***
 
+**Criteria for method *deleteUser*:**
 
-
-
+- `username` exists in the database
+- `type` corresponds to inserted user
+- param not empty
 
 **Predicates for method *name*:**
 
 | Criteria | Predicate |
 | -------- | --------- |
-|          |           |
-|          |           |
-|          |           |
-|          |           |
-
-
-
-
-
-**Boundaries**:
-
-| Criteria | Boundary values |
-| -------- | --------------- |
-|          |                 |
-|          |                 |
-
-
+| `username` exists in the database | True |
+|          | False |
+|          | undefined |
+| `type` corresponds to inserted user | True |
+|| False |
+|| undefined |
+| param not empty | Yes |
+|          | No |
 
 **Combination of predicates**:
 
+User already inserted:
+```
+{ 
+    username: "mj@ezwh.com", 
+    name: "Mary",
+    surname: "Jane",
+    password: "testpassword",
+    type: "supplier"
+}
+```
+
+| `username` exists in the database | `type` corresponds to inserted user | param not empty | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|
+| True | True | Yes | Valid | `deleteUser_TEST()` terminates with 204 | `function`<br> deleteUser_TEST("deleted ok", {type: "supplier", username : "mj@ezwh.com"}, 204)|
+| True | False | Yes | Invalid | `deleteUser_TEST()` terminates with 503 | `function`<br> deleteUser_TEST("type didn't match with user", {type: "clerk", username : "mj@ezwh.com"}, 503)|
+| False | True | Yes | Invalid |  `deleteUser_TEST()` terminates with 503 | `function`<br> deleteUser_TEST("username not found", {type: "supplier", username : "pippo@ezwh.com"}, 503)|
+| undefined | undefined | No | Invalid | `deleteUser_TEST()` terminates with 503 | `function`<br> deleteUser_TEST("bad request", undefined, 503)|
+
+### Class *UserController* - method **logout**
+
+**Criteria for method *logout***:
+
+- Database 
+
+**Predicates for method *logout*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|||
+|||
+|||
+|||
+
+**Combination of predicates**:
 
 | Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|-------|
@@ -194,7 +229,6 @@ User inserted:
 |||||||
 |||||||
 |||||||
-
 
 ## **Class InternalOrderController**
 ### **Class *InternalOrderController* - method *name***
