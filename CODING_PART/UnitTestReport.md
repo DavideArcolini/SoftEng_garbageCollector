@@ -31,7 +31,7 @@ Version:
 **Criteria for method *newUser*:**
 	
  - req is not empty
- - req.username not already in db
+ - username not already in db
 
 **Predicates for method *newUser*:**
 
@@ -57,10 +57,12 @@ Version:
 
 | Criteria 1 | Criteria 2 | Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|
-| Valid | Yes | Valid |User not in db, it can be inserted correctly | newUser("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, 201) -> passed; |
+| Valid | Yes | Valid | newUser() | newUser("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, 201) -> passed; |
 | Valid | No | Invalid | User already exists, cannot be inserted in db | newUser("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, 201) <br><br>newUser("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, 409) -> failed |
 | undefined | undefined | Invalid | Trying to pass an empty body request, throw an error 503 | newUser("bad request", undefined, 503)-> failed |
 
+
+### **Class *UserController* - method *getUser***
 **Criteria for method *getUser*:**
 
  - Username exists
@@ -73,10 +75,62 @@ Version:
 | -------- | --------- |
 | Username exists | Yes |
 |          | No |
+|| undefined |
 | Password valid | Yes |
 |          | No |
+|| undefined |
 | req not empty | Valid |
 || undefined |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|          |                 |
+|          |                 |
+
+
+
+**Combination of predicates**
+
+User inserted:
+```
+{ 
+    username: "mj@ezwh.com", 
+    name: "Mary",
+    surname: "Jane",
+    password: "testpassword",
+    type: "supplier"
+}
+```
+| Criteria 1 | Criteria 2 | Criteria 3 | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|
+| Yes | Yes | Yes | Valid | get id, name and surname of a user given its username and password | getUser("ok",<br>{username: "mj@ezwh.com",<br>password: "testpassword"},<br>{id:1,<br>username: "mj@ezwh.com",<br>name: "Mary"}) -> passed |
+| Yes | No | Yes | Invalid | password not match with the username | getUser("wrong password", {id:1, username: "mj@ezwh.com", password: "ciaociao"}, 401) -> failed|
+| No | Yes | Yes | Invalid | username in req not in db | getUser("wrong username", {id:1, username: "customer1@ezwh.com", password: "testpassword"}, 401) -> failed |
+| undefined | undefined | undefined | Invalid | passing to the function a undefined req | getUser("bad request", undefined, undefined) -> failed |
+
+### **Class *UserController* - method *editUser***
+**Criteria for method *editUser*:**
+	
+ - Username exists 
+ - req not empty
+ - param not empty
+
+**Predicates for method *name*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Username exists | Yes |
+|          | No |
+| req not empty | Yes |
+|          | No |
+| param not empty | Yes |
+|          | No |
+
+
+
+
 
 **Boundaries**:
 
@@ -92,7 +146,8 @@ Version:
 
 | Criteria 1 | Criteria 2 | Criteria 3 | Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|-------|
-|||||||
+| Yes | Yes | Yes | Valid |  | editUser("edited ok", {<br>"oldType" : "clerk",<br>"newType" : "qualityEmployee"},<br>"mj@ezwh.com",200) -> passed |
+| No | Yes | Yes | Invalid |  | editUser("user not found",{<br>"oldType" : "clerk",<br>"newType" : "qualityEmployee"},<br>"user2@ezwh.com",404) -> failed|
 |||||||
 |||||||
 |||||||
@@ -100,7 +155,6 @@ Version:
 
 **Criteria for method *name*:**
 	
-
  - 
  - 
 
@@ -109,7 +163,7 @@ Version:
 
 
 **Predicates for method *name*:**
-s
+
 | Criteria | Predicate |
 | -------- | --------- |
 |          |           |

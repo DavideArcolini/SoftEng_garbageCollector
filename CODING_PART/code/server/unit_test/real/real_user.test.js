@@ -236,6 +236,12 @@ describe('edit user', () => {
     editUser("bad request", undefined,
     "mj@ezwh.com", 503)
 
+    editUser("bad request", {
+        "oldType" : "clerk",
+        "newType" : "qualityEmployee"
+        },
+    undefined, 503)
+
     afterAll(async() => {
         /* const sql = `
             DELETE from USERS
@@ -270,6 +276,13 @@ describe('delete user', () => {
     deleteUser("deleted ok", {type: "supplier", username : "mj@ezwh.com"}, 204)
 })
 
+describe('logout', () => {
+    test('logout', async() =>{
+        let res = await user.logout();
+        expect(res).toEqual(200);
+    })
+})
+
 /*
     Definitions of testing functions
     =================================================
@@ -291,7 +304,7 @@ function newUser(name, usr, expected) {
 
 function getSuppliers(name, expected){
     test(name, async() => {
-        let res = await user.getStoredUsers();
+        let res = await user.getSuppliers();
         expect(res).toEqual(expected);
     })
 }
