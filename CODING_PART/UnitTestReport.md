@@ -3,6 +3,9 @@
 Date:
 
 Version:
+| Version | Changes |
+| ------- |---------|
+| 1 | Added first version of Unit Test Report document. |
 
 # Contents
 
@@ -22,7 +25,51 @@ Version:
     class and method name that contains the test case>
     <Jest tests  must be in code/server/unit_test  >
 
- ### **Class *class_name* - method *name***
+## **Class UserController**
+### **Class *UserController* - method *name***
+
+**Criteria for method *name*:**
+	
+
+ - 
+ - 
+
+**Predicates for method *name*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|          |           |
+|          |           |
+|          |           |
+|          |           |
+
+
+
+
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|          |                 |
+|          |                 |
+
+
+
+**Combination of predicates**:
+
+
+| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|
+|||||||
+|||||||
+|||||||
+|||||||
+|||||||
+
+
+## **Class InternalOrderController**
+### **Class *InternalOrderController* - method *name***
 
 
 
@@ -69,6 +116,389 @@ Version:
 |||||||
 |||||||
 
+## **Class ItemController**
+### **Class *ItemController* - method *name***
+
+
+
+**Criteria for method *name*:**
+	
+
+ - 
+ - 
+
+
+
+
+
+**Predicates for method *name*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|          |           |
+|          |           |
+|          |           |
+|          |           |
+
+
+
+
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|          |                 |
+|          |                 |
+
+
+
+**Combination of predicates**:
+
+
+| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|
+|||||||
+|||||||
+|||||||
+|||||||
+|||||||
+
+## **Class PositionController**
+### **Class *PositionController* - method *name***
+
+
+
+**Criteria for method *name*:**
+	
+
+ - 
+ - 
+
+
+
+
+
+**Predicates for method *name*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|          |           |
+|          |           |
+|          |           |
+|          |           |
+
+
+
+
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|          |                 |
+|          |                 |
+
+
+
+**Combination of predicates**:
+
+
+| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|
+|||||||
+|||||||
+|||||||
+|||||||
+|||||||
+
+## **Class RestockOrderController**
+### **Class *RestockOrderController* - method *name***
+
+
+
+**Criteria for method *name*:**
+	
+
+ - 
+ - 
+
+
+
+
+
+**Predicates for method *name*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|          |           |
+|          |           |
+|          |           |
+|          |           |
+
+
+
+
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|          |                 |
+|          |                 |
+
+
+
+**Combination of predicates**:
+
+
+| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|
+|||||||
+|||||||
+|||||||
+|||||||
+|||||||
+
+## **Class ReturnOrderController**
+### **Class *ReturnOrderController* - method *name***
+
+
+
+**Criteria for method *name*:**
+	
+
+ - 
+ - 
+
+
+
+
+
+**Predicates for method *name*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|          |           |
+|          |           |
+|          |           |
+|          |           |
+
+
+
+
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|          |                 |
+|          |                 |
+
+
+
+**Combination of predicates**:
+
+
+| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|
+|||||||
+|||||||
+|||||||
+|||||||
+|||||||
+
+## **Class SKUController**
+### **Class *SKUController* - method *name***
+
+
+
+**Criteria for method *name*:**
+	
+
+ - 
+ - 
+
+
+
+
+
+**Predicates for method *name*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|          |           |
+|          |           |
+|          |           |
+|          |           |
+
+
+
+
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|          |                 |
+|          |                 |
+
+
+
+**Combination of predicates**:
+
+
+| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|
+|||||||
+|||||||
+|||||||
+|||||||
+|||||||
+
+## **Class SKUitemController**
+### **Class *SKUitemController* - method *name***
+
+
+
+**Criteria for method *name*:**
+	
+
+ - 
+ - 
+
+
+
+
+
+**Predicates for method *name*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|          |           |
+|          |           |
+|          |           |
+|          |           |
+
+
+
+
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|          |                 |
+|          |                 |
+
+
+
+**Combination of predicates**:
+
+
+| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|
+|||||||
+|||||||
+|||||||
+|||||||
+|||||||
+
+## **Class TestDescriptorController**
+### **Class *TestDescriptorController* - method *name***
+
+
+
+**Criteria for method *name*:**
+	
+
+ - 
+ - 
+
+
+
+
+
+**Predicates for method *name*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|          |           |
+|          |           |
+|          |           |
+|          |           |
+
+
+
+
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|          |                 |
+|          |                 |
+
+
+
+**Combination of predicates**:
+
+
+| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|
+|||||||
+|||||||
+|||||||
+|||||||
+|||||||
+
+## **Class TestResultController**
+### **Class *TestResultController* - method *name***
+
+
+
+**Criteria for method *name*:**
+	
+
+ - 
+ - 
+
+
+
+
+
+**Predicates for method *name*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|          |           |
+|          |           |
+|          |           |
+|          |           |
+
+
+
+
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|          |                 |
+|          |                 |
+
+
+
+**Combination of predicates**:
+
+
+| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|
+|||||||
+|||||||
+|||||||
+|||||||
+|||||||
 
 
 
