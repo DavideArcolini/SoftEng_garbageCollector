@@ -432,7 +432,7 @@ class DAO {
 
   newTableTR() {
     return new Promise((res, rej)=>{
-        const sql = "CREATE TABLE IF NOT EXISTS TEST_RESULTS(id INTEGER PRIMARY KEY, rfid VARCHAR, idTestDescriptor VARCHAR, Date DATE, Result BOOLEAN)";
+        const sql = "CREATE TABLE IF NOT EXISTS TEST_RESULTS(id INTEGER PRIMARY KEY, rfid VARCHAR, idTestDescriptor INTEGER, Date DATE, Result BOOLEAN)";
         this.db.run(sql, (err)=>{
             if (err) {
                 rej(err);
