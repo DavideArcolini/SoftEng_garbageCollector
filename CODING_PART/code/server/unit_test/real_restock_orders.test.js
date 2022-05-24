@@ -185,17 +185,18 @@ createRestockOrder('2022/5/12 17:44',7, [
   describe('modify restock order state',()=>{
     
     beforeEach(async() => {
-      await RO.dao.dropTableRO();
+      //await RO.dao.dropTableRO();
       await RO.dao.newTableRO();
       await RO.createRestockOrder('2022/5/12 17:44',7, [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ]);
       await RO.createRestockOrder('2022/5/12 17:44',7, [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ]);
-      
+      await RO.createRestockOrder('2022/5/12 17:44',7, [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ]);
     })
 
   test('modify restock order state',async()=>{
       let res = await RO.modifyRestockOrderState(id,newState);
       expect(res).toEqual(expected);
   })
+   
 });
 }
 
