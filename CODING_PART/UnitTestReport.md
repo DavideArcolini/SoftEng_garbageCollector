@@ -247,7 +247,7 @@ User already inserted:
 
 **Combination of predicates**:
 | Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
-|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
+|:-------:|:-------:|:-------:|:-------:|
 | *true* | valid |`getPositions_TEST()` terminates with <br>`{code: 200}`|`function` <br>`getPositions_TEST(describe_NAME, expectedResult)`|
 |*false*|invalid|`getPositions_TEST()` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}`|`function` <br>`getPositions_TEST(describe_NAME, expectedResult)`|
 
