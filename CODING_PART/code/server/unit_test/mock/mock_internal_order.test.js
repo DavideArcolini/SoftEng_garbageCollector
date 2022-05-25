@@ -63,7 +63,6 @@ const IO = new IOController(dao);
     
     test('get internal order by id', async() => {
         let res = await IO.getInternalOrderById(7);
-        console.log(res)
         expect(res).toEqual({
             id: 7,
             issueDate: '2022/5/12 16:23',
@@ -74,7 +73,6 @@ const IO = new IOController(dao);
             ]
           });
         res = await IO.getInternalOrderById(2);
-        console.log(res)
         expect(res).toEqual({
             id: 2,
             issueDate: '2022/5/12 16:20',
@@ -134,7 +132,6 @@ const IO = new IOController(dao);
     
     test('get internal orders', async() => {
         let res = await IO.getInternalOrders();
-        console.log(res)
         expect(res.length).toEqual([{
             id: 2,
             issueDate: '2022/5/12 16:20',
@@ -227,7 +224,6 @@ const IO = new IOController(dao);
   
   test('get internal orders issued', async() => {
       let res = await IO.getInternalOrdersIssued();
-      console.log(res)
       expect(res).toEqual([
         {
           id: 7,
@@ -309,7 +305,6 @@ const IO = new IOController(dao);
     
     test('get internal orders accepted', async() => {
         let res = await IO.getInternalOrdersAccepted();
-        console.log(res)
         expect(res).toEqual([
           {
             id: 3,
@@ -354,15 +349,12 @@ const IO = new IOController(dao);
       let issueDate = "2021/11/29 09:33";
       const products= [{SKUId:12,description:"a product",price:10.99,qty:30},
                       {SKUId:180,description: "another product",price:11.99,qty:20}];
-      console.log(products);
       let customerId = 1;
 
       let res = await IO.createInternalOrder(issueDate,products,customerId);
-      console.log(res)
       expect(res).toEqual(2);
 
       res = await IO.createInternalOrder(issueDate,products,customerId);
-      console.log(res)
       expect(res).toEqual(3);
     
   })
@@ -412,15 +404,12 @@ const IO = new IOController(dao);
 
      
       let res = await IO.modifyInternalOrderState(1,'CANCELED',undefined);
-      console.log(res)
       expect(res).toEqual(1);
 
       res = await IO.modifyInternalOrderState(2,'COMPLETED',[{"SkuID":1,"RFID":"12345678901234567890123456789016"},{"SkuID":1,"RFID":"12345678901234567890123456789038"}]);
-      console.log(res)
       expect(res).toEqual(2);
 
       res = await IO.modifyInternalOrderState(1,'CANCELED',undefined);
-      console.log(res)
       expect(res).toEqual({message: "Not Found"});
     
   })
@@ -444,11 +433,9 @@ const IO = new IOController(dao);
   test('delete internal order', async() => {
 
       let res = await IO.deleteInternalOrder(1);
-      console.log(res)
       expect(res).toEqual(1);
 
       res = await IO.deleteInternalOrder(2);
-      console.log(res)
       expect(res).toEqual(2);
     
   })

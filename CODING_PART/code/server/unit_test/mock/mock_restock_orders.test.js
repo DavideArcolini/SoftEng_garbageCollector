@@ -76,7 +76,6 @@ describe('get restock order by id', () => {
     
     test('get restock order by id', async() => {
         let res = await RO.getRestockOrderById(2);
-        console.log(res)
         expect(res).toEqual({
             id: 2,
             issueDate: '2022/5/12 17:44',
@@ -87,7 +86,6 @@ describe('get restock order by id', () => {
             skuItems: [ { SKUId: 1, RFID: '00000000000000000000000000000001' } ]
           });
         res = await RO.getRestockOrderById(33);
-        console.log(res)
         expect(res).toEqual({
             id: 33,
             issueDate: '2021/11/29 09:33',
@@ -165,7 +163,6 @@ describe('get restock orders', () => {
     
     test('get restock orders', async() => {
         let res = await RO.getRestockOrders();
-        console.log(res.length)
         expect(res.length).toEqual([{
           id: 2,
           issueDate: '2022/5/12 17:44',
@@ -244,7 +241,6 @@ describe('get restock orders', () => {
     
     test('get restock orders issued', async() => {
         let res = await RO.getRestockOrdersIssued();
-        console.log(res)
         expect(res.length).toEqual([{
             id: 2,
             issueDate: '2022/5/12 17:44',
@@ -296,15 +292,12 @@ describe('get restock orders', () => {
         let issueDate = "2021/11/29 09:33";
         const products= [{SKUId:12,description:"a product",price:10.99,qty:30},
                         {SKUId:180,description: "another product",price:11.99,qty:20}];
-        console.log(products);
         let supplierId = 1;
 
         let res = await RO.createRestockOrder(issueDate,supplierId,products);
-        console.log(res)
         expect(res).toEqual(2);
 
         res = await RO.createRestockOrder(issueDate,supplierId,products);
-        console.log(res)
         expect(res).toEqual(3);
       
     })
@@ -356,15 +349,12 @@ describe('get restock orders', () => {
 
        
         let res = await RO.modifyRestockOrderState(2,'DELIVERED');
-        console.log(res)
         expect(res).toEqual(2);
 
         res = await RO.modifyRestockOrderState(33,'DELIVERED');
-        console.log(res)
         expect(res).toEqual(33);
 
         res = await RO.modifyRestockOrderState(50,'DELIVERED');
-        console.log(res)
         expect(res).toEqual({message: "Not Found"});
       
     })
@@ -388,11 +378,9 @@ describe('get restock orders', () => {
     test('delete restock order', async() => {
 
         let res = await RO.deleteRestockOrder(1);
-        console.log(res)
         expect(res).toEqual(1);
 
         res = await RO.deleteRestockOrder(2);
-        console.log(res)
         expect(res).toEqual(2);
       
     })
@@ -431,19 +419,15 @@ describe('get restock orders', () => {
 
        
         let res = await RO.addTransportNote(1,{transportNote:{deliveryDate:"2022/12/29"}});
-        console.log(res)
         expect(res).toEqual(1);
 
         res = await RO.addTransportNote(33,{transportNote:{deliveryDate:"2022/12/29"}});
-        console.log()
         expect(res).toEqual({message: "Not Found"});
 
         res = await RO.addTransportNote(1,{transportNote:{deliveryDate:"2022/12/29"}});
-        console.log(res)
         expect(res).toEqual({unprocessable: "Cannot put transport note"});
       
        /* res = await RO.addTransportNote(1,{transportNote:{deliveryDate:"2020/12/29"}});
-        console.log(res)
         expect(res).toEqual({unprocessable: "Cannot put transport note"});*/
     })
     
@@ -475,19 +459,15 @@ describe('get restock orders', () => {
 
        
         let res = await RO.setSkuItems(1, [{SKUId:1,rfid:"12345678901234567890123456789016"}]);
-        console.log(res)
         expect(res).toEqual(1);
 
         res = await RO.setSkuItems(33, [{SKUId:1,rfid:"12345678901234567890123456789016"}]);
-        console.log()
         expect(res).toEqual({message: "Not Found"});
 
         res = await RO.setSkuItems(1,[{SKUId:1,rfid:"12345678901234567890123456789016"}]);
-        console.log(res)
         expect(res).toEqual({unprocessable: "Cannot put skuItems"});
       
        /* res = await RO.addTransportNote(1,{transportNote:{deliveryDate:"2020/12/29"}});
-        console.log(res)
         expect(res).toEqual({unprocessable: "Cannot put transport note"});*/
     })
     
@@ -539,15 +519,12 @@ describe('get restock orders', () => {
 
        
         let res = await RO.getReturnItems(7);
-        console.log(res)
         expect(res).toEqual([{SKUId:3, rfid:"12345678901234567890123456789016"}]);
 
         res = await RO.getReturnItems(33);
-        console.log()
         expect(res).toEqual({message: "Not Found"});
 
         res = await RO.getReturnItems(1);
-        console.log(res)
         expect(res).toEqual({unprocessable: "Cannot get return Items"});
 
     })

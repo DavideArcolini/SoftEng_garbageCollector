@@ -115,7 +115,6 @@ class RestockOrderController {
             try{
             let sql = "SELECT id, issueDate, state, supplierId, SKUId, description, price, deliveryDate, COUNT(*) as qty FROM RESTOCK_ORDERS WHERE id==? GROUP BY id, issueDate, state, supplierId, SKUId, description, price "
             let response = await this.dao.all(sql,id);
-            console.log(response);
             if(response ===undefined || response[0]==null){
                 //return res.status(404).end();
                 return {message: "Not Found"};
@@ -144,7 +143,6 @@ class RestockOrderController {
            // result.products = result.products.map((x)=> JSON.parse(JSON.stringify(x)));
             
             //return res.status(200).json(result);
-            console.log(result);
             return result;
         }catch(error){
             //return res.status(503).end();
@@ -232,7 +230,6 @@ class RestockOrderController {
             let result= await this.dao.get(sql,[id]);
             if(result==null){
                 //return res.status(404).end();
-                console.log('here ok')
                 return {message: "Not Found"}; 
             }
 

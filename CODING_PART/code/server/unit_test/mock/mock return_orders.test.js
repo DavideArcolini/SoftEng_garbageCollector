@@ -52,7 +52,6 @@ const REO = new REOController(dao);
     
     test('get internal order by id', async() => {
         let res = await REO.getReturnOrderById(3);
-        console.log(res)
         expect(res).toEqual({
             id: 3,
             returnDate: '2021/11/29 09:33',
@@ -73,7 +72,6 @@ const REO = new REOController(dao);
             ]
           });
         res = await REO.getReturnOrderById(5);
-        console.log(res)
         expect(res).toEqual({message: "Not Found"});
     })
     
@@ -124,7 +122,6 @@ const REO = new REOController(dao);
     
     test('get return orders', async() => {
         let res = await REO.getReturnOrders();
-        console.log(res)
         expect(res).toEqual([{
             id: 2,
             returnDate: '2021/11/29 09:33',
@@ -188,15 +185,12 @@ const REO = new REOController(dao);
         let returnDate = "2021/11/29 09:33";
         const products= [{SKUId:12,description:"a product",price:10.99,RFID: '12345678901234567890123456789038'},
                         {SKUId:180,description: "another product",price:11.99,RFID: '12345678901234567890123456789038'}];
-        console.log(products);
         let customerId = 1;
   
         let res = await REO.createReturnOrder(returnDate,1,products);
-        console.log(res)
         expect(res).toEqual(2);
   
         res =await REO.createReturnOrder(returnDate,1,products);
-        console.log(res)
         expect(res).toEqual(3);
       
     })
@@ -220,11 +214,9 @@ const REO = new REOController(dao);
     test('delete return order', async() => {
   
         let res = await REO.deleteReturnOrder(1);
-        console.log(res)
         expect(res).toEqual(1);
   
         res = await REO.deleteReturnOrder(2);
-        console.log(res)
         expect(res).toEqual(2);
       
     })

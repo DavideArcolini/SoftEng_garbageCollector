@@ -52,7 +52,6 @@ class ReturnOrderController {
         try{
             let sql = "SELECT id, returnDate, restockOrderId, SKUId, description, price, RFID FROM RETURN_ORDERS WHERE id==? GROUP BY id, returnDate, restockOrderId, SKUId, description, price,RFID"
             let response = await this.dao.all(sql,id);
-            console.log(response);
             if(response==null || response[0]==null){
                 //return res.status(404).end();
                 return {message: "Not Found"}; 
@@ -69,7 +68,6 @@ class ReturnOrderController {
                 
     }) ;
         result = {...result , products : products };   
-        console.log(result);
         return result;
         //return res.status(200).json(result);
     }catch(error){
@@ -82,12 +80,10 @@ class ReturnOrderController {
         try{
             let sql = "SELECT id, returnDate, restockOrderId FROM RETURN_ORDERS GROUP BY id, returnDate, restockOrderId";
             let result = await this.dao.all(sql);
-            console.log(result);
             
             await Promise.all(result.map(async (x) => {
                     sql = "SELECT SKUId, description, price, RFID FROM RETURN_ORDERS WHERE id==? "
                     x.products = await this.dao.all(sql,x.id);
-                    console.log(x.products);
                     
                 
             }));

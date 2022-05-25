@@ -48,7 +48,6 @@ class InternalOrderController {
         try{
         let sql = "SELECT id, issueDate, state, customerId FROM INTERNAL_ORDERS GROUP BY id, issueDate, state, customerId";
         let result = await this.dao.all(sql);
-            console.log(result);
         await Promise.all(result.map(async (x) => {
             if(x.state!=="COMPLETED"){
                 sql = "SELECT id, SKUId, description, price, COUNT(*) as qty FROM INTERNAL_ORDERS WHERE id==? GROUP BY id, SKUId, description, price "
@@ -101,7 +100,6 @@ class InternalOrderController {
         
         
         //return res.status(200).json(result);
-        console.log(result);
         return result;
     }catch(error){
         //return res.status(500).end();
@@ -113,11 +111,9 @@ class InternalOrderController {
         try{
         let sql = "SELECT id, issueDate, state, customerId FROM INTERNAL_ORDERS WHERE state==? GROUP BY id, issueDate, state, customerId ";
         let result = await this.dao.all(sql,["ACCEPTED"]);
-        console.log(result);
         await Promise.all(result.map(async (x) => {
              sql = "SELECT id, SKUId, description, price, COUNT(*) as qty FROM INTERNAL_ORDERS WHERE id==? GROUP BY id, SKUId, description, price "
                 x.products = await this.dao.all(sql,x.id);
-                console.log(x.products);
                 x.products = x.products.map( (x)=>{
                    
                     delete x.id
@@ -141,7 +137,6 @@ class InternalOrderController {
         try{
             let sql = "SELECT id, issueDate, state, customerId, SKUId, description, price, COUNT(*) as qty FROM INTERNAL_ORDERS WHERE id==? GROUP BY id, issueDate, state, customerId, SKUId, description, price "
             let response = await this.dao.all(sql,id);
-           // console.log(response);
             if(response.length==0){
                 //return res.status(404).json();
                 return {message: "Not Found"}; 
@@ -166,12 +161,10 @@ class InternalOrderController {
 
                 sql = "SELECT SKUId, description, price, RFID FROM INTERNAL_ORDERS WHERE id==?"
                 result = {...result , products : await this.dao.all(sql,id)};
-                //console.log(result);
                 return result;
             }
             
             //return res.status(200).json(result);
-           // console.log(result);
             return result;
         }catch(error){
             //return res.status(500).end();
@@ -184,7 +177,6 @@ class InternalOrderController {
         try{
             let sql = "SELECT * FROM INTERNAL_ORDERS WHERE id==?";
             let result = await this.dao.get(sql,id);
-           // console.log(result);
             if(result==null){
                // return res.status(404).end();
                return {message: "Not Found"}; 
@@ -196,7 +188,6 @@ class InternalOrderController {
                     for(const prod of products){
                         sql = "SELECT MIN(key) as min_id  FROM INTERNAL_ORDERS WHERE id==? AND SKUId==? AND RFID IS NULL "
                         let pid= await this.dao.get(sql,[id,prod.SkuID]);
-                        console.log(pid);
                         sql = "UPDATE INTERNAL_ORDERS SET RFID=? WHERE SKUId==? AND id==? AND key == ?"
                         await this.dao.run(sql,[prod.RFID, prod.SkuID, id, pid.min_id])
                     }
