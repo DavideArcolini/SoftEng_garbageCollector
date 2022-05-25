@@ -8,7 +8,7 @@
 
 /* ------------ MODULE IMPORT ------------ */
 const dao = require("../test_DB/mock_dao");
-const REOController = require("../,,/controller/ReturnOrderController");
+const REOController = require("../../controller/ReturnOrderController");
 /* ------------ INITIALIZATION ------------ */
 const REO = new REOController(dao);
 /**
