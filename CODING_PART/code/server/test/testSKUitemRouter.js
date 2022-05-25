@@ -10,11 +10,14 @@
 const chai      = require('chai');
 const chaiHttp  = require('chai-http');
 const app       = require('../server');
+const DAO       = require('../db/DAO');
+require('./testPositionRouter');
 
 /* ------------ INITIALIZATION ------------ */
 chai.use(chaiHttp);
 chai.should();
 var agent = chai.request.agent(app);
+const dao = new DAO();
 
 
 /**
@@ -44,10 +47,17 @@ describe('API: GET /api/skuitems', () => {
 */
 describe('API: GET /api/skuitems/sku/:id', () => {
 
+    before(async () => {
+        await dao.run(
+            "INSERT INTO SKUS (ID, DESCRIPTION, WEIGHT, VOLUME, NOTES, PRICE, AVAILABLEQUANTITY) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [333, "TestDescription", 50, 50, "TestNote", 10.99, 1]
+        );
+    });
+
     /* TESTING */
     getSKUitemsBySKUId_APITEST(
         '[200] OK', 
-        {id: 1},
+        {id: 333},
         200,
         false /* triggerFails */
     );
@@ -59,6 +69,10 @@ describe('API: GET /api/skuitems/sku/:id', () => {
         422,
         true /* triggerFails */
     );
+
+    after(async () => {
+        await agent.delete('/api/skus/333')
+    });
 });
 
 /*
@@ -69,10 +83,14 @@ describe('API: GET /api/skuitems/sku/:id', () => {
 describe('API: GET /api/skuitems/:rfid', () => {
 
     before(async () => {
+        await dao.run(
+            "INSERT INTO SKUS (ID, DESCRIPTION, WEIGHT, VOLUME, NOTES, PRICE, AVAILABLEQUANTITY) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [222, "TestDescription", 50, 50, "TestNote", 10.99, 1]
+        );
         await agent.post('/api/skuitem').send(
             {
-                "RFID": "90000000000000000000000000000001",
-                "SKUId": 1,
+                "RFID": "91100000000000000000000000000001",
+                "SKUId": 222,
                 "DateOfStock": "2021/11/29 12:30"
             }
         );
@@ -81,7 +99,7 @@ describe('API: GET /api/skuitems/:rfid', () => {
     /* TESTING */
     getSKUitemsByRFID_APITEST(
         '[200] OK', 
-        {rfid: "90000000000000000000000000000001"},
+        {rfid: "91100000000000000000000000000001"},
         200,
         false /* triggerFails */
     );
@@ -89,7 +107,7 @@ describe('API: GET /api/skuitems/:rfid', () => {
     /* TESTING */
     getSKUitemsByRFID_APITEST(
         '[404] Not Found (rfid non existing)', 
-        {rfid: "99000000000000000000000000000001"},
+        {rfid: "99900000000000000000000000000001"},
         404,
         true /* triggerFails */
     );
@@ -103,7 +121,8 @@ describe('API: GET /api/skuitems/:rfid', () => {
     );
 
     after(async () => {
-        await agent.delete('/api/skuitems/90000000000000000000000000000001');
+        await agent.delete('/api/skuitems/91100000000000000000000000000001');
+        await agent.delete('/api/skus/222');
     });
 });
 
@@ -114,12 +133,19 @@ describe('API: GET /api/skuitems/:rfid', () => {
 */
 describe('API: POST /api/skuitem', () => {
 
+    before(async () => {
+        await dao.run(
+            "INSERT INTO SKUS (ID, DESCRIPTION, WEIGHT, VOLUME, NOTES, PRICE, AVAILABLEQUANTITY) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [555, "TestDescription", 50, 50, "TestNote", 10.99, 1]
+        );
+    });
+
     /* TESTING */
     newSKUitem_APITEST(
         '[201] Created',
         {
             "RFID": "90000000000000000000000000000002",
-            "SKUId": 1,
+            "SKUId": 555,
             "DateOfStock": "2021/11/29 12:30"
         },
         201
@@ -127,10 +153,21 @@ describe('API: POST /api/skuitem', () => {
 
     /* TESTING */
     newSKUitem_APITEST(
+        '[404] Not Found (SKUid non existing)',
+        {
+            "RFID": "90000000000000000000000000000002",
+            "SKUId": 554,
+            "DateOfStock": "2021/11/29 12:30"
+        },
+        404
+    );
+
+    /* TESTING */
+    newSKUitem_APITEST(
         '[422] Unprocessable Entity (body parameters constraints failed)',
         {
             "RFID": "90000000000000000000000000000002",
-            "SKUId": 1,
+            "SKUId": 555,
             "DateOfStock": "FailingHere"
         },
         422
@@ -138,6 +175,7 @@ describe('API: POST /api/skuitem', () => {
 
     after(async () => {
         await agent.delete('/api/skuitems/90000000000000000000000000000002');
+        await agent.delete('/api/skus/555');
     });
 });
 
@@ -149,10 +187,14 @@ describe('API: POST /api/skuitem', () => {
 describe('API: PUT /api/skuitems/:rfid', () => {
 
     before(async () => {
+        await dao.run(
+            "INSERT INTO SKUS (ID, DESCRIPTION, WEIGHT, VOLUME, NOTES, PRICE, AVAILABLEQUANTITY) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [777, "TestDescription", 50, 50, "TestNote", 10.99, 1]
+        );
         await agent.post('/api/skuitem').send(
             {
-                "RFID": "90000000000000000000000000000003",
-                "SKUId": 1,
+                "RFID": "91100000000000000000000000000003",
+                "SKUId": 777,
                 "DateOfStock": "2021/11/29 12:30"
             }
         );
@@ -161,9 +203,9 @@ describe('API: PUT /api/skuitems/:rfid', () => {
     /* TESTING */
     editSKUitem_APITEST(
         '[200] OK',
-        {rfid: "90000000000000000000000000000003"},
+        {rfid: "91100000000000000000000000000003"},
         {
-            "newRFID": "90000000000000000000000000000013",
+            "newRFID": "91100000000000000000000000000013",
             "newAvailable": 1,
             "newDateOfStock": "2021/11/29 12:30"
         },
@@ -173,9 +215,9 @@ describe('API: PUT /api/skuitems/:rfid', () => {
     /* TESTING */
     editSKUitem_APITEST(
         '[404] Not Found (rfid non existing)',
-        {rfid: "99000000000000000000000000000003"},
+        {rfid: "99900000000000000000000000000003"},
         {
-            "newRFID": "90000000000000000000000000000013",
+            "newRFID": "91100000000000000000000000000013",
             "newAvailable": 1,
             "newDateOfStock": "FailingHere"
         },
@@ -185,7 +227,7 @@ describe('API: PUT /api/skuitems/:rfid', () => {
     /* TESTING */
     editSKUitem_APITEST(
         '[422] Unprocessable Entity (body parameters constraints failed)',
-        {rfid: "90000000000000000000000000000003"},
+        {rfid: "91100000000000000000000000000003"},
         {
             "newRFID": "90000000000000000000000000000013",
             "newAvailable": 1,
@@ -207,8 +249,9 @@ describe('API: PUT /api/skuitems/:rfid', () => {
     );
 
     after(async () => {
-        await agent.delete('/api/skuitems/90000000000000000000000000000003');
-        await agent.delete('/api/skuitems/90000000000000000000000000000013');
+        await agent.delete('/api/skuitems/91100000000000000000000000000003');
+        await agent.delete('/api/skuitems/91100000000000000000000000000013');
+        await agent.delete('/api/skus/777');
     });
 });
 

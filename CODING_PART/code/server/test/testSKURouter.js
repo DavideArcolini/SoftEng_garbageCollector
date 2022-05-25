@@ -11,6 +11,7 @@ const chai      = require('chai');
 const chaiHttp  = require('chai-http');
 const app       = require('../server');
 const DAO       = require('../db/DAO');
+require('./testSKUitemRouter');
 
 /* ------------ INITIALIZATION ------------ */
 chai.use(chaiHttp);
@@ -44,9 +45,17 @@ describe('API: GET /api/skus', () => {
 * =============================================
 */
 describe('API: GET /api/skus/:id', () => {
+
+    before(async () => {
+        await dao.run(
+            "INSERT INTO SKUS (ID, DESCRIPTION, WEIGHT, VOLUME, NOTES, PRICE, AVAILABLEQUANTITY) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [444, "TestDescription", 50, 50, "TestNote", 10.99, 1]
+        );
+    });
+
     getStoredSKUById_APITEST(
         '[200] OK',
-        {id: 1},
+        {id: 444},
         200
     );
 
@@ -61,6 +70,10 @@ describe('API: GET /api/skus/:id', () => {
         {id: "FailingHere"},
         422
     );
+
+    after(async () => {
+        await agent.delete('/api/skus/444');
+    });
 });
 
 /*
