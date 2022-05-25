@@ -1,10 +1,18 @@
 # Design Document
 
-Authors:
+**Authors**:
+ * Riccardo Medina
+ * Simran Singh
+ * Davide Arcolini
+ * Giuseppe Atanasio
 
-Date:
+**Date**: 25 May 2022
 
-Version:
+**Version**: `1.1`
+| Version number | Change |
+| ----------------- |:-----------|
+| `1.0` | Added first version of Design document. | 
+| `1.1` | Re-designed in according to the code `v1.0`. | 
 
 # Contents
 
@@ -14,8 +22,27 @@ Version:
 - [High level design](#high-level-design)
   - [Package Diagram](#package-diagram)
 - [Low level design](#low-level-design)
+  - [it.polito.ezwh.controller](#itpolitoezwhcontroller)
+  - [it.polito.ezwh.model](#itpolitoezwhmodel)
+  - [it.polito.ezwh.exceptions](#itpolitoezwhexceptions)
 - [Verification traceability matrix](#verification-traceability-matrix)
 - [Verification sequence diagrams](#verification-sequence-diagrams)
+  - [**SC1.1**: *Create SKU*](#sc11-create-sku)
+  - [**SC1.2**: *Modify SKU Location*](#sc12-modify-sku-location)
+  - [**SC2.1**: *Create Position*](#sc21-create-position)
+  - [**SC2.3**: *Modify weight and volume of Position*](#sc23-modify-weight-and-volume-of-position)
+  - [**SC3.1**: *Restock Order of SKU S issued by quantity*](#sc31-restock-order-of-sku-s-issued-by-quantity)
+  - [**SC4.1**: *Create user and define rights*](#sc41-create-user-and-define-rights)
+  - [**SC5.1.1**: *Record restock order arrival*](#sc511-record-restock-order-arrival)
+  - [**SC5.2.1**: *Record positive test results of all SKU items of a RestockOrder*](#sc521-record-positive-test-results-of-all-sku-items-of-a-restockorder)
+  - [**SC5.3.1**: *Stock all SKU items of a RO*](#sc531-stock-all-sku-items-of-a-ro)
+  - [**SC6.1** *Return order of SKU items that failed quality test*](#sc61-return-order-of-sku-items-that-failed-quality-test)
+  - [**SC6.1** *Login*](#sc61-login)
+  - [**SC9.1** *Internal Order IO accepted*](#sc91-internal-order-io-accepted)
+  - [**SC9.3 : *Internal Order IO cancelled***](#sc93--internal-order-io-cancelled)
+  - [**SC10.1: *Internal Order IO Completed***](#sc101-internal-order-io-completed)
+  - [**SC11.1: *Create Item I***](#sc111-create-item-i)
+  - [**SC12.1: *Create test description***](#sc121-create-test-description)
 
 # Instructions
 
@@ -54,156 +81,41 @@ We use a MVC pattern because the user of EZWH application can modify data and, c
 
 ## it.polito.ezwh.controller
 
-```plantuml
-package it.polito.ezwh.controller{
-  class EzWarehouse {
-    - reset(): void
-    -- Local Data --
-    - users: Array of User
-    - items: Array of Item
-    - restockOrders: Array of RestockOrder
-    - returnOrders: Array of ReturnOrder
-    - internalOrders: Array of Item + Qty_per_Item
-    - skus: Array of SKU
-    - skuItems: Array of SKUItem
-    - testDescriptors: Array of TestDescriptor
-    - testResult: Array of TestResult
-    - positions: Array of Position
-
-    -- Remote Data --
-    - databaseHelper: Object of DatabaseHelper
-    
-    -- SKU Management --
-    + getSKUs() : Array
-    + getSKUByID(ID : String) : Object
-    + createSKU(description: String, weight : number , volume: number, notes : String, price : number, availableQuantity : number) : Void
-    + modifySKU(ID: String, newDescription: String, newWeight: number, newVolume: number, newNotes: String, newPrice: number, newAvailableQuantity: number)
-    + updateSKUPosition(ID: number, positionID: String)
-    
-    -- SKUItem Management --
-    + getSKUItems() : Array
-    + getBySkuID(ID: String) : Object
-    + getByRFID(RFID: String) : Object
-    + createSkuItem(RFID: String, SKUID: number, DateOfStock: Date) : void
-    + modifySkuItem(newRFID: String, newAvailable: Boolean, newDateOfStock: Date) : void
-    + deleteSkuItem(RFID: String) : void
-
-    -- TestResult Management --
-    + getTests() : Array
-    + getTestByRFID(RFID : number) : Object
-    + createTestResult(idTestDescriptor : number, Date : String, Result : boolean) : void
-    + modifyTestResult(newTestDescriptor : number, newDate : String, newResult : boolean) : void
-    + deleteTestResult(id : number) : void
-    
-    -- Position Management --
-    + getPositions() : Array
-    + createPosition(positionID : String, aisleID : String, row : String, col : String, maxWeight : number, maxVolume : number, occupiedWeight=0,occupiedVolume=0) : void
-    + modifyPosition(P: Position, positionID: String, newAisleID : String, newRow : String, newCol : String, newMaxWeight : number, newMaxVolume : number, newOccupiedWeight : number, newOccupiedVolume : number) : void
-    + updatePID(positionID: String, newPositionId : String) : void
-    + decreaseOccupation(skus : array) : void
-    + increaseOccupation(skus:) : void
-    + deletePosition(positionID : String) : void
-    
-    -- Test Descriptor Management --
-    + getTestDescriptors() : Array
-    + getTestDescriptorByID(id : number) : Object
-    + createTestDescriptor(name : String, procedureDescription : String, idSKU : number) : void
-    + modifyTestDescriptor(id: number, newName : String, newProcedureDescription : String, newIdSKU : number) : void
-    + deleteTestDescriptor(id : number) : void
-
-    -- User Management --
-    + getUserByID(ID : String) : Object
-    + getSuppliers() : Array
-    + getUsers() : Array
-    + createUser(ID : String, username : String, name : String, surname : String, type : String) : void
-    + login(username : String, password : String) : Object
-    + modifyUserPermissions(username: String, newType : String) : void
-    + deleteUser(username : String, type : String) : void
-    
-    -- Restock Order Management --
-    + getRestockOrders(void) : Array
-    + getRestockOrdersIssued(void) : Array
-    + getRestockOrderByID(ID: number) : Object
-    + getReturnItems(ID: number) : Array
-    + getSKUitems(ID: number) : Array
-    + createRestockOrder(issueDate : Date, products : Array, supplierID : number) : void
-    + modifyState( ID: number, newState : number) : void
-    + addItems(ID: number, items : List) : void
-    + addTransportNote( ID: number, transportNote : String ) : void
-    + setSkuItems(ID: number, skuItems: Array): Void
-    + deleteRestockOrder(ID : String) : void
-
-    -- Return Order Management --
-    + getReturnOrders() : Array
-    + getReturnOrder(id : number) : Object
-    + createReturnOrder(returnDate : String, products : Array, restockOrderId : number) : void
-    + deleteReturnOrder(id : number) : void
-    
-    -- Internal Order Management --
-    + getInternalOrders(void) : Array
-    + getInternalOrdersIssued(void) : Array
-    + getInternalOrdersAccepted(void) : Array
-    + getInternalOrderByID(ID: number) : Object
-    + createInternalOrder(issueDate : Date, products : Array, customerID : number) : void
-    + modifyInternalOrder(newState : number, products : Array) : Array
-    + deleteInternalOrder(ID : number) : void
-    
-    -- Item Management --
-    + getItems() : Array
-    + getItemByID(ID: String) : Object
-    + createItem(ID: String, description : string, price : number, SKUId: String, supplierId : String) : void
-    + modifyItem(ID: String, description : string, price : number) : void
-    + deleteItem(ID : String) : void
-  }
-}
-```
+Here there are routers that calling models, called by the server.
 
 ## it.polito.ezwh.model
-N.B. All the classes are linked to the class `DataImpl`of `it.polito.ezwh.controller`
+N.B. All the classes are linked to the class `DataImpl` of `it.polito.ezwh.controller`
 
 ```plantuml
 package it.polito.ezwh.model {
   top to bottom direction
 
-  class DatabaseHelper {
-    - databaseName: String
-    - createConnection(): Connection
-    - closeConnection(): Void
-    - resetConnection(): Connection
-    - createTable(): Void
+  class DAO {
+    - db: Object sqlite.Database()
 
-    -- Load from DB --
-    + loadItems(): Array
-    + loadUsers(): Array
-    + loadInternalOrders(): Array
-    + loadRestockOrders(): Array
-    + loadSKUs(): Array
-    + loadSKUItems(): Array
-    + loadTestDescriptors(): Array 
-    + loadTestResults(): Array
-    + loadPositions(): Array
+    -- Table creations --
+    + newTableUsers(): void
+    + newTablePositions(): void
+    + newTableSKUS(): void
+    + newTableSKUItems(): void
+    + newTableTD(): void
+    + newTableTR(): void
+    + newTableI(): void
+    + newTableRO(): void
+    + newTableIO(): void
+    + newTableRTO(): void
 
-    -- Store to DB --
-    + storeItem(item: Item): Void
-    + storeUser(user: User): Void
-    + storeInternalOrder(order: InternalOrder): Void
-    + storeRestockOrder(order: RestockOrder): Void
-    + storeSKU(sku: SKU): Void
-    + storeSKUItem(skuitem: SKUItem): Void
-    + storeTestDescriptor(test: TestDescriptor): Void
-    + StoreTestResult(test: TestResult): Void
-    + StorePosition(position: Position): Void
-
-    -- Update DB --
-    + updateItem(item: Item): Void
-    + updateUser(user: User): Void
-    + updateInternalOrder(order: InternalOrder): Void
-    + updateRestockOrder(order: RestockOrder): Void 
-    + updateSKU(sku: SKU): Void
-    + updateSKUItem(skuitem: SKUItem): Void
-    + updateTestDescriptor(test: TestDescriptor): Void
-    + updateTestResult(test: TestResult): Void
-    + updatePosition(position: Position): Void
+    -- Table deletions --
+    + dropTableUsers(): void
+    + dropTableRO(): void
+    + dropTableIO(): void
+    + dropTableRTO(): void
+    + dropTableSKUS(): void
+    + dropTablePositions(): void
+    + dropTableSKUItems(): void
+    + dropTableTD(): void
+    + dropTableTR(): void
+    + dropTableI(): void
   }
 
   enum userType {
@@ -215,20 +127,27 @@ package it.polito.ezwh.model {
     QUALITY_EMPLOYEE
   }
 
-  class User {
-    + ID: number
-    + name: String
-    + surname: String
-    + username: String
-    + type: userType
+  class UserController {
+    - types: Array
+    - regex: Regex
+
+    -- Methods --
+    + newUser(): Number
+    + getStoredUsers(): Array
+    + getSuppliers(): Array
+    + getUser(): Object
+    + editUser(): Number
+    + deleteUser(): Number
   }
 
-  class Item {
-    + ID : String
-    + description : String
-    + price : number
-    + SKUId: number
-    + supplierID: number
+  class ItemController {
+
+    -- Methods --
+    + getItems(): Array
+    + getItemById(): Object
+    + createItem(): Number
+    + modifyItem(): Number
+    + deleteItem(): Number
   }
 
   enum enumState {
@@ -241,71 +160,72 @@ package it.polito.ezwh.model {
     COMPLETED
   }
 
-  class RestockOrder {
-    + ID : String
-    + issueDate: Date
-    + state: enumState
-    + products : Array
-    + supplierID: number
-    + transportNote: Array
-    + skuItems: Array
-    + returnItems: Array
+  class RestockOrderController {
+
+    -- Methods --
+    + createRestockOrder(): Number
+    + getRestockOrders(): Array
+    + getRestockOrdersIssued(): Array
+    + getRestockOrderById(): Array
+    + deleteRestockOrder(): Number
+    + modifyRestockOrderState(): Number
+    + setSkuItems(): Number 
   }
 
-  class ReturnOrder {
-    + ID : String
-    + returnDate: Date
-    + products : Array
-    + restockOrderID: number
+  class ReturnOrderController {
+
+    -- Methods --
+    + createReturnOrder(): Number
+    + getReturnOrderById(): Object
+    + getReturnOrders(): Array
+    + deleteReturnOrder(): Number
   }
 
-  class Qty_per_Item {
-    + qty: number
+
+
+  class SKUController {
+
+    -- Methods --
+    + getStoredSKUs(): Array     
+    + getStoredSKUById(): Object 
+    + newSKU(): Object           
+    + editSKU(): Object             
+    + addOrEditPositionSKU(): Object
+    + deleteSKU(): Object            
   }
 
-  class SKU {
-    + ID : number
-    + description : String
-    + weight: number
-    + volume : number
-    + price : number
-    + notes : String
-    + availableQuantity : number
-    + position: String 
-    + testDescriptors : Array<number>
+  class SKUItemController {
+    - getSKUitems(): Array
+    - getSKUitemsBySKUId(): Object
+    - getSKUitemsByRFID(): Array
+    - newSKUitem(): Object
+    - editSKUitem(): Object
+    - deleteSKUitem(): Object
+    
   }
 
-  class SKUItem {
-    + RFID : String
-    + Available : boolean
-    + DateOfStock : String
-    + SKUID: number
+  class TestDescriptorController {
+    + getTestDescriptors() : Array
+    + getTestDescriptorById() : Object
+    + createTestDescriptor() : Number
+    + modifyTestDescriptor() : Number
+    + deleteTestDescriptor() : Number
   }
 
-  class TestDescriptor {
-    + ID : String
-    + name : String
-    + procedureDescription : String
-    + idSKU : number
+  class TestResultController {
+    + getTestResults() : Array
+    + getTestResultById() : Object
+    + createTestResult() : Number
+    + modifyTestResult() : Number
+    + deleteTestResult() : Number
   }
 
-  class TestResult {
-    + ID: number
-    + RFID : String
-    + idTestDescriptor: number
-    + date : Date
-    + result: boolean
-  }
-
-  class Position {
-    + positionID : String
-    + aisle : String
-    + row : String
-    + col : String
-    + max_weight : number
-    + max_volume : number
-    + occupied_weight : number
-    + occupied_volume : number
+  class PositionController {
+    + getPositions() : Array
+    + newPositions() : Object
+    + editPosition() : Object
+    + editPositionID() : Object
+    + deletePosition() : Object
   }
 
   enum internalOrderState {
@@ -316,21 +236,32 @@ package it.polito.ezwh.model {
     COMPLETED
   }
 
-  class InternalOrder {
-    ID : number
-    issueDate : Date
-    state: internalOrderState
-    customerID : number
-    products : Array
+  class InternalOrderController {
+
+    -- Methods --
+    + createInternalOrder(): Number
+    + getInternalOrderById(): Object
+    + getInternalOrders(): Array
+    + getInternalOrdersIssued(): Array
+    + getInternalOrdersAccepted(): Array
+    + modifyInternalOrderState(): Number
+    + deleteInternalOrder(): Number
   }
 }
 
-enumState "1"-- "1" RestockOrder
-internalOrderState "1"--"1" InternalOrder
-Qty_per_Item -- "*" Item
-Qty_per_Item -- "*" RestockOrder
-Qty_per_Item -- "*" InternalOrder
-userType -- User
+enumState "1"-- "1" RestockOrderController
+internalOrderState "1"--"1" InternalOrderController
+userType -- UserController
+DAO -- InternalOrderController
+DAO -- RestockOrderController
+DAO -up- ItemController
+DAO -- TestDescriptorController
+DAO -- ReturnOrderController
+DAO - SKUController
+DAO -right- SKUItemController
+DAO -left- TestResultController
+DAO -up- PositionController
+DAO -- UserController
 
 ```
 
@@ -363,7 +294,7 @@ package it.polito.ezshop.exceptions {
 
 \<for each functional requirement from the requirement document, list which classes concur to implement it>
 
-|| EzWarehouse | User: Supplier | User: Customer | Item | RestockOrder | ReturnOrder | InternalOrder | SKU | SKUitem | TestDescriptor | TestResult | Position |
+|| EzWarehouse | UserController: Supplier | UserController: Customer | ItemController | RestockOrderController | ReturnOrderController | InternalOrderController | SKUController | SKUitemController | TestDescriptorController | TestResultController | PositionController |
 |:--|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 | **FR1**: *manage users and rights* | X | X | X |||||||
 | **FR2**: *manage SKU* | X ||||||| X | X ||X|
@@ -382,7 +313,7 @@ actor Manager as Manager
 participant HTTPCalls as HTTPCalls
 participant EzWarehouse as EzWarehouse
 participant SKU as SKU
-participant DatabaseHelper as DatabaseHelper
+participant DAO as DAO
 
 group create SKU
 group HTTP POST Request
@@ -404,10 +335,10 @@ deactivate SKU
 end
 
 group Store SKU in database
-EzWarehouse -> DatabaseHelper: StoreSKU(S)
-activate DatabaseHelper
-DatabaseHelper --> EzWarehouse: Void
-deactivate DatabaseHelper
+EzWarehouse -> DAO: StoreSKU(S)
+activate DAO
+DAO --> EzWarehouse: Void
+deactivate DAO
 end
 
 EzWarehouse --> HTTPCalls: return response.json
@@ -456,12 +387,12 @@ Position --> EzWarehouse: return modified Position
 deactivate Position
 
 group update database
-EzWarehouse -> DatabaseHelper: updatePosition()
-activate DatabaseHelper
-DatabaseHelper --> EzWarehouse: void
-EzWarehouse -> DatabaseHelper: updateSKU()
-DatabaseHelper --> EzWarehouse: void
-deactivate DatabaseHelper
+EzWarehouse -> DAO: updatePosition()
+activate DAO
+DAO --> EzWarehouse: void
+EzWarehouse -> DAO: updateSKU()
+DAO --> EzWarehouse: void
+deactivate DAO
 end
 end
 EzWarehouse --> HTTPCalls: response.json
@@ -478,7 +409,7 @@ actor Manager as Manager
 participant HTTPCalls as HTTPCalls
 participant EzWarehouse as EzWarehouse
 participant Position as Position
-participant DatabaseHelper as DatabaseHelper
+participant DAO as DAO
 
 group create Position
 group HTTP POST Request
@@ -502,10 +433,10 @@ deactivate Position
 end
 
 group Store position in database
-EzWarehouse -> DatabaseHelper: StorePosition(P)
-activate DatabaseHelper
-DatabaseHelper --> EzWarehouse: Void
-deactivate DatabaseHelper
+EzWarehouse -> DAO: StorePosition(P)
+activate DAO
+DAO --> EzWarehouse: Void
+deactivate DAO
 end
 
 EzWarehouse --> HTTPCalls: return response.json
@@ -522,7 +453,7 @@ actor Manager as Manager
 participant HTTPCalls as HTTPCalls
 participant EzWarehouse as EzWarehouse
 participant Position as Position
-participant DatabaseHelper as DatabaseHelper
+participant DAO as DAO
 
 group modify Position
 group HTTP PUT Request
@@ -550,10 +481,10 @@ deactivate Position
 end
 
 group Store position in database
-EzWarehouse -> DatabaseHelper: StorePosition(P)
-activate DatabaseHelper
-DatabaseHelper --> EzWarehouse: void
-deactivate DatabaseHelper
+EzWarehouse -> DAO: StorePosition(P)
+activate DAO
+DAO --> EzWarehouse: void
+deactivate DAO
 end
 
 EzWarehouse --> HTTPCalls: return response.json
@@ -570,7 +501,7 @@ actor Manager
 participant HTTPCalls
 participant EzWarehouse
 participant RestockOrder
-participant DatabaseHelper
+participant DAO
 
 group Create RestockOrder
 group HTTP PUT request
@@ -598,10 +529,10 @@ RestockOrder-->EzWarehouse: return new RestockOrder RO
 end
 
 group Store RestockOrder in database
-EzWarehouse->DatabaseHelper: storeRestockOrder(object RO)
-activate DatabaseHelper
-DatabaseHelper-->EzWarehouse: void
-deactivate DatabaseHelper
+EzWarehouse->DAO: storeRestockOrder(object RO)
+activate DAO
+DAO-->EzWarehouse: void
+deactivate DAO
 end
 
 EzWarehouse-->HTTPCalls: return response .json
@@ -618,7 +549,7 @@ actor Admin
 participant HTTPCalls
 participant EzWarehouse
 participant User
-participant DatabaseHelper
+participant DAO
 
 group create User
 group HTPP put request
@@ -643,10 +574,10 @@ deactivate User
 end
 
 group Store in database
-EzWarehouse->DatabaseHelper: storeUser(U)
-activate DatabaseHelper
-DatabaseHelper-->EzWarehouse: void
-deactivate DatabaseHelper
+EzWarehouse->DAO: storeUser(U)
+activate DAO
+DAO-->EzWarehouse: void
+deactivate DAO
 end
 
 EzWarehouse-->HTTPCalls: retunr response json
@@ -662,7 +593,7 @@ actor Clerk
 participant HTTPCalls
 participant EzWarehouse
 participant SKUItem
-participant DatabaseHelper
+participant DAO
 
 group Record Restock Order Arrival
 group HTTP PUT Request
@@ -692,10 +623,10 @@ deactivate SKUItem
 end
 
 group Store in database
-EzWarehouse->DatabaseHelper: storeSKUItem(SK)
-activate DatabaseHelper
-DatabaseHelper-->EzWarehouse: void
-deactivate DatabaseHelper
+EzWarehouse->DAO: storeSKUItem(SK)
+activate DAO
+DAO-->EzWarehouse: void
+deactivate DAO
 end
 
 EzWarehouse-->HTTPCalls: return json response
@@ -713,10 +644,10 @@ deactivate RestockOrder
 end
 
 group Store in database
-EzWarehouse->DatabaseHelper: storeRestockOrder(RO)
-activate DatabaseHelper
-DatabaseHelper-->EzWarehouse: void
-deactivate DatabaseHelper
+EzWarehouse->DAO: storeRestockOrder(RO)
+activate DAO
+DAO-->EzWarehouse: void
+deactivate DAO
 end
 
 EzWarehouse-->HTTPCalls: return json response
@@ -736,7 +667,7 @@ participant HTTPCalls
 participant EzWarehouse
 participant TestResult
 participant RestockOrder
-participant DatabaseHelper
+participant DAO
 
 group Test Item in Restock Order
 group HTTP PUT Request
@@ -774,10 +705,10 @@ deactivate TestResult
 end
 
 group Store in database
-EzWarehouse->DatabaseHelper: storeTestResult(object TestResult)
-activate DatabaseHelper
-DatabaseHelper-->EzWarehouse: void
-deactivate DatabaseHelper
+EzWarehouse->DAO: storeTestResult(object TestResult)
+activate DAO
+DAO-->EzWarehouse: void
+deactivate DAO
 end
 end
 
@@ -790,10 +721,10 @@ RestockOrder-->EzWarehouse: return Restock Order RO
 end
 
 group Store in database
-EzWarehouse->DatabaseHelper: storeRestockOrder(RO)
-activate DatabaseHelper
-DatabaseHelper-->EzWarehouse: void
-deactivate DatabaseHelper
+EzWarehouse->DAO: storeRestockOrder(RO)
+activate DAO
+DAO-->EzWarehouse: void
+deactivate DAO
 end
 
 EzWarehouse-->HTTPCalls: return json response
@@ -813,7 +744,7 @@ participant EzWarehouse as EzWarehouse
 participant Position as Position
 participant SKU as SKU
 participant RestockOrder
-participant DatabaseHelper as DatabaseHelper
+participant DAO as DAO
 group HTTPRequest PUT
 Clerk -> HTTPCalls : select RFID
 Clerk -> HTTPCalls : select RFID
@@ -848,10 +779,10 @@ EzWarehouse<-Position: return P modified
 deactivate Position
 end
 group Store Position in database
-EzWarehouse -> DatabaseHelper: StorePosition(P)
-activate DatabaseHelper
-DatabaseHelper --> EzWarehouse: void
-deactivate DatabaseHelper
+EzWarehouse -> DAO: StorePosition(P)
+activate DAO
+DAO --> EzWarehouse: void
+deactivate DAO
 end
 EzWarehouse->HTTPCalls: return response.json
 deactivate EzWarehouse
@@ -867,10 +798,10 @@ EzWarehouse<-SKU: return S modified
 deactivate SKU
 end
 group Store SKU in database
-EzWarehouse -> DatabaseHelper: StoreSKU(S)
-activate DatabaseHelper
-DatabaseHelper --> EzWarehouse: void
-deactivate DatabaseHelper
+EzWarehouse -> DAO: StoreSKU(S)
+activate DAO
+DAO --> EzWarehouse: void
+deactivate DAO
 end
 activate EzWarehouse
 EzWarehouse->HTTPCalls: return response.json
@@ -888,10 +819,10 @@ EzWarehouse<-RestockOrder: return RO modified
 deactivate RestockOrder
 end
 group Store RO in database
-EzWarehouse -> DatabaseHelper: StoreRestockOrder(RO)
-activate DatabaseHelper
-DatabaseHelper --> EzWarehouse: void
-deactivate DatabaseHelper
+EzWarehouse -> DAO: StoreRestockOrder(RO)
+activate DAO
+DAO --> EzWarehouse: void
+deactivate DAO
 end
 EzWarehouse->HTTPCalls: return response.json
 deactivate EzWarehouse
@@ -911,7 +842,7 @@ participant HTTPCalls as HTTPCalls
 participant EzWarehouse as EzWarehouse
 participant SKUItem 
 participant ReturnOrder
-participant DatabaseHelper as DatabaseHelper
+participant DAO as DAO
 
 group HTTP Request GET
 Manager -> HTTPCalls : insert RO.ID
@@ -946,10 +877,10 @@ deactivate SKUItem
 end
 
 group Store SKUItem in database
-EzWarehouse -> DatabaseHelper: StoreSKUItem(SI)
-activate DatabaseHelper
-DatabaseHelper --> EzWarehouse: void
-deactivate DatabaseHelper
+EzWarehouse -> DAO: StoreSKUItem(SI)
+activate DAO
+DAO --> EzWarehouse: void
+deactivate DAO
 end
 
 activate EzWarehouse
@@ -967,10 +898,10 @@ EzWarehouse<-ReturnOrder: return ReturnOrder as REO
 deactivate ReturnOrder
 end 
 group store REO 
-EzWarehouse->DatabaseHelper: storeReturnOrder(REO)
-activate DatabaseHelper
-EzWarehouse<-DatabaseHelper: void
-deactivate DatabaseHelper
+EzWarehouse->DAO: storeReturnOrder(REO)
+activate DAO
+EzWarehouse<-DAO: void
+deactivate DAO
 end
 HTTPCalls<-EzWarehouse: return response.json
 deactivate EzWarehouse
@@ -1019,7 +950,7 @@ participant SKUItem
 participant InternalOrder
 participant Position
 participant SKU
-participant DatabaseHelper as DatabaseHelper
+participant DAO as DAO
 
 
 group Customer creates an InternalOrder
@@ -1042,10 +973,10 @@ EzWarehouse<-InternalOrder: InternalOrder as IO
 deactivate InternalOrder
 end
 group store IO
-EzWarehouse->DatabaseHelper: storeInternalOrder(IO)
-activate DatabaseHelper
-EzWarehouse<-DatabaseHelper: void
-deactivate DatabaseHelper
+EzWarehouse->DAO: storeInternalOrder(IO)
+activate DAO
+EzWarehouse<-DAO: void
+deactivate DAO
 end
 
 EzWarehouse->HTTPCalls: return response.json
@@ -1063,10 +994,10 @@ deactivate InternalOrder
 end
 
 group Store IO in database
-EzWarehouse -> DatabaseHelper: StoreInternalOrder(IO)
-activate DatabaseHelper
-DatabaseHelper --> EzWarehouse: return response.json
-deactivate DatabaseHelper
+EzWarehouse -> DAO: StoreInternalOrder(IO)
+activate DAO
+DAO --> EzWarehouse: return response.json
+deactivate DAO
 end
 
 activate EzWarehouse
@@ -1093,10 +1024,10 @@ deactivate Position
 end
 
 group Store position in database
-EzWarehouse -> DatabaseHelper: StorePosition(P)
-activate DatabaseHelper
-DatabaseHelper --> EzWarehouse: void
-deactivate DatabaseHelper
+EzWarehouse -> DAO: StorePosition(P)
+activate DAO
+DAO --> EzWarehouse: void
+deactivate DAO
 end
 EzWarehouse --> HTTPCalls: '201 Success'
 deactivate EzWarehouse
@@ -1111,10 +1042,10 @@ EzWarehouse<-SKU: return S modified
 deactivate SKU
 end
 group Store SKU in database
-EzWarehouse -> DatabaseHelper: StoreSKU(S)
-activate DatabaseHelper
-DatabaseHelper --> EzWarehouse: void
-deactivate DatabaseHelper
+EzWarehouse -> DAO: StoreSKU(S)
+activate DAO
+DAO --> EzWarehouse: void
+deactivate DAO
 end
 activate EzWarehouse
 EzWarehouse->HTTPCalls: '201 Success'
@@ -1139,10 +1070,10 @@ deactivate InternalOrder
 end
 
 group Store IO in database
-EzWarehouse -> DatabaseHelper: StoreInternalOrder(IO)
-activate DatabaseHelper
-DatabaseHelper --> EzWarehouse: void
-deactivate DatabaseHelper
+EzWarehouse -> DAO: StoreInternalOrder(IO)
+activate DAO
+DAO --> EzWarehouse: void
+deactivate DAO
 end
 
 
@@ -1167,7 +1098,7 @@ participant EzWarehouse as ezwh
 participant InternalOrder as I
 participant SKU as S
 participant Position as P
-participant DatabaseHelper as DH
+participant DAO as DAO
 
 C -> H : starts internal order
 activate H
@@ -1185,10 +1116,10 @@ ezwh -> I : InternalOrder(json)
 activate I
 ezwh <- I : order
 deactivate I
-ezwh -> DH : storeInternalOrder(order)
-activate DH
-ezwh <- DH : void
-deactivate DH
+ezwh -> DAO : storeInternalOrder(order)
+activate DAO
+ezwh <- DAO : void
+deactivate DAO
 
 loop for each sku and relative position
 ezwh -> S : sku.setAvailability()
@@ -1199,14 +1130,14 @@ ezwh -> P : position.setOccupation()
 activate P
 P -> ezwh : void
 deactivate P
-ezwh -> DH : updateSKU(sku)
-activate DH
-DH -> ezwh : void
-deactivate DH
-ezwh -> DH : updatePosition(position)
-activate DH
-DH -> ezwh : void
-deactivate DH
+ezwh -> DAO : updateSKU(sku)
+activate DAO
+DAO -> ezwh : void
+deactivate DAO
+ezwh -> DAO : updatePosition(position)
+activate DAO
+DAO -> ezwh : void
+deactivate DAO
 end
 ezwh -> H : 201 created
 deactivate ezwh
@@ -1216,10 +1147,10 @@ M -> H : refuse order
 activate H
 H -> ezwh : modifyInternalOrder(params)
 activate ezwh
-ezwh -> DH : updateInternalOrder(params)
-activate DH
-ezwh <- DH: void
-deactivate DH
+ezwh -> DAO : updateInternalOrder(params)
+activate DAO
+ezwh <- DAO: void
+deactivate DAO
 
 loop for each sku and relative position, same operations as before
 ezwh -> ezwh
@@ -1237,7 +1168,7 @@ participant HTTPCalls
 participant EzWarehouse as ezwh
 participant InternalOrder as I
 participant SKUItem as S
-participant DatabaseHelper as DH
+participant DAO as DAO
 
 D -> HTTPCalls : select internal order
 activate HTTPCalls
@@ -1265,10 +1196,10 @@ ezwh -> S : skuitem.setAvailability(0)
 activate S
 S -> ezwh : void
 deactivate S
-ezwh -> DH : updateSKUItem(skuitem)
-activate DH
-DH -> ezwh : void
-deactivate DH
+ezwh -> DAO : updateSKUItem(skuitem)
+activate DAO
+DAO -> ezwh : void
+deactivate DAO
 deactivate ezwh
 ezwh -> HTTPCalls : 200 OK
 deactivate HTTPCalls
@@ -1286,10 +1217,10 @@ ezwh -> I : internalOrder.setProducts()
 activate I
 ezwh <- I : void
 deactivate I
-ezwh->DH : updateInternalOrder(internalOrder)
-activate DH
-DH -> ezwh: void
-deactivate DH
+ezwh->DAO : updateInternalOrder(internalOrder)
+activate DAO
+DAO -> ezwh: void
+deactivate DAO
 
 ezwh -> HTTPCalls : 200 OK
 deactivate ezwh
@@ -1303,7 +1234,7 @@ actor Supplier as S
 participant HTTPCalls as H
 participant EzWarehouse as ezwh
 participant Item as I
-participant DatabaseHelper as DH
+participant DAO as DAO
 
 S -> H : insert item description
 S -> H : insert SKUid
@@ -1319,11 +1250,11 @@ I -> ezwh : item
 deactivate I
 deactivate ezwh
 
-ezwh -> DH : storeItem(item)
-activate DH
+ezwh -> DAO : storeItem(item)
+activate DAO
 activate ezwh
-DH -> ezwh : void
-deactivate DH
+DAO -> ezwh : void
+deactivate DAO
 ezwh -> H : 201 created
 deactivate ezwh
 deactivate H
@@ -1336,7 +1267,7 @@ actor Manager as M
 participant HTTPCalls as H
 participant EzWarehouse as ezwh
 participant TestDescriptor as T
-participant DatabaseHelper as DH
+participant DAO as DAO
 
 M -> H : insert name
 M -> H : insert SKU id
@@ -1349,10 +1280,10 @@ ezwh -> T : TestDescriptor(name, procedureDescription, idSKU)
 activate T
 ezwh <- T : test
 deactivate T
-ezwh -> DH : storeTestDescriptor(test)
-activate DH
-ezwh <- DH : void
-deactivate DH
+ezwh -> DAO : storeTestDescriptor(test)
+activate DAO
+ezwh <- DAO : void
+deactivate DAO
 H <- ezwh : 201 Created
 deactivate H
 deactivate ezwh
