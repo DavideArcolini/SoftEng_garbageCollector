@@ -190,7 +190,6 @@ router.put(
             } else if (value.newState === "COMPLETED") {
 
                 if (value.products === undefined) {
-                    console.log("ROTTISSIMO")
                     throw new Error('Missing parameters');
                 }
             }
