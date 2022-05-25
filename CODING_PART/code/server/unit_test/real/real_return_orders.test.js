@@ -28,9 +28,10 @@ const REO = new REOController(dao);
  function getReturnOrderById(req,expected){
     describe('get return order by id',()=>{
       
-      beforeEach(async() => {
-        await REO.dao.dropTableRTO();
-        await REO.dao.newTableRTO();
+      beforeAll(async() => {
+        //await REO.dao.dropTableRTO();
+        //await REO.dao.newTableRTO();
+        await REO.dao.deleteAllReturnOrders();
         await REO.createReturnOrder('2021/11/29 09:33', 1, [
             {
               SKUId: 12,
@@ -52,6 +53,9 @@ const REO = new REOController(dao);
     test('get return order by id',async()=>{
         let res = await REO.getReturnOrderById(req);
         expect(res).toEqual(expected);
+    })
+    afterAll(async()=>{
+      await REO.dao.deleteAllReturnOrders();
     })
   });
 }
@@ -88,9 +92,10 @@ getReturnOrderById(5,{message:"Not Found"});
  function getReturnOrders(expected){
     describe('get return orders',()=>{
       
-      beforeEach(async() => {
-        await REO.dao.dropTableRTO();
-        await REO.dao.newTableRTO();
+      beforeAll(async() => {
+        //await REO.dao.dropTableRTO();
+        //await REO.dao.newTableRTO();
+        await REO.dao.deleteAllReturnOrders();
         await REO.createReturnOrder('2021/11/29 09:33', 1, [
             {
               SKUId: 12,
@@ -128,6 +133,10 @@ getReturnOrderById(5,{message:"Not Found"});
         let res = await REO.getReturnOrders();
         expect(res).toEqual(expected);
     })
+    afterAll(async()=>{
+      await REO.dao.deleteAllReturnOrders();
+    })
+
   });
 }
 
@@ -180,9 +189,10 @@ getReturnOrders([
  function createReturnOrder(returnDate,restockOrderId,products,expected){
     describe('create return order',()=>{
       
-      beforeEach(async() => {
-        await REO.dao.dropTableRTO();
-        await REO.dao.newTableRTO();
+      beforeAll(async() => {
+       // await REO.dao.dropTableRTO();
+       // await REO.dao.newTableRTO();
+        await REO.dao.deleteAllReturnOrders();
         
       })
 
@@ -191,6 +201,9 @@ getReturnOrders([
         res = await REO.getReturnOrderById(res);
         expect(res).toEqual(expected);
 
+    })
+    afterAll(async()=>{
+      await REO.dao.deleteAllReturnOrders();
     })
   });
 }
@@ -268,9 +281,10 @@ createReturnOrder('2021/11/29 09:33', 1, [
    function deleteReturnOrder(req){
     describe('delete return order',()=>{
       
-      beforeEach(async() => {
-        await REO.dao.dropTableRTO();
-        await REO.dao.newTableRTO();
+      beforeAll(async() => {
+        //await REO.dao.dropTableRTO();
+        ///await REO.dao.newTableRTO();
+        await REO.dao.deleteAllReturnOrders();
         await REO.createReturnOrder('2021/11/29 09:33', 1, [
             {
               SKUId: 12,
@@ -307,6 +321,9 @@ createReturnOrder('2021/11/29 09:33', 1, [
         let res = await REO.deleteReturnOrder(req);
         res = await REO.getReturnOrderById(req);
         expect(res).toEqual({message: "Not Found"});
+    })
+    afterAll(async()=>{
+      await REO.dao.deleteAllReturnOrders();
     })
   });
 }

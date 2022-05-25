@@ -254,6 +254,18 @@ class DAO {
         });
     });
   }
+  deleteAllRestockOrders(){
+    return new Promise((res, rej) => {
+      const sql = "DELETE FROM RESTOCK_ORDERS";
+      this.db.run(sql, (err)=>{
+          if (err) {
+              rej(err);
+              return;
+          }
+          res(this.lastID);
+      });
+    });
+  }
   
   /**
      * ========================
@@ -284,6 +296,18 @@ class DAO {
             }
             res(this.lastID);
         });
+    });
+  }
+  deleteAllReturnOrders(){
+    return new Promise((res, rej) => {
+      const sql = "DELETE FROM RETURN_ORDERS";
+      this.db.run(sql, (err)=>{
+          if (err) {
+              rej(err);
+              return;
+          }
+          res(this.lastID);
+      });
     });
   }
 
@@ -317,6 +341,18 @@ class DAO {
             res(this.lastID);
         });
     });
+}
+deleteAllInternalOrders(){
+  return new Promise((res, rej) => {
+    const sql = "DELETE FROM INTERNAL_ORDERS";
+    this.db.run(sql, (err)=>{
+        if (err) {
+            rej(err);
+            return;
+        }
+        res(this.lastID);
+    });
+  });
 }
 
   /**
@@ -364,6 +400,7 @@ class DAO {
       });
     });
   }
+
 
 
  /**

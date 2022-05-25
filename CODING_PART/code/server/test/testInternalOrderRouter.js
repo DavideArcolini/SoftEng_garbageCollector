@@ -396,7 +396,7 @@ after(async()=>{
       res.body.should.be.a('array');
       let id = res.body[res.body.length-1].id;
 
-    await agent.put('/api/internalOrders/'+id).send({newState: 'COMPLETED', products: {SKUId: 1, rfid: "12345678901234567890123456789016"}}).then(function(res){
+    await agent.put('/api/internalOrders/'+id).send({newState: 'COMPLETED', products: {SkuID: 1, RFID: "12345678901234567890123456789016"}}).then(function(res){
       res.should.have.status(200);
       })
     })

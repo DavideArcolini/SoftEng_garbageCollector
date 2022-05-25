@@ -22,9 +22,10 @@ const RO = new ROController(dao);
 function getRestockOrderById(req,expected){
     describe('get restok order by id',()=>{
       
-      beforeEach(async() => {
-        await RO.dao.dropTableRO();
-        await RO.dao.newTableRO();
+      beforeAll(async() => {
+        //await RO.dao.dropTableRO();
+        await RO.dao.deleteAllRestockOrders();
+        //await RO.dao.newTableRO();
         await RO.createRestockOrder('2022/5/12 17:44',7, [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ])
         
       })
@@ -34,6 +35,9 @@ function getRestockOrderById(req,expected){
         expect(res).toEqual(expected);
     })
 
+    afterAll(async()=>{
+      await RO.dao.deleteAllRestockOrders();
+    })
     
   });
 }
@@ -59,9 +63,9 @@ getRestockOrderById(1,{
 function getRestockOrders(expected){
     describe('get restok orders',()=>{
       
-      beforeEach(async() => {
-        await RO.dao.dropTableRO();
-        await RO.dao.newTableRO();
+      beforeAll(async() => {
+        await RO.dao.deleteAllRestockOrders();
+        //await RO.dao.newTableRO();
         await RO.createRestockOrder('2022/5/12 17:44',7, [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ]);
         await RO.createRestockOrder('2022/5/12 17:44',7, [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ]);
         await RO.createRestockOrder('2022/5/12 17:44',7, [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ]);
@@ -70,6 +74,9 @@ function getRestockOrders(expected){
     test('get restock orders',async()=>{
         let res = await RO.getRestockOrders();
         expect(res).toEqual(expected);
+    })
+    afterAll(async()=>{
+      await RO.dao.deleteAllRestockOrders();
     })
   });
 }
@@ -110,9 +117,10 @@ getRestockOrders([
  function getRestockOrdersIssued(expected){
   describe('get restok orders issued',()=>{
     
-    beforeEach(async() => {
-      await RO.dao.dropTableRO();
-      await RO.dao.newTableRO();
+    beforeAll(async() => {
+      //await RO.dao.dropTableRO();
+      //await RO.dao.newTableRO();
+      await RO.dao.deleteAllRestockOrders();
       await RO.createRestockOrder('2022/5/12 17:44',7, [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ]);
       await RO.createRestockOrder('2022/5/12 17:44',7, [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ]);
       await RO.createRestockOrder('2022/5/12 17:44',7, [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ]);
@@ -122,6 +130,9 @@ getRestockOrders([
   test('get restock orders',async()=>{
       let res = await RO.getRestockOrdersIssued();
       expect(res).toEqual(expected);
+  })
+  afterAll(async()=>{
+    await RO.dao.deleteAllRestockOrders();
   })
 });
 }
@@ -162,15 +173,18 @@ getRestockOrdersIssued([
  function createRestockOrder(issueDate,supplierId,products,expected){
   describe('create restock order',()=>{
     
-    beforeEach(async() => {
-      await RO.dao.dropTableRO();
-      await RO.dao.newTableRO();
-      
+    beforeAll(async() => {
+      //await RO.dao.dropTableRO();
+      //await RO.dao.newTableRO();
+      await RO.dao.deleteAllRestockOrders();
     })
 
   test('create restock order',async()=>{
       let res = await RO.createRestockOrder(issueDate,supplierId,products);
       expect(res).toEqual(expected);
+  })
+  afterAll(async()=>{
+    await RO.dao.deleteAllRestockOrders();
   })
 });
 }
@@ -196,9 +210,10 @@ createRestockOrder('2022/5/12 17:44',7, [
  function modifyRestockOrderState(id,newState,expected){
   describe('modify restock order state',()=>{
     
-    beforeEach(async() => {
+    beforeAll(async() => {
       //await RO.dao.dropTableRO();
-      await RO.dao.newTableRO();
+      //await RO.dao.newTableRO();
+      await RO.dao.deleteAllRestockOrders();
       await RO.createRestockOrder('2022/5/12 17:44',7, [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ]);
       await RO.createRestockOrder('2022/5/12 17:44',7, [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ]);
       await RO.createRestockOrder('2022/5/12 17:44',7, [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ]);
@@ -207,6 +222,9 @@ createRestockOrder('2022/5/12 17:44',7, [
   test('modify restock order state',async()=>{
       let res = await RO.modifyRestockOrderState(id,newState);
       expect(res).toEqual(expected);
+  })
+  afterAll(async()=>{
+    await RO.dao.deleteAllRestockOrders();
   })
    
 });
@@ -226,9 +244,10 @@ modifyRestockOrderState(1,'COMPLETEDRETURN',1);
  function deleteRestockOrder(id){
   describe('delete restock order',()=>{
     
-    beforeEach(async() => {
-      await RO.dao.dropTableRO();
-      await RO.dao.newTableRO();
+    beforeAll(async() => {
+      //await RO.dao.dropTableRO();
+      //await RO.dao.newTableRO();
+      await RO.dao.deleteAllRestockOrders();
       await RO.createRestockOrder('2022/5/12 17:44',7, [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ]);
       await RO.createRestockOrder('2022/5/12 17:44',7, [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ]);
     })
@@ -238,6 +257,10 @@ modifyRestockOrderState(1,'COMPLETEDRETURN',1);
       res = await RO.getRestockOrderById(id);
       expect(res).toEqual({message: "Not Found"});
   })
+  afterAll(async()=>{
+    await RO.dao.deleteAllRestockOrders();
+  })
+  
 });
 }
 deleteRestockOrder(1);
@@ -251,9 +274,10 @@ deleteRestockOrder(2);
  function addTransportNote(id,transportNote,expected){
   describe('add transport note',()=>{
     
-    beforeEach(async() => {
-      await RO.dao.dropTableRO();
-      await RO.dao.newTableRO();
+    beforeAll(async() => {
+      //await RO.dao.dropTableRO();
+      //await RO.dao.newTableRO();
+      await RO.dao.deleteAllRestockOrders();
       await RO.createRestockOrder('2022/5/12 17:44',7, [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ]);
       await RO.createRestockOrder('2022/5/12 17:44',7, [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ]);
       await RO.modifyRestockOrderState(1,'DELIVERY');
@@ -262,6 +286,9 @@ deleteRestockOrder(2);
   test('add transport note',async()=>{
       let res = await RO.addTransportNote(id,transportNote);
       expect(res).toEqual(expected);
+  })
+  afterAll(async()=>{
+    await RO.dao.deleteAllRestockOrders();
   })
 });
 }
@@ -277,9 +304,10 @@ addTransportNote(2,{transportNote:{deliveryDate:"2021/12/29"}},{unprocessable: "
  function addSkuItems(id,skuItems,expected){
   describe('add sku Items',()=>{
     
-    beforeEach(async() => {
-      await RO.dao.dropTableRO();
-      await RO.dao.newTableRO();
+    beforeAll(async() => {
+     // await RO.dao.dropTableRO();
+      //await RO.dao.newTableRO();
+      await RO.dao.deleteAllRestockOrders();
       await RO.createRestockOrder('2022/5/12 17:44',7, [ { SKUId: 1, description: null, price: 0.01, qty: 1 }, { SKUId: 12, description: null, price: 0.01, qty: 1 } ]);
       await RO.createRestockOrder('2022/5/12 17:44',7, [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ]);
       await RO.modifyRestockOrderState(1,'DELIVERED');
@@ -288,6 +316,9 @@ addTransportNote(2,{transportNote:{deliveryDate:"2021/12/29"}},{unprocessable: "
   test('add sku Items',async()=>{
       let res = await RO.setSkuItems(id,skuItems);
       expect(res).toEqual(expected);
+  })
+  afterAll(async()=>{
+    await RO.dao.deleteAllRestockOrders();
   })
 });
 }

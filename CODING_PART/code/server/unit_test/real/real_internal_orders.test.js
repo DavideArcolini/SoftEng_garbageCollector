@@ -27,9 +27,10 @@ const IO = new IOController(dao);
  function getInternalOrderById(req,expected){
     describe('get internal order by id',()=>{
       
-      beforeEach(async() => {
-        await IO.dao.dropTableIO();
-        await IO.dao.newTableIO();
+      beforeAll(async() => {
+        //await IO.dao.dropTableIO();
+        //await IO.dao.newTableIO();
+        await IO.dao.deleteAllInternalOrders();
         await IO.createInternalOrder('2022/5/12 17:44', [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ], 1)
         
       })
@@ -37,6 +38,9 @@ const IO = new IOController(dao);
     test('get internal order by id',async()=>{
         let res = await IO.getInternalOrderById(req);
         expect(res).toEqual(expected);
+    })
+    afterAll(async()=>{
+      await IO.dao.deleteAllInternalOrders();
     })
   });
 }
@@ -59,9 +63,10 @@ getInternalOrderById(1,{
     function getInternalOrders(expected){
         describe('get internal orders',()=>{
           
-          beforeEach(async() => {
-            await IO.dao.dropTableIO();
-            await IO.dao.newTableIO();
+          beforeAll(async() => {
+            //await IO.dao.dropTableIO();
+            //await IO.dao.newTableIO();
+            await IO.dao.deleteAllInternalOrders();
             await IO.createInternalOrder('2022/5/12 17:44', [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ], 1);
             await IO.createInternalOrder('2022/5/12 17:44', [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ], 1);
             await IO.createInternalOrder('2022/5/12 17:44', [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ], 1);
@@ -71,6 +76,9 @@ getInternalOrderById(1,{
         test('get internal orders',async()=>{
             let res = await IO.getInternalOrders();
             expect(res).toEqual(expected);
+        })
+        afterAll(async()=>{
+          await IO.dao.deleteAllInternalOrders();
         })
       });
     }
@@ -107,9 +115,10 @@ getInternalOrderById(1,{
  function getInternalOrdersIssued(expected){
     describe('get internal orders issued',()=>{
       
-      beforeEach(async() => {
-        await IO.dao.dropTableIO();
-        await IO.dao.newTableIO();
+      beforeAll(async() => {
+        //await IO.dao.dropTableIO();
+        //await IO.dao.newTableIO();
+        await IO.dao.deleteAllInternalOrders();
         await IO.createInternalOrder('2022/5/12 17:44', [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ], 1);
         await IO.createInternalOrder('2022/5/12 17:44', [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ], 1);
         await IO.createInternalOrder('2022/5/12 17:44', [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ], 1);
@@ -119,6 +128,9 @@ getInternalOrderById(1,{
     test('get internal orders issued',async()=>{
         let res = await IO.getInternalOrdersIssued();
         expect(res).toEqual(expected);
+    })
+    afterAll(async()=>{
+      await IO.dao.deleteAllInternalOrders();
     })
   });
 }
@@ -155,9 +167,10 @@ getInternalOrdersIssued([
  function getInternalOrdersAccepted(expected){
     describe('get internal orders accepted',()=>{
       
-      beforeEach(async() => {
-        await IO.dao.dropTableIO();
-        await IO.dao.newTableIO();
+      beforeAll(async() => {
+        //await IO.dao.dropTableIO();
+        //await IO.dao.newTableIO();
+        await IO.dao.deleteAllInternalOrders();
         await IO.createInternalOrder('2022/5/12 17:44', [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ], 1);
         await IO.createInternalOrder('2022/5/12 17:44', [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ], 1);
         await IO.createInternalOrder('2022/5/12 17:44', [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ], 1);
@@ -169,6 +182,9 @@ getInternalOrdersIssued([
     test('get internal orders accepted',async()=>{
         let res = await IO.getInternalOrdersAccepted();
         expect(res).toEqual(expected);
+    })
+    afterAll(async()=>{
+      await IO.dao.deleteAllInternalOrders();
     })
   });
 }
@@ -205,10 +221,10 @@ getInternalOrdersAccepted([
  function createInternalOrder(issueDate,products,customerId,expected){
     describe('create internal order',()=>{
       
-      beforeEach(async() => {
-        await IO.dao.dropTableIO();
-        await IO.dao.newTableIO();
-       
+      beforeAll(async() => {
+        //await IO.dao.dropTableIO();
+        //await IO.dao.newTableIO();
+        await IO.dao.deleteAllInternalOrders();
         
       })
 
@@ -216,6 +232,9 @@ getInternalOrdersAccepted([
         let res = await IO.createInternalOrder(issueDate,products,customerId);
         res = await IO.getInternalOrderById(res);
         expect(res).toEqual(expected);
+    })
+    afterAll(async()=>{
+      await IO.dao.deleteAllInternalOrders();
     })
   });
 }
@@ -243,9 +262,10 @@ createInternalOrder('2022/5/12 17:44', [ { SKUId: 1, description: null, price: 0
  function modifyInternalOrderState(id,newState,products,expected){
     describe('modify internal order state',()=>{
       
-      beforeEach(async() => {
-        await IO.dao.dropTableIO();
-        await IO.dao.newTableIO();
+      beforeAll(async() => {
+        //await IO.dao.dropTableIO();
+        //await IO.dao.newTableIO();
+        await IO.dao.deleteAllInternalOrders();
         await IO.createInternalOrder('2022/5/12 17:44', [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ], 1);
         await IO.createInternalOrder('2022/5/12 17:44', [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ], 1);
         
@@ -254,6 +274,9 @@ createInternalOrder('2022/5/12 17:44', [ { SKUId: 1, description: null, price: 0
     test('modify internal order state',async()=>{
         let res = await IO.modifyInternalOrderState(id,newState,products);
         expect(res).toEqual(expected);
+    })
+    afterAll(async()=>{
+      await IO.dao.deleteAllInternalOrders();
     })
   });
 }
@@ -270,9 +293,10 @@ modifyInternalOrderState(5,'REFUSED',null,{message: "Not Found"});
  function deleteInternalOrder(req){
     describe('delete internal order',()=>{
       
-      beforeEach(async() => {
-        await IO.dao.dropTableIO();
-        await IO.dao.newTableIO();
+      beforeAll(async() => {
+        //await IO.dao.dropTableIO();
+        //await IO.dao.newTableIO();
+        await IO.dao.deleteAllInternalOrders();
         await IO.createInternalOrder('2022/5/12 17:44', [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ], 1);
         await IO.createInternalOrder('2022/5/12 17:44', [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ], 1);
         
@@ -282,6 +306,9 @@ modifyInternalOrderState(5,'REFUSED',null,{message: "Not Found"});
         let res = await IO.deleteInternalOrder(req);
         res= await IO.getInternalOrderById(req);
         expect(res).toEqual({message: "Not Found"});
+    })
+    afterAll(async()=>{
+      await IO.dao.deleteAllInternalOrders();
     })
   });
 }
