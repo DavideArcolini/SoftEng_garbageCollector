@@ -9,6 +9,7 @@
 /* ------------ MODULE IMPORT ------------ */
 const dao = require("../test_DB/mock_dao");
 const ROController = require("../../controller/RestockOrderController");
+const DAO = require("../test_DB/TestDAO");
 
 /* ------------ INITIALIZATION ------------ */
 const RO = new ROController(dao);
@@ -104,6 +105,20 @@ describe('get restock order by id', () => {
           });
     })
     
+    
+    test('triggering error', async () => {
+      dao.all.mockReset();
+      dao.all.mockImplementation(async () => {
+        throw new TypeError();
+      });
+
+      try {
+        let res = await RO.getRestockOrderById(1);
+      } catch (error) {
+        expect(error).toBeInstanceOf(TypeError);
+      }
+    });
+    
 });
 
 /**
@@ -185,6 +200,19 @@ describe('get restock orders', () => {
           }].length);
         
     })
+
+    test('triggering error', async () => {
+      dao.all.mockReset();
+      dao.all.mockImplementation(() => {
+        throw new TypeError('Test');
+      });
+
+      try {
+        let res = await RO.getRestockOrders();
+      } catch (error) {
+        expect(error).toBeInstanceOf(TypeError);
+      }
+    });
     
 });
 
@@ -267,6 +295,19 @@ describe('get restock orders', () => {
           }].length);
         
     })
+
+    test('triggering error', async () => {
+      dao.all.mockReset();
+      dao.all.mockImplementation(() => {
+        throw new TypeError();
+      });
+
+      try {
+        let res = await RO.getRestockOrdersIssued();
+      } catch (error) {
+        expect(error).toBeInstanceOf(TypeError);
+      }
+    });
     
 });
 
@@ -301,6 +342,20 @@ describe('get restock orders', () => {
         expect(res).toEqual(3);
       
     })
+
+    test('triggering error', async () => {
+      dao.all.mockReset();
+      dao.run.mockImplementation(async () => {
+        throw new TypeError();
+      });
+      let issueDate = "2021/11/29 09:33";
+        let supplierId = 1;
+        try {
+          let res = await RO.createRestockOrder(issueDate,supplierId,undefined);
+        } catch (error) {
+          expect(error).toBeInstanceOf(TypeError);
+        }
+    });
     
 });
 
@@ -321,42 +376,37 @@ describe('get restock orders', () => {
             supplierId: 7,
             transportNote: { deliveryDate: '2022/5/12 17:46' },
             products: [ { SKUId: 1, description: null, price: 0.01, qty: 1 } ],
-            skuItems: [ { SKUId: 1, RFID: '00000000000000000000000000000001' } ]})
-        .mockReturnValueOnce({
-            id: 33,
-            issueDate: '2021/11/29 09:33',
-            state: 'ISSUED',
-            supplierId: 1,
-            products: [
-            { SKUId: 12, description: 'a product', price: 10.99, qty: 3 },
-            {
-                SKUId: 180,
-                description: 'another product',
-                price: 11.99,
-                qty: 2
-            }
-            ],
-            skuItems: []
-        });
-                dao.run.mockReset();
-                dao.run.mockReturnValueOnce({ id: 2 }).mockReturnValueOnce({id:33});
+            skuItems: [ { SKUId: 1, RFID: '00000000000000000000000000000001' } ]
+          });
+        dao.run.mockReset();
+        dao.run.mockReturnValueOnce({ id: 2 }).mockReturnValueOnce({id:33});
 
 
-            })
+    })
 
     
     test('modify restock orders state', async() => {
-
-       
         let res = await RO.modifyRestockOrderState(2,'DELIVERED');
         expect(res).toEqual(2);
+    })
 
-        res = await RO.modifyRestockOrderState(33,'DELIVERED');
-        expect(res).toEqual(33);
+    test('not found', async() => {
+      dao.get.mockReset();
+      dao.get.mockReturnValueOnce(undefined);
+      let res = await RO.modifyRestockOrderState(50,'DELIVERED');
+      expect(res).toEqual({message: "Not Found"});
+    })
 
-        res = await RO.modifyRestockOrderState(50,'DELIVERED');
-        expect(res).toEqual({message: "Not Found"});
-      
+    test('test failed', async() => {
+      dao.get.mockReset();
+      dao.get.mockImplementation(async () => {
+        throw new TypeError();
+      });
+      try {
+        let res = await RO.modifyRestockOrderState(undefined,undefined);
+      } catch (error) {
+        expect(error).toBeInstanceOf(TypeError);
+      }
     })
     
 });
@@ -384,6 +434,19 @@ describe('get restock orders', () => {
         expect(res).toEqual(2);
       
     })
+
+    test('triggering error', async () => {
+      dao.run.mockReset()
+      dao.run.mockImplementation(async () => {
+        throw new TypeError();
+      });
+
+      try {
+        let res = await RO.deleteRestockOrder(1);
+      } catch (error) {
+        expect(error).toBeInstanceOf(TypeError);
+      }
+    });
     
 });
 
@@ -395,7 +458,7 @@ describe('get restock orders', () => {
  */
 
  describe('put transport note', () => {
-    beforeEach( () => {
+    beforeAll( () => {
         dao.get.mockReset();
         dao.get.mockReturnValueOnce({
             issueDate: '2022/5/12 21:30',
@@ -415,22 +478,38 @@ describe('get restock orders', () => {
             })
 
     
-    test('put transport note', async() => {
-
-       
+    test('put transport note', async() => {       
         let res = await RO.addTransportNote(1,{transportNote:{deliveryDate:"2022/12/29"}});
         expect(res).toEqual(1);
+    })
 
-        res = await RO.addTransportNote(33,{transportNote:{deliveryDate:"2022/12/29"}});
-        expect(res).toEqual({message: "Not Found"});
-
-        res = await RO.addTransportNote(1,{transportNote:{deliveryDate:"2022/12/29"}});
-        expect(res).toEqual({unprocessable: "Cannot put transport note"});
-      
-       /* res = await RO.addTransportNote(1,{transportNote:{deliveryDate:"2020/12/29"}});
-        expect(res).toEqual({unprocessable: "Cannot put transport note"});*/
+    test('not found', async() => {
+      dao.get.mockReset();
+      dao.get.mockReturnValueOnce(undefined);
+      let res = await RO.addTransportNote(33,{transportNote:{deliveryDate:"2022/12/29"}});
+      expect(res).toEqual({message: "Not Found"});      
     })
     
+    test('Cannot put transport note', async() => {
+      dao.get.mockReset();
+      dao.get.mockReturnValueOnce({
+        state: "COMPLETED"
+      });
+      let res = await RO.addTransportNote(1,{transportNote:{deliveryDate:"2022/12/29"}});
+      expect(res).toEqual({unprocessable: "Cannot put transport note"});
+    })
+
+    test('error', async() => {
+      dao.get.mockReset();
+      dao.get.mockImplementation(() => {
+        throw new TypeError();
+      });
+      try {
+        let res = await RO.addTransportNote(undefined, undefined);
+      } catch (error) {
+        expect(error).toBeInstanceOf(TypeError)
+      }
+    })
 });
 
 /**
@@ -439,7 +518,7 @@ describe('get restock orders', () => {
  * ==========================================================
  */
  describe('put skuItems', () => {
-    beforeEach( () => {
+    beforeAll( () => {
         dao.get.mockReset();
         dao.get.mockReturnValueOnce({
             state: 'DELIVERED',
@@ -456,19 +535,36 @@ describe('get restock orders', () => {
 
     
     test('put skuItems', async() => {
-
-       
         let res = await RO.setSkuItems(1, [{SKUId:1,rfid:"12345678901234567890123456789016"}]);
         expect(res).toEqual(1);
+    })
 
-        res = await RO.setSkuItems(33, [{SKUId:1,rfid:"12345678901234567890123456789016"}]);
-        expect(res).toEqual({message: "Not Found"});
+    test('not found', async() => {
+      dao.get.mockReset();
+      dao.get.mockReturnValueOnce(undefined);
+      let res = await RO.setSkuItems(33, [{SKUId:1,rfid:"12345678901234567890123456789016"}]);
+      expect(res).toEqual({message: "Not Found"});      
+    })
 
-        res = await RO.setSkuItems(1,[{SKUId:1,rfid:"12345678901234567890123456789016"}]);
-        expect(res).toEqual({unprocessable: "Cannot put skuItems"});
-      
-       /* res = await RO.addTransportNote(1,{transportNote:{deliveryDate:"2020/12/29"}});
-        expect(res).toEqual({unprocessable: "Cannot put transport note"});*/
+    test('cannot put skuItems', async() => {
+      dao.get.mockReset();
+      dao.get.mockReturnValueOnce({
+        state: "COMPLETED"
+      });
+      let res = await RO.setSkuItems(1,[{SKUId:1,rfid:"12345678901234567890123456789016"}]);
+      expect(res).toEqual({unprocessable: "Cannot put skuItems"});
+    })
+
+    test('error', async() => {
+      dao.get.mockReset();
+      dao.get.mockImplementation(async () => {
+        throw new Error();
+      });
+      try {
+        let res = await RO.setSkuItems(1,[{SKUId:1,rfid:"12345678901234567890123456789016"}]);
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error)
+      }
     })
     
 });
@@ -516,17 +612,57 @@ describe('get restock orders', () => {
 
     
     test('get return Items', async() => {
-
-       
         let res = await RO.getReturnItems(7);
         expect(res).toEqual([{SKUId:3, rfid:"12345678901234567890123456789016"}]);
+    })
 
-        res = await RO.getReturnItems(33);
-        expect(res).toEqual({message: "Not Found"});
+    test('not found', async() => {
+      dao.get.mockReset();
+      dao.get.mockReturnValueOnce(undefined);
+      let res = await RO.getReturnItems(33);
+      expect(res).toEqual({message: "Not Found"});
+    })
 
-        res = await RO.getReturnItems(1);
-        expect(res).toEqual({unprocessable: "Cannot get return Items"});
+    test('filter error', async () => {
+      dao.all.mockReset();
+      dao.all.mockImplementationOnce(() => {
+        return [
+          {
+            RFID: "12341234123412341234123412341234"
+          }
+        ];
+      }).mockImplementationOnce(() => {
+        return [
+          {
+            Result: true
+          }
+        ];
+      });
 
+      let result = await RO.getReturnItems(7);
+      expect(result).toEqual([{RFID: "12341234123412341234123412341234"}]);
+    });
+    
+    
+    test('Cannot get return Items', async() => {
+      dao.get.mockReset();
+      dao.get.mockReturnValueOnce({
+        state: "COMPLETED"
+      });
+      let res = await RO.getReturnItems(1);
+      expect(res).toEqual({unprocessable: "Cannot get return Items"});
+    })
+
+    test('error', async() => {
+      dao.get.mockReset();
+      dao.get.mockImplementation(() => {
+        throw new TypeError();
+      });
+      try {
+        let res = await RO.getReturnItems(undefined);
+      } catch (error) {
+        expect(error).toBeInstanceOf(TypeError);
+      }
     })
     
 });

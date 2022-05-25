@@ -1949,6 +1949,10 @@ User already inserted:
 
 
 ### Code coverage report
+
+Please note: TestDAO is not testable due to the server architecture. It creates and drop only the DB's tables, and also auxiliary methods `run()`, `get()`, `all()`.
+
+
 ![coverage](./images/coverage.png)
 
     

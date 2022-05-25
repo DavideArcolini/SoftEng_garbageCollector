@@ -69,7 +69,7 @@ getStoredSKUs_MOCK(
                 position: "800234523412",
                 availableQuantity: 50,
                 price: 10.99,
-                MOCKDescriptors: [1, 2, 3]
+                testDescriptors: [1, 2, 3]
             },
             {
                 id :2,
@@ -80,7 +80,7 @@ getStoredSKUs_MOCK(
                 position: "800234543412",
                 availableQuantity: 55,
                 price: 10.99,
-                MOCKDescriptors: [1, 2, 3]
+                testDescriptors: [1, 2, 3]
             }
         ]
     },
@@ -119,7 +119,7 @@ getStoredSKUById_MOCK(
             position: "800234523412",
             availableQuantity: 50,
             price: 10.99,
-            MOCKDescriptors: [ 1, 2, 3 ]
+            testDescriptors: [ 1, 2, 3 ]
         }
     },
     0, 
@@ -644,7 +644,7 @@ function retrieveMOCKDescriptor_MOCK(describe_NAME, request, expectedResult, tri
 
         test(describe_NAME, async () => {
             try {
-                const result = await skuController.retrieveMOCKDescriptor(dao, request);
+                const result = await skuController.retrieveTestDescriptor(dao, request);
                 expect(result).toEqual(expectedResult);
             } catch (error) {
                 expect(error).toBeInstanceOf(expectedResult);
@@ -668,7 +668,7 @@ function getStoredSKUs_MOCK(describe_NAME, expectedResult, triggerDatabaseError,
 
         /* preparing mock database for MOCKing */
         beforeEach(() => {
-            skuController.retrieveMOCKDescriptor = jest.fn().mockImplementation(() => {
+            skuController.retrieveTestDescriptor = jest.fn().mockImplementation(() => {
                 if (triggerUtilityFunctionError) {
                     throw new TypeError;
                 } else {
@@ -735,7 +735,7 @@ function getStoredSKUById_MOCK(describe_NAME, params, expectedResult, triggerDat
 
         /* preparing mock database for MOCKing */
         beforeEach(() => {
-            skuController.retrieveMOCKDescriptor = jest.fn().mockImplementation(() => {
+            skuController.retrieveTestDescriptor = jest.fn().mockImplementation(() => {
                 if (triggerUtilityFunctionError) {
                     throw new TypeError();
                 } else {
@@ -1106,7 +1106,7 @@ function deleteSKU_MOCK(describe_NAME, params, expectedResult, triggerDatabaseEr
             dao.all.mockReset();
             dao.run.mockReset();
 
-            skuController.retrieveMOCKDescriptor = jest.fn().mockImplementation(() => {
+            skuController.retrieveTestDescriptor = jest.fn().mockImplementation(() => {
                 if (triggerUtilityFunctionError) {
                     return [1, 2, 3];
                 } else {

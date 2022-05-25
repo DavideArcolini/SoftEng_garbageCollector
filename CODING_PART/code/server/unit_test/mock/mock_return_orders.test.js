@@ -24,7 +24,7 @@ const REO = new REOController(dao);
  *              GET /api/returnOrders/:id
  * =================================================
  */
- describe('get internal order by id', () => {
+ describe('get return order by id', () => {
     beforeEach( () => {
         dao.all.mockReset();
         dao.all.mockReturnValueOnce([
@@ -50,7 +50,7 @@ const REO = new REOController(dao);
     })
 
     
-    test('get internal order by id', async() => {
+    test('get return order by id', async() => {
         let res = await REO.getReturnOrderById(3);
         expect(res).toEqual({
             id: 3,
@@ -74,6 +74,18 @@ const REO = new REOController(dao);
         res = await REO.getReturnOrderById(5);
         expect(res).toEqual({message: "Not Found"});
     })
+    test('get return order failed', async()=>{
+      dao.all.mockReset();
+      dao.all.mockImplementation(() => {
+        throw new TypeError();
+      });
+      try{
+        res = await REO.getReturnOrderById(1);
+      }catch (error) {
+        expect(error).toBeInstanceOf(TypeError);
+      }
+    })
+    
     
 });
 
@@ -161,6 +173,19 @@ const REO = new REOController(dao);
           }]);
         
     })
+
+    test('triggering error', async () => {
+      dao.all.mockReset();
+      dao.all.mockImplementation(async () => {
+        throw new TypeError();
+      });
+
+      try {
+        let res = await REO.getReturnOrders();
+      } catch (error) {
+        expect(error).toBeInstanceOf(TypeError);
+      }
+    });
     
 });
 
@@ -185,7 +210,7 @@ const REO = new REOController(dao);
         let returnDate = "2021/11/29 09:33";
         const products= [{SKUId:12,description:"a product",price:10.99,RFID: '12345678901234567890123456789038'},
                         {SKUId:180,description: "another product",price:11.99,RFID: '12345678901234567890123456789038'}];
-        let customerId = 1;
+        
   
         let res = await REO.createReturnOrder(returnDate,1,products);
         expect(res).toEqual(2);
@@ -194,6 +219,37 @@ const REO = new REOController(dao);
         expect(res).toEqual(3);
       
     })
+    test('creation failed', async () => {
+      let returnDate = "2021/11/29 09:33";
+        
+      let restockOrderId = 1;
+      // should raise an error
+      try {
+        let res = await REO.createReturnOrder(returnDate,undefined,restockOrderId);
+      } catch (error) {
+        expect(error).toBeInstanceOf(TypeError);
+      }
+    })
+
+    test('database error', async () => {
+      let returnDate = "2021/11/29 09:33";
+      const products= [{SKUId:12,description:"a product",price:10.99,RFID: '12345678901234567890123456789038'},
+                      {SKUId:180,description: "another product",price:11.99,RFID: '12345678901234567890123456789038'}];
+      let customerId = 1;
+
+      dao.run.mockReset();
+      dao.run.mockImplementation(() => {
+        throw new TypeError();
+      });
+
+      try {
+        await REO.createReturnOrder(returnDate, customerId, products);
+      } catch (error) {
+        expect(error).toBeInstanceOf(TypeError);
+      }
+    });
+      
+
     
   });
 
@@ -220,5 +276,18 @@ const REO = new REOController(dao);
         expect(res).toEqual(2);
       
     })
+    test('delete return order failed', async()=>{
+      dao.run.mockReset();
+      dao.run.mockImplementation(() => {
+        throw new TypeError();
+      });
+      try{
+        res = await REO.deleteReturnOrder(1);
+      }catch (error) {
+        expect(error).toBeInstanceOf(TypeError);
+      }
+    })
+
+
     
   });

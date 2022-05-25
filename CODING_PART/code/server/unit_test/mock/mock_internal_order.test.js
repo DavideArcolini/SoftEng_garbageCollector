@@ -60,7 +60,23 @@ const IO = new IOController(dao);
           ])
     })
 
+    test('triggering error', async () => {
+      dao.all.mockReset();
+      dao.all.mockImplementation(async () => {
+        throw new TypeError();
+      });
+
+      try {
+        let res = await IO.getInternalOrderById(7);
+      } catch (error) {
+        expect(error).toBeInstanceOf(TypeError);
+      }
+    });
     
+
+
+
+
     test('get internal order by id', async() => {
         let res = await IO.getInternalOrderById(7);
         expect(res).toEqual({
@@ -158,6 +174,19 @@ const IO = new IOController(dao);
               }].length);
         
     })
+
+    test('throwing error', async() => {
+      dao.all.mockReset();
+      dao.all.mockImplementation(async () => {
+        throw new Error();
+      });
+
+      try {
+        let res = await IO.getInternalOrders();
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error);
+      }
+    })
     
 });
 
@@ -253,6 +282,19 @@ const IO = new IOController(dao);
           ]
         }]);
       
+  });
+
+  test('throwing error', async() => {
+    dao.all.mockReset();
+    dao.all.mockImplementation(async () => {
+      throw new Error();
+    });
+
+    try {
+      let res = await IO.getInternalOrdersIssued();
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error)
+    }
   })
   
 });
@@ -324,6 +366,20 @@ const IO = new IOController(dao);
           }]);
         
     })
+
+    test('throwing error', async() => {
+      dao.all.mockReset();
+      dao.all.mockImplementation(async () => {
+      throw new Error();
+      });
+
+      try {
+        await IO.getInternalOrdersAccepted()
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error)
+      }
+
+    })
     
   });
   
@@ -339,25 +395,34 @@ const IO = new IOController(dao);
       dao.get.mockReturnValueOnce({id:1}).mockReturnValueOnce({id:2});
       dao.run.mockReset();
       dao.run.mockReturnValueOnce({ id: 2 }).mockReturnValueOnce({id:3});
-
-
   })
 
   
   test('create internal order', async() => {
 
       let issueDate = "2021/11/29 09:33";
-      const products= [{SKUId:12,description:"a product",price:10.99,qty:30},
-                      {SKUId:180,description: "another product",price:11.99,qty:20}];
+      let products= [{SKUId:12,description:"a product",price:10.99,qty:30}, {SKUId:180,description: "another product",price:11.99,qty:20}];
       let customerId = 1;
-
+     
+      // should work
       let res = await IO.createInternalOrder(issueDate,products,customerId);
       expect(res).toEqual(2);
-
-      res = await IO.createInternalOrder(issueDate,products,customerId);
-      expect(res).toEqual(3);
-    
+  
   })
+  
+  test('creation failed', async () => {
+    let issueDate = "2021/11/29 09:33";
+      let products= [{SKUId:12,description:"a product",price:10.99,qty:30},
+                      {SKUId:180,description: "another product",price:11.99,qty:20}];
+      let customerId = 1;
+    // should raise an error
+    try {
+      let res = await IO.createInternalOrder(issueDate,undefined,customerId);
+      expect(res).toEqual(2);
+    } catch (error) {
+      expect(error).toBeInstanceOf(TypeError);
+    }
+  });
   
 });
 
@@ -413,6 +478,19 @@ const IO = new IOController(dao);
       expect(res).toEqual({message: "Not Found"});
     
   })
+
+  test('triggering Database error', async () => {
+    dao.get.mockReset();
+    dao.get.mockImplementation(() => {
+      throw new TypeError();
+    });
+
+    try {
+      let result = await IO.modifyInternalOrderState(1, undefined, undefined);
+    } catch (error) {
+      expect(error).toBeInstanceOf(TypeError);
+    }
+  });
   
 });
 
@@ -439,5 +517,18 @@ const IO = new IOController(dao);
       expect(res).toEqual(2);
     
   })
+
+  test('triggering error', async () => {
+    dao.run.mockReset();
+    dao.run.mockImplementation(async () => {
+      throw new TypeError();
+    });
+
+    try {
+      let res = await IO.deleteInternalOrder(7);
+    } catch (error) {
+      expect(error).toBeInstanceOf(TypeError);
+    }
+  });
   
 });

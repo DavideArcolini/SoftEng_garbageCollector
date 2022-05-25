@@ -33,7 +33,7 @@ class ReturnOrderController {
             return id;
     }catch(error){
         //return res.status(503).end();
-        throw error;
+        throw new TypeError();
     }
         
         
@@ -72,7 +72,7 @@ class ReturnOrderController {
         //return res.status(200).json(result);
     }catch(error){
         //return res.status(500).end();
-        throw error;
+        throw new TypeError('');
     }
 
     }
@@ -93,7 +93,7 @@ class ReturnOrderController {
         return result;
     }catch(error){
         //return res.status(500).end();
-        throw error;
+        throw new TypeError('');
     }
 }
    
@@ -107,7 +107,7 @@ deleteReturnOrder = async (id) => {
        return id;
     }catch(error){
         //return res.status(503).end();
-        throw error;
+        throw new TypeError();
     }
 }
     

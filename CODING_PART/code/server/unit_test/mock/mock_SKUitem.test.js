@@ -392,7 +392,7 @@ function getSKUitemsBySKUId_MOCK(describe_NAME, params, expectedResult, triggerD
                                 position: "800234523412",
                                 availableQuantity: 50,
                                 price: 10.99,
-                                MOCKDescriptors: [1,3,4]
+                                testDescriptors: [1,3,4]
                             }
                         ];
                     }
@@ -512,7 +512,7 @@ function newSKUitem_MOCK(describe_NAME, request, expectedResult, triggerDatabase
                                 position: "800234523412",
                                 availableQuantity: 50,
                                 price: 10.99,
-                                MOCKDescriptors: [1,3,4]
+                                testDescriptors: [1,3,4]
                             }
                         ];
                     }

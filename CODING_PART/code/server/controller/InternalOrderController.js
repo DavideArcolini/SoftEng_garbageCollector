@@ -8,40 +8,33 @@ class InternalOrderController {
     }
 
     createInternalOrder = async (issueDate,products,customerId) => {
-       
-        if (issueDate===undefined || customerId===undefined ) {
-            return res.status(422).end();           
-        }
         try{
-        let sql = "SELECT MAX(id) as id FROM INTERNAL_ORDERS"
-        let max_id = await this.dao.get(sql);
+            let sql = "SELECT MAX(id) as id FROM INTERNAL_ORDERS"
+            let max_id = await this.dao.get(sql);
+            
+            let id=1;
+            if(max_id !==null && max_id.id!==null)
+                id = max_id.id+1;
         
-        let id=1;
-        if(max_id !==null && max_id.id!==null)
-            id = max_id.id+1;
-       
-        
-       // let data = req.body;
-        
-        for (const prod of products)
-        {
-           
-            await Promise.all([...Array(parseInt(prod.qty))].map(async () => {
-                sql = "INSERT INTO INTERNAL_ORDERS(id, issueDate, state, customerId, SKUId, description, price) VALUES(?,?,?,?,?,?,?)"
-                await this.dao.run(sql,[id, issueDate,"ISSUED", customerId, prod.SKUId, prod.description, prod.price])
-            }));
+            
+            // let data = req.body;
+            for (let prod of products)
+            {
+            
+                await Promise.all([...Array(parseInt(prod.qty))].map(async () => {
+                    sql = "INSERT INTO INTERNAL_ORDERS(id, issueDate, state, customerId, SKUId, description, price) VALUES(?,?,?,?,?,?,?)"
+                    await this.dao.run(sql,[id, issueDate,"ISSUED", customerId, prod.SKUId, prod.description, prod.price])
+                }));
 
+            }
+
+            //return res.status(201).end()
+       
+            return id;
+        }catch(error){
+            //return res.status(500).end();
+            throw new TypeError('');
         }
-
-        //return res.status(201).end()
-       
-        return id;
-    }catch(error){
-        //return res.status(500).end();
-        throw error;
-    }
-        
-        
     }
 
     getInternalOrders = async () =>{

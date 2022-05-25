@@ -169,7 +169,7 @@ class RestockOrderController {
         try{
             let sql = "SELECT * FROM RESTOCK_ORDERS WHERE id==?";
             let result = await this.dao.get(sql,id);
-            if(result==null){
+            if(result===undefined){
                 return {message: "Not Found"};
             }
             sql = "UPDATE RESTOCK_ORDERS SET state=? WHERE id==?";
@@ -228,7 +228,7 @@ class RestockOrderController {
         try{
             let sql = "SELECT state, issueDate FROM RESTOCK_ORDERS WHERE id==?";
             let result= await this.dao.get(sql,[id]);
-            if(result==null){
+            if(result===undefined){
                 //return res.status(404).end();
                 return {message: "Not Found"}; 
             }
@@ -285,9 +285,9 @@ class RestockOrderController {
             
 
             //return res.status(200).json(result);
-            if(result==null){
+          /*  if(result==null){
                 return []
-            }
+            }*/
             return result;
     }catch(error){
         //return res.status(500).end();

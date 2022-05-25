@@ -30,7 +30,7 @@ getStoredSKUs_TEST(
         code: 200,
         message: [
             {
-                id: 1,
+                id: 1111,
                 description: "A new SKU",
                 weight: 150,
                 volume: 50,
@@ -41,13 +41,13 @@ getStoredSKUs_TEST(
                 testDescriptors: []
             }, 
             {
-                id: 2,
+                id: 2222,
                 description: "Another SKU",
                 weight: 101,
                 volume: 60,
                 notes: "second SKU",
                 position: "800212344532",
-                availableQuantity: 150,
+                availableQuantity: 1,
                 price: 110.99,
                 testDescriptors: []
             }
@@ -185,8 +185,8 @@ function getStoredSKUs_TEST(describe_NAME, expectedResult) {
     describe('TEST (DB): getStoredSKUs()', () => {
         beforeAll(async () => {
             const query_SQL = "INSERT INTO SKUS (ID, DESCRIPTION, WEIGHT, VOLUME, NOTES, POSITION, PRICE, AVAILABLEQUANTITY) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            await dao.run(query_SQL, [1, "A new SKU", 150, 50, "first SKU", null, 10.99, 50]);
-            await dao.run(query_SQL, [2, "Another SKU", 101, 60, "second SKU", "800212344532", 110.99, 150]);
+            await dao.run(query_SQL, [1111, "A new SKU", 150, 50, "first SKU", null, 10.99, 50]);
+            await dao.run(query_SQL, [2222, "Another SKU", 101, 60, "second SKU", "800212344532", 110.99, 1]);
         });
 
         test(describe_NAME, async () => {
@@ -196,8 +196,8 @@ function getStoredSKUs_TEST(describe_NAME, expectedResult) {
 
         afterAll(async () => {
             const query_SQL = "DELETE FROM SKUS WHERE SKUS.id == ?";
-            await dao.run(query_SQL, [1]);
-            await dao.run(query_SQL, [2]);
+            await dao.run(query_SQL, [1111]);
+            await dao.run(query_SQL, [2222]);
         });
     });
 }

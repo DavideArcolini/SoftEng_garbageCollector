@@ -488,7 +488,7 @@ function editPosition_MOCK(describe_NAME, params, request, expectedResult, trigg
                             position: "800234523412",
                             availableQuantity: 50,
                             price: 10.99,
-                            MOCKDescriptors: [1,3,4]
+                            testDescriptors: [1,3,4]
                         }
                     ];
                 }
@@ -571,7 +571,7 @@ function editPositionID_MOCK(describe_NAME, params, request, expectedResult, tri
                                 position: "801234543412",
                                 availableQuantity: 50,
                                 price: 10.99,
-                                MOCKDescriptors: [1,3,4]
+                                testDescriptors: [1,3,4]
                             }
                         ];
                     } else {
