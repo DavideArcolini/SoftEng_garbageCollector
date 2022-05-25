@@ -329,6 +329,50 @@ class DAO {
   *  - dropTableUser(): drop the users table.
   */
   newTableUsers() {
+
+    let users = [{
+      username: "manager1@ezwh.com",
+      name: "Dave",
+      surname: "Grohl",
+      type: "manager",
+      password: "testpassword"
+    },
+    {
+      username: "customer1@ezwh.com",
+      name: "Davide",
+      surname: "Arcolini",
+      type: "customer",
+      password: "testpassword"
+    },
+    {
+      username: "qualityEmployee1@ezwh.com",
+      name: "Simran",
+      surname: "Singh",
+      type: "qualityEmployee",
+      password: "testpassword"
+    },
+    {
+      username: "clerk1@ezwh.com",
+      name: "Riccardo",
+      surname: "Medina",
+      type: "clerk",
+      password: "testpassword"
+    },
+    {
+      username: "deliveryEmployee1@ezwh.com",
+      name: "Maurizio",
+      surname: "Morisio",
+      type: "deliveryEmployee",
+      password: "testpassword"
+    },
+    {
+      username: "supplier1@ezwh.com",
+      name: "Luca",
+      surname: "Ardito",
+      type: "supplier",
+      password: "testpassword"
+    }
+  ]
     return new Promise(async (res, rej)=>{
       let sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR, PRIMARY KEY(id)) ";
       this.db.run(sql, (err)=>{
@@ -347,14 +391,17 @@ class DAO {
         password: "testpassword"
       }
       sql = "INSERT OR IGNORE INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
-      let hash = await bcrypt.hash(manager.password, saltRounds);
-      this.db.run(sql, [manager.username, manager.name, manager.surname, hash, manager.type], (err)=>{
-        if (err) {
-          rej(err);
-            return;
-          }
-        res(this.lastID);
-      });
+      users.forEach(async (e) => {
+        let hash = await bcrypt.hash(e.password, saltRounds);
+        this.db.run(sql, [e.username, e.name, e.surname, hash, e.type], (err)=>{
+          if (err) {
+            rej(err);
+              return;
+            }
+          res(this.lastID);
+        });
+      })
+
     });
   }
   

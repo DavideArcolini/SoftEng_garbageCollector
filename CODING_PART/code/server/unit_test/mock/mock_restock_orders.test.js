@@ -287,7 +287,7 @@ describe('get restock orders', () => {
     })
 
     
-    test('create restock orders', async() => {
+    test('create restock order', async() => {
 
         let issueDate = "2021/11/29 09:33";
         const products= [{SKUId:12,description:"a product",price:10.99,qty:30},

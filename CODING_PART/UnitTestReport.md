@@ -1,11 +1,18 @@
 # Unit Testing Report
 
-Date:
+**Authors**:
+ * Riccardo Medina
+ * Simran Singh
+ * Davide Arcolini
+ * Giuseppe Atanasio
 
-Version:
-| Version | Changes |
-| ------- |---------|
-| 1 | Added first version of Unit Test Report document. |
+**Date**: 25 May 2022
+
+**Version**: `1.0`
+
+| Version number | Change |
+| ----------------- |:-----------|
+| 1.0 | Added first version of Unit Test Report document. | 
 
 # Contents
 
@@ -15,11 +22,16 @@ Version:
 
 # Black Box Unit Tests
 
-    <Define here criteria, predicates and the combination of predicates for each function of each class.
-    Define test cases to cover all equivalence classes and boundary conditions.
-    In the table, report the description of the black box test case and (traceability) the correspondence with the Jest test case writing the 
-    class and method name that contains the test case>
-    <Jest tests  must be in code/server/unit_test  >
+- [Class UserController](#class-usercontroller)
+- [Class PositionController](#class-positioncontroller)
+- [Class SKUitemController](#class-skuitemcontroller)
+- [Class SKUController](#class-skucontroller)
+- [Class InternalOrderController](#class-internalordercontroller)
+- [Class ItemController](#class-itemcontroller)
+- [Class RestockOrderController](#class-restockordercontroller)
+- [Class ReturnOrderController](#class-returnordercontroller)
+- [Class TestDescriptorController](#class-testdescriptorcontroller)
+- [Class TestResultController](#class-testresultcontroller)
 
 ## **Class UserController**
 
@@ -204,34 +216,6 @@ User already inserted:
 | True | False | Yes | Invalid | `deleteUser_TEST()` terminates with 503 | `function`<br> deleteUser_TEST("type didn't match with user", {type: "clerk", username : "mj@ezwh.com"}, 503)|
 | False | True | Yes | Invalid |  `deleteUser_TEST()` terminates with 503 | `function`<br> deleteUser_TEST("username not found", {type: "supplier", username : "pippo@ezwh.com"}, 503)|
 | undefined | undefined | No | Invalid | `deleteUser_TEST()` terminates with 503 | `function`<br> deleteUser_TEST("bad request", undefined, 503)|
-
-### Class *UserController* - method **logout**
-
-**Criteria for method *logout***:
-
-- Database 
-
-**Predicates for method *logout*:**
-
-| Criteria | Predicate |
-| -------- | --------- |
-|||
-|||
-|||
-|||
-
-**Combination of predicates**:
-
-| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|-------|-------|
-|||||||
-|||||||
-|||||||
-|||||||
-|||||||
-
-
-
 
 ## **Class PositionController**
 ### **Class *PositionController* - method *getPositions()***
@@ -626,7 +610,7 @@ User already inserted:
 
 
 **Criteria for method *getInternalOrders*:**
-	
+    
  - Database is reachable
 
 
@@ -638,19 +622,6 @@ User already inserted:
 | :--------:            | :---------: |
 | Database is reachable | *true* |
 |                       | *false*|
-
-
-
-
-
-
-
-**Boundaries**:
-
-| Criteria | Boundary values |
-| -------- | --------------- |
-|          |                 |
-|          |                 |
 
 
 
@@ -668,7 +639,7 @@ User already inserted:
 
 
 **Criteria for method *getInternalOrdersIssued*:**
-	
+    
  - Database is reachable
 
 
@@ -698,7 +669,7 @@ User already inserted:
 
 
 **Criteria for method *getInternalOrdersAccepted*:**
-	
+    
  - Database is reachable
 
 
@@ -729,7 +700,7 @@ User already inserted:
 
 
 **Criteria for method *getInternalOrderById*:**
-- Database is reachable	
+- Database is reachable 
 - Internal order associated to the `id` *exists* in the db
 
 
@@ -814,7 +785,7 @@ User already inserted:
 
 
 **Criteria for method *modifyInternalOrderState*:**
-	
+    
  - Database is reachable
  - internal order associated to the `id`  *exists* in the database
  - `newState` constraint
@@ -867,7 +838,7 @@ User already inserted:
 
 
 **Criteria for method *deleteInternalOrder*:**
-	
+    
  - Database is reachable
 
 
@@ -899,7 +870,7 @@ User already inserted:
 
 
 **Criteria for method *getItems*:**
-	
+    
 
  - Database is reachable
  - 
@@ -931,7 +902,7 @@ User already inserted:
 
 
 **Criteria for method *getItemById*:**
-	
+    
 
  - Database is reachable  
  -id is unique in the DB
@@ -966,7 +937,7 @@ User already inserted:
 
 
 **Criteria for method *createItem*:**
-	
+    
 
  - Database is reachable
  - SKUId exists in database
@@ -1009,10 +980,11 @@ User already inserted:
 
 
 **Criteria for method *modifyItem*:**
-	
+    
 
  - Database is reachable
  - id exists in the database
+
 
 
 
@@ -1035,16 +1007,16 @@ User already inserted:
 
 | DB is reachable | id exists in the DB | Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|
-|true|true|valid|modifytestDescriptor() terminates with 200|function modyfyItem(200, { newDescription : "a new sku", newPrice : 10.99}, {id: 13})|
-|true|false|invalid|modifyItem() fails on id search|function modyfyItem(404,{ newDescription : "a new sku", newPrice : 10.99}, {id: 12})
-|false|/|invalid|modifyItem() catches an error and return 503|function modyfyItem(503, undefined, undefined)|
+|true|true|valid|modifytestDescriptor() terminates with 200|function modifyItem(200, { newDescription : "a new sku", newPrice : 10.99}, {id: 13})|
+|true|false|invalid|modifyItem() fails on id search|function modifyItem(404,{ newDescription : "a new sku", newPrice : 10.99}, {id: 12})
+|false|/|invalid|modifyItem() catches an error and return 503|function modifyItem(503, undefined, undefined)|
 
 ### **Class *ItemController*- method *deleteItem***
 
 
 
 **Criteria for method *deleteItem*:**
-	
+    
 
  - Database is reachable
  - 
@@ -1081,7 +1053,7 @@ User already inserted:
 
 
 **Criteria for method *getRestockOrders*:**
-	
+    
  - Database is reachable
 
 
@@ -1114,7 +1086,7 @@ User already inserted:
 
 
 **Criteria for method *getRestockOrdersIssued*:**
-	
+    
  - Database is reachable
 
 
@@ -1134,7 +1106,7 @@ User already inserted:
 
 
 **Criteria for method *getRestockOrderById*:**
-- Database is reachable	
+- Database is reachable 
 - restock order associated to the `id` *exists* in the db
 
 
@@ -1185,7 +1157,7 @@ User already inserted:
 
 
 **Criteria for method *createRestockOrder*:**
-	
+    
 - Database is reachable
 - `issueDate` saved in the db as expected
 - `supplierId` saved in the db as expected
@@ -1226,7 +1198,7 @@ User already inserted:
 
 
 **Criteria for method *modifyRestockOrderState*:**
-	
+    
  - Database is reachable
  - internal order associated to the `id`  *exists* in the database
  - `newState` 
@@ -1283,7 +1255,7 @@ User already inserted:
 
 
 **Criteria for method *addTransportNote*:**
-	
+    
 - Database is reachable
 - restock order associated to the `id`  *exists* in the database
 - restock order's `state` = "DELIVERY"
@@ -1324,7 +1296,7 @@ User already inserted:
 
 
 **Criteria for method *addSkuItems*:**
-	
+    
 - Database is reachable
 - restock order associated to the `id`  *exists* in the database
 - restock order's `state` = "DELIVERED"
@@ -1366,7 +1338,7 @@ User already inserted:
 
 
 **Criteria for method *deleteRestockOrder*:**
-	
+    
  - Database is reachable
 
 
@@ -1394,7 +1366,7 @@ User already inserted:
 ## **Class ReturnOrderController**
 
 **Criteria for method *getReturnOrders*:**
-	
+    
  - Database is reachable
 
 
@@ -1421,7 +1393,7 @@ User already inserted:
 
 
 **Criteria for method *getReturnOrderById*:**
-- Database is reachable	
+- Database is reachable 
 - Return order associated to the `id` *exists* in the db
 
 
@@ -1507,7 +1479,7 @@ User already inserted:
 
 
 **Criteria for method *deleteReturnOrder*:**
-	
+    
  - Database is reachable
 
 
@@ -1541,7 +1513,7 @@ User already inserted:
 
 
 **Criteria for method *getTestDescriptors*:**
-	
+    
 
  - Database is reachable
  - 
@@ -1573,7 +1545,7 @@ User already inserted:
 
 
 **Criteria for method *getTestDescriptorById*:**
-	
+    
 
  - Database is reachable  
  -id is unique in the DB
@@ -1608,7 +1580,7 @@ User already inserted:
 
 
 **Criteria for method *createTestDescriptor*:**
-	
+    
 
  - Database is reachable
  - idSKU exists in database
@@ -1645,7 +1617,7 @@ User already inserted:
 
 
 **Criteria for method *modifyTestDescriptor*:**
-	
+    
 
  - Database is reachable
  - id exists in the database
@@ -1674,21 +1646,21 @@ User already inserted:
 
 | DB is reachable | id exists in the DB |newidSKU exist in the DB| Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|-------|
-|true|true|true|valid|modifytestDescriptor() terminates with 200|function modyfyTestDescriptor(200, { newName: "test descriptor 1",  newProcedureDescription: "put successful", newIdSKU :33}, {id: 1})|
-|true|true|false|invalid|modifyTestDescriptor() fails on newidSKU check|function modyfyTestDescriptor(404, {  newName: "test descriptor 1",  newProcedureDescription: "This test is described by...",  newIdSKU :39}, {id: 1})|
-|true|false|true|invalid|modifyTestDescriptor() fails on id search|function modyfyTestDescriptor(404, {  newName: "test descriptor 1", newProcedureDescription: "This test is described by...",  newIdSKU :1}, {id: 2})|
-|true|false|false|invalid|modifyTestDescriptor() fails on newidSKU check|function modyfyTestDescriptor(404, { newName: "test descriptor 1", newProcedureDescription: "This test is described by...", newIdSKU :39}, {id: 1})|
-|false|true|true|invalid|modifyTestDescriptor() catches an error and return 503|function modyfyTestDescriptor(503, undefined, {id: 1})|
-|false|true|false|invalid|modifyTestDescriptor() catches an error and return 503|function modyfyTestDescriptor(503, undefined, {id: 1})|
-|false|false|true|invalid|modifyTestDescriptor() catches an error and return 503|function modyfyTestDescriptor(503, undefined, {id: 1})|
-|false|false|false|invalid|modifyTestDescriptor() catches an error and return 503|function modyfyTestDescriptor(503, undefined, {id: 1})|
+|true|true|true|valid|modifytestDescriptor() terminates with 200|function modifyTestDescriptor(200, { newName: "test descriptor 1",  newProcedureDescription: "put successful", newIdSKU :33}, {id: 1})|
+|true|true|false|invalid|modifyTestDescriptor() fails on newidSKU check|function modifyTestDescriptor(404, {  newName: "test descriptor 1",  newProcedureDescription: "This test is described by...",  newIdSKU :39}, {id: 1})|
+|true|false|true|invalid|modifyTestDescriptor() fails on id search|function modifyTestDescriptor(404, {  newName: "test descriptor 1", newProcedureDescription: "This test is described by...",  newIdSKU :1}, {id: 2})|
+|true|false|false|invalid|modifyTestDescriptor() fails on newidSKU check|function modifyTestDescriptor(404, { newName: "test descriptor 1", newProcedureDescription: "This test is described by...", newIdSKU :39}, {id: 1})|
+|false|true|true|invalid|modifyTestDescriptor() catches an error and return 503|function modifyTestDescriptor(503, undefined, {id: 1})|
+|false|true|false|invalid|modifyTestDescriptor() catches an error and return 503|function modifyTestDescriptor(503, undefined, {id: 1})|
+|false|false|true|invalid|modifyTestDescriptor() catches an error and return 503|function modifyTestDescriptor(503, undefined, {id: 1})|
+|false|false|false|invalid|modifyTestDescriptor() catches an error and return 503|function modifyTestDescriptor(503, undefined, {id: 1})|
 
 ### **Class *TestDescriptorController* - method *deleteTestDescriptor***
 
 
 
 **Criteria for method *deleteTestDescriptor*:**
-	
+    
 
  - Database is reachable
  - 
@@ -1723,7 +1695,7 @@ User already inserted:
 
 
 **Criteria for method *getTestResults*:**
-	
+    
 
  - Database is reachable
  - rfid exist in the database
@@ -1760,7 +1732,7 @@ User already inserted:
 
 
 **Criteria for method *getTestResultById*:**
-	
+    
 
  - Database is reachable
  - rfid exists in the database
@@ -1803,7 +1775,7 @@ User already inserted:
 
 
 **Criteria for method *createTestResult*:**
-	
+    
 
  - Database is reachable
  - 
@@ -1844,7 +1816,7 @@ User already inserted:
 
 
 **Criteria for method *modifyTestResult*:**
-	
+    
 
  - Database is reachable
  - rfid exists in database
@@ -1887,7 +1859,7 @@ User already inserted:
 
 
 **Criteria for method *deleteTestResult*:**
-	
+    
 
  - Database is reachable
  - 
@@ -1920,34 +1892,90 @@ User already inserted:
 # White Box Unit Tests
 
 ### Test cases definition
-    
-    
-    <Report here all the created Jest test cases, and the units/classes under test >
-    <For traceability write the class and method name that contains the test case>
-
 
 | Unit name | Jest test case |
 |--|--|
-|||
-|||
-||||
+| Class **UserController.js** method `getStoredUsers()` | `getStoredUsers_TEST()` |
+| Class **UserController.js** method `getSuppliers()` | `getSuppliers_TEST()` |
+| Class **UserController.js** method `newUser()` | `newUser_TEST()` |
+| Class **UserController.js** method `getUser()` | `getUser_TEST()` |
+| Class **UserController.js** method `editUser()` | `editUser_TEST()` |
+| Class **UserController.js** method `deleteUser()` | `deleteUser_TEST()` |
+| Class **PositionController.js** method `getPositions()` | `getPositions_TEST()` |
+| Class **PositionController.js** method `newPosition()` | `newPosition_TEST()` |
+| Class **PositionController.js** method `editPosition()` | `editPosition_TEST()` |
+| Class **PositionController.js** method `editPositionID()` | `editPositionID_TEST()` |
+| Class **PositionController.js** method `deletePosition()` | `deletePosition_TEST()` |
+| Class **SKUitemController.js** method `getSKUitems()` | `getSKUitems_TEST()` |
+| Class **SKUitemController.js** method `getSKUitemsBySKUId()` | `getSKUitemsBySKUId_TEST()` |
+| Class **SKUitemController.js** method `getSKUitemsByRFID()` | `getSKUitemsByRFID_TEST()` |
+| Class **SKUitemController.js** method `newSKUitem()` | `newSKUitem_TEST()` |
+| Class **SKUitemController.js** method `editSKUitem()` | `editSKUitem()` |
+| Class **SKUitemController.js** method `deleteSKUitem()` | `deleteSKUitem_TEST()` |
+| Class **SKUController.js** method `getStoredSKUs()` | `getStoredSKUs_TEST()` |
+| Class **SKUController.js** method `getStoredSKUById()` | `getStoredSKUById_TEST()` |
+| Class **SKUController.js** method `newSKU()` | `newSKU_TEST()` |
+| Class **SKUController.js** method `editSKU()` | `editSKU_TEST()` |
+| Class **SKUController.js** method `addOrEditPositionSKU()` | `addOrEditPositionSKU_TEST()` |
+| Class **SKUController.js** method `deleteSKU()` | `deleteSKU_TEST()` |
+| Class **RestockOrderController.js** method `createRestockOrder()` | `createRestockOrder()` |
+| Class **RestockOrderController.js** method `getRestockOrderById()` | `getRestockOrderById()` |
+| Class **RestockOrderController.js** method `getRestockOrders()` | `getRestockOrders()` |
+| Class **RestockOrderController.js** method `getRestockOrdersIssued()` | `getRestockOrdersIssued()` |
+| Class **RestockOrderController.js** method `modifyRestockOrderState()` | `modifyRestockOrderState()` |
+| Class **RestockOrderController.js** method `addTransportNote()` | `addTransportNote()` |
+| Class **RestockOrderController.js** method `setSkuItems()` | `addSkuItems()` |
+| Class **RestockOrderController.js** method `deleteRestockOrder()` | `deleteRestockOrder()` |
+| Class **InternalOrderController.js** method `createInternalOrder()` | `createInternalOrder()` |
+| Class **InternalOrderController.js** method `getInternalOrders()` | `getInternalOrders()` |
+| Class **InternalOrderController.js** method `getInternalOrdersIssued()` | `getInternalOrdersIssued()` |
+| Class **InternalOrderController.js** method `getInternalOrdersAccepted()` | `getInternalOrdersAccepted()` |
+| Class **InternalOrderController.js** method `modifyInternalOrderState()` | `modifyInternalOrderState()` |
+| Class **InternalOrderController.js** method `deleteInternalOrder()` | `deleteInternalOrder()` |
+| Class **ReturnOrderController.js** method `createReturnOrder()` | `createReturnOrder()` |
+| Class **ReturnOrderController.js** method `getReturnOrderById()` | `getReturnOrderById()` |
+| Class **ReturnOrderController.js** method `getReturnOrders()` | `getReturnOrders()` |
+| Class **ReturnOrderController.js** method `deleteReturnOrder()` | `deleteReturnOrder()` |
+| Class **ItemController.js** method `getItems()`| `getItems()`|
+| Class **ItemController.js** method `getItemById()`| `getItemById()`|
+| Class **ItemController.js** method `createItem()`| `createItem()`|
+| Class **ItemController.js** method `modifyItem()`| `modifyItem()`|
+| Class **ItemController.js** method `deleteItem()`| `deleteItem()`|
+| Class **TestDescriptorController.js** method `getTestDescriptors()`| `getTestDescriptors()`|
+| Class **TestDescriptorController.js** method `getTestDescriptorById()`| `getTestDescriptorById()`|
+| Class **TestDescriptorController.js** method `createTestDescriptor()`| `createTestDescriptor()`|
+| Class **TestDescriptorController.js** method `modifyTestDescriptor()`| `modifyTestDescriptor()`|
+| Class **TestDescriptorController.js** method `deleteTestDescriptor()`| `deleteTestDescriptor()`|
+| Class **TestResultController.js** method `getTestResults()`| `getTestResults()`|
+| Class **TestResultController.js** method `getTestResultById()`| `getTestResultById()`|
+| Class **TestResultController.js** method `createTestResult()`| `createTestResult()`|
+| Class **TestResultController.js** method `modifyTestResult()`| `modifyTestResult()`|
+| Class **TestResultController.js** method `deleteTestResult()`| `deleteTestResult()`|
+
+
+
 
 ### Code coverage report
+![coverage](./images/coverage.png)
 
-    <Add here the screenshot report of the statement and branch coverage obtained using
-    the coverage tool. >
-
+    
 
 ### Loop coverage analysis
 
-    <Identify significant loops in the units and reports the test cases
-    developed to cover zero, one or multiple iterations >
-
-|Unit name | Loop rows | Number of iterations | Jest test case |
+| Unit name | Loop rows | Number of iterations | Jest test case |
 |---|---|---|---|
-|||||
-|||||
-||||||
+| Class **RestockOrderController.js**  method `createRestockOrder()`        | 27-35 | products.length | `createRestockOrder_TEST(issueDate,supplierId,products,expected)` |
+| Class **RestockOrderController.js**  method `setSkuItems()`               | 201-2015 | skuItems.length | `addSkuItems(id,skuItems,expected)` |
+| Class **RestockOrderController.js**  method `getRestockOrders()`          | 56-63 | one for each restock order retrieved | `getRestockOrders(id,skuItems,expected)` |
+| Class **InternalOrderController.js** method `createInternalOrder()`       | 26-34 | products.length | `createInternalOrder(issueDate,products,customerId,expected)` |
+| Class **InternalOrderController.js** method `modifyInternalOrderState()`  | 188-193 | products.length | `modifyInternalOrderState(id,newState,products,expected)` |
+| Class **InternalOrderController.js** method `getInternalOrders()`         | 51-63 | products.length | ` getInternalOrders(expected)` |
+| Class **InternalOrderController.js** method `getInternalOrdersIssued()`   | 86-97 | products.length | ` getInternalOrdersIssued(expected)` |
+| Class **InternalOrderController.js** method `getInternalOrdersAccepted()` | 113-123 | products.length | ` getInternalOrdersAccepted(expected)` |
+| Class **SKUController.js**           method `getStoredSKUs()`             | 80-86 | number of SKUS in the DB | `getStoredSKUs_TEST(testName, expectedResult)` |
+| Class **TestResultController.js**    method `getTestResults()`            | 30     |number of Test Result retrieved|`getTestResults(expected,rfid)`|
+| Class **ReturnOrderController.js**   method `createReturnOrder()`         | 24 | products.length | `createInternalOrder(issueDate,products,customerId,expected)` |
+| Class **TestResultController.js**    method `modifyTestResult()`          | 136    |number of Test Result retrieved|`modifyTestResult(expected,req1,req2)`|
 
 
 

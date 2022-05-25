@@ -1,5 +1,5 @@
 /**
- *      TESTING CLASS: SKUitem 
+ *      MOCKING CLASS: SKUitem 
  * ==================================
  * 
 */
@@ -28,7 +28,7 @@ const skuItemController     = new SKUitemController(dao);
 *           GET /api/skuitems
 * =========================================
 */
-getSKUitems_TEST(
+getSKUitems_MOCK(
     '[200] OK',
     {
         code: 200,
@@ -49,7 +49,7 @@ getSKUitems_TEST(
     },
     0
 );
-getSKUitems_TEST(
+getSKUitems_MOCK(
     'TypeError: Internal Server Error',
     TypeError,
     1
@@ -60,7 +60,7 @@ getSKUitems_TEST(
 *      API: GET /api/skuitems/sku/:id
 * =========================================
 */
-getSKUitemsBySKUId_TEST(
+getSKUitemsBySKUId_MOCK(
     '[200] OK',
     {id: 1},
     {
@@ -81,7 +81,7 @@ getSKUitemsBySKUId_TEST(
     [0, 0],
     0
 );
-getSKUitemsBySKUId_TEST(
+getSKUitemsBySKUId_MOCK(
     '[404] Not Found',
     {id: 9999},
     {
@@ -91,14 +91,14 @@ getSKUitemsBySKUId_TEST(
     [0, 0],
     1
 );
-getSKUitemsBySKUId_TEST(
+getSKUitemsBySKUId_MOCK(
     'TypeError: Internal Server Error',
     {id: 1},
     TypeError,
     [1, 0],
     0
 );
-getSKUitemsBySKUId_TEST(
+getSKUitemsBySKUId_MOCK(
     'TypeError: Internal Server Error',
     {id: 1},
     TypeError,
@@ -111,7 +111,7 @@ getSKUitemsBySKUId_TEST(
 *      API: GET /api/skuitems/:rfid
 * =========================================
 */
-getSKUitemsByRFID_TEST(
+getSKUitemsByRFID_MOCK(
     '[200] OK',
     {rfid: "12345678901234567890123456789015"},
     {
@@ -126,7 +126,7 @@ getSKUitemsByRFID_TEST(
     0, 
     0
 );
-getSKUitemsByRFID_TEST(
+getSKUitemsByRFID_MOCK(
     '[404] Not Found',
     {rfid: "99999999999999999999999999999999"},
     {
@@ -136,7 +136,7 @@ getSKUitemsByRFID_TEST(
     0, 
     1
 );
-getSKUitemsByRFID_TEST(
+getSKUitemsByRFID_MOCK(
     'TypeError: Internal Server Error',
     {rfid: "12345678901234567890123456789015"},
     TypeError,
@@ -149,7 +149,7 @@ getSKUitemsByRFID_TEST(
 *          API: POST /api/skuitem
 * =========================================
 */
-newSKUitem_TEST(
+newSKUitem_MOCK(
     '[201] Created',
     {
         RFID: "12345678901234567890123456789015",
@@ -163,7 +163,7 @@ newSKUitem_TEST(
     [0, 0],
     0
 );
-newSKUitem_TEST(
+newSKUitem_MOCK(
     '[201] Created (no DateOfStock)',
     {
         RFID: "12345678901234567890123456789015",
@@ -176,7 +176,7 @@ newSKUitem_TEST(
     [0, 0],
     0
 );
-newSKUitem_TEST(
+newSKUitem_MOCK(
     '[404] no SKU associated to SKUId',
     {
         RFID: "12345678901234567890123456789015",
@@ -190,7 +190,7 @@ newSKUitem_TEST(
     [0, 0],
     1
 );
-newSKUitem_TEST(
+newSKUitem_MOCK(
     'TypeError: SELECT from table SKUS failed',
     {
         RFID: "12345678901234567890123456789015",
@@ -201,7 +201,7 @@ newSKUitem_TEST(
     [1, 0],
     0
 );
-newSKUitem_TEST(
+newSKUitem_MOCK(
     'TypeError: INSERT into table SKUITEMS failed',
     {
         RFID: "12345678901234567890123456789015",
@@ -219,7 +219,7 @@ newSKUitem_TEST(
 *      API: PUT /api/skuitems/:rfid
 * =========================================
 */
-editSKUitem_TEST(
+editSKUitem_MOCK(
     '[200] OK',
     {rfid: 12345678901234567890123456789015},
     {
@@ -234,7 +234,7 @@ editSKUitem_TEST(
     [0, 0],
     0
 );
-editSKUitem_TEST(
+editSKUitem_MOCK(
     '[404] no SKU Item associated to rfid',
     {rfid: 99999999999999999999999999999999},
     {
@@ -249,7 +249,7 @@ editSKUitem_TEST(
     [0, 0],
     1
 );
-editSKUitem_TEST(
+editSKUitem_MOCK(
     'TypeError: SELECT from table SKUITEMS failed',
     {rfid: 12345678901234567890123456789015},
     {
@@ -261,7 +261,7 @@ editSKUitem_TEST(
     [1, 0],
     0
 );
-editSKUitem_TEST(
+editSKUitem_MOCK(
     'TypeError: UPDATE table SKUITEMS failed',
     {rfid: 12345678901234567890123456789015},
     {
@@ -279,7 +279,7 @@ editSKUitem_TEST(
 *      API: DELETE /api/skuitems/:rfid
 * =========================================
 */
-deleteSKUitem_TEST(
+deleteSKUitem_MOCK(
     '[204] No Content',
     {rfid: 12345678901234567890123456789015},
     {
@@ -288,7 +288,7 @@ deleteSKUitem_TEST(
     },
     0
 );
-deleteSKUitem_TEST(
+deleteSKUitem_MOCK(
     'TypeErroR: DELETE from table SKUITEMS failed',
     {rfid: 12345678901234567890123456789015},
     TypeError,
@@ -312,14 +312,14 @@ deleteSKUitem_TEST(
  * -----------------------------------------
  *         API: /api/skuitems
  * =========================================
- * @param {String} describe_NAME specific description of the test run
+ * @param {String} describe_NAME specific description of the MOCK run
  * @param {Array} expectedResult JSON Array containing the result of the query
  * @param {Boolean} triggerDatabaseError boolean value that indicates if the dao.all mock implementation should return an error
 */
-function getSKUitems_TEST(describe_NAME, expectedResult, triggerDatabaseError) {
-    describe('TEST: getSKUitems()', () => {
+function getSKUitems_MOCK(describe_NAME, expectedResult, triggerDatabaseError) {
+    describe('MOCK: getSKUitems()', () => {
 
-        /* preparing mock database for testing */
+        /* preparing mock database for MOCKing */
         beforeEach(() => {
             dao.all.mockReset();
             if (triggerDatabaseError) {
@@ -344,7 +344,7 @@ function getSKUitems_TEST(describe_NAME, expectedResult, triggerDatabaseError) {
             }
         });
 
-        /* testing the mock database created */
+        /* MOCKing the mock database created */
         test(describe_NAME, async () => {
             try {
                 const result = await skuItemController.getSKUitems();
@@ -362,16 +362,16 @@ function getSKUitems_TEST(describe_NAME, expectedResult, triggerDatabaseError) {
  * --------------------------------------------------------------
  *               API: GET /api/skuitems/sku/:id
  * ==============================================================
- * @param {String} describe_NAME specific description of the test run
+ * @param {String} describe_NAME specific description of the MOCK run
  * @param {JSON} params JSON Object containing the :id specified
  * @param {Array} expectedResult JSON Array containing the result of the query
  * @param {Array} triggerDatabaseError Array of values that indicates if the dao.all mock implementation should return an error
  * @param {Boolean} triggerNotFoundError Boolean value indicating if the :positionID is present in the DB
 */
-function getSKUitemsBySKUId_TEST(describe_NAME, params, expectedResult, triggerDatabaseError, triggerNotFoundError) {
-    describe('TEST: getSKUitemsBySKUId()', () => {
+function getSKUitemsBySKUId_MOCK(describe_NAME, params, expectedResult, triggerDatabaseError, triggerNotFoundError) {
+    describe('MOCK: getSKUitemsBySKUId()', () => {
 
-        /* preparing mock database for testing */
+        /* preparing mock database for MOCKing */
         beforeEach(() => {
             dao.all.mockReset();
 
@@ -392,7 +392,7 @@ function getSKUitemsBySKUId_TEST(describe_NAME, params, expectedResult, triggerD
                                 position: "800234523412",
                                 availableQuantity: 50,
                                 price: 10.99,
-                                testDescriptors: [1,3,4]
+                                MOCKDescriptors: [1,3,4]
                             }
                         ];
                     }
@@ -417,7 +417,7 @@ function getSKUitemsBySKUId_TEST(describe_NAME, params, expectedResult, triggerD
             });
         });
 
-        /* testing the mock database created */
+        /* MOCKing the mock database created */
         test(describe_NAME, async () => {
             try {
                 const result = await skuItemController.getSKUitemsBySKUId(params);
@@ -434,16 +434,16 @@ function getSKUitemsBySKUId_TEST(describe_NAME, params, expectedResult, triggerD
  * --------------------------------------------------------------
  *                API: GET /api/skuitems/:rfid
  * ==============================================================
- * @param {String} describe_NAME specific description of the test run
+ * @param {String} describe_NAME specific description of the MOCK run
  * @param {JSON} params JSON Object containing the :id specified
  * @param {Array} expectedResult JSON Array containing the result of the query
  * @param {Boolean} triggerDatabaseError Boolean value that indicates if the dao.all mock implementation should return an error
  * @param {Boolean} triggerNotFoundError Boolean value indicating if the :positionID is present in the DB
 */
-function getSKUitemsByRFID_TEST(describe_NAME, params, expectedResult, triggerDatabaseError, triggerNotFoundError) {
-    describe('TEST: getSKUitemsByRFID()', () => {
+function getSKUitemsByRFID_MOCK(describe_NAME, params, expectedResult, triggerDatabaseError, triggerNotFoundError) {
+    describe('MOCK: getSKUitemsByRFID()', () => {
 
-        /* preparing mock database for testing */
+        /* preparing mock database for MOCKing */
         beforeEach(() => {
             dao.all.mockReset();
             dao.all.mockImplementation(() => {
@@ -464,7 +464,7 @@ function getSKUitemsByRFID_TEST(describe_NAME, params, expectedResult, triggerDa
             });
         });
 
-        /* testing the mock database created */
+        /* MOCKing the mock database created */
         test(describe_NAME, async () => {
             try {
                 const result = await skuItemController.getSKUitemsByRFID(params);
@@ -481,16 +481,16 @@ function getSKUitemsByRFID_TEST(describe_NAME, params, expectedResult, triggerDa
  * ---------------------------------------------------------
  *                 API: POST /api/skuitem
  * =========================================================
- * @param {String} describe_NAME specific description of the test run
+ * @param {String} describe_NAME specific description of the MOCK run
  * @param {JSON} request JSON Object containing the SKUitem to add to the DB
  * @param {JSON} expectedResult JSON object returned by the function
  * @param {Boolean} triggerDatabaseError boolean value that indicates if the dao.all mock implementation should return an error
  * @param {Boolean} triggerNotFoundError Boolean value indicating if the :positionID is present in the DB
 */
-function newSKUitem_TEST(describe_NAME, request, expectedResult, triggerDatabaseError, triggerNotFoundError) {
-    describe('TEST: newSKUitem()', () => {
+function newSKUitem_MOCK(describe_NAME, request, expectedResult, triggerDatabaseError, triggerNotFoundError) {
+    describe('MOCK: newSKUitem()', () => {
 
-        /* preparing mock database for testing */
+        /* preparing mock database for MOCKing */
         beforeEach(() => {
             dao.run.mockReset();
             dao.all.mockReset();
@@ -512,7 +512,7 @@ function newSKUitem_TEST(describe_NAME, request, expectedResult, triggerDatabase
                                 position: "800234523412",
                                 availableQuantity: 50,
                                 price: 10.99,
-                                testDescriptors: [1,3,4]
+                                MOCKDescriptors: [1,3,4]
                             }
                         ];
                     }
@@ -545,17 +545,17 @@ function newSKUitem_TEST(describe_NAME, request, expectedResult, triggerDatabase
  * ---------------------------------------------------------
  *             API: PUT /api/skuitems/:rfid
  * =========================================================
- * @param {String} describe_NAME specific description of the test run
+ * @param {String} describe_NAME specific description of the MOCK run
  * @param {JSON} param JSON Object containing the :rfid of the skuitem to modify
  * @param {JSON} request JSON Object containing the SKUitem to add to the DB
  * @param {JSON} expectedResult JSON object returned by the function
  * @param {Boolean} triggerDatabaseError boolean value that indicates if the dao.all mock implementation should return an error
  * @param {Boolean} triggerNotFoundError Boolean value indicating if the :positionID is present in the DB
 */
-function editSKUitem_TEST(describe_NAME, params, request, expectedResult, triggerDatabaseError, triggerNotFoundError) {
-    describe('TEST: editSKUitem()', () => {
+function editSKUitem_MOCK(describe_NAME, params, request, expectedResult, triggerDatabaseError, triggerNotFoundError) {
+    describe('MOCK: editSKUitem()', () => {
 
-        /* preparing mock database for testing */
+        /* preparing mock database for MOCKing */
         beforeEach(() => {
             dao.run.mockReset();
             dao.all.mockReset();
@@ -604,15 +604,15 @@ function editSKUitem_TEST(describe_NAME, params, request, expectedResult, trigge
  * --------------------------------------------------------------
  *                API: DELETE /api/skuitems/:rfid
  * ==============================================================
- * @param {String} describe_NAME specific description of the test run
+ * @param {String} describe_NAME specific description of the MOCK run
  * @param {JSON} params JSON Object containing the :id specified
  * @param {Array} expectedResult JSON Array containing the result of the query
  * @param {Boolean} triggerDatabaseError Boolean value that indicates if the dao.all mock implementation should return an error
 */
-function deleteSKUitem_TEST(describe_NAME, params, expectedResult, triggerDatabaseError) {
-    describe('TEST: deleteSKUitem()', () => {
+function deleteSKUitem_MOCK(describe_NAME, params, expectedResult, triggerDatabaseError) {
+    describe('MOCK: deleteSKUitem()', () => {
 
-        /* preparing mock database for testing */
+        /* preparing mock database for MOCKing */
         beforeEach(() => {
             dao.run.mockReset();
             dao.run.mockImplementation(() => {
@@ -624,7 +624,7 @@ function deleteSKUitem_TEST(describe_NAME, params, expectedResult, triggerDataba
             });
         });
 
-        /* testing the mock database created */
+        /* MOCKing the mock database created */
         test(describe_NAME, async () => {
             try {
                 const result = await skuItemController.deleteSKUitem(params);

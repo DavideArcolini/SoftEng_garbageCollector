@@ -281,9 +281,8 @@ describe("delete test descriptor", () => {
             response.should.have.status(204);
         });
     
-        await agent.delete(`/api/skus/1`).then(async (response) => {
-            response.should.have.status(204);
-        });
+        let sql="DELETE FROM SKUS";
+        dao.run(sql);
 
     });
 

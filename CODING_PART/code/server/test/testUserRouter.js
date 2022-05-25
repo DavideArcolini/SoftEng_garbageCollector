@@ -2,6 +2,8 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 chai.should();
+const DAO = require("../db/DAO");
+const dao = new DAO();
 
 const app = require('../server');
 var agent = chai.request.agent(app);
@@ -29,26 +31,22 @@ let users = [
         password: "testpassword",
         type: "supplier"
     }];
-let return_users = JSON.stringify([
-    {
-        email: "test@clerk.ezwh.com",
-        id: 2,
-        name: "Test",
-        surname: "To Test",
-        type: "clerk"
-    },
-    {
-        email: "supplier1@supplier.ezwh.com",
-        id: 3,
-        name: "Rosario",
-        surname: "Sorbello",
-        type: "supplier"
-    }
-])
+
+describe('get users', () => {
+    getStoredUsers("retrieve users", 200, undefined)
+    getStoredUsers("not empty body", 422, users)
+
+})
+
+describe('get suppliers', () => {
+    getSuppliers("retrieve users", 200, undefined)
+    getSuppliers("not empty body", 422, users)
+})
 
 describe('get user', () => {
     
     before(async() => {
+        await dao.deleteAllUsers()
         await agent.post('/api/newUser')
         .send(usr)
         .then(function (res) {
@@ -56,7 +54,7 @@ describe('get user', () => {
         })
     });
     getUser('getting user data from the system', 200, {
-        id: 2,
+        id: 1,
         username: "test@ezwh.com",
         name: "Test",
         password: "testpassword"
@@ -65,14 +63,14 @@ describe('get user', () => {
     getUser('empty body', 422, {})
 
     getUser('bad username format', 422, {
-        id: 2,
+        id: 1,
         username: "tes",
         name: "Test",
         password: "testpassword"
     });
 
     getUser('bad password format', 422, {
-        id:2,
+        id:1,
         username: "tes",
         name: "Test",
         password: "test"
@@ -80,14 +78,14 @@ describe('get user', () => {
 
     //  401
     getUser('not found: wrong username', 401, {
-        id:2,
+        id:1,
         username: "tes@ezwh.com",
         name: "Test",
         password: "testpassword"
     }, 401)
 
     getUser('not found: wrong password', 401, {
-        id:2,
+        id:1,
         username: "test@ezwh.com",
         name: "Test",
         password: "tespassword"
@@ -210,7 +208,7 @@ function getUser(name, expectedHTTPStatus, usr) {
             .send({username: usr.username, password: usr.password})
             .then(function (r) {
                 r.should.have.status(expectedHTTPStatus);
-                r.body.id.should.equal(2);
+                r.body.id.should.equal(1);
                 r.body.name.should.equal(usr.name);
                 r.body.username.should.equal(usr.username);
                 done();
@@ -264,5 +262,43 @@ function deleteUser(name, expectedHTTPStatus, param_req){
                 else {r.body.error.should.equal("Service Unavailable")}
                 done();
             }).catch(done);
+    })
+}
+
+function getStoredUsers(name, expectedHTTPStatus, body_test) {
+    it(name, function(done) {
+        if(!body_test){
+            agent.get("/api/users").then(function (r) {
+                r.should.have.status(expectedHTTPStatus);
+                done();
+            }).catch(done)
+        }
+        else {
+            agent.get("/api/users")
+            .send(body_test)
+            .then(function (r) {
+                r.should.have.status(expectedHTTPStatus);
+                done();
+            }).catch(done)
+        }
+    })
+}
+
+function getSuppliers(name, expectedHTTPStatus, body_test) {
+    it(name, function(done) {
+        if(!body_test){
+            agent.get("/api/users").then(function (r) {
+                r.should.have.status(expectedHTTPStatus);
+                done();
+            }).catch(done)
+        }
+        else {
+            agent.get("/api/users")
+            .send(body_test)
+            .then(function (r) {
+                r.should.have.status(expectedHTTPStatus);
+                done();
+            }).catch(done)
+        }
     })
 }

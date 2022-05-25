@@ -1,5 +1,5 @@
 /**
- *      TESTING CLASS: SKU
+ *      MOCKING CLASS: SKU
  * ===========================
  * 
 */
@@ -25,25 +25,25 @@ const skuController     = new SKUController(dao);
 
 /*
 * -----------------------------------------
-*         retrieveTestDescriptor
+*         retrieveMOCKDescriptor
 * =========================================
 */
-retrieveTestDescriptor_TEST(
+retrieveMOCKDescriptor_MOCK(
     'Error with database',
     {SKUid: 1},
     TypeError,
     1,
     0
 );
-retrieveTestDescriptor_TEST(
-    'No test descriptors associated to SKU',
+retrieveMOCKDescriptor_MOCK(
+    'No MOCK descriptors associated to SKU',
     {SKUid: 999},
     [],
     0,
     1
 );
-retrieveTestDescriptor_TEST(
-    'retrieved test descriptors associated to SKU',
+retrieveMOCKDescriptor_MOCK(
+    'retrieved MOCK descriptors associated to SKU',
     {SKUid: 1},
     [1, 2],
     0,
@@ -55,7 +55,7 @@ retrieveTestDescriptor_TEST(
 *          API: GET /api/skus
 * =========================================
 */
-getStoredSKUs_TEST(
+getStoredSKUs_MOCK(
     '[200] OK',
     {
         code: 200, 
@@ -69,7 +69,7 @@ getStoredSKUs_TEST(
                 position: "800234523412",
                 availableQuantity: 50,
                 price: 10.99,
-                testDescriptors: [1, 2, 3]
+                MOCKDescriptors: [1, 2, 3]
             },
             {
                 id :2,
@@ -80,21 +80,21 @@ getStoredSKUs_TEST(
                 position: "800234543412",
                 availableQuantity: 55,
                 price: 10.99,
-                testDescriptors: [1, 2, 3]
+                MOCKDescriptors: [1, 2, 3]
             }
         ]
     },
     0, 
     0
 );
-getStoredSKUs_TEST(
+getStoredSKUs_MOCK(
     'TypeError: SELECT from table SKUS failed',
     TypeError,
     1, 
     0
 );
-getStoredSKUs_TEST(
-    '[500]: retrieveTestDescriptor failed',
+getStoredSKUs_MOCK(
+    '[500]: retrieveMOCKDescriptor failed',
     TypeError,
     0, 
     1
@@ -105,7 +105,7 @@ getStoredSKUs_TEST(
 *          API: GET /api/skus/:id
 * =========================================
 */
-getStoredSKUById_TEST(
+getStoredSKUById_MOCK(
     '[200] OK',
     {id: 1},
     {
@@ -119,14 +119,14 @@ getStoredSKUById_TEST(
             position: "800234523412",
             availableQuantity: 50,
             price: 10.99,
-            testDescriptors: [ 1, 2, 3 ]
+            MOCKDescriptors: [ 1, 2, 3 ]
         }
     },
     0, 
     0, 
     0
 );
-getStoredSKUById_TEST(
+getStoredSKUById_MOCK(
     '[404] Not Found',
     {id: 99999},
     {
@@ -137,15 +137,15 @@ getStoredSKUById_TEST(
     1, 
     0
 );
-getStoredSKUById_TEST(
-    '[500] retrieveTestDescriptor failed',
+getStoredSKUById_MOCK(
+    '[500] retrieveMOCKDescriptor failed',
     {id: 1},
     TypeError,
     0, 
     0, 
     1
 );
-getStoredSKUById_TEST(
+getStoredSKUById_MOCK(
     'TypeError: SELECT from table SKUS failed',
     {id: 1},
     TypeError,
@@ -160,7 +160,7 @@ getStoredSKUById_TEST(
 *             API: POST /api/sku
 * =========================================
 */
-newSKU_TEST(
+newSKU_MOCK(
     '[201] Created',
     {
         description: "a new sku",
@@ -176,7 +176,7 @@ newSKU_TEST(
     },
     0
 );
-newSKU_TEST(
+newSKU_MOCK(
     'TypeError: INSERT into table SKUS failed',
     {
         description: "a new sku",
@@ -195,7 +195,7 @@ newSKU_TEST(
 *             API: POST /api/sku
 * =========================================
 */
-editSKU_TEST(
+editSKU_MOCK(
     '[200] OK',
     {id: 1},
     {
@@ -214,7 +214,7 @@ editSKU_TEST(
     [0, 0],         /* triggerNotFoundError         */
     0               /* triggerNonExistingPosition   */
 );
-editSKU_TEST(
+editSKU_MOCK(
     '[200] OK (SKU.position: null)',
     {id: 1},
     {
@@ -233,7 +233,7 @@ editSKU_TEST(
     [0, 0],         /* triggerNotFoundError         */
     1               /* triggerNonExistingPosition   */
 );
-editSKU_TEST(
+editSKU_MOCK(
     '[404] Not Found: SKU not existing',
     {id: 99999},
     {
@@ -252,7 +252,7 @@ editSKU_TEST(
     [1, 0],         /* triggerNotFoundError         */
     0               /* triggerNonExistingPosition   */
 );
-editSKU_TEST(
+editSKU_MOCK(
     'TypeError: SKU associated with a non existing position',
     {id: 1},
     {
@@ -268,7 +268,7 @@ editSKU_TEST(
     [0, 1],         /* triggerNotFoundError         */
     0               /* triggerNonExistingPosition   */
 );
-editSKU_TEST(
+editSKU_MOCK(
     'TypeError: UPDATE table SKUS failed',
     {id: 1},
     {
@@ -284,7 +284,7 @@ editSKU_TEST(
     [0, 0],         /* triggerNotFoundError         */
     1               /* triggerNonExistingPosition   */
 );
-editSKU_TEST(
+editSKU_MOCK(
     'TypeError: SELECT from table SKUS failed',
     {id: 1},
     {
@@ -300,7 +300,7 @@ editSKU_TEST(
     [0, 0],         /* triggerNotFoundError         */
     0               /* triggerNonExistingPosition   */
 );
-editSKU_TEST(
+editSKU_MOCK(
     'TypeError: SELECT from table POSITIONS failed',
     {id: 1},
     {
@@ -316,7 +316,7 @@ editSKU_TEST(
     [0, 0],         /* triggerNotFoundError         */
     0               /* triggerNonExistingPosition   */
 );
-editSKU_TEST(
+editSKU_MOCK(
     'TypeError: UPDATE table SKUS failed',
     {id: 1},
     {
@@ -332,7 +332,7 @@ editSKU_TEST(
     [0, 0],         /* triggerNotFoundError         */
     0               /* triggerNonExistingPosition   */
 );
-editSKU_TEST(
+editSKU_MOCK(
     'TypeError: UPDATE table POSITIONS failed',
     {id: 1},
     {
@@ -348,7 +348,7 @@ editSKU_TEST(
     [0, 0],         /* triggerNotFoundError         */
     0               /* triggerNonExistingPosition   */
 );
-editSKU_TEST(
+editSKU_MOCK(
     'TypeError: weight/volume constraints failed',
     {id: 1},
     {
@@ -374,7 +374,7 @@ editSKU_TEST(
 *       API: PUT /api/sku/:id/position
 * =========================================
 */
-addOrEditPositionSKU_TEST(
+addOrEditPositionSKU_MOCK(
     '[200] OK',
     {id: 1},
     {position: "800234523412"},
@@ -387,7 +387,7 @@ addOrEditPositionSKU_TEST(
     [0, 0],                 /* triggerNonExistingPosition   */
     0                       /* triggerConstraintError       */
 );
-addOrEditPositionSKU_TEST(
+addOrEditPositionSKU_MOCK(
     '[422] position is already assigned to a sku',
     {id: 1},
     {position: "800234523412"},
@@ -400,7 +400,7 @@ addOrEditPositionSKU_TEST(
     [1, 0],                 /* triggerNonExistingPosition   */
     0                       /* triggerConstraintError       */
 );
-addOrEditPositionSKU_TEST(
+addOrEditPositionSKU_MOCK(
     'TypeError: SELECT from table SKUS failed (sku.position)',
     {id: 1},
     {position: "999999999999"},
@@ -410,7 +410,7 @@ addOrEditPositionSKU_TEST(
     [0, 0],                 /* triggerNonExistingPosition   */
     0                       /* triggerConstraintError       */
 );
-addOrEditPositionSKU_TEST(
+addOrEditPositionSKU_MOCK(
     'TypeError: SELECT from table SKUS failed (sku.id)',
     {id: 1},
     {position: "800234523412"},
@@ -420,7 +420,7 @@ addOrEditPositionSKU_TEST(
     [0, 0],                 /* triggerNonExistingPosition   */
     0                       /* triggerConstraintError       */
 );
-addOrEditPositionSKU_TEST(
+addOrEditPositionSKU_MOCK(
     '[404]: SKU does not exist',
     {id: 99999},
     {position: "800234523412"},
@@ -433,7 +433,7 @@ addOrEditPositionSKU_TEST(
     [0, 0],                 /* triggerNonExistingPosition   */
     0                       /* triggerConstraintError       */
 );
-addOrEditPositionSKU_TEST(
+addOrEditPositionSKU_MOCK(
     '[200]: OK (SKU.position !== null)',
     {id: 1},
     {position: "800234523412"},
@@ -446,7 +446,7 @@ addOrEditPositionSKU_TEST(
     [0, 1],                 /* triggerNonExistingPosition   */
     0                       /* triggerConstraintError       */
 );
-addOrEditPositionSKU_TEST(
+addOrEditPositionSKU_MOCK(
     'TypeError: UPDATE table position failed (SKU.position !== null)',
     {id: 1},
     {position: "800234523412"},
@@ -456,7 +456,7 @@ addOrEditPositionSKU_TEST(
     [0, 1],                 /* triggerNonExistingPosition   */
     0                       /* triggerConstraintError       */
 );
-addOrEditPositionSKU_TEST(
+addOrEditPositionSKU_MOCK(
     'TypeError: SELECT from table POSITIONS failed (position.positionID)',
     {id: 1},
     {position: "800234523412"},
@@ -466,7 +466,7 @@ addOrEditPositionSKU_TEST(
     0,                      /* triggerNonExistingPosition   */
     0                       /* triggerConstraintError       */
 );
-addOrEditPositionSKU_TEST(
+addOrEditPositionSKU_MOCK(
     '[404]: positionID does not exist',
     {id: 1},
     {position: "999999999999"},
@@ -479,7 +479,7 @@ addOrEditPositionSKU_TEST(
     0,                      /* triggerNonExistingPosition   */
     0                       /* triggerConstraintError       */
 );
-addOrEditPositionSKU_TEST(
+addOrEditPositionSKU_MOCK(
     '[422]: SKU does not satisfy position constraints',
     {id: 1},
     {position: "800234523412"},
@@ -492,7 +492,7 @@ addOrEditPositionSKU_TEST(
     0,                      /* triggerNonExistingPosition   */
     1                       /* triggerConstraintError       */
 );
-addOrEditPositionSKU_TEST(
+addOrEditPositionSKU_MOCK(
     'TypeError: UPDATE table SKUS failed',
     {id: 1},
     {position: "800234523412"},
@@ -502,7 +502,7 @@ addOrEditPositionSKU_TEST(
     0,                      /* triggerNonExistingPosition   */
     0                       /* triggerConstraintError       */
 );
-addOrEditPositionSKU_TEST(
+addOrEditPositionSKU_MOCK(
     'TypeError: UPDATE table POSITIONS failed',
     {id: 1},
     {position: "800234523412"},
@@ -512,7 +512,7 @@ addOrEditPositionSKU_TEST(
     [0, 0],                 /* triggerNonExistingPosition   */
     0                       /* triggerConstraintError       */
 );
-addOrEditPositionSKU_TEST(
+addOrEditPositionSKU_MOCK(
     'TypeError: UPDATE table POSITIONS failed',
     {id: 1},
     {position: "800234523412"},
@@ -529,7 +529,7 @@ addOrEditPositionSKU_TEST(
 *       API: DELETE /api/skus/:id
 * =========================================
 */
-deleteSKU_TEST(
+deleteSKU_MOCK(
     '[204] No Content',
     {id: 1},
     {
@@ -541,8 +541,8 @@ deleteSKU_TEST(
     0,                      /* triggerNonExistingPosition   */
     0                       /* triggerUtilityFunctionError  */
 );
-deleteSKU_TEST(
-    '[422] cannot delete SKU with associated test descriptors',
+deleteSKU_MOCK(
+    '[422] cannot delete SKU with associated MOCK descriptors',
     {id: 1},
     {
         code: 422,
@@ -553,7 +553,7 @@ deleteSKU_TEST(
     0,                      /* triggerNonExistingPosition   */
     1                       /* triggerUtilityFunctionError  */
 );
-deleteSKU_TEST(
+deleteSKU_MOCK(
     '[422] cannot delete SKU with associated SKUitems',
     {id: 1},
     {
@@ -565,7 +565,7 @@ deleteSKU_TEST(
     0,                      /* triggerNonExistingPosition   */
     0                       /* triggerUtilityFunctionError  */
 );
-deleteSKU_TEST(
+deleteSKU_MOCK(
     '[204] No Content (with position updated)',
     {id: 1},
     {
@@ -577,7 +577,7 @@ deleteSKU_TEST(
     1,                      /* triggerNonExistingPosition   */
     0                       /* triggerUtilityFunctionError  */
 );
-deleteSKU_TEST(
+deleteSKU_MOCK(
     'TypeError: UPDATE constraints failed',
     {id: 1},
     TypeError,
@@ -586,7 +586,7 @@ deleteSKU_TEST(
     0,                      /* triggerNonExistingPosition   */
     0                       /* triggerUtilityFunctionError  */
 );
-deleteSKU_TEST(
+deleteSKU_MOCK(
     'TypeError: DELETE from table SKUS failed',
     {id: 1},
     TypeError,
@@ -611,8 +611,8 @@ deleteSKU_TEST(
  *  |                                                  |
  *  + ------------------------------------------------ +
 */
-function retrieveTestDescriptor_TEST(describe_NAME, request, expectedResult, triggerDatabaseError, triggerEmpty) {
-    describe('TEST: retrieveTestDescriptor()', () => {
+function retrieveMOCKDescriptor_MOCK(describe_NAME, request, expectedResult, triggerDatabaseError, triggerEmpty) {
+    describe('MOCK: retrieveMOCKDescriptor()', () => {
         beforeEach(() => {
             dao.all.mockReset();
             dao.all.mockImplementation(() => {
@@ -625,15 +625,15 @@ function retrieveTestDescriptor_TEST(describe_NAME, request, expectedResult, tri
                         return [
                             {
                                 id: 1,
-                                name: "test descriptor 1",
-                                procedureDescription: "This test is described by...",
+                                name: "MOCK descriptor 1",
+                                procedureDescription: "This MOCK is described by...",
                                 idSKU: 1
                     
                             },
                             {
                                 id :2,
-                                name: "test descriptor 2",
-                                procedureDescription: "This test is described by...",
+                                name: "MOCK descriptor 2",
+                                procedureDescription: "This MOCK is described by...",
                                 idSKU: 2
                             }
                         ];
@@ -644,7 +644,7 @@ function retrieveTestDescriptor_TEST(describe_NAME, request, expectedResult, tri
 
         test(describe_NAME, async () => {
             try {
-                const result = await skuController.retrieveTestDescriptor(dao, request);
+                const result = await skuController.retrieveMOCKDescriptor(dao, request);
                 expect(result).toEqual(expectedResult);
             } catch (error) {
                 expect(error).toBeInstanceOf(expectedResult);
@@ -658,17 +658,17 @@ function retrieveTestDescriptor_TEST(describe_NAME, request, expectedResult, tri
  * -----------------------------------------
  *         API: GET /api/skus
  * =========================================
- * @param {String} describe_NAME specific description of the test run
+ * @param {String} describe_NAME specific description of the MOCK run
  * @param {Array} expectedResult JSON Array containing the result of the query
  * @param {Boolean} triggerDatabaseError boolean value that indicates if the dao.all mock implementation should return an error
- * @param {Boolean} triggerUtilityFunctionError boolean value indicating the result of the utility function retrieveTestDescriptor
+ * @param {Boolean} triggerUtilityFunctionError boolean value indicating the result of the utility function retrieveMOCKDescriptor
 */
-function getStoredSKUs_TEST(describe_NAME, expectedResult, triggerDatabaseError, triggerUtilityFunctionError) {
-    describe('TEST: getStoredSKUs()', () => {
+function getStoredSKUs_MOCK(describe_NAME, expectedResult, triggerDatabaseError, triggerUtilityFunctionError) {
+    describe('MOCK: getStoredSKUs()', () => {
 
-        /* preparing mock database for testing */
+        /* preparing mock database for MOCKing */
         beforeEach(() => {
-            skuController.retrieveTestDescriptor = jest.fn().mockImplementation(() => {
+            skuController.retrieveMOCKDescriptor = jest.fn().mockImplementation(() => {
                 if (triggerUtilityFunctionError) {
                     throw new TypeError;
                 } else {
@@ -706,7 +706,7 @@ function getStoredSKUs_TEST(describe_NAME, expectedResult, triggerDatabaseError,
             });
         });
 
-        /* testing the mock database created */
+        /* MOCKing the mock database created */
         test(describe_NAME, async () => {
             try {
                 const result = await skuController.getStoredSKUs();
@@ -723,19 +723,19 @@ function getStoredSKUs_TEST(describe_NAME, expectedResult, triggerDatabaseError,
  * -----------------------------------------
  *         API: GET /api/skus/:id
  * =========================================
- * @param {String} describe_NAME specific description of the test run
+ * @param {String} describe_NAME specific description of the MOCK run
  * @param {JSON} params JSON Object containing the :id specified
  * @param {Array} expectedResult JSON Array containing the result of the query
  * @param {Boolean} triggerDatabaseError boolean value that indicates if the dao.all mock implementation should return an error
  * @param {Boolean} triggerNotFoundError Boolean value indicating if the :positionID is present in the DB
- * @param {Boolean} triggerUtilityFunctionError boolean value indicating the result of the utility function retrieveTestDescriptor
+ * @param {Boolean} triggerUtilityFunctionError boolean value indicating the result of the utility function retrieveMOCKDescriptor
 */
-function getStoredSKUById_TEST(describe_NAME, params, expectedResult, triggerDatabaseError, triggerNotFoundError, triggerUtilityFunctionError) {
-    describe('TEST: getStoredSKUById()', () => {
+function getStoredSKUById_MOCK(describe_NAME, params, expectedResult, triggerDatabaseError, triggerNotFoundError, triggerUtilityFunctionError) {
+    describe('MOCK: getStoredSKUById()', () => {
 
-        /* preparing mock database for testing */
+        /* preparing mock database for MOCKing */
         beforeEach(() => {
-            skuController.retrieveTestDescriptor = jest.fn().mockImplementation(() => {
+            skuController.retrieveMOCKDescriptor = jest.fn().mockImplementation(() => {
                 if (triggerUtilityFunctionError) {
                     throw new TypeError();
                 } else {
@@ -766,7 +766,7 @@ function getStoredSKUById_TEST(describe_NAME, params, expectedResult, triggerDat
             });
         });
 
-        /* testing the mock database created */
+        /* MOCKing the mock database created */
         test(describe_NAME, async () => {
             try {
                 const result = await skuController.getStoredSKUById(params);
@@ -783,15 +783,15 @@ function getStoredSKUById_TEST(describe_NAME, params, expectedResult, triggerDat
  * -----------------------------------------------------
  *                API: POST /api/sku
  * =====================================================
- * @param {String} describe_NAME specific description of the test run
+ * @param {String} describe_NAME specific description of the MOCK run
  * @param {JSON} request JSON Object containing the SKUitem to add to the DB
  * @param {Array} expectedResult JSON Array containing the result of the query
  * @param {Boolean} triggerDatabaseError boolean value that indicates if the dao.all mock implementation should return an error
 */
-function newSKU_TEST(describe_NAME, request, expectedResult, triggerDatabaseError) {
-    describe('TEST: newSKU()', () => {
+function newSKU_MOCK(describe_NAME, request, expectedResult, triggerDatabaseError) {
+    describe('MOCK: newSKU()', () => {
 
-        /* preparing mock database for testing */
+        /* preparing mock database for MOCKing */
         beforeEach(() => {
             dao.run.mockReset();
             dao.run.mockImplementation(() => {
@@ -803,7 +803,7 @@ function newSKU_TEST(describe_NAME, request, expectedResult, triggerDatabaseErro
             });
         });
 
-        /* testing the mock database created */
+        /* MOCKing the mock database created */
         test(describe_NAME, async () => {
             try {
                 const result = await skuController.newSKU(request);
@@ -823,7 +823,7 @@ function newSKU_TEST(describe_NAME, request, expectedResult, triggerDatabaseErro
  * -----------------------------------------------------
  *                 API: PUT /api/sku/:id
  * =====================================================
- * @param {String} describe_NAME specific description of the test run
+ * @param {String} describe_NAME specific description of the MOCK run
  * @param {JSON} params JSON Object containing the :id specified
  * @param {JSON} request JSON Object containing the SKUitem to add to the DB
  * @param {Array} expectedResult JSON Array containing the result of the query
@@ -831,10 +831,10 @@ function newSKU_TEST(describe_NAME, request, expectedResult, triggerDatabaseErro
  * @param {Array} triggerNotFoundError Boolean values indicating if the :positionID is present in the DB
  * @param {Boolean} triggerNonExistingPosition Boolean value indicating if the SKU is associated to a position 
 */
-function editSKU_TEST(describe_NAME, params, request, expectedResult, triggerDatabaseError, triggerNotFoundError, triggerNonExistingPosition) {
-    describe('TEST: editSKU()', () => {
+function editSKU_MOCK(describe_NAME, params, request, expectedResult, triggerDatabaseError, triggerNotFoundError, triggerNonExistingPosition) {
+    describe('MOCK: editSKU()', () => {
 
-        /* preparing mock database for testing */
+        /* preparing mock database for MOCKing */
         beforeEach(() => {
             dao.all.mockReset();
             dao.run.mockReset();
@@ -911,7 +911,7 @@ function editSKU_TEST(describe_NAME, params, request, expectedResult, triggerDat
             });
         });
        
-        /* testing the mock database created */
+        /* MOCKing the mock database created */
         test(describe_NAME, async () => {
             try {
                 const result = await skuController.editSKU(params, request);
@@ -930,7 +930,7 @@ function editSKU_TEST(describe_NAME, params, request, expectedResult, triggerDat
  * -----------------------------------------------------
  *           API: PUT /api/sku/:id/position
  * =====================================================
- * @param {String} describe_NAME specific description of the test run
+ * @param {String} describe_NAME specific description of the MOCK run
  * @param {JSON} params JSON Object containing the :id specified
  * @param {JSON} request JSON Object containing the SKUitem to add to the DB
  * @param {Array} expectedResult JSON Array containing the result of the query
@@ -939,10 +939,10 @@ function editSKU_TEST(describe_NAME, params, request, expectedResult, triggerDat
  * @param {Boolean} triggerNonExistingPosition Boolean value indicating if the SKU is associated to a position 
  * @param {Boolean} triggerConstraintError Boolean value indicating if the SKU does not satisfy position constraints
 */
-function addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResult, triggerDatabaseError, triggerNotFoundError, triggerNonExistingPosition, triggerConstraintError) {
-    describe('TEST: addOrEditPositionSKU()', () => {
+function addOrEditPositionSKU_MOCK(describe_NAME, params, request, expectedResult, triggerDatabaseError, triggerNotFoundError, triggerNonExistingPosition, triggerConstraintError) {
+    describe('MOCK: addOrEditPositionSKU()', () => {
 
-        /* preparing mock database for testing */
+        /* preparing mock database for MOCKing */
         beforeEach(() => {
             dao.all.mockReset();
             dao.run.mockReset();
@@ -1073,7 +1073,7 @@ function addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResul
             });
         });
        
-        /* testing the mock database created */
+        /* MOCKing the mock database created */
         test(describe_NAME, async () => {
             try {
                 const result = await skuController.addOrEditPositionSKU(params, request);
@@ -1090,23 +1090,23 @@ function addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResul
  * -----------------------------------------------------
  *             API: DELETE /api/skus/:id
  * =====================================================
- * @param {String} describe_NAME specific description of the test run
+ * @param {String} describe_NAME specific description of the MOCK run
  * @param {JSON} params JSON Object containing the :id specified
  * @param {Array} expectedResult JSON Array containing the result of the query
  * @param {Array} triggerDatabaseError boolean values that indicate if the dao.all mock implementation should return an error
  * @param {Boolean} triggerConstraintError Boolean value indicating if the SKU does not satisfy position constraints
  * @param {Boolean} triggerNonExistingPosition Boolean value indicating if the SKU is associated to a position 
- * @param {Boolean} triggerUtilityFunctionError boolean value indicating the result of the utility function retrieveTestDescriptor
+ * @param {Boolean} triggerUtilityFunctionError boolean value indicating the result of the utility function retrieveMOCKDescriptor
 */
-function deleteSKU_TEST(describe_NAME, params, expectedResult, triggerDatabaseError, triggerConstraintError, triggerNonExistingPosition, triggerUtilityFunctionError) {
-    describe('TEST: deleteSKU()', () => {
+function deleteSKU_MOCK(describe_NAME, params, expectedResult, triggerDatabaseError, triggerConstraintError, triggerNonExistingPosition, triggerUtilityFunctionError) {
+    describe('MOCK: deleteSKU()', () => {
 
-        /* preparing mock database for testing */
+        /* preparing mock database for MOCKing */
         beforeEach(() => {
             dao.all.mockReset();
             dao.run.mockReset();
 
-            skuController.retrieveTestDescriptor = jest.fn().mockImplementation(() => {
+            skuController.retrieveMOCKDescriptor = jest.fn().mockImplementation(() => {
                 if (triggerUtilityFunctionError) {
                     return [1, 2, 3];
                 } else {
@@ -1176,7 +1176,7 @@ function deleteSKU_TEST(describe_NAME, params, expectedResult, triggerDatabaseEr
             });
         });
 
-        /* testing the mock database created */
+        /* MOCKing the mock database created */
         test(describe_NAME, async () => {
             try {
                 const result = await skuController.deleteSKU(params);

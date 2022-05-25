@@ -10,11 +10,11 @@ const bcrypt        = require('bcrypt');
 
 /**
  * API:
- *            POST /api/newUser
+ *            POST /api/newUser_TEST_mock
  *  =================================================
  */
 //  201
-newUser("insert ok", {
+newUser_TEST_mock("insert ok", {
     username:"supplier1@ezwh.com",
     name : "Voldemort",
     surname: "You-Know-Who",
@@ -23,7 +23,7 @@ newUser("insert ok", {
 }, undefined, 201);
 
 //  409
-newUser("user already exists", {
+newUser_TEST_mock("user already exists", {
     username:"supplier1@ezwh.com",
     name : "Voldemort",
     surname: "You-Know-Who",
@@ -34,14 +34,14 @@ newUser("user already exists", {
 , 409);
 
 //  503
-newUser("bad request", undefined, undefined, 503);
+newUser_TEST_mock("bad request", undefined, undefined, 503);
 
 /**
  * API:
  *            GET /api/users
  *  =================================================
  */
-getStoredUsers([{
+getStoredUsers_TEST_mock([{
     id: 2,
     name: "Pippo",
     surname: "Franco",
@@ -54,7 +54,7 @@ getStoredUsers([{
  *            GET /api/suppliers
  *  =================================================
  */
-getSuppliers([{
+getSuppliers_TEST_mock([{
     id: 2,
     name: "Pippo",
     surname: "Franco",
@@ -68,7 +68,7 @@ getSuppliers([{
  *  =================================================
  */
 //  ok
-getUser("return ok", {username: "manager1@ezwh.com", password: "testpassword"}, {
+getUser_TEST_mock("return ok", {username: "manager1@ezwh.com", password: "testpassword"}, {
     id: 1,
     username: "manager1@ezwh.com",
     name: "Dave",
@@ -84,7 +84,7 @@ getUser("return ok", {username: "manager1@ezwh.com", password: "testpassword"}, 
 
 //  401
 //  wrong password
-getUser("wrong password", {username: "manager1@ezwh.com", password: "pippopluto"}, 
+getUser_TEST_mock("wrong password", {username: "manager1@ezwh.com", password: "pippopluto"}, 
 {
     id: 1,
     username: "manager1@ezwh.com",
@@ -94,11 +94,11 @@ getUser("wrong password", {username: "manager1@ezwh.com", password: "pippopluto"
     password: "testpassword"
 }, 401);
 //  wrong username
-getUser("wrong username",{username: "customer1@ezwh.com", password: "testpassword"}, 
+getUser_TEST_mock("wrong username",{username: "customer1@ezwh.com", password: "testpassword"}, 
     undefined, 401);
 
 //  500
-getUser("bad request", undefined, 
+getUser_TEST_mock("bad request", undefined, 
 {
     id: 1,
     username: "manager1@ezwh.com",
@@ -113,7 +113,7 @@ getUser("bad request", undefined,
  *  =================================================
  */
 //  200
-editUser("edited ok",{
+editUser_TEST_mock("edited ok",{
     "oldType" : "clerk",
     "newType" : "qualityEmployee"
     },
@@ -123,7 +123,7 @@ editUser("edited ok",{
 )
 //  404
 //  user not found
-editUser("user not found",{
+editUser_TEST_mock("user not found",{
     "oldType" : "clerk",
     "newType" : "qualityEmployee"
     },
@@ -133,7 +133,7 @@ editUser("user not found",{
 )
 
 //  503
-editUser("bad request", undefined,
+editUser_TEST_mock("bad request", undefined,
     "user1@ezwh.com",
     {username: "user1@ezwh.com"},
     503
@@ -146,7 +146,7 @@ editUser("bad request", undefined,
  */
 
 //  204
-deleteUser(
+deleteUser_TEST_mock(
     "deleted ok",
     {type: "customer", username : "customer1@ezwh.com"},
     {type: "customer", username : "customer1@ezwh.com"},
@@ -154,7 +154,7 @@ deleteUser(
 )
 
 //  503
-deleteUser(
+deleteUser_TEST_mock(
     "bad request",
     undefined,
     {type: "customer", username : "customer1@ezwh.com"},
@@ -165,7 +165,7 @@ deleteUser(
     Definitions of testing functions
     =================================================
 */
-function newUser(name, req, to_test, expected) {
+function newUser_TEST_mock(name, req, to_test, expected) {
     describe('new user', () => {
         beforeEach( () => {
             dao.get.mockReset();
@@ -180,7 +180,7 @@ function newUser(name, req, to_test, expected) {
     }) 
 }
 
-function getStoredUsers(expected){
+function getStoredUsers_TEST_mock(expected){
     describe('get users', () => {
         beforeEach( () => {
             dao.all.mockReset();
@@ -200,7 +200,7 @@ function getStoredUsers(expected){
     })
 }
 
-function getSuppliers(expected){
+function getSuppliers_TEST_mock(expected){
     describe('get suppliers', () => {
         beforeEach( () => {
             dao.all.mockReset();
@@ -220,7 +220,7 @@ function getSuppliers(expected){
     })
 }
 
-function getUser(name, req, to_test, expected){
+function getUser_TEST_mock(name, req, to_test, expected){
     describe('login', ()=> {
         beforeEach(async () => {
             dao.get.mockReset();
@@ -249,7 +249,7 @@ function getUser(name, req, to_test, expected){
     })
 }
 
-function editUser(name, req, username, to_test, expected) {
+function editUser_TEST_mock(name, req, username, to_test, expected) {
     describe('edit user',() => {
         beforeEach(async () => {
             dao.get.mockReset();
@@ -264,7 +264,7 @@ function editUser(name, req, username, to_test, expected) {
     })
 }
 
-function deleteUser(name, req, to_test, expected) {
+function deleteUser_TEST_mock(name, req, to_test, expected) {
     describe('delete user',() => {
         beforeEach( async () => {
             dao.get.mockReset();
@@ -274,16 +274,6 @@ function deleteUser(name, req, to_test, expected) {
 
         test(name, async ()=> {
             let res = await user.deleteUser(req);
-            expect(res).toEqual(expected);
-        })
-    })
-}
-
-function logout(req, expected) {
-    describe('logout', () => {
-        
-        test('logout', async() => {
-            let res = await user.logout(req);
             expect(res).toEqual(expected);
         })
     })

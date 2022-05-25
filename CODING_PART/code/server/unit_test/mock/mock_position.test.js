@@ -1,5 +1,5 @@
 /**
- *      TESTING CLASS: POSITION 
+ *      MOCKING CLASS: POSITION 
  * ==================================
  * 
 */
@@ -28,7 +28,7 @@ const position              = new PositionController(dao);
 *         API: GET /api/positions 
 * =========================================
 */
-getPositions_TEST(
+getPositions_MOCK(
     '[200] OK', 
     [
         {
@@ -54,7 +54,7 @@ getPositions_TEST(
     ], 
     false   /* triggerDatabaseError */
 );
-getPositions_TEST(
+getPositions_MOCK(
     'TypeError: Internal Server Error', 
     TypeError,
     true    /* triggerDatabaseError */
@@ -65,7 +65,7 @@ getPositions_TEST(
  *                 API: POST /api/position
  * =========================================================
  */
-newPosition_TEST(
+newPosition_MOCK(
     '[201] Created',
     {
         positionID: "800234543412",
@@ -82,7 +82,7 @@ newPosition_TEST(
     false    /* triggerDatabaseError */
 );
 
-newPosition_TEST(
+newPosition_MOCK(
     'TypeError: Internal Server Error',
     {
         positionID: "800234543412",
@@ -101,7 +101,7 @@ newPosition_TEST(
 *      PUT /api/position/:positionID
 * =========================================
 */
-editPosition_TEST(
+editPosition_MOCK(
     '[200] OK',
     {positionID: "801234543412"},
     {
@@ -120,7 +120,7 @@ editPosition_TEST(
     [0, 0, 0],   /* triggerDatabaseError[] */
     [0, 0]       /* triggerNotFoundError */
 );
-editPosition_TEST(
+editPosition_MOCK(
     '[200] OK (no SKU.position updated)',
     {positionID: "801234543412"},
     {
@@ -139,7 +139,7 @@ editPosition_TEST(
     [0, 0, 0],   /* triggerDatabaseError[] */
     [0, 1]       /* triggerNotFoundError */
 );
-editPosition_TEST(
+editPosition_MOCK(
     '[404] Not Found',
     {positionID: "801234543412"},
     {
@@ -158,7 +158,7 @@ editPosition_TEST(
     [0, 0, 0],   /* triggerDatabaseError[] */
     [1, 0]       /* triggerNotFoundError */
 );
-editPosition_TEST(
+editPosition_MOCK(
     '[422] Unprocessable Entity',
     {positionID: "801234543412"},
     {
@@ -177,7 +177,7 @@ editPosition_TEST(
     [0, 0, 0],   /* triggerDatabaseError[] */
     [0, 0]       /* triggerNotFoundError */
 );
-editPosition_TEST(
+editPosition_MOCK(
     'TypeError: SELECT from table POSITIONS failed',
     {positionID: "801234543412"},
     {
@@ -193,7 +193,7 @@ editPosition_TEST(
     [1, 0, 0],   /* triggerDatabaseError[] */
     [0, 0]       /* triggerNotFoundError */
 );
-editPosition_TEST(
+editPosition_MOCK(
     'TypeError: SELECT from table SKUS failed',
     {positionID: "801234543412"},
     {
@@ -209,7 +209,7 @@ editPosition_TEST(
     [0, 1, 0],   /* triggerDatabaseError[] */
     [0, 0]       /* triggerNotFoundError */
 );
-editPosition_TEST(
+editPosition_MOCK(
     'TypeError: UPDATE table POSITIONS failed',
     {positionID: "801234543412"},
     {
@@ -231,7 +231,7 @@ editPosition_TEST(
 *      PUT /api/position/:positionID/changeID
 * ================================================
 */
-editPositionID_TEST(
+editPositionID_MOCK(
     '[200] OK',
     {positionID: "801234543412"},
     {newPositionID: "800234543412"},
@@ -243,7 +243,7 @@ editPositionID_TEST(
     0,           /* triggerNotFoundError */
     0            /* updateSKU */
 );
-editPositionID_TEST(
+editPositionID_MOCK(
     '[200] OK (no SKU.position update)',
     {positionID: "801234543412"},
     {newPositionID: "800234543412"},
@@ -255,7 +255,7 @@ editPositionID_TEST(
     0,           /* triggerNotFoundError */
     1            /* updateSKU */
 );
-editPositionID_TEST(
+editPositionID_MOCK(
     '[404] Not Found',
     {positionID: "222222222222"},
     {newPositionID: "800234543412"},
@@ -267,7 +267,7 @@ editPositionID_TEST(
     1,           /* triggerNotFoundError */
     0            /* updateSKU */
 );
-editPositionID_TEST(
+editPositionID_MOCK(
     'TypeError: SELECT from table POSITIONS failed',
     {positionID: "800234543412"},
     {newPositionID: "800234543412"},
@@ -276,7 +276,7 @@ editPositionID_TEST(
     0,           /* triggerNotFoundError */
     0            /* updateSKU */
 );
-editPositionID_TEST(
+editPositionID_MOCK(
     'TypeError: UPDATE table POSITIONS failed',
     {positionID: "800234543412"},
     {newPositionID: "800234543412"},
@@ -285,7 +285,7 @@ editPositionID_TEST(
     0,           /* triggerNotFoundError */
     0            /* updateSKU */
 );
-editPositionID_TEST(
+editPositionID_MOCK(
     'TypeError: SELECT from table SKUS failed',
     {positionID: "800234543412"},
     {newPositionID: "800234543412"},
@@ -301,7 +301,7 @@ editPositionID_TEST(
 *      DELETE /api/position/:positionID
 * =========================================
 */
-deletePosition_TEST(
+deletePosition_MOCK(
     '[204] No Content',
     {
         positionID: "800234543412"
@@ -312,7 +312,7 @@ deletePosition_TEST(
     },
     false    /* triggerDatabaseError */
 );
-deletePosition_TEST(
+deletePosition_MOCK(
     'TypeError: DELETE from table POSITIONS failed',
     {
         positionID: "800234543412"
@@ -344,14 +344,14 @@ deletePosition_TEST(
  * -----------------------------------------
  *         API: GET /api/positions 
  * =========================================
- * @param {String} describe_NAME specific description of the test run
+ * @param {String} describe_NAME specific description of the MOCK run
  * @param {Array} expectedResult JSON Array containing the result of the query
  * @param {Boolean} triggerDatabaseError boolean value that indicates if the dao.all mock implementation should return an error
 */
-function getPositions_TEST(describe_NAME, expectedResult, triggerDatabaseError) {
-    describe('TEST: getPositions()', () => {
+function getPositions_MOCK(describe_NAME, expectedResult, triggerDatabaseError) {
+    describe('MOCK: getPositions()', () => {
 
-        /* preparing mock database for testing */
+        /* preparing mock database for MOCKing */
         beforeEach(() => {
             if (triggerDatabaseError) {
                 dao.all.mockReset();
@@ -385,7 +385,7 @@ function getPositions_TEST(describe_NAME, expectedResult, triggerDatabaseError) 
             }
         });
 
-        /* testing the mock database created */
+        /* MOCKing the mock database created */
         test(describe_NAME, async () => {
             try {
                 const result = await position.getPositions();   
@@ -402,15 +402,15 @@ function getPositions_TEST(describe_NAME, expectedResult, triggerDatabaseError) 
  * ---------------------------------------------------------
  *                 API: POST /api/position
  * =========================================================
- * @param {String} describe_NAME specific description of the test run
+ * @param {String} describe_NAME specific description of the MOCK run
  * @param {JSON} request JSON Object containing the position to add to the DB
  * @param {JSON} expectedResult JSON object returned by the function
  * @param {Boolean} triggerDatabaseError boolean value that indicates if the dao.all mock implementation should return an error
 */
-function newPosition_TEST(describe_NAME, request, expectedResult, triggerDatabaseError) {
-    describe('TEST: newPosition()', () => {
+function newPosition_MOCK(describe_NAME, request, expectedResult, triggerDatabaseError) {
+    describe('MOCK: newPosition()', () => {
 
-        /* preparing mock database for testing */
+        /* preparing mock database for MOCKing */
         beforeEach(() => {
             dao.run.mockReset();
             if (triggerDatabaseError) {
@@ -436,17 +436,17 @@ function newPosition_TEST(describe_NAME, request, expectedResult, triggerDatabas
  * ------------------------------------------
  *      API: PUT /api/position/:positionID
  * ==========================================
- * @param {String} describe_NAME specific description of the test run
+ * @param {String} describe_NAME specific description of the MOCK run
  * @param {JSON} params JSON Object containing the :positionID parameter
  * @param {JSON} request JSON Object containing the position to add to the DB
  * @param {JSON} expectedResult JSON object returned by the function
  * @param {Array} triggerDatabaseError array of values that indicate if the dao.all mock implementation should return an error
  * @param {Boolean} triggerNotFoundError Boolean value indicating if the :positionID is present in the DB
 */
-function editPosition_TEST(describe_NAME, params, request, expectedResult, triggerDatabaseError, triggerNotFoundError) {
-    describe('TEST: editPosition()', () => {
+function editPosition_MOCK(describe_NAME, params, request, expectedResult, triggerDatabaseError, triggerNotFoundError) {
+    describe('MOCK: editPosition()', () => {
         
-        /* preparing mock database for testing */
+        /* preparing mock database for MOCKing */
         beforeEach(() => {
             dao.all.mockReset();
             dao.run.mockReset();
@@ -488,7 +488,7 @@ function editPosition_TEST(describe_NAME, params, request, expectedResult, trigg
                             position: "800234523412",
                             availableQuantity: 50,
                             price: 10.99,
-                            testDescriptors: [1,3,4]
+                            MOCKDescriptors: [1,3,4]
                         }
                     ];
                 }
@@ -503,7 +503,7 @@ function editPosition_TEST(describe_NAME, params, request, expectedResult, trigg
             });
         });
 
-        /* testing the mock database created */
+        /* MOCKing the mock database created */
         test(describe_NAME, async () => {
             try {
                 const result = await position.editPosition(params, request);
@@ -520,7 +520,7 @@ function editPosition_TEST(describe_NAME, params, request, expectedResult, trigg
  * -----------------------------------------------------------------------
  *                API: PUT /api/position/:positionID/changeID
  * =======================================================================
- * @param {String} describe_NAME specific description of the test run
+ * @param {String} describe_NAME specific description of the MOCK run
  * @param {JSON} params JSON Object containing the :positionID parameter
  * @param {JSON} request JSON Object containing the position to add to the DB
  * @param {JSON} expectedResult JSON object returned by the function
@@ -528,10 +528,10 @@ function editPosition_TEST(describe_NAME, params, request, expectedResult, trigg
  * @param {Boolean} triggerNotFoundError Boolean value indicating if the :positionID is present in the DB
  * @param {Boolean} updateSKU Boolean value that indicates if the position is associated to an SKU or not
 */
-function editPositionID_TEST(describe_NAME, params, request, expectedResult, triggerDatabaseError, triggerNotFoundError, updateSKU) {
-    describe('TEST: editPositionID()', () => {
+function editPositionID_MOCK(describe_NAME, params, request, expectedResult, triggerDatabaseError, triggerNotFoundError, updateSKU) {
+    describe('MOCK: editPositionID()', () => {
 
-        /* preparing mock database for testing */
+        /* preparing mock database for MOCKing */
         beforeEach(() => {
             dao.all.mockReset();
             dao.run.mockReset();
@@ -571,7 +571,7 @@ function editPositionID_TEST(describe_NAME, params, request, expectedResult, tri
                                 position: "801234543412",
                                 availableQuantity: 50,
                                 price: 10.99,
-                                testDescriptors: [1,3,4]
+                                MOCKDescriptors: [1,3,4]
                             }
                         ];
                     } else {
@@ -589,7 +589,7 @@ function editPositionID_TEST(describe_NAME, params, request, expectedResult, tri
             });
         });
 
-        /* testing the mock database created */
+        /* MOCKing the mock database created */
         test(describe_NAME, async () => {
             try {
                 const result = await position.editPositionID(params, request);
@@ -607,15 +607,15 @@ function editPositionID_TEST(describe_NAME, params, request, expectedResult, tri
  * ------------------------------------------
  *      API: DELETE /api/position/:id
  * ==========================================
- * @param {String} describe_NAME specific description of the test run
+ * @param {String} describe_NAME specific description of the MOCK run
  * @param {JSON} request position object passed indicating the object to remove
  * @param {JSON} expectedResult JSON object returned by the function
  * @param {Boolean} triggerDatabaseError boolean value that indicates if the dao.all mock implementation should return an error
 */
-function deletePosition_TEST(describe_NAME, request, expectedResult, triggerDatabaseError) {
-    describe('TEST deletePosition()', () => {
+function deletePosition_MOCK(describe_NAME, request, expectedResult, triggerDatabaseError) {
+    describe('MOCK deletePosition()', () => {
 
-        /* preparing mock database for testing */
+        /* preparing mock database for MOCKing */
         beforeEach(() => {
             dao.run.mockReset();
             if (triggerDatabaseError) {
@@ -625,7 +625,7 @@ function deletePosition_TEST(describe_NAME, request, expectedResult, triggerData
             } 
         });
 
-        /* testing the mock database created */
+        /* MOCKing the mock database created */
         test(describe_NAME, async () => {
             try {
                 const result = await position.deletePosition(request);

@@ -103,7 +103,11 @@ createinternalOrder();
       res.should.have.status(200);
       res.should.to.be.json;
       res.body.should.be.a('array');
-      let id = res.body[res.body.length-1].id-1;
+      let id=res.body[res.body.length-1].id;
+      await agent.get('/api/internalOrders/'+id).then(function(res){
+        res.should.have.status(200);
+    })
+     id = id-1; 
       await agent.get('/api/internalOrders/'+id).then(function(res){
           res.should.have.status(200);
       })
