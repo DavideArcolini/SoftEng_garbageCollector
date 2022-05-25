@@ -894,52 +894,184 @@ User already inserted:
 | *false* | invalid |`deleteInternalOrder(req)` catch `TypeError` and terminates with <br>`{code: 503, message: "Unprocessable Entity"}`|`function` <br>`deleteInternalOrder(req)`|
 
 ## **Class ItemController**
-### **Class *ItemController* - method *name***
+### **Class *ItemController* - method *getItems***
 
 
 
-**Criteria for method *name*:**
+**Criteria for method *getItems*:**
 	
 
+ - Database is reachable
  - 
- - 
 
 
 
-
-
-**Predicates for method *name*:**
+**Predicates for method *getItems*:**
 
 | Criteria | Predicate |
 | -------- | --------- |
-|          |           |
-|          |           |
-|          |           |
-|          |           |
+|  DB is reachable        | true          |
+|          |    false       |
 
-
-
-
-
-**Boundaries**:
-
-| Criteria | Boundary values |
-| -------- | --------------- |
-|          |                 |
-|          |                 |
 
 
 
 **Combination of predicates**:
 
 
-| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|-------|-------|
-|||||||
-|||||||
-|||||||
-|||||||
-|||||||
+| DB is reachable  | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|
+|true|valid|getItems() terminates with results returned|function getItems([{id:1,description : "a new item",price : 10.99, SKUId : 1, supplierId : 2},{id:2, description : "another item", price : 12.99, SKUId : 2, supplierId : 1}]) |
+|false|invalid|getItems() catches an error and return 500 |function getItems(500)|
+
+
+
+### **Class *ItemController*- method *getItemById***
+
+
+
+**Criteria for method *getItemById*:**
+	
+
+ - Database is reachable  
+ -id is unique in the DB
+
+
+
+
+
+**Predicates for method *getItemById*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|    DB is reachable        |     true      |
+|          |    false       |
+|    id exists in the DB      |     true      |
+|          |    false       |
+
+
+
+**Combination of predicates**:
+
+
+| DB is reachable | Id exists in the DB |  Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|------|-------|-------|
+|true|true|     valid                   |getItemById() terminates with result returned|function getItemById({id: 1},{id:1, description :"a new item", price : 10.99, SKUId : 1, supplierId : 2})|
+|true|false|invalid                     |getItemById() fails on id check and return 404 |function getItemById({id: 2}, 404)|
+|false|true|     invalid                           |getItemById() catches an error and return 500|function getItemById(undefined, 500)|
+|false|true|            invalid                    |getItemById() catches an error and return 500|function getItemById(undefined, 500)|
+
+### **Class *ItemController*- method *createItem***
+
+
+
+**Criteria for method *createItem*:**
+	
+
+ - Database is reachable
+ - SKUId exists in database
+ -supplier doesn't sell same id
+ -supplier doesn't sell same SKUid
+
+
+
+
+
+
+**Predicates for method *createItem*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|    DB is reachable      |      true     |
+|          |    false       |
+|    SKUId exists in the DB      |   true        |
+|          |    false       |
+|supplier doesn't sell same id|true|
+|          |    false       |
+|supplier doesn't sell same SKUId|true|
+|          |    false       |
+
+
+
+**Combination of predicates**:
+
+
+| DB is reachable | SKUId exists in the DB|supplier doesn't sell same id|supplier doesn't sell same SKUId| Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|-------|
+|true|true|true|true|valid|createItem() terminates with 201|function createItem( 201, {id : 12, description : "a new item", price : 10.99, SKUId : 25, supplierId : 2})|
+|true|true|true|false|invalid|createItem() fails on SKUid check|function createItem( 404, {  id : 12, description : "a new item", price : 10.99,  SKUId : 30,  supplierId : 2})|
+|true|true|false|/|invalid|createItem() fails on id check|function createItem(422, { id : 13, description : "a new item", price : 10.99, SKUId : 28, supplierId : 2})|
+|true|false|/|/|invalid|createItem() fails on SKUId check|function createItem( 404, {  id : 12, description : "a new item", price : 10.99, SKUId : 30, supplierId : 2})|
+|false|/|/|/|invalid|createItem() catches an error and return 503|function createItem(503, undefined)|
+
+### **Class *ItemController*- method *modifyItem***
+
+
+
+**Criteria for method *modifyItem*:**
+	
+
+ - Database is reachable
+ - id exists in the database
+
+
+
+
+
+**Predicates for method *modifyItem*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|   DB is reachable       |   true        |
+|          |    false       |
+|  id exists in the DB        |   true        |
+|          |    false       |
+
+
+
+
+**Combination of predicates**:
+
+
+| DB is reachable | id exists in the DB | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|
+|true|true|valid|modifytestDescriptor() terminates with 200|function modyfyItem(200, { newDescription : "a new sku", newPrice : 10.99}, {id: 13})|
+|true|false|invalid|modifyItem() fails on id search|function modyfyItem(404,{ newDescription : "a new sku", newPrice : 10.99}, {id: 12})
+|false|/|invalid|modifyItem() catches an error and return 503|function modyfyItem(503, undefined, undefined)|
+
+### **Class *ItemController*- method *deleteItem***
+
+
+
+**Criteria for method *deleteItem*:**
+	
+
+ - Database is reachable
+ - 
+
+
+
+
+
+**Predicates for method *deleteItem*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|     DB is reachable     |      true     |
+|          |    false       |
+
+
+
+
+
+**Combination of predicates**:
+
+
+| DB is reachable|Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|
+|true|valid|deleteItem() terminates with 204|function deleteItem(204,{id: 13})|
+|false|invalid|deleteItem catches an error and return 503|function deleteItem(503,undefined)|
+
 
 ## **Class RestockOrderController**
 
@@ -1404,98 +1536,384 @@ User already inserted:
 ## **Class TestDescriptorController**
 ### **Class *TestDescriptorController* - method *name***
 
+### **Class *TestDescriptorController* - method *getTestDescriptors***
 
 
-**Criteria for method *name*:**
+
+**Criteria for method *getTestDescriptors*:**
 	
 
+ - Database is reachable
  - 
- - 
 
 
 
-
-
-**Predicates for method *name*:**
+**Predicates for method *getTestDescriptors*:**
 
 | Criteria | Predicate |
 | -------- | --------- |
-|          |           |
-|          |           |
-|          |           |
-|          |           |
+|  DB is reachable        | true          |
+|          |    false       |
 
-
-
-
-
-**Boundaries**:
-
-| Criteria | Boundary values |
-| -------- | --------------- |
-|          |                 |
-|          |                 |
 
 
 
 **Combination of predicates**:
 
 
-| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | Jest test case |
+| DB is reachable  | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|
+|true|valid|getTestDescriptors() terminates with results returned|function getTestDescriptors([{ id: 1,  name: "test descriptor 3",  procedureDescription: "This test is described by...",  idSKU: 1},{ id: 2,  name: "test descriptor 4",  procedureDescription: "test2",  idSKU: 1}])|
+|false|invalid|getTestDescriptors() catches an error and return 500 |function getTestDescriptors(500)|
+
+
+
+### **Class *TestDescriptorController* - method *getTestDescriptorById***
+
+
+
+**Criteria for method *getTestDescriptorById*:**
+	
+
+ - Database is reachable  
+ -id is unique in the DB
+
+
+
+
+
+**Predicates for method *getTestDescriptorById*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|    DB is reachable        |     true      |
+|          |    false       |
+|    id exists in the DB      |     true      |
+|          |    false       |
+
+
+
+**Combination of predicates**:
+
+
+| DB is reachable | Id exists in the DB |  Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|------|-------|-------|
+|true|true|     valid                   |getTestDescriptorById() terminates with result returned|function getTestDescriptorById({id: 1}, {  id: 1,  name: "test descriptor 3",  procedureDescription: "This test is described by...",  idSKU: 1})|
+|true|false|invalid                     |getTestDescriptorById() fails on id check and return 404 |function getTestDescriptorById({id: 2}, 404)|
+|false|true|     invalid                           |getTestDescriptorById() catches an error and return 500|function getTestDescriptorById(undefined, 500)|
+|false|true|            invalid                    |getTestDescriptorById() catches an error and return 500|function getTestDescriptorById(undefined, 500)|
+
+### **Class *TestDescriptorController* - method *createTestDescriptor***
+
+
+
+**Criteria for method *createTestDescriptor*:**
+	
+
+ - Database is reachable
+ - idSKU exists in database
+
+
+
+
+
+**Predicates for method *createTestDescriptor*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|    DB is reachable      |      true     |
+|          |    false       |
+|    idSKU exists in the DB      |   true        |
+|          |    false       |
+
+
+
+
+**Combination of predicates**:
+
+
+| DB is reachable | idSKU exists in the DB| Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|
+|true|true|valid|createTestDescriptor() terminates with 201|function createTestDescriptor(201, {  name: "test descriptor 3",
+ procedureDescription: "This test is described by...",  idSKU: 32})|
+|true|false|invalid|createTestDescriptor() fails on idSKU check|functioncreateTestDescriptor( 404, { name: "test descriptor 3", procedureDescription: "This test is described by...", idSKU: 37})|
+|false|true|invalid|createTestDescriptor() catches an error and return 503|function createTestDescriptor(503, undefined)|
+|false|false|invalid|createTestDescriptor() catches an error and return 503|function createTestDescriptor(503, undefined)|
+
+### **Class *TestDescriptorController* - method *modifyTestDescriptor***
+
+
+
+**Criteria for method *modifyTestDescriptor*:**
+	
+
+ - Database is reachable
+ - id exists in the database
+ -newidSKU exists in the database
+
+
+
+
+
+**Predicates for method *modifyTestDescriptor*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|   DB is reachable       |   true        |
+|          |    false       |
+|  id exists in the DB        |   true        |
+|          |    false       |
+|newidSKU exist in the DB|true|
+||false|
+
+
+
+
+**Combination of predicates**:
+
+
+| DB is reachable | id exists in the DB |newidSKU exist in the DB| Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|-------|
-|||||||
-|||||||
-|||||||
-|||||||
-|||||||
+|true|true|true|valid|modifytestDescriptor() terminates with 200|function modyfyTestDescriptor(200, { newName: "test descriptor 1",  newProcedureDescription: "put successful", newIdSKU :33}, {id: 1})|
+|true|true|false|invalid|modifyTestDescriptor() fails on newidSKU check|function modyfyTestDescriptor(404, {  newName: "test descriptor 1",  newProcedureDescription: "This test is described by...",  newIdSKU :39}, {id: 1})|
+|true|false|true|invalid|modifyTestDescriptor() fails on id search|function modyfyTestDescriptor(404, {  newName: "test descriptor 1", newProcedureDescription: "This test is described by...",  newIdSKU :1}, {id: 2})|
+|true|false|false|invalid|modifyTestDescriptor() fails on newidSKU check|function modyfyTestDescriptor(404, { newName: "test descriptor 1", newProcedureDescription: "This test is described by...", newIdSKU :39}, {id: 1})|
+|false|true|true|invalid|modifyTestDescriptor() catches an error and return 503|function modyfyTestDescriptor(503, undefined, {id: 1})|
+|false|true|false|invalid|modifyTestDescriptor() catches an error and return 503|function modyfyTestDescriptor(503, undefined, {id: 1})|
+|false|false|true|invalid|modifyTestDescriptor() catches an error and return 503|function modyfyTestDescriptor(503, undefined, {id: 1})|
+|false|false|false|invalid|modifyTestDescriptor() catches an error and return 503|function modyfyTestDescriptor(503, undefined, {id: 1})|
+
+### **Class *TestDescriptorController* - method *deleteTestDescriptor***
+
+
+
+**Criteria for method *deleteTestDescriptor*:**
+	
+
+ - Database is reachable
+ - 
+
+
+
+
+
+**Predicates for method *deleteTestDescriptor*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|     DB is reachable     |      true     |
+|          |    false       |
+
+
+
+
+
+**Combination of predicates**:
+
+
+| DB is reachable|Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|
+|true|valid|deleteTestDescriptor() terminates with 204|function deleteTestDescriptor(204,{id: 1})|
+|false|invalid|deleteTestDescriptor catches an error and return 503|function deleteTestDescriptor(503,undefined)|
+
 
 ## **Class TestResultController**
-### **Class *TestResultController* - method *name***
+### **Class *TestResultController* - method *getTestResults***
 
 
 
-**Criteria for method *name*:**
+**Criteria for method *getTestResults*:**
 	
 
- - 
- - 
+ - Database is reachable
+ - rfid exist in the database
 
 
 
 
 
-**Predicates for method *name*:**
+**Predicates for method *getTestResults*:**
 
 | Criteria | Predicate |
 | -------- | --------- |
-|          |           |
-|          |           |
-|          |           |
-|          |           |
+|     DB is reachable     |  true         |
+|          |    false       |
+|     rfid exists in the DB     |   true        |
+|          |   false        |
 
-
-
-
-
-**Boundaries**:
-
-| Criteria | Boundary values |
-| -------- | --------------- |
-|          |                 |
-|          |                 |
 
 
 
 **Combination of predicates**:
 
 
-| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | Jest test case |
+| DB is reachable | rfid exists in the DB   | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|
+|true|true|valid|getTestResults()terminates with result returned|function getTestResults([{ id: 1, idTestDescriptor: 12, Date: "2021/11/28", Result: false},{  id: 2,  idTestDescriptor: 13,  Date: "2021/11/28",  Result: true}],{rfid: "40"})|
+|true|false|invalid|getTestResults() fails on rfid check and return 404|function getTestResults(404, {rfid: "47"})|
+|false|true|invalid|getTestResults() catches an error and return 500|function getTestResults(500, undefined)|
+|false|false|invalid|getTestResults() catches an error and return 500|function getTestResults(500, undefined)|
+
+
+### **Class *TestResultController* - method *getTestResultById***
+
+
+
+**Criteria for method *getTestResultById*:**
+	
+
+ - Database is reachable
+ - rfid exists in the database
+ -id exists in the database
+
+
+
+
+
+**Predicates for method *getTestResultById*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|     DB is reachable     |  true         |
+|          |    false       |
+|   rfid exist in the DB       |     true      |
+|          |   false        |
+|id exists in the DB|true|
+||false|
+
+
+
+**Combination of predicates**:
+
+
+| DB is reachable |  rfid exist in the DB    |  id exist in the DB    | Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|-------|
-|||||||
-|||||||
-|||||||
-|||||||
-|||||||
+|true|true|true|valid|getTestResultById() terminates with result returned|function getTestResultById({ id: 2, idTestDescriptor: 14, Date: "2021/11/28",  Result: true},{rfid: "43", id: 2})|
+|true|true|false|invalid|getTestResultById() fails on id check and return 404|function getTestResultById(404, {rfid: "43", id: 0})|
+|true|false|true|invalid|getTestResultById() fails on rfid check and return 404|function getTestResultById(404,{rfid: "47", id: 1})|
+|true|false|false|invalid|getTestResultById() fails on rfid check and return 404|function getTestResultById(404,{rfid: "47", id: 1})|
+|false|true|true|invalid|getTestResultById() catches an error and return 500|function getTestResultById(500,undefined)|
+|false|true|false|invalid|getTestResultById() catches an error and return 500|function getTestResultById(500,undefined)|
+|false|false|true|invalid|getTestResultById() catches an error and return 500|function getTestResultById(500,undefined)|
+|false|false|false|invalid|getTestResultById() catches an error and return 500|function getTestResultById(500,undefined)|
+
+
+### **Class *TestResultController* - method *createTestResult***
+
+
+
+**Criteria for method *createTestResult*:**
+	
+
+ - Database is reachable
+ - 
+
+
+
+
+
+**Predicates for method *createTestResult*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|     DB is reachable     |  true         |
+|          |    false       |
+|   rfid exist in the DB        | true          |
+|          |   false        |
+|idTestDescriptor exists in the DB|true|
+||false|
+
+
+**Combination of predicates**:
+
+
+| DB is reachable |rfid exist in the DB  |idTestDescriptor exists in the DB | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|
+|true|true|true|valid|createTestResult() terminates with 201 returned|function createTestResult(201,{ rfid: "44", idTestDescriptor: 28, Date: "2021/11/28", Result: true})|
+|true|true|false|invalid|createTestResult() fails on idTestDescriptor check and return 404|function createTestResult(404,{ rfid: "44", idTestDescriptor: 29, Date: "2021/11/28", Result: true})|
+|true|false|true|invalid|createTestResult() fails on rfid check and return 404|function createTestResult(404,{ rfid: "47", idTestDescriptor: 28, Date: "2021/11/28", Result: true})|
+|true|false|false|invalid|createTestResult() fails on rfidcheck and return 404|function createTestResult(404,{  rfid: "47",  idTestDescriptor: 28,  Date: "2021/11/28", Result: true})|
+|false|true|true|invalid|createTestResult() catches an error and return 503|function createTestResult(503,undefined)|
+|false|true|false|invalid|createTestResult() catches an error and return 503|function createTestResult(503,undefined)|
+|false|false|true|invalid|createTestResult() catches an error and return 503|function createTestResult(503,undefined)|
+|false|false|false|invalid|createTestResult() catches an error and return 503|function createTestResult(503,undefined)|
+
+
+### **Class *TestResultController* - method *modifyTestResult***
+
+
+
+**Criteria for method *modifyTestResult*:**
+	
+
+ - Database is reachable
+ - rfid exists in database
+ -newIdTestDescriptor exist in the database
+ -id exist in the database
+
+
+
+
+
+**Predicates for method *modifyTestResult*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|     DB is reachable     |  true         |
+|          |    false       |
+|   rfid exists DB       | true          |
+|          |    false       |
+|   id exists in DB     |      true     |
+|          |    false       |
+|newIdTestDescriptor exist in the DB|true|
+|          |    false       |
+
+
+
+**Combination of predicates**:
+
+
+| DB is reachable |   rfid exists DB   |newIdTestDescriptor exist in the DB    | id exists in DB| Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|-------|
+|true|true|true|true|valid|modifyTestResult() terminates with 200 returned|function modifyTestResult(200,{id: 1, rfid: "45"},{  newIdTestDescriptor:31, newDate:"2021/11/28", newResult: true})|
+|true|true|true|false|invalid|modifyTestResult() fails on id check and return 404|function modifyTestResult(404,{id: 12, rfid: "45"},{ newIdTestDescriptor:31, newDate:"2021/11/28", newResult: true})|
+|true|true|false|/|invalid|modifyTestResult() fails on newIdTestDescriptor check and return 404|function modifyTestResult(404,{id: 1, rfid: "45"},{ newIdTestDescriptor:47,newDate:"2021/11/28", newResult: true})|
+|true|false|/|/|invalid|modifyTestResult() fails on rfid check and return 404|function modifyTestResult(404,{id: 1, rfid: "47"},{ newIdTestDescriptor:31, newDate:"2021/11/28", newResult: true})|
+|false|/|/|/|invalid|modifyTestResult() catches an error and return 503|function modifyTestResult(503,undefined,{  newIdTestDescriptor:2, newDate:"2021/11/28", newResult: true})|
+
+
+### **Class *TestResultController* - method *deleteTestResult***
+
+
+
+**Criteria for method *deleteTestResult*:**
+	
+
+ - Database is reachable
+ - 
+
+
+
+
+
+**Predicates for method *deleteTestResult*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|     DB is reachable     |  true         |
+|          |    false       |
+
+
+
+
+**Combination of predicates**:
+
+
+| DB is reachable |  Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|
+|true|valid|deleteTestResult() terminates with 204 returned|function deleteTestResult(204,{id: 1, rfid: "1"})|
+|false|invalid|deleteTestResult() catches an error and return 503|function deleteTestResult(503,undefined)|
+
 
 
 
