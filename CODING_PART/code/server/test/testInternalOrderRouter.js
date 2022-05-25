@@ -52,8 +52,6 @@ var agent = chai.request.agent(app);
           res.should.to.be.json;
           res.body.should.be.a('array');
           let id = res.body[res.body.length-1].id;
-          //console.log(id);
-          console.log(id+'deleted')
          await agent.delete('/api/internalOrders/'+id).then(function(res){
           res.should.have.status(204);})
          
@@ -140,11 +138,9 @@ it('get internal order by id - NOT FOUND',async()=>{
       res.should.to.be.json;
       res.body.should.be.a('array');
       let id = res.body[res.body.length-1].id;
-      console.log(id+'deleted')
     await agent.delete('/api/internalOrders/'+id).then(function(res){
       res.should.have.status(204);})
       id = id-1;
-      console.log(id+'deleted')
       await agent.delete('/api/internalOrders/'+id).then(function(res){
         res.should.have.status(204);})
   })
@@ -202,11 +198,9 @@ after(async()=>{
     res.should.to.be.json;
     res.body.should.be.a('array');
     let id = res.body[res.body.length-1].id;
-    console.log(id+'deleted')
   await agent.delete('/api/internalOrders/'+id).then(function(res){
     res.should.have.status(204);})
     id = id-1;
-    console.log(id+'deleted')
     await agent.delete('/api/internalOrders/'+id).then(function(res){
       res.should.have.status(204);})
 })
@@ -260,11 +254,9 @@ after(async()=>{
     res.should.to.be.json;
     res.body.should.be.a('array');
     let id = res.body[res.body.length-1].id;
-    console.log(id+'deleted')
   await agent.delete('/api/internalOrders/'+id).then(function(res){
     res.should.have.status(204);})
     id = id-1;
-    console.log(id+'deleted')
     await agent.delete('/api/internalOrders/'+id).then(function(res){
       res.should.have.status(204);})
 })
@@ -324,11 +316,9 @@ after(async()=>{
         res.should.to.be.json;
         res.body.should.be.a('array');
         let id = res.body[res.body.length-1].id;
-        console.log(id+'deleted')
       await agent.delete('/api/internalOrders/'+id).then(function(res){
         res.should.have.status(204);})
         id = id-1;
-        console.log(id+'deleted')
         await agent.delete('/api/internalOrders/'+id).then(function(res){
           res.should.have.status(204);})
     })
@@ -396,7 +386,7 @@ after(async()=>{
       res.body.should.be.a('array');
       let id = res.body[res.body.length-1].id;
 
-    await agent.put('/api/internalOrders/'+id).send({newState: 'COMPLETED', products: {SkuID: 1, RFID: "12345678901234567890123456789016"}}).then(function(res){
+    await agent.put('/api/internalOrders/'+id).send({newState: 'COMPLETED', products: [{SkuID: 1, RFID: "12345678901234567890123456789016"}]}).then(function(res){
       res.should.have.status(200);
       })
     })

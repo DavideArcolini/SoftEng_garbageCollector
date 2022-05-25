@@ -89,11 +89,11 @@ it('get restock order by id - UNPROCESSABLE ENTITY',async()=>{
         res.should.to.be.json;
         res.body.should.be.a('array');
         let id = res.body[res.body.length-1].id;
-        console.log(id+'deleted')
+
       await agent.delete('/api/restockOrder/'+id).then(function(res){
         res.should.have.status(204);})
         id = id-1;
-        console.log(id+'deleted')
+       
         await agent.delete('/api/restockOrder/'+id).then(function(res){
           res.should.have.status(204);})
     })
@@ -131,8 +131,7 @@ getRestockOrderById();
         res.should.to.be.json;
         res.body.should.be.a('array');
         let id = res.body[res.body.length-1].id;
-        //console.log(id);
-        console.log(id+'deleted')
+      
        await agent.delete('/api/restockOrder/'+id).then(function(res){
         res.should.have.status(204);})
         //id = res.body[res.body.length-2].id;
@@ -186,11 +185,11 @@ createRestockOrder();
       res.should.to.be.json;
       res.body.should.be.a('array');
       let id = res.body[res.body.length-1].id;
-      console.log(id+'deleted')
+
      await agent.delete('/api/restockOrder/'+id).then(function(res){
       res.should.have.status(204);})
       id = id-1;
-      console.log(id+'deleted')
+    
       await agent.delete('/api/restockOrder/'+id).then(function(res){
         res.should.have.status(204);})
   })
@@ -237,11 +236,11 @@ getRestockOrders(200);
       res.should.to.be.json;
       res.body.should.be.a('array');
       let id = res.body[res.body.length-1].id;
-      console.log(id+'deleted')
+
      await agent.delete('/api/restockOrder/'+id).then(function(res){
       res.should.have.status(204);})
       id = id-1;
-      console.log(id+'deleted')
+     
       await agent.delete('/api/restockOrder/'+id).then(function(res){
         res.should.have.status(204);})
   })

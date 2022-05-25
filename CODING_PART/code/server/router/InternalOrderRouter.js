@@ -183,11 +183,14 @@ router.put(
     [
         param('id').isNumeric(),                                                        /* [FROM API.md]: id is a numeric value                                                 */
         header('Content-Type').equals('application/json'),                              /* [FROM API.md]: Request header has a line: Content-Type: application/json.            */
-        body().custom(value => {                                                        /* [FROM API.md]: all parameters should be defined (no optional parameters)             */
+        body().custom(value => {   
+                                                            /* [FROM API.md]: all parameters should be defined (no optional parameters)             */
             if (value.newState === undefined) {
                 throw new Error('Missing parameters');
             } else if (value.newState === "COMPLETED") {
+
                 if (value.products === undefined) {
+                    console.log("ROTTISSIMO")
                     throw new Error('Missing parameters');
                 }
             }
@@ -197,8 +200,10 @@ router.put(
             if (value.products !== undefined) {
                 value.products.forEach((product) => {
                     if (isNaN(product.SkuID)) {
+                        console.log("ROTTO 1")
                         throw new Error('Invalid product value');
                     } else if (product.RFID.length != 32 || /^[0-9]+$/.test(product.RFID) === false) {
+                        console.log("ROTTO 2")
                         throw new Error('Invalid product value');
                     }
                 });

@@ -64,8 +64,7 @@ var agent = chai.request.agent(app);
             res.should.to.be.json;
             res.body.should.be.a('array');
             let id = res.body[res.body.length-1].id;
-            //console.log(id);
-            console.log(id+'deleted')
+         
            await agent.delete('/api/returnOrder/'+id).then(function(res){
             res.should.have.status(204);})
            
@@ -127,11 +126,11 @@ var agent = chai.request.agent(app);
         res.should.to.be.json;
         res.body.should.be.a('array');
         let id = res.body[res.body.length-1].id;
-        console.log(id+'deleted')
+     
       await agent.delete('/api/returnOrder/'+id).then(function(res){
         res.should.have.status(204);})
         id = id-1;
-        console.log(id+'deleted')
+    
         await agent.delete('/api/returnOrder/'+id).then(function(res){
           res.should.have.status(204);})
     })
@@ -207,11 +206,11 @@ it('get return order by id- unprocessable',async()=>{
         res.should.to.be.json;
         res.body.should.be.a('array');
         let id = res.body[res.body.length-1].id;
-        console.log(id+'deleted')
+     
       await agent.delete('/api/returnOrder/'+id).then(function(res){
         res.should.have.status(204);})
         id = id-1;
-        console.log(id+'deleted')
+      
         await agent.delete('/api/returnOrder/'+id).then(function(res){
           res.should.have.status(204);})
     })
@@ -256,7 +255,7 @@ it('get return order by id- unprocessable',async()=>{
             res.should.to.be.json;
             res.body.should.be.a('array');
             let id = res.body[res.body.length-1].id;
-            console.log(id+'deleted')
+           
           await agent.delete('/api/returnOrder/'+id).then(function(res){
             res.should.have.status(204);
           })
@@ -268,7 +267,7 @@ it('get return order by id- unprocessable',async()=>{
               res.should.to.be.json;
               res.body.should.be.a('array');
               let id = res.body[res.body.length-1].id;
-              console.log(id+'deleted')
+ 
             await agent.delete('/api/returnOrder/'+id).then(function(res){
               res.should.have.status(204);
             })
