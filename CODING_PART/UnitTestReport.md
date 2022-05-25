@@ -37,7 +37,7 @@
 
 ### Class *UserController* - method **getStoredUsers**
 
-**Criteria for method **getStoredUsers:**
+**Criteria for method *getStoredUsers:***
 
 - Database is reachable
 
@@ -59,7 +59,7 @@ Please note: There are users in the database
 
 ### Class *UserController* - method **getSuppliers**
 
-**Criteria for method **getSuppliers:**
+**Criteria for method *getSuppliers:***
 
 - Database is reachable
 
@@ -567,11 +567,11 @@ User already inserted:
 **Combination of predicates**:
 | Database is reachable |`positionID` is already assigned to **SKU** |`SKUid` *exists* in the database|`positionID` *exists* in the database|**Position** associated to **SKU** satisfies `maxWeight` and `maxVolume` constraints| Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
-| *true* | *true* | *true* | *true* | *true* | valid |`addOrEditPositionSKU_TEST()` terminates with <br>`{code: 200}`|`function` <br>`addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResult)`|
-| *true* | *true* | *true* | *true* | *false* | invalid |`addOrEditPositionSKU_TEST()` terminates with <br>`{code: 422, message: "Unprocessable Entity"}`|`function` <br>`addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResult)`|
-| *true* | *true* | *true* | *false* | */* | invalid |`addOrEditPositionSKU_TEST()` terminates with <br>`{code: 404, message: "Not Found"}`|`function` <br>`addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResult)`|
-| *true* | *true* | *false* | */* | */* | invalid |`addOrEditPositionSKU_TEST()` terminates with <br>`{code: 404, message: "Not Found"}`|`function` <br>`addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResult)`|
-| *true* | */* | */* | */* | */* | invalid |`addOrEditPositionSKU_TEST()` terminates with <br>`{code: 422, message: "Unprocessable Entity"}`|`function` <br>`addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResult)`|
+| *true* | *false* | *true* | *true* | *true* | valid |`addOrEditPositionSKU_TEST()` terminates with <br>`{code: 200}`|`function` <br>`addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResult)`|
+| *true* | *false* | *true* | *true* | *false* | invalid |`addOrEditPositionSKU_TEST()` terminates with <br>`{code: 422, message: "Unprocessable Entity"}`|`function` <br>`addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResult)`|
+| *true* | *false* | *true* | *false* | */* | invalid |`addOrEditPositionSKU_TEST()` terminates with <br>`{code: 404, message: "Not Found"}`|`function` <br>`addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResult)`|
+| *true* | *false* | *false* | */* | */* | invalid |`addOrEditPositionSKU_TEST()` terminates with <br>`{code: 404, message: "Not Found"}`|`function` <br>`addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResult)`|
+| *true* | *true* | */* | */* | */* | invalid |`addOrEditPositionSKU_TEST()` terminates with <br>`{code: 422, message: "Unprocessable Entity"}`|`function` <br>`addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResult)`|
 | *false* | */* | */* | */* | */* | invalid |`addOrEditPositionSKU_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`addOrEditPositionSKU_TEST(describe_NAME, params, request, expectedResult)`|
 
 ### **Class *SKUController* - method *deleteSKU()***
@@ -733,7 +733,7 @@ User already inserted:
 | *true* | *false* | invalid | `getInternalOrderById` terminates with <br>`{message: "Not Found"}`|  `function` <br> `getInternalOrderById(req,expected)` |
 | *false* | */* | invalid | `getInternalOrderById` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}` | `function` <br>` getInternalOrderById(req,expected)` |
 
-### **Class *InternalOrderController* - method *getInternalOrders***
+### **Class *InternalOrderController* - method *createInternalOrder***
 
 
 ### **Class *InternalOrderController* - method *createInternalOrder***
@@ -873,7 +873,7 @@ User already inserted:
     
 
  - Database is reachable
- - 
+
 
 
 
@@ -905,7 +905,7 @@ User already inserted:
     
 
  - Database is reachable  
- -id is unique in the DB
+ - id is unique in the DB
 
 
 
@@ -941,8 +941,8 @@ User already inserted:
 
  - Database is reachable
  - SKUId exists in database
- -supplier doesn't sell same id
- -supplier doesn't sell same SKUid
+ - supplier doesn't sell same id
+ - supplier doesn't sell same SKUid
 
 
 
@@ -1100,7 +1100,12 @@ User already inserted:
 | Database is reachable | *true* |
 |                       | *false*|
 
+**Combination of predicates**:
 
+| Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|
+| *true* | valid |`getRestockOrdersIssued(expected)` returns <br>an array of the restock orders issued retrieved |`function` <br>`getRestockOrdersIssued(expected)`|
+|*false*|invalid|`getRestockOrders(expected)` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}`|`function` <br>`getRestockOrdersIssued(expected)`|
 ### **Class *RestockOrderController* - method *getRestockOrderById***
 
 
@@ -1144,12 +1149,7 @@ User already inserted:
 
 
 
-**Combination of predicates**:
 
-| Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
-|:-------:|:-------:|:-------:|:-------:|
-| *true* | valid |`getRestockOrdersIssued(expected)` returns <br>an array of the restock orders issued retrieved |`function` <br>`getRestockOrdersIssued(expected)`|
-|*false*|invalid|`getRestockOrders(expected)` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}`|`function` <br>`getRestockOrdersIssued(expected)`|
 
 
 ### **Class *RestockOrderController* - method *createRestockOrder***
@@ -1506,8 +1506,6 @@ User already inserted:
 | *false* | invalid |`deleteReturnOrder(req)` catch `TypeError` and terminates with <br>`{code: 503, message: "Unprocessable Entity"}`|`function` <br>`deleteReturnOrder(req)`|
 
 ## **Class TestDescriptorController**
-### **Class *TestDescriptorController* - method *name***
-
 ### **Class *TestDescriptorController* - method *getTestDescriptors***
 
 
@@ -1515,8 +1513,7 @@ User already inserted:
 **Criteria for method *getTestDescriptors*:**
     
 
- - Database is reachable
- - 
+ - Database is reachable 
 
 
 
@@ -1548,7 +1545,7 @@ User already inserted:
     
 
  - Database is reachable  
- -id is unique in the DB
+ - id is unique in the DB
 
 
 
@@ -1606,11 +1603,10 @@ User already inserted:
 
 | DB is reachable | idSKU exists in the DB| Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|
-|true|true|valid|createTestDescriptor() terminates with 201|function createTestDescriptor(201, {  name: "test descriptor 3",
- procedureDescription: "This test is described by...",  idSKU: 32})|
-|true|false|invalid|createTestDescriptor() fails on idSKU check|functioncreateTestDescriptor( 404, { name: "test descriptor 3", procedureDescription: "This test is described by...", idSKU: 37})|
-|false|true|invalid|createTestDescriptor() catches an error and return 503|function createTestDescriptor(503, undefined)|
-|false|false|invalid|createTestDescriptor() catches an error and return 503|function createTestDescriptor(503, undefined)|
+|true|true|valid| `createTestDescriptor()` terminates with 201|`function createTestDescriptor(201, {  name: "test descriptor 3", procedureDescription: "This test is described by...",  idSKU: 32})`|
+|true|false|invalid|`createTestDescriptor()` fails on idSKU check|`function createTestDescriptor( 404, { name: "test descriptor 3", procedureDescription: "This test is described by...", idSKU: 37})`|
+|false|true|invalid| `createTestDescriptor()` catches an error and return `503`|`function createTestDescriptor(503, undefined)`|
+|false|false|invalid|`createTestDescriptor(3)` catches an error and return `503`|function `createTestDescriptor(503, undefined)`|
 
 ### **Class *TestDescriptorController* - method *modifyTestDescriptor***
 
@@ -1621,7 +1617,7 @@ User already inserted:
 
  - Database is reachable
  - id exists in the database
- -newidSKU exists in the database
+ - newidSKU exists in the database
 
 
 
@@ -1663,7 +1659,6 @@ User already inserted:
     
 
  - Database is reachable
- - 
 
 
 
@@ -1778,7 +1773,6 @@ User already inserted:
     
 
  - Database is reachable
- - 
 
 
 
@@ -1820,8 +1814,8 @@ User already inserted:
 
  - Database is reachable
  - rfid exists in database
- -newIdTestDescriptor exist in the database
- -id exist in the database
+ - newIdTestDescriptor exist in the database
+ - id exist in the database
 
 
 
@@ -1862,7 +1856,6 @@ User already inserted:
     
 
  - Database is reachable
- - 
 
 
 

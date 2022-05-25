@@ -23,28 +23,17 @@
   - [Step 1](#step-1)
   - [Step 2](#step-2)
 - [API testing - Scenarios](#api-testing---scenarios)
-  - [Scenario UCx.y](#scenario-ucxy)
 - [Coverage of Scenarios and FR](#coverage-of-scenarios-and-fr)
 - [Coverage of Non Functional Requirements](#coverage-of-non-functional-requirements)
-    - [](#)
-
-- [Tests](#tests)
-
-- [Scenarios](#scenarios)
-
-- [Coverage of scenarios and FR](#scenario-coverage)
-- [Coverage of non-functional requirements](#nfr-coverage)
-
 
 
 # Dependency graph 
+![dependency graph](./images/dependencies.jpeg)
 
-     <report the here the dependency graph of the classes in EzWH, using plantuml or other tool>
-     
 # Integration approach
 
-The integration sequence we adopted is **bottom-up**. We started with unit-testing, in particular first with mock tests and then with real tests, in which we tested the controllers and their methods, and those are documented in `UnitTestReport.md`. Then, we proceeded to test the APIs in which we tested the routers for each controller class(`ItemRouter.js`, `UserRouter.js`, `PositionRouter.js`, `SKURouter.js`).
-We used a single mockup, which is `mock_dao.js`
+The integration sequence we adopted is **bottom-up**. We started with unit-testing, in particular first with mock tests and then with real tests, in which we tested the controllers and their methods, and those are documented in `UnitTestReport.md`. Then, we proceeded to test the APIs in which we tested the routers for each controller class (`ItemRouter.js`, `UserRouter.js`, `PositionRouter.js`, `SKURouter.js`, etc).
+We used a single mockup, which is `mock_dao.js`.
 
 #  Integration Tests
 
@@ -52,7 +41,7 @@ We used a single mockup, which is `mock_dao.js`
 | Classes  | mock up used |Jest test cases |
 |--|--|--|
 | **UserController** | `getStoredUsers_TEST_mock()` | `getStoredUsers_TEST()` |
-| **UserController** | | `getSuppliers_TEST()` |
+| **UserController** | `getSuppliers_TEST_mock()` | `getSuppliers_TEST()` |
 | **UserController** | `newUser_TEST_mock()` | `newUser_TEST()` |
 | **UserController** | `getUser_TEST_mock()` | `getUser_TEST()` |
 | **UserController** | `editUser_TEST_mock()` | `editUser_TEST()` |
@@ -171,12 +160,6 @@ We used a single mockup, which is `mock_dao.js`
 
 
 # API testing - Scenarios
-
-
-<If needed, define here additional scenarios for the application. Scenarios should be named
- referring the UC in the OfficialRequirements that they detail>
-
-## Scenario UCx.y
 
 **Scenario 1.4**
 | Scenario 1.4 |  Get all SKUs |
@@ -372,12 +355,6 @@ We used a single mockup, which is `mock_dao.js`
 # Coverage of Scenarios and FR
 
 
-<Report in the following table the coverage of  scenarios (from official requirements and from above) vs FR. 
-Report also for each of the scenarios the (one or more) API Mocha tests that cover it. >  Mocha test cases should be here code/server/test
-
-
-
-
 | Scenario ID | Functional Requirements covered | Mocha  Test(s) | 
 | ----------- | :-------------------------------: | :-----------: | 
 | 1-1         | FR2.1                           | `newSKU_APITEST()` |
@@ -426,19 +403,13 @@ Report also for each of the scenarios the (one or more) API Mocha tests that cov
 | 13-4 (new)  | FR5.8.3                         | `newSKUitem_APITEST()` |
 | 13-5 (new)  |     /                           | `editSKUitem_APITEST()` |
 | 13-6 (new)  | FR6.10                          | `deleteSKUitem_APITEST()` |
-| 14-1 (new)  |                           | `deleteTestResult()` |
-| 14-2 (new)  |                           | `modifyTestResult()` |
+| 14-1 (new)  |            /              | `deleteTestResult()` |
+| 14-2 (new)  |            /              | `modifyTestResult()` |
            
 
 
 
 # Coverage of Non Functional Requirements
-
-
-<Report in the following table the coverage of the Non Functional Requirements of the application - only those that can be tested with automated testing frameworks.>
-
-
-### 
 
 | Non Functional Requirement | Test name |
 | -------------------------- | --------- |
