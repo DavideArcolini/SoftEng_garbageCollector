@@ -56,12 +56,6 @@ describe('get users', () => {
     ])
 
     afterAll(async() => {
-        /* const sql = `
-            DELETE from USERS
-            WHERE username = (?) AND type = (?)
-            `;
-        await dao.run(sql, ["ciccio1@ezwh.com", "customer"])
-        await dao.run(sql, ["joe@ezwh.com", "clerk"]) */
         await dao.deleteAllUsers()
     })
 }) 
@@ -112,12 +106,6 @@ describe('get suppliers', () => {
 
     afterAll(async() => {
         await dao.deleteAllUsers()
-        /* const sql = `
-            DELETE from USERS
-            WHERE username = (?) AND type = (?)
-            `;
-        await dao.run(sql, ["mj@ezwh.com", "supplier"])
-        await dao.run(sql, ["peter@ezwh.com", "supplier"]) */
     })
 })
 
@@ -148,11 +136,6 @@ describe('get suppliers', () => {
     newUser_TEST("bad request", undefined, 503)
 
     afterAll(async() => {
-        /* const sql = `
-            DELETE from USERS
-            WHERE username = (?) AND type = (?)
-            `;
-        await dao.run(sql, ["clerk1@ezwh.com", "clerk"]) */
         await dao.deleteAllUsers()
     })
     
@@ -190,11 +173,6 @@ describe('get user', () => {
     getUser_TEST("bad request", undefined, undefined);
 
     afterAll(async() => {
-        /* const sql = `
-            DELETE from USERS
-            WHERE username = (?) AND type = (?)
-            `;
-        await dao.run(sql, ["mj@ezwh.com", "supplier"]) */
         await dao.deleteAllUsers()
     })
 })
@@ -242,11 +220,6 @@ describe('edit user', () => {
     undefined, 503)
 
     afterAll(async() => {
-        /* const sql = `
-            DELETE from USERS
-            WHERE username = (?) AND type = (?)
-            `;
-        await dao.run(sql, ["mj@ezwh.com", "qualityEmployee"]) */
         await dao.deleteAllUsers()
     })
 })
