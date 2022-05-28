@@ -32,7 +32,7 @@ class DAO {
         // this.dropTablePositions();
         // this.dropTableSKUItems();
         // this.dropTableTD();
-        // this.dropTableTR();
+        //this.dropTableTR();
         // this.dropTableI();
     }
 
@@ -49,7 +49,8 @@ class DAO {
           this.db.run(sql, params, function (err) {
             if (err) {
               console.log('Error running sql ' + sql)
-              reject(err);
+              console.log(err)
+              reject(err)
             } else {
               resolve({ id: this.lastID })
             }
@@ -62,6 +63,7 @@ class DAO {
           this.db.get(sql, params, (err, result) => {
             if (err) {
               console.log('Error running sql: ' + sql)
+              console.log(err)
               reject(err)
             } else {
               resolve(result)
@@ -75,6 +77,7 @@ class DAO {
           this.db.all(sql, params, (err, rows) => {
             if (err) {
               console.log('Error running sql: ' + sql)
+              console.log(err)
               reject(err)
             } else {
               resolve(rows)
@@ -189,10 +192,10 @@ class DAO {
       return new Promise((resolve, reject) => {
         // const query_SQL = `CREATE TABLE IF NOT EXISTS POSITIONS(positionID INTEGER PRIMARY KEY, aisleID INTEGER, row INTEGER, col INTEGER, maxWeight FLOAT, maxVolume FLOAT, occupiedWeight FLOAT, occupiedVolume FLOAT)`;
         const query_SQL = "CREATE TABLE IF NOT EXISTS POSITIONS (                         \
-                              positionID              TEXT,                               \
-                              aisleID                 TEXT,                               \
-                              row                     TEXT,                               \
-                              col                     TEXT,                               \
+                              positionID              INTEGER,                            \
+                              aisleID                 INTEGER,                            \
+                              row                     INTEGER,                            \
+                              col                     INTEGER,                            \
                               maxWeight               FLOAT,                              \
                               maxVolume               FLOAT,                              \
                               occupiedWeight          FLOAT,                              \
