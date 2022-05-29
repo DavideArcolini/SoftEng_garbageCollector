@@ -38,27 +38,27 @@ class SKUDAO {
      */
     getSKUs = async () => {
         const querySQL = "SELECT * FROM SKUS";
-        const result = this.dao.all(
+        return this.dao.all(
             querySQL
-        ).catch((error) => {
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
             throw new Error(error.message);
         });
-
-        return result;
     }
 
     getSKUByID = async (id) => {
         const querySQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
-        const result = this.dao.get(
+        return this.dao.get(
             querySQL,
             [
                 id
             ]
-        ).catch((error) => {
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
             throw new Error(error.message);
         });
-
-        return result;
     }
 
     /**
@@ -69,16 +69,16 @@ class SKUDAO {
      */
     getSKUByPositionID = async (positionID) => {
         const querySQL = "SELECT * FROM SKUS WHERE SKUS.position == ?";
-        const result = this.dao.get(
+        return this.dao.get(
             querySQL, 
             [
                 positionID
             ]
-        ).catch((error) => {
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
             throw new Error(error.message);
         });
-
-        return result;
     }
 
     /**
@@ -139,13 +139,15 @@ class SKUDAO {
      */
     updateSKUpositionID = async (id, newPositionID) => {
         const querySQL = "UPDATE SKUS SET position = ? WHERE id == ?";
-        const result = this.dao.run(
+        return this.dao.run(
             querySQL,
             [
                 newPositionID,
                 id
             ]
-        ).catch((error) => {
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
             throw new Error(error.message);
         });
 

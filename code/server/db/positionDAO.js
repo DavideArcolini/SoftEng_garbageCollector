@@ -39,13 +39,13 @@ class PositionDAO {
      */
     getPositions = async () => {
         const querySQL = "SELECT * FROM POSITIONS";
-        const result = this.dao.all(
+        return this.dao.all(
             querySQL
-        ).catch((error) => {
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
             throw new Error(error.message);
         });
-
-        return result;
     }
 
     /**
@@ -57,7 +57,7 @@ class PositionDAO {
     getPositionByID = async (positionID) => {
     
         const querySQL = "SELECT * FROM POSITIONS WHERE POSITIONS.positionID == ?";
-        const result = this.dao.get(
+        return this.dao.get(
             querySQL,
             [
                 positionID
@@ -67,8 +67,6 @@ class PositionDAO {
         }).catch((error) => {
             throw new Error(error.message);
         });
-
-        return result;
     }
 
     /**
@@ -79,7 +77,7 @@ class PositionDAO {
      */
     newPosition = async (positionObject) => {
         const querySQL = "INSERT INTO POSITIONS VALUES (?, ?, ?, ?, ?, ?, 0, 0)";
-        const result = this.dao.run(
+        return this.dao.run(
             querySQL,
             [
                 positionObject.positionID,
@@ -89,11 +87,11 @@ class PositionDAO {
                 positionObject.maxWeight,
                 positionObject.maxVolume
             ]
-        ).catch((error) => {
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
             throw new Error(error.message);
         });
-
-        return result;
     }
 
     /**
@@ -104,7 +102,7 @@ class PositionDAO {
      */
     updatePositionByPositionID = async (positionID, positionObject) => {
         const querySQL = "UPDATE POSITIONS SET positionID = ?, aisleID = ?, row = ?, col = ?, maxWeight = ?, maxVolume = ?, occupiedWeight = ?, occupiedVolume = ? WHERE positionID == ?";
-        const result = this.dao.run(
+        return this.dao.run(
             querySQL,
             [
                 positionObject.newPositionID,
@@ -117,11 +115,11 @@ class PositionDAO {
                 positionObject.newOccupiedVolume,
                 positionID
             ]
-        ).catch((error) => {
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
             throw new Error(error.message);
         });
-
-        return result;
     }
 
 
@@ -133,7 +131,7 @@ class PositionDAO {
      */
     updatePositionID = async (positionID, newPositionID) => {
         const querySQL = "UPDATE POSITIONS SET positionID = ?, aisleID = ?, row = ?, col = ? WHERE positionID == ?";
-        const result = this.dao.run(
+        return this.dao.run(
             querySQL,
             [
                 newPositionID,
@@ -142,11 +140,11 @@ class PositionDAO {
                 newPositionID.slice(8, 12),
                 positionID
             ]
-        ).catch((error) => {
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
             throw new Error(error.message);
         });
-
-        return result;
     }
 
     /**
@@ -180,16 +178,16 @@ class PositionDAO {
      */
     removePosition = async (positionID) => {
         const querySQL = "DELETE FROM POSITIONS WHERE POSITIONS.positionID == ?"
-        const result = this.dao.run(
+        return this.dao.run(
             querySQL,
             [
                 positionID
             ]
-        ).catch((error) => {
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
             throw new Error(error.message);
         });
-
-        return result;
     }
 }
 

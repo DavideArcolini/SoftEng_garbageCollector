@@ -77,16 +77,16 @@ class SKUitemDAO {
      */
     getSKUitemByRFID = async (rfid) => {
         const querySQL = "SELECT * FROM SKUITEMS WHERE SKUITEMS.RFID == ?";
-        const result = this.dao.get(
+        return this.dao.get(
             querySQL,
             [
                 rfid
             ]
-        ).catch((error) => {
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
             throw new Error(error.message);
         });
-
-        return result;
     }
 
     /**
@@ -97,7 +97,7 @@ class SKUitemDAO {
      */
     newSkuItem = async (skuItemObject) => {
         const querySQL = "INSERT INTO SKUITEMS (RFID, SKUId, Available, DateOfStock) VALUES (?, ?, 0, ?)";
-        const result = this.dao.run(
+        return this.dao.run(
             querySQL, 
             [
                 skuItemObject.RFID,
@@ -105,11 +105,11 @@ class SKUitemDAO {
                 (skuItemObject.DateOfStock === undefined) ? "" : skuItemObject.DateOfStock
 
             ]
-        ).catch((error) => {
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
             throw new Error(error.message);
         });
-
-        return result;
     }
 
     /**
@@ -121,7 +121,7 @@ class SKUitemDAO {
      */
     updateSKUitem = async (rfid, skuItemObject) => {
         const querySQL = "UPDATE SKUITEMS SET RFID = ?, Available = ?, DateOfStock = ? WHERE SKUITEMS.RFID == ?";
-        const result = this.dao.run(
+        return this.dao.run(
             querySQL,
             [
                 skuItemObject.newRFID,
@@ -129,11 +129,11 @@ class SKUitemDAO {
                 skuItemObject.newDateOfStock,
                 rfid
             ]
-        ).catch((error) => {
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
             throw new Error(error.message);
         });
-
-        return result;
     }
 
     /**
@@ -144,16 +144,16 @@ class SKUitemDAO {
      */
     deleteSKUitem = async (rfid) => {
         const querySQL = "DELETE FROM SKUITEMS WHERE SKUITEMS.RFID == ?";
-        const result = this.dao.run(
+        return this.dao.run(
             querySQL,
             [
                 rfid
             ]
-        ).catch((error) => {
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
             throw new Error(error.message);
         });
-
-        return result;
     }
 }
  
