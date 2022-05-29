@@ -38,13 +38,27 @@ class SKUDAO {
      */
     getSKUs = async () => {
         const querySQL = "SELECT * FROM SKUS";
-        const skus = this.dao.all(
+        const result = this.dao.all(
             querySQL
         ).catch((error) => {
             throw new Error(error.message);
         });
 
-        return skus;
+        return result;
+    }
+
+    getSKUByID = async (id) => {
+        const querySQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
+        const result = this.dao.get(
+            querySQL,
+            [
+                id
+            ]
+        ).catch((error) => {
+            throw new Error(error.message);
+        });
+
+        return result;
     }
 
     /**
@@ -55,7 +69,7 @@ class SKUDAO {
      */
     getSKUByPositionID = async (positionID) => {
         const querySQL = "SELECT * FROM SKUS WHERE SKUS.position == ?";
-        const sku = this.dao.get(
+        const result = this.dao.get(
             querySQL, 
             [
                 positionID
@@ -64,28 +78,97 @@ class SKUDAO {
             throw new Error(error.message);
         });
 
-        return sku;
+        return result;
     }
 
     /**
-     * Update the positionID of a SKU given its positionID
+     * Create a new SKU in the DB
+     * --------------------------
+     * @param {JSON} skuObject 
+     */
+    newSKU = async (skuObject) => {
+        const querySQL = "INSERT INTO SKUS (DESCRIPTION, WEIGHT, VOLUME, NOTES, PRICE, AVAILABLEQUANTITY) VALUES (?, ?, ?, ?, ?, ?)";
+        return this.dao.run(
+            querySQL,
+            [
+                skuObject.description,
+                skuObject.weight,
+                skuObject.volume,
+                skuObject.notes,
+                skuObject.price,
+                skuObject.availableQuantity
+            ]
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
+            throw new Error(error.message);
+        });
+    }
+
+    /**
+     * Update a SKU Object given its ID
+     * --------------------------------
+     * @param {Number} id 
+     * @param {JSON} skuObject 
+     */
+    updateSKU = async (id, skuObject) => {
+        const querySQL = "UPDATE SKUS SET description = ?, weight = ?, volume = ?, notes = ?, price = ?, availableQuantity = ? WHERE id == ?";
+        return this.dao.run(
+            querySQL,
+            [
+                skuObject.newDescription, 
+                skuObject.newWeight, 
+                skuObject.newVolume, 
+                skuObject.newNotes, 
+                skuObject.newPrice, 
+                skuObject.newAvailableQuantity, 
+                id
+            ]
+        ).then((result) => {
+            return result
+        }).catch((error) => {
+            throw new Error(error.message);
+        });
+    }
+
+    /**
+     * Update the positionID of a SKU given its id
      * ---------------------------------------------------
      * @param {String} positionID 
      * @param {String} newPositionID 
      */
-    updateSKUpositionID = async (positionID, newPositionID) => {
-        const querySQL = "UPDATE SKUS SET position = ? WHERE position == ?";
+    updateSKUpositionID = async (id, newPositionID) => {
+        const querySQL = "UPDATE SKUS SET position = ? WHERE id == ?";
         const result = this.dao.run(
             querySQL,
             [
                 newPositionID,
-                positionID
+                id
             ]
         ).catch((error) => {
             throw new Error(error.message);
         });
 
         return result;
+    }
+
+    /**
+     * Remove the SKU Object corresponding to the given ID from DB
+     * -----------------------------------------------------------
+     * @param {Number} id 
+     */
+    deleteSKU = async (id) => {
+        const querySQL = "DELETE FROM SKUS WHERE SKUS.ID == ?";
+        return this.dao.run(
+            querySQL,
+            [
+                id
+            ]
+        ).then((result) => {
+            return result
+        }).catch((error) => {
+            throw new Error(error.message);
+        });
     }
 }
 

@@ -38,8 +38,8 @@ router.get(
     validationHandler,
     async (request, response) => {
         try {
-            const positions = await positionController.getPositions();
-            return response.status(200).json(positions);
+            const result = await positionController.getPositions();
+            return response.status(result.code).json(result.message);
         } catch (error) {
             console.log(error);
             return response.status(500).json(ERROR_500);

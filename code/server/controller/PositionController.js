@@ -47,10 +47,13 @@ class PositionController {
      */
     getPositions = async () => {
 
-        /* access the DB through positionDAO */
         try {
+            /* access the DB through positionDAO */
             const positions = await this.positionDAO.getPositions();
-            return positions;
+            return {
+                code: 200,
+                message: positions
+            };
         } catch (error) {
             throw error;
         }
@@ -154,7 +157,7 @@ class PositionController {
             if (sku !== undefined) {
 
                 /* update SKU's positionID */
-                await this.skuDAO.updateSKUpositionID(targetID, newPositionID);
+                await this.skuDAO.updateSKUpositionID(sku.id, newPositionID);
             }
 
             return MESSG_200;
@@ -182,7 +185,8 @@ class PositionController {
             await this.positionDAO.removePosition(targetID);
 
             /* update corresponding SKU */
-            await this.skuDAO.updateSKUpositionID(targetID, null);
+            const sku = await this.skuDAO.getSKUByPositionID(targetID);
+            await this.skuDAO.updateSKUpositionID(sku.id, null);
 
             return MESSG_204;
 

@@ -149,6 +149,29 @@ class PositionDAO {
         return result;
     }
 
+    /**
+     * Update occupiedWeight and occupiedVolume of position object
+     * -----------------------------------------------------------
+     * @param {String} positionID 
+     * @param {Number} newOccupiedWeight 
+     * @param {Number} newOccupiedVolume 
+     */
+    updatePositionQuantity = async (positionID, newOccupiedWeight, newOccupiedVolume) => {
+        const querySQL = "UPDATE POSITIONS SET occupiedWeight = ?, occupiedVolume = ? WHERE positionID == ?";
+        return this.dao.run(
+            querySQL,
+            [
+                newOccupiedWeight,
+                newOccupiedVolume,
+                positionID
+            ]
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
+            throw new Error(error.message);
+        });
+    }
+
 
     /**
      * Remove a Position Object from DB given it positionID
