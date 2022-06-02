@@ -1,6 +1,15 @@
 "use strict";
 
-const ERROR_404 = "Not Found";
+/* --------- IMPORT MODULES --------- */
+const SKUitemDAO    = require("../db/skuItemDAO");
+const SKUDAO        = require("../db/skuDAO");
+
+/* --------- ERROR MESSAGES --------- */
+const MESSG_200 = {code: 200, message: 'Ok'}
+const MESSG_201 = {code: 201, message: 'Created'};
+const MESSG_204 = {code: 204, message: 'No Content'};
+const ERROR_404 = {code: 404, message: 'Not Found'};
+
 
 
 /**
@@ -18,17 +27,17 @@ class SKUitemController {
 
     /**
      * Constructor of the class
-     * @param {DAO Object} input_dao 
+     * @param {DAO Object} generalPurposeDAO 
      */
-    constructor (input_dao) {
-        this.dao = input_dao;
-        this.dao.new;
+    constructor (generalPurposeDAO) {
+        this.skuItemDAO = new SKUitemDAO(generalPurposeDAO);
+        this.skuDAO     = new SKUDAO(generalPurposeDAO);
     }
 
     /** 
-     *          + ------- +
-     *          |   API   |
-     *          + ------- +
+     *          + ------------ +
+     *          |   SERVICES   |
+     *          + ------------ +
     */
 
     /**
@@ -39,21 +48,16 @@ class SKUitemController {
      */
     getSKUitems = async () => {
 
-        /* QUERYING DATABASE */
-        let result_SQL;
+        /* retrieve SKUitems from DB */
         try {
-            const query_SQL = "SELECT * FROM SKUITEMS";
-            result_SQL = await this.dao.all(query_SQL);
+            const skuitems = await this.skuItemDAO.getSKUitems();
+            return {
+                code: 200,
+                message: skuitems
+            };
         } catch (error) {
-            // console.log(error);
-            throw new TypeError('Internal Server Error');
+            throw error;
         }
-        
-        /* RETURNING RESULT */
-        return {
-            code: 200,
-            message: result_SQL
-        };
     }
 
     /**
@@ -66,39 +70,24 @@ class SKUitemController {
      */
     getSKUitemsBySKUId = async (params) => {
 
-        const target_id = params.id;
+        const targetID = params.id;
 
-        /* CHECK IF SKU EXISTS */
         try {
-            const query_retrieveSKU_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
-            let result_retrieveSKU_SQL = await this.dao.all(query_retrieveSKU_SQL, [target_id]);
-            if (result_retrieveSKU_SQL.length === 0) {
-                return {
-                    code: 404,
-                    message: ERROR_404
-                };
+            /* check if SKUid exists in DB */
+            const sku = await this.skuDAO.getSKUByID(targetID);
+            if (sku === undefined) {
+                return ERROR_404;
             }
-        } catch (error) {
-            // console.log(error);
-            throw new TypeError('Internal Server Error');
-        }
-        
 
-        /* QUERYING DATABASE */
-        let result_SQL;
-        try {
-            const query_SQL = "SELECT * FROM SKUITEMS WHERE SKUITEMS.SKUId == ? AND SKUITEMS.Available == 1";
-            result_SQL = await this.dao.all(query_SQL, [target_id]);
+            /* retrieving skuitems from DB */
+            const skuitems = await this.skuItemDAO.getSKUitemsBySKUid(targetID);
+            return {
+                code: 200,
+                message: skuitems
+            };
         } catch (error) {
-            // console.log(error);
-            throw new TypeError('Internal Server Error');
+            throw error;
         }
-        
-        /* RETURNING RESULT */
-        return {
-            code: 200,
-            message: result_SQL
-        };
     }
    
 
@@ -111,20 +100,15 @@ class SKUitemController {
      */
     getSKUitemsByRFID = async (params) => {
 
-        const target_rfid = params.rfid;
+        const targetRFID = params.rfid;
 
-        /* QUERYING DATABASE */
-        let result_SQL;
         try {
-            const query_SQL = "SELECT * FROM SKUITEMS WHERE SKUITEMS.RFID == ?";
-            result_SQL = await this.dao.all(query_SQL, [target_rfid]);
+            /* retrieve skuitem from DB */
+            const skuitem = await this.skuItemDAO.getSKUitemByRFID(targetRFID);
+            return (skuitem === undefined) ? ERROR_404 : {code: 200, message: skuitem};
         } catch (error) {
-            // console.log(error);
-            throw new TypeError('Internal Server Error');
+            throw error;
         }
-
-        /* RETURNING RESULT */
-        return (result_SQL.length === 0) ? {code: 404, message: ERROR_404} : {code: 200, message: result_SQL};
     }
 
 
@@ -137,35 +121,19 @@ class SKUitemController {
      */
     newSKUitem = async (body) => {
 
-        /* CHECKING IF SKU ACTUALLY EXISTS */
         try {
-            const query_retrieveSKU_SQL = "SELECT * FROM SKUS WHERE SKUS.id == ?";
-            let result_retrieveSKU_SQL = await this.dao.all(query_retrieveSKU_SQL, [body.SKUId]);
-            if (result_retrieveSKU_SQL.length === 0) {
-                return {
-                    code: 404,
-                    message: ERROR_404
-                };
+            /* checking if SKUid actually exists */
+            const sku = await this.skuDAO.getSKUByID(body.SKUId);
+            if (sku === undefined) {
+                return ERROR_404;
             }
-        } catch (error) {
-            // console.log(error);
-            throw new TypeError('Service Unavailable');
-        }
 
-        /* QUERYING DATABASE */
-        try {
-            const query_SQL = "INSERT INTO SKUITEMS (RFID, SKUId, Available, DateOfStock) VALUES (?, ?, 0, ?)";
-            await this.dao.run(query_SQL, [body.RFID, body.SKUId, ((body.DateOfStock === undefined) ? "" : body.DateOfStock)]);
+            /* creating new skuitem in the DB */
+            await this.skuItemDAO.newSkuItem(body);
+            return MESSG_201;
         } catch (error) {
-            // console.log(error);
-            throw new TypeError('Service Unavailable');
+            throw error;
         }
-        
-        /* RETURNING RESULT */
-        return {
-            code: 201,
-            message: "CREATED"
-        };
     }
 
     /**
@@ -178,41 +146,22 @@ class SKUitemController {
      */
     editSKUitem = async (params, body) => {
 
-        const target_rfid = params.rfid;
+        const targetRFID = params.rfid;
         const data = body;
 
-        /* QUERYING DATABASE */
         try {
-            const query_SQL = "SELECT * FROM SKUITEMS WHERE SKUITEMS.RFID == ?";
-            let result_SQL = await this.dao.all(query_SQL, [target_rfid]);
-            if (result_SQL.length === 0) {
-                return {
-                    code: 404,
-                    message: ERROR_404
-                };
+            /* check if SKUitem exists */
+            const skuitem = await this.skuItemDAO.getSKUitemByRFID(targetRFID);
+            if (skuitem === undefined) {
+                return ERROR_404;
             }
-        } catch (error) {
-            // console.log(error);
-            throw new TypeError('Service Unavailable');
-        }
-        
 
-        /* IF EVERYTHING IS FINE, UPDATE THE NEW SKUItem */
-        try {
-            const update_SQL = "UPDATE SKUITEMS \
-                                SET RFID = ?, Available = ?, DateOfStock = ? \
-                                WHERE SKUITEMS.RFID==?";
-            await this.dao.run(update_SQL, [data.newRFID, data.newAvailable, data.newDateOfStock, target_rfid]);
+            /* update SKUitem */
+            await this.skuItemDAO.updateSKUitem(targetRFID, data);
+            return MESSG_200;
         } catch (error) {
-            // console.log(error);
-            throw new TypeError('Service Unavailable');
+            throw error;
         }
-        
-        /* RETURN RESULT ON SUCCESS */
-        return {
-            code: 200,
-            message: "OK"
-        };
     }
     
 
@@ -225,24 +174,16 @@ class SKUitemController {
      */
     deleteSKUitem = async (params) => {
 
-        let target_rfid = params.rfid;
+        let targetRFID = params.rfid;
 
-        /* QUERYING DATABASE */
         try {
-            const query_SQL = "DELETE FROM SKUITEMS WHERE SKUITEMS.RFID == ?";
-            await this.dao.run(query_SQL, [target_rfid]);
+            /* accessing DB through DAO */
+            await this.skuItemDAO.deleteSKUitem(targetRFID);
+            return MESSG_204;
         } catch (error) {
-            // console.log(error);
-            throw new TypeError('Service Unavailable');
+            throw error;
         }
-        
-        /* RETURNING RESULT ON SUCCESS */
-        return {
-            code: 204,
-            message: "NO CONTENT"
-        };
     }
-
 }
 
 module.exports = SKUitemController;
