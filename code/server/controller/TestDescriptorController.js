@@ -13,7 +13,7 @@ class TestDescriptorController {
 
             const sql = "SELECT * FROM TEST_DESCRIPTORS GROUP BY id";
             const result = await this.daotd.all(sql);
-            if(result[0].idSKU==null){
+            if(result.length !== 0 && result[0].idSKU==null){
                 throw(error);
             }else{
                 return result;
@@ -72,12 +72,13 @@ class TestDescriptorController {
     modifyTestDescriptor = async(json, req) => {
         
         try{
+
             //See if SKUId exist
             let sql ="SELECT * FROM SKUS WHERE id==?"
             let result = await this.daotd.get(sql,json.newIdSKU);
 
             //SKUID doesn't exist
-            if(result==undefined){
+            if(result === undefined){
                 return 404;
             }
         
@@ -86,7 +87,7 @@ class TestDescriptorController {
             result = await this.daotd.get(sql,req.id);
 
             //ID doesn't exist    
-            if(result==undefined){
+            if(result === undefined){
                 return 404;
             }
 

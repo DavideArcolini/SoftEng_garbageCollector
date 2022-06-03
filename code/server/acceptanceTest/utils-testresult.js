@@ -166,7 +166,7 @@ function testDeleteTestResultByRFIDandID(agent, expCode, rfid){
             agent.get('/api/skuitems/'+rfid+'/testResults')
             .then(function(res){
                 let trid = res.body[0].id;
-                //console.log(res.body);
+                // console.log(res.body);
                 agent.delete('/api/skuitems/'+rfid+'/testResult/'+trid)
                 .then(function(res2){
                     res2.should.have.status(expCode);

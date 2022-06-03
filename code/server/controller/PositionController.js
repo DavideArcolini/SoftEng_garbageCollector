@@ -186,7 +186,9 @@ class PositionController {
 
             /* update corresponding SKU */
             const sku = await this.skuDAO.getSKUByPositionID(targetID);
-            await this.skuDAO.updateSKUpositionID(sku.id, null);
+            if (sku !== undefined) {
+                await this.skuDAO.updateSKUpositionID(sku.id, null);
+            }
 
             return MESSG_204;
 

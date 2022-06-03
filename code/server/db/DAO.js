@@ -371,7 +371,7 @@ class DAO {
     }
   ]
     return new Promise(async (res, rej)=>{
-      let sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR, PRIMARY KEY(id)) ";
+      let sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER, username VARCHAR, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR, PRIMARY KEY(id)) ";
       this.db.run(sql, (err)=>{
         if (err) {
           rej(err);

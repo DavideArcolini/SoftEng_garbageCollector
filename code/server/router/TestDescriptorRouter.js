@@ -29,7 +29,7 @@ router.get(
     ], 
     validationHandler,
     async (req,res)=>{
-        let result= await   td.getTestDescriptors();
+        let result = await td.getTestDescriptors();
         if(result==500){
             return res.status(500).json();
         }else{
@@ -125,7 +125,7 @@ router.put(
     ],
     validationHandler,
     async (req,res)=>{
-        result= await     td.modifyTestDescriptor(req.body,req.params);
+        const result = await td.modifyTestDescriptor(req.body,req.params);
         if(result==200){ //PUT success, no body
             return res.status(200).json();
         }else if(result==404){
@@ -154,7 +154,7 @@ router.delete(
     ],
     validationHandler,
     async (req,res)=>{
-        result= await     td.deleteTestDescriptor(req.params);
+        const result= await     td.deleteTestDescriptor(req.params);
         if(result==503){
             return res.status(503).json();
         }else if (result==404){

@@ -281,7 +281,8 @@ router.put(
             return true;
         }),
         body().custom(value => {                                                        /* [FROM API.md]: transportNote is a object to be validated                             */
-            if (/^\d{4}\/\d{2}\/\d{2}$/.test(value.transportNote.deliveryDate) === false) {
+            if (/^\d{4}\/\d{2}\/\d{2}$/.test(value.transportNote.deliveryDate) === false && 
+                /^\d{4}\/\d{2}\/\d{2} \d{2}\:\d{2}$/.test(value.transportNote.deliveryDate) === false) {
                 throw new Error("Invalid date format");
             }
             return true;

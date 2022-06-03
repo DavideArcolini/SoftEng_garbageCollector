@@ -18,7 +18,12 @@ class ReturnOrderController {
             if(max_id.id!==null)
                 id = max_id.id+1;
             
-            
+            /* checkinf restock order */
+            let sql_check = "SELECT * FROM RESTOCK_ORDERS WHERE RESTOCK_ORDERS.id == ?";
+            const result = await this.dao.get(sql_check, [restockOrderId]);
+            if (result === undefined) {
+                return 404;
+            }
             
             for (const prod of products)
             { 

@@ -31,7 +31,7 @@ router.get(
     ],
     validationHandler,
     async (req,res)=>{
-        result= await  i.getItems();
+        const result= await  i.getItems();
         if(result==500){
             return res.status(500).json();
         }else{
@@ -58,7 +58,7 @@ router.get(
     ],
     validationHandler,
     async (req,res)=>{
-        result= await  i.getItemById(req.params);
+        const result= await  i.getItemById(req.params);
         if(result==404){
             return res.status(404).json();
         }else if(result==500){
@@ -96,12 +96,12 @@ router.post(
     ],
     validationHandler,
     async (req,res)=>{
-        result= await  i.createItem(req.body);
-        if(result==404){
+        const result= await i.createItem(req.body);
+        if(result===404){
             return res.status(404).json();
-        }else if(result==500){
+        }else if(result===500){
             return res.status(500).json();
-        }else if(result==422){
+        }else if(result===422){
             return res.status(422).json();
         }else{
             return res.status(201).json();
@@ -131,7 +131,7 @@ router.put(
     ],
     validationHandler,
     async (req,res)=>{
-        result= await  i.modifyItem(req.body,req.id);
+        const result = await  i.modifyItem(req.body, req.id);
         if(result==200){ //PUT success, no body
             return res.status(200).json();
         }else if(result==404){
@@ -160,13 +160,13 @@ router.delete(
     ],
     validationHandler,
     async (req,res)=>{
-        result= await  i.deleteItem(req.params);
+        const result= await  i.deleteItem(req.params);
         if(result==404){
             return res.status(404).json();
         }else if(result==503){
             return res.status(503).json();
         }else if(result==204){
-            return res.status(204);
+            return res.status(204).json();
         }
     }   
 );

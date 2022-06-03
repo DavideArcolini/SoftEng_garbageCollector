@@ -113,6 +113,8 @@ router.post(
         let result = await rtoc.createReturnOrder(req.body.returnDate,req.body.restockOrderId,req.body.products);
         if(result.unprocessableEntity){
             return res.status(422).end();
+        } else if (result === 404) {
+            return res.status(404).json();
         }
         return res.status(201).end();
         }catch(error){

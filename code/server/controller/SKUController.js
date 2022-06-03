@@ -247,17 +247,17 @@ class SKUController {
         let targetID = params.id;
 
         try {
-            /* check if SKU is associated to SKUitems */
-            const skuitems = await this.skuItemDAO.getSKUitemsBySKUid(targetID);
-            if (skuitems.length != 0) {
-                return ERROR_422;
-            }
+            // /* check if SKU is associated to SKUitems */
+            // const skuitems = await this.skuItemDAO.getSKUitemsBySKUid(targetID);
+            // if (skuitems.length != 0) {
+            //     return ERROR_422;
+            // }
 
-            /* check if SKU is associated to TestDescriptors */
-            const testDescriptors = await this.testDescriptorsDAO.getTDIDbySKUid(targetID);
-            if (testDescriptors.length != 0) {
-                return ERROR_422;
-            }
+            // /* check if SKU is associated to TestDescriptors */
+            // const testDescriptors = await this.testDescriptorsDAO.getTDIDbySKUid(targetID);
+            // if (testDescriptors.length != 0) {
+            //     return ERROR_422;
+            // }
 
             /* retrieving SKU from DB (update position) */
             const sku = await this.skuDAO.getSKUByID(targetID);

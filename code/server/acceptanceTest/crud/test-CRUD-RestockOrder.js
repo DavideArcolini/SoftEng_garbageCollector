@@ -81,7 +81,7 @@ function testRestockOrderCRUD(){
         restockorders.testEditRestockWrongBodyOrderSkuItems(agent, 422);
         restockorders.testEditRestockOrderTransportNote(agent, 422);
         restockorders.testEditRestockOrder(agent, "DELIVERY", 200);
-        restockorders.testEditRestockOrderTransportNote(agent, 200);
+        restockorders.testEditRestockOrderTransportNote(agent, 200);//
         restockorders.testEditRestockOrderTransportNoteNotFound(agent, 404);       
         restockorders.deleteAllRestockOrders(agent);
         skuitems.deleteAllSkuItems(agent);      

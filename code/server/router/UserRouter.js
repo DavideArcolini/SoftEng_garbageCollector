@@ -191,7 +191,10 @@ router.delete(
             if (value === 'manager' || value === 'administrator') {
                 throw new Error('Invalid type value');
             }
-            return true;
+            if (value === 'customer' || value === 'qualityEmployee' || value === 'clerk' || value === 'deliveryEmployee' || value === 'supplier') {
+                return true;
+            }
+            return false;
         }),
         body().custom(value => {                                                /* [FROM API.md]: body should be empty                                                  */
             if (Object.keys(value).length !== 0) {
@@ -204,9 +207,10 @@ router.delete(
     async(req, res) => {
         try {
             let result = await uc.deleteUser(req.params);
-            
             if (result === 204) {
                 return res.status(204).json({message:"success"});
+            } else if (result === 422) {
+                return res.status(422).json();
             }
             else {
                 return res.status(503).json({error: "Service Unavailable"});

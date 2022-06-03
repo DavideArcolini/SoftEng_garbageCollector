@@ -12,11 +12,7 @@ class ItemController {
             let sql = "SELECT * FROM ITEMS";
             let result = await this.daoi.all(sql);
             
-            if(result[0].SKUId==null){
-                throw(error)
-            }else{
-                return result;
-            }
+            return result;
             
         }catch{
             return 500;
@@ -49,13 +45,12 @@ class ItemController {
     createItem = async (json) => {
         
         try {
-            
             //See if SKUId exist
-            let sql ="SELECT * FROM SKUITEMS WHERE SKUId=(?)"
-            let result = await this.daoi.get(sql,json.SKUId);
+            let sql = "SELECT * FROM SKUS WHERE id == ?"
+            let result = await this.daoi.get(sql, [json.SKUId]);
 
             //SKUID doesn't exist
-            if(result==undefined){
+            if(result === undefined){
                 return 404;
             }
             
@@ -85,21 +80,22 @@ class ItemController {
     }
 
 
-    modifyItem = async(json,req) => { 
+    modifyItem = async(json,id) => { 
         
         try{
             //Find if item exist
-            let sql = "SELECT * FROM ITEMS WHERE id=?"
-            let result = await this.daoi.get(sql,[req.id]);
+            let sql = "SELECT * FROM ITEMS WHERE ITEMS.id == ?"
+            let result = await this.daoi.get(sql, [id]);
 
             //Item doesn't exist
-            if(result==undefined){
-                return 404;
-            }
+            // console.log(result);
+            // if(result === undefined){
+            //     return 404;
+            // }
 
             //Update the object if found
-            sql = `UPDATE ITEMS SET  description=(?), price=(?) WHERE id=(?)`;
-            result = await this.daoi.run(sql,[json.newDescription,json.newPrice, req.id]);
+            sql = `UPDATE ITEMS SET description=(?), price=(?) WHERE id==?`;
+            result = await this.daoi.run(sql,[json.newDescription,json.newPrice, id]);
             return 200;
         }
         catch(error){

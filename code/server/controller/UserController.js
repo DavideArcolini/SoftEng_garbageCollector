@@ -1,5 +1,6 @@
 "use strict";
 
+const { throws } = require('assert');
 const bcrypt        = require('bcrypt');
 const saltRounds    = 10;
 
@@ -17,7 +18,7 @@ class UserController {
         try {
             const sql = "INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
             //let data = req;
-            let control = await this.dao.get("SELECT username FROM USERS where username = (?)", data.username)
+            let control = await this.dao.get("SELECT * FROM USERS where username = (?) and type == ?", [data.username, data.type]);
             /*
             if (Object.keys(data).length === 0 || (data.type == "manager") || (data.type == "administrator") || (data.password.length < 8) || !this.regex.test(data.username)) {
                 return 422;
@@ -112,9 +113,8 @@ class UserController {
         
         try {
             let user = username.split("@")[0].concat("@ezwh.com");
-            let control = await this.dao.get("SELECT username FROM USERS WHERE username=(?)", [user])
-
-            if ((!this.types.includes(req.oldType)) || (!this.types.includes(req.newType)) || (control == undefined)) {
+            let control = await this.dao.get("SELECT username FROM USERS WHERE username=(?) AND type == ?", [user, req.oldType]);
+            if ((!this.types.includes(req.oldType)) || (!this.types.includes(req.newType)) || (control === undefined)) {
                 return 404
             }
             else {
@@ -128,18 +128,19 @@ class UserController {
 
     deleteUser = async (req) => {
         try {
+            console.log(req.type);
+            console.log(req.username)
             let type = req.type;
             let username = req.username;
-            let user = req.username.split("@")[0].concat("@ezwh.com");
-            const sql = `
-            DELETE from USERS
-            WHERE username = (?) AND type = (?)
-            `;
-        
-            let res = await this.dao.get("SELECT username FROM USERS WHERE username = (?) AND type = (?)", [user, type])
-            if (!res) {
-                throws;
+            let user = username.split("@")[0].concat("@ezwh.com");
+            if (type === 'manager' || type === 'administrator') {
+                return 422;
             }
+            const sql = 'DELETE from USERS WHERE username == ? AND type == ?';
+            // let res = await this.dao.get("SELECT username FROM USERS WHERE username == ? AND type == ?", [user, type])
+            // if (res === undefined) {
+            //     return 422 ;
+            // }
             await this.dao.run(sql, [user, type]);
             return 204
         } catch (error) {

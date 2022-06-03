@@ -30,7 +30,7 @@ router.get(
     ],
     validationHandler,
     async (req,res)=>{
-        result= await  tr.getTestResults(req.params);
+        const result= await  tr.getTestResults(req.params);
         if(result==404){
             return res.status(404).json();
         }else if(result==500){
@@ -60,7 +60,7 @@ router.get(
     ],
     validationHandler,
     async (req,res)=>{
-        result= await  tr.getTestResultById(req.params);
+        const result= await  tr.getTestResultById(req.params);
         if(result==404){
             return res.status(404).json();
         }else if(result==500){
@@ -96,7 +96,7 @@ router.post(
     ],
     validationHandler,
     async (req,res)=>{
-        result= await  tr.createTestResult(req.body);
+        const result= await  tr.createTestResult(req.body);
         if(result==404){
             return res.status(404).json();
         }else if(result==503){
@@ -132,7 +132,7 @@ router.put(
     ],
     validationHandler,
     async (req,res)=>{
-        result= await  tr.modifyTestResult(req.params,req.body);
+        const result= await  tr.modifyTestResult(req.params,req.body);
         if(result==200){ //PUT success, no body
             return res.status(200).json();
         }else if(result==404){
@@ -162,13 +162,13 @@ router.delete(
     ],
     validationHandler,
     async (req,res)=>{
-        result= await  tr.deleteTestResult(req.params);
+        const result= await  tr.deleteTestResult(req.params);
         if(result==404){
             return res.status(404).json();
         }else if(result==503){
             return res.status(503).json();
         }else{
-            return res.status(204);
+            return res.status(204).json();
         }
     }
 );
