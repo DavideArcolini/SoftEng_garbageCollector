@@ -408,19 +408,6 @@ class DAO {
     });
   }
 
-  deleteAllUsers() {
-    return new Promise((res, rej) => {
-      const sql = "DELETE FROM USERS";
-      this.db.run(sql, (err)=>{
-          if (err) {
-              rej(err);
-              return;
-          }
-          res(this.lastID);
-      });
-    });
-  }
-
 
  /**
   * ========================

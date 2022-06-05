@@ -73,9 +73,7 @@ class UserController {
     editUser = async(req, username) => {
         try {
             let user = username.split("@")[0].concat("@ezwh.com");
-            console.log(user)
             let control = await this.dao.getUser(user, req.oldType)
-            console.log(control)
             if (control === undefined) {
                 return 404
             }

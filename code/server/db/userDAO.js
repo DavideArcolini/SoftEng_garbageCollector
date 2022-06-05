@@ -24,7 +24,6 @@ exports.createUser = async(username, name, surname, password, type) => {
 
 exports.getUser = async(username, type=undefined) => {
         let sql = ``;
-        console.log(username,type)
         try{
             if(type) {
                 sql = `
@@ -108,4 +107,13 @@ exports.removeUser = async(username, type) => {
         return(error)
     }
     
+}
+
+exports.deleteAllUsers = async() => {
+        const sql = "DELETE FROM USERS";
+        await dao.run(sql, (err)=>{
+            if (err) {
+                throw err
+            }
+        });
 }
