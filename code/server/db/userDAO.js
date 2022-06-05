@@ -10,42 +10,36 @@ const DAO = require("../db/DAO")
 const dao = new DAO();
 
 exports.createUser = async(username, name, surname, password, type) => {
-        const sql = "INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
-        try{
-            let hash = await bcrypt.hash(password, saltRounds);
-            await dao.run(sql, [username, name, surname, hash, type], (err) => {
-                if(err) throw(err);
-            });
-            return
-        } catch(err) {
-            return(err)
-        }
+    const sql = "INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
+
+    let hash = await bcrypt.hash(password, saltRounds);
+    await dao.run(sql, [username, name, surname, hash, type], (err) => {
+        if(err) throw(err);
+    });
+    return
 }
 
 exports.getUser = async(username, type=undefined) => {
-        let sql = ``;
-        try{
-            if(type) {
-                sql = `
-                SELECT * 
-                FROM USERS 
-                WHERE username = (?) AND type = (?)`;
-                return await dao.get(sql, [username, type], (err) => {
-                    if (err) throw(err);
-                });
-            }
-            else {
-                sql = `
-                SELECT * 
-                FROM USERS 
-                WHERE username = (?)`
-                return await dao.get(sql, [username], (err) => {
-                    if (err) throw(err);
-                });
-            }
-        } catch(err) {
-            return err
-        }
+    let sql = ``;
+
+    if(type) {
+        sql = `
+        SELECT * 
+        FROM USERS 
+        WHERE username = (?) AND type = (?)`;
+        return await dao.get(sql, [username, type], (err) => {
+            if (err) throw(err);
+        });
+    }
+    else {
+        sql = `
+        SELECT * 
+        FROM USERS 
+        WHERE username = (?)`
+        return await dao.get(sql, [username], (err) => {
+            if (err) throw(err);
+        });
+    }
 }
 
 exports.getUsers = (suppliers = undefined) => {
@@ -78,42 +72,39 @@ exports.getUsers = (suppliers = undefined) => {
 }
 
 exports.modifyPermissions = async(username, old_type, new_type) => {
-    try{
-        const sql = `
-        UPDATE USERS
-        SET
-            type = (?)
-        WHERE username = (?) AND type = (?)
-        `;
+    const sql = `
+    UPDATE USERS
+    SET
+        type = (?)
+    WHERE username = (?) AND type = (?)
+    `;
 
-        let res = await dao.run(sql, [new_type, username, old_type], (err) => {
-            if(err) throw(err)
-        });
-        return res
-    } catch(err) {
-        return(err)
-    }
+    let res = await dao.run(sql, [new_type, username, old_type], (err) => {
+        if(err) throw(err)
+    });
+    return res
 }
 
 exports.removeUser = async(username, type) => {
     const sql = 'DELETE from USERS WHERE username == ? AND type == ?';
-    try {
-        await dao.run(sql, [username, type], (err) => {
-            if (err) throw(err);
-            else return;
-        });
-        
-    } catch (error) {
-        return(error)
+    let res = await dao.run(sql, [username, type], (err, row) => {
+        console.log(row)
+        if (err || row.id===0) throw(err);
+    });
+    console.log(res)
+    try{
+    if(!res) throw(err)
+    }catch(err) {
+        console.log(err)
     }
     
 }
 
 exports.deleteAllUsers = async() => {
-        const sql = "DELETE FROM USERS";
-        await dao.run(sql, (err)=>{
-            if (err) {
-                throw err
-            }
-        });
+    const sql = "DELETE FROM USERS";
+    await dao.run(sql, (err)=>{
+        if (err) {
+            throw err
+        }
+    });
 }
