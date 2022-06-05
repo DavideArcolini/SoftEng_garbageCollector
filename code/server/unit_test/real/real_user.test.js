@@ -71,7 +71,7 @@ describe('get suppliers', () => {
             "testpassword",
             "supplier"
         ),
-        await dao.run(        
+        await dao.createUser(        
             "peter@ezwh.com", 
             "Peter",
             "Parker",
@@ -265,7 +265,7 @@ function getSuppliers_TEST(name, expected){
 
 function getUser_TEST(name, req, expected){
     test(name, async () => {
-        let res = await user.getUser(req);
+        let res = await user.login(req);
         expect(res).toEqual(expected)
     })
 }
