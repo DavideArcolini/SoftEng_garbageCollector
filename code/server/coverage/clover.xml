@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1654423967462" clover="3.2.0">
+  <project timestamp="1654423967462" name="All files">
+    <metrics statements="40" coveredstatements="14" conditionals="0" coveredconditionals="0" methods="22" coveredmethods="2" elements="62" coveredelements="16" complexity="0" loc="40" ncloc="40" packages="2" files="2" classes="2"/>
+    <package name="db">
+      <metrics statements="37" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="22" coveredmethods="2"/>
+      <file name="positionDAO.js" path="/Users/davidearcolini/Desktop/PoliTo_CyberSecurity/Courses/Software_Engineering/Exam_Project/SoftEng_garbageCollector/code/server/db/positionDAO.js">
+        <metrics statements="37" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="22" coveredmethods="2"/>
+        <line num="25" count="1" type="stmt"/>
+        <line num="40" count="1" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="42" count="1" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="47" count="0" type="stmt"/>
+        <line num="57" count="1" type="stmt"/>
+        <line num="59" count="0" type="stmt"/>
+        <line num="60" count="0" type="stmt"/>
+        <line num="66" count="0" type="stmt"/>
+        <line num="68" count="0" type="stmt"/>
+        <line num="78" count="1" type="stmt"/>
+        <line num="79" count="0" type="stmt"/>
+        <line num="80" count="0" type="stmt"/>
+        <line num="91" count="0" type="stmt"/>
+        <line num="93" count="0" type="stmt"/>
+        <line num="103" count="1" type="stmt"/>
+        <line num="104" count="0" type="stmt"/>
+        <line num="105" count="0" type="stmt"/>
+        <line num="119" count="0" type="stmt"/>
+        <line num="121" count="0" type="stmt"/>
+        <line num="132" count="1" type="stmt"/>
+        <line num="133" count="0" type="stmt"/>
+        <line num="134" count="0" type="stmt"/>
+        <line num="144" count="0" type="stmt"/>
+        <line num="146" count="0" type="stmt"/>
+        <line num="157" count="1" type="stmt"/>
+        <line num="158" count="0" type="stmt"/>
+        <line num="159" count="0" type="stmt"/>
+        <line num="167" count="0" type="stmt"/>
+        <line num="169" count="0" type="stmt"/>
+        <line num="179" count="1" type="stmt"/>
+        <line num="180" count="0" type="stmt"/>
+        <line num="181" count="0" type="stmt"/>
+        <line num="187" count="0" type="stmt"/>
+        <line num="189" count="0" type="stmt"/>
+        <line num="194" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="unit_test.test_DB">
+      <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="mock_dao.js" path="/Users/davidearcolini/Desktop/PoliTo_CyberSecurity/Courses/Software_Engineering/Exam_Project/SoftEng_garbageCollector/code/server/unit_test/test_DB/mock_dao.js">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>
