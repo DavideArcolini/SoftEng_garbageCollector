@@ -3,7 +3,7 @@ Server listening at http://localhost:3001
 
   create internal order
 [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]
-    ✔ create internal order (1333ms)
+    ✔ create internal order (1328ms)
 [ { SKUId: 1, description: 'a product', price: -0.01, qty: 1 } ]
     ✔ create internal order - UNPROCESSABLE
 
@@ -74,8 +74,19 @@ Server listening at http://localhost:3001
     ✔ [422] Unprocessable Entity (id constraint failed)
 
   API: GET /api/skuitems/:rfid
-    1) [200] OK
+Here the response: 
+{
+  RFID: '91100000000000000000000000000001',
+  SKUId: 222,
+  Available: 0,
+  DateOfStock: '2021/11/29 12:30'
+}
+    ✔ [200] OK
+Here the response: 
+Not Found
     ✔ [404] Not Found (rfid non existing)
+Here the response: 
+{ error: 'Unprocessable Entity' }
     ✔ [422] Unprocessable Entity (id constraint failed)
 
   API: POST /api/skuitem
@@ -269,15 +280,15 @@ Server listening at http://localhost:3001
     ✔ not empty body
 
   get user
-    ✔ getting user data from the system (60ms)
+    ✔ getting user data from the system (57ms)
     ✔ empty body
     ✔ bad username format
     ✔ bad password format
     ✔ not found: wrong username
-    ✔ not found: wrong password (56ms)
+    ✔ not found: wrong password (57ms)
 
   new user
-    ✔ user created (56ms)
+    ✔ user created (58ms)
     ✔ empty body
     ✔ wrong username format
     ✔ password too short
@@ -299,15 +310,5 @@ Server listening at http://localhost:3001
     ✔ deleted
 
 
-  153 passing (2s)
-  1 failing
-
-  1) API: GET /api/skuitems/:rfid
-       [200] OK:
-     AssertionError: expected { …(4) } to be an array
-      at /Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/test/testSKUitemRouter.js:357:41
-      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-      at async Context.<anonymous> (test/testSKUitemRouter.js:353:9)
-
-
+  154 passing (2s)
 
