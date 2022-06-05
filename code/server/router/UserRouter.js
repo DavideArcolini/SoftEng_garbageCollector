@@ -3,8 +3,7 @@ const express = require('express');
 const { ValidationHalt } = require('express-validator/src/base');
 const router = express.Router();
 const UserController = require('../controller/UserController');
-const DAO = require("../db/DAO");
-const dao = new DAO();
+const dao = require('../db/userDAO');
 const uc = new UserController(dao);
 
 const { validationHandler } = require("../validator/validationHandler");
@@ -247,7 +246,7 @@ router.post("/managerSessions",[
 ],
 validationHandler,
 async(req, res) => {
-    const user = await uc.getUser(req.body);
+    const user = await uc.login(req.body);
     
     if(user === 401) {
         return res.status(401).json({message : "Wrong username and/or password"});
@@ -282,7 +281,7 @@ router.post("/deliveryEmployeeSessions", [
 ],
 validationHandler,
 async(req, res) => {
-    const user = await uc.getUser(req.body);
+    const user = await uc.login(req.body);
     
     if(user === 401) {
         return res.status(401).json({message : "Wrong username and/or password"});
@@ -317,7 +316,7 @@ router.post("/qualityEmployeeSessions", [
 ],
 validationHandler,
 async(req, res) => {
-    const user = await uc.getUser(req.body);
+    const user = await uc.login(req.body);
     
     if(user === 401) {
         return res.status(401).json({message : "Wrong username and/or password"});
@@ -353,7 +352,7 @@ router.post("/clerkSessions",
 ],
 validationHandler,
 async(req, res) => {
-    const user = await uc.getUser(req.body);
+    const user = await uc.login(req.body);
     
     if(user === 401) {
         return res.status(401).json({message : "Wrong username and/or password"});
@@ -388,7 +387,7 @@ router.post("/customerSessions", [
 ],
 validationHandler,
 async(req, res) => {
-    const user = await uc.getUser(req.body);
+    const user = await uc.login(req.body);
     
     if(user === 401) {
         return res.status(401).json({message : "Wrong username and/or password"});
@@ -423,7 +422,7 @@ router.post("/supplierSessions", [
 ],
 validationHandler,
 async(req, res) => {
-    const user = await uc.getUser(req.body);
+    const user = await uc.login(req.body);
     
     if(user === 401) {
         return res.status(401).json({message : "Wrong username and/or password"});

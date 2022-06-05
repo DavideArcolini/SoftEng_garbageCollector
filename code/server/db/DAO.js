@@ -335,7 +335,7 @@ class DAO {
       password: "testpassword"
     },
     {
-      username: "customer1@ezwh.com",
+      username: "user1@ezwh.com",
       name: "Davide",
       surname: "Arcolini",
       type: "customer",
@@ -371,7 +371,7 @@ class DAO {
     }
   ]
     return new Promise(async (res, rej)=>{
-      let sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER, username VARCHAR, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR, PRIMARY KEY(id)) ";
+      let sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR, PRIMARY KEY(id)) ";
       this.db.run(sql, (err)=>{
         if (err) {
           rej(err);
@@ -380,13 +380,6 @@ class DAO {
         res(this.lastID);
       });
 
-      let manager = {
-        username: "manager1@ezwh.com",
-        name: "Dave",
-        surname: "Grohl",
-        type: "manager",
-        password: "testpassword"
-      }
       sql = "INSERT OR IGNORE INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
       users.forEach(async (e) => {
         let hash = await bcrypt.hash(e.password, saltRounds);
