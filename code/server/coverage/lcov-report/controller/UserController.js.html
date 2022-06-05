@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">78% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>39/50</span>
+                <span class='fraction'>50/50</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>4/8</span>
+                <span class='fraction'>8/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.42% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/7</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">78% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>39/50</span>
+                <span class='fraction'>50/50</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -209,31 +209,31 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -310,32 +310,32 @@ class UserController {
         }
     }
 &nbsp;
-    getSuppliers = <span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            let result = <span class="cstat-no" title="statement not covered" >this.dao.getUsers(true);</span>
-<span class="cstat-no" title="statement not covered" >            return result</span>
+    getSuppliers = async () =&gt; {
+        try {
+            let result = this.dao.getUsers(true);
+            return result
         } catch (error) {
             //console.log(error)
         }
     }
 &nbsp;
-    login = <span class="fstat-no" title="function not covered" >as</span>ync(req) =&gt; {
-        const sql = <span class="cstat-no" title="statement not covered" >`</span>
+    login = async(req) =&gt; {
+        const sql = `
         SELECT * 
         FROM USERS 
         WHERE username=(?)
         `;
         /* AND password=(?);*/
-<span class="cstat-no" title="statement not covered" >        try{</span>
-            let result = <span class="cstat-no" title="statement not covered" >await this.dao.getUser(req.username);</span>
-<span class="cstat-no" title="statement not covered" >            if (result) {</span>
-                let validPass = <span class="cstat-no" title="statement not covered" >await bcrypt.compare(req.password, result.password);</span>
-<span class="cstat-no" title="statement not covered" >                return validPass ? {id: result.id, username: result.username, name: result.name} : 401;</span>
+        try{
+            let result = await this.dao.getUser(req.username);
+            if (result) {
+                let validPass = await bcrypt.compare(req.password, result.password);
+                return validPass ? {id: result.id, username: result.username, name: result.name} : 401;
             }
-            else {<span class="cstat-no" title="statement not covered" >return 401}</span>
+            else {return 401}
         }
         catch(e){
-<span class="cstat-no" title="statement not covered" >            return;</span>
+            return;
         }
     }
 &nbsp;
@@ -376,7 +376,7 @@ module.exports = UserController;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Sun Jun 05 2022 13:07:16 GMT+0200 (Ora legale dell’Europa centrale)
+                at Sun Jun 05 2022 14:43:42 GMT+0200 (Ora legale dell’Europa centrale)
             </div>
         <script src="../prettify.js"></script>
         <script>
