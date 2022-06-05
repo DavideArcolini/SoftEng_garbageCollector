@@ -1,8 +1,7 @@
 "use strict";
 
-const TestDAO = require("../test_DB/TestDAO");
 const UserController = require("../../controller/UserController");
-const dao = new TestDAO();
+const dao = require("../../db/userDAO")
 const user = new UserController(dao);
 const bcrypt        = require('bcrypt');
 
@@ -18,24 +17,20 @@ const bcrypt        = require('bcrypt');
  */
 describe('get users', () => {
     beforeAll( async () => {
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash("testpassword", salt)
-        await dao.run("INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)",
-        [
+        await dao.deleteAllUsers()
+        await dao.createUser(
             "ciccio1@ezwh.com", 
             "Ciccio",
             "Pasticcio",
-            hash,
-            "customer"
-        ] ),
-        await dao.run("INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)",
-        [
+            "testpassword",
+            "customer" ),
+        await dao.createUser(
             "joe@ezwh.com", 
             "Joe",
             "Biden",
-            hash,
+            "testpassword",
             "clerk"
-        ] )
+        )
     })
     
     getStoredUsers_TEST("Get user ok", [
@@ -69,22 +64,20 @@ describe('get suppliers', () => {
     beforeAll( async () => {
         await dao.deleteAllUsers()
         const salt = await bcrypt.genSalt(10);
-        await dao.run("INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)",
-        [
+        await dao.createUser(
             "mj@ezwh.com", 
             "Mary",
             "Jane",
-            await bcrypt.hash("testpassword", salt),
+            "testpassword",
             "supplier"
-        ] ),
-        await dao.run("INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)",
-        [
+        ),
+        await dao.run(        
             "peter@ezwh.com", 
             "Peter",
             "Parker",
-            await bcrypt.hash("testpassword", salt),
+            "testpassword",
             "supplier"
-        ] )
+        )
     })
 
     getSuppliers_TEST("Get user ok", [
@@ -157,9 +150,7 @@ describe('get user', () => {
             password: "testpassword",
             type: "supplier"
         };
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(to_test.password, salt);
-        await dao.run("INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)", [to_test.username, to_test.name, to_test.surname, hash, to_test.type])
+        await dao.createUser(to_test.username, to_test.name, to_test.surname, to_test.password, to_test.type)
     })
 
     getUser_TEST("ok",
@@ -192,9 +183,7 @@ describe('edit user', () => {
             password: "testpassword",
             type: "supplier"
         };
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(to_test.password, salt);
-        await dao.run("INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)", [to_test.username, to_test.name, to_test.surname, hash, to_test.type])
+        await dao.createUser(to_test.username, to_test.name, to_test.surname, to_test.password, to_test.type)
     })
 
     //  200
@@ -239,9 +228,7 @@ describe('delete user', () => {
             password: "testpassword",
             type: "supplier"
         };
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(to_test.password, salt);
-        await dao.run("INSERT OR IGNORE INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)", [to_test.username, to_test.name, to_test.surname, hash, to_test.type])
+        await dao.createUser(to_test.username, to_test.name, to_test.surname, to_test.password, to_test.type)
     })
 
     deleteUser_TEST("bad request", undefined, 503)

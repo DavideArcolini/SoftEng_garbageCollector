@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for controller/ItemController.js</title>
+    <title>Code coverage report for db/userDAO.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">controller</a> ItemController.js</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">db</a> userDAO.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98.07% </span>
+                <span class="strong">58.73% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>51/52</span>
+                <span class='fraction'>37/63</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">15% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>3/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">46.66% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>6/6</span>
+                <span class='fraction'>7/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98.07% </span>
+                <span class="strong">64.91% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>51/52</span>
+                <span class='fraction'>37/57</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -181,35 +181,110 @@
 <a name='L116'></a><a href='#L116'>116</a>
 <a name='L117'></a><a href='#L117'>117</a>
 <a name='L118'></a><a href='#L118'>118</a>
-<a name='L119'></a><a href='#L119'>119</a>
-<a name='L120'></a><a href='#L120'>120</a>
-<a name='L121'></a><a href='#L121'>121</a>
-<a name='L122'></a><a href='#L122'>122</a>
-<a name='L123'></a><a href='#L123'>123</a>
-<a name='L124'></a><a href='#L124'>124</a>
-<a name='L125'></a><a href='#L125'>125</a>
-<a name='L126'></a><a href='#L126'>126</a>
-<a name='L127'></a><a href='#L127'>127</a>
-<a name='L128'></a><a href='#L128'>128</a>
-<a name='L129'></a><a href='#L129'>129</a>
-<a name='L130'></a><a href='#L130'>130</a>
-<a name='L131'></a><a href='#L131'>131</a>
-<a name='L132'></a><a href='#L132'>132</a>
-<a name='L133'></a><a href='#L133'>133</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L119'></a><a href='#L119'>119</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -217,249 +292,132 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use strict";
 &nbsp;
-class ItemController {
-    constructor(daoi) {
-        this.daoi = daoi
+const bcrypt        = require('bcrypt');
+const saltRounds    = 10;
+&nbsp;
+const sqlite = require('sqlite3');
+const DAO = require("../db/DAO")
+&nbsp;
+// open the database
+const dao = new DAO();
+&nbsp;
+exports.createUser = async(username, name, surname, password, type) =&gt; {
+        const sql = "INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
+        try{
+            let hash = await bcrypt.hash(password, saltRounds);
+            await dao.run(sql, [username, name, surname, hash, type], <span class="fstat-no" title="function not covered" >(e</span>rr) =&gt; {
+<span class="cstat-no" title="statement not covered" >                if(err) <span class="cstat-no" title="statement not covered" >throw(err);</span></span>
+            });
+            return
+        } catch(err) {
+<span class="cstat-no" title="statement not covered" >            return(err)</span>
+        }
+}
+&nbsp;
+exports.getUser = async(username, type=<span class="branch-0 cbranch-no" title="branch not covered" >undefined)</span> =&gt; {
+        let sql = ``;
+        try{
+            if(type) {
+                sql = `
+                SELECT * 
+                FROM USERS 
+                WHERE username = (?) AND type = (?)`;
+                return await dao.get(sql, [username, type], <span class="fstat-no" title="function not covered" >(e</span>rr) =&gt; {
+<span class="cstat-no" title="statement not covered" >                    if (err) <span class="cstat-no" title="statement not covered" >throw(err);</span></span>
+                });
+            }
+            else <span class="missing-if-branch" title="else path not taken" >E</span>{
+<span class="cstat-no" title="statement not covered" >                sql = `</span>
+                SELECT * 
+                FROM USERS 
+                WHERE username = (?)`
+<span class="cstat-no" title="statement not covered" >                return await dao.get(sql, [username], <span class="fstat-no" title="function not covered" >(e</span>rr) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                    if (err) <span class="cstat-no" title="statement not covered" >throw(err);</span></span>
+                });
+            }
+        } catch(err) {
+<span class="cstat-no" title="statement not covered" >            return err</span>
+        }
+}
+&nbsp;
+exports.getUsers = (suppliers = undefined) =&gt; {
+    return new Promise(async(resolve, reject) =&gt; {
+        let sql='';
+        <span class="missing-if-branch" title="if path not taken" >I</span>if(suppliers){
+<span class="cstat-no" title="statement not covered" >            sql = "SELECT * FROM USERS WHERE type &lt;&gt; (?) and type = \"supplier\"";</span>
+        }
+        else {
+            sql = "SELECT * FROM USERS WHERE type &lt;&gt; (?)";
+        }
+        let result = await dao.all(sql, "manager", <span class="fstat-no" title="function not covered" >(e</span>rr) =&gt; {
+<span class="cstat-no" title="statement not covered" >            if(err) <span class="cstat-no" title="statement not covered" >reject(err)</span></span>
+        });
+        
+        let final = result.map((e) =&gt; {
+            let user = e.username.split("@");
+            let email = user[0].concat(`@${e.type}.ezwh.com`);
+            let json = {
+                id: e.id,
+                name: e.name,
+                surname: e.surname,
+                email: email,
+                type: e.type
+            }
+            return json;
+        })
+        resolve(final)
+    })
+}
+&nbsp;
+exports.modifyPermissions = <span class="fstat-no" title="function not covered" >as</span>ync(username, old_type, new_type) =&gt; {
+<span class="cstat-no" title="statement not covered" >    try{</span>
+        const sql = <span class="cstat-no" title="statement not covered" >`</span>
+        UPDATE USERS
+        SET
+            type = (?)
+        WHERE username = (?) AND type = (?)
+        `;
+&nbsp;
+        let res = <span class="cstat-no" title="statement not covered" >await dao.run(sql, [new_type, username, old_type], <span class="fstat-no" title="function not covered" >(e</span>rr) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            if(err) <span class="cstat-no" title="statement not covered" >throw(err)</span></span>
+        });
+<span class="cstat-no" title="statement not covered" >        return res</span>
+    } catch(err) {
+<span class="cstat-no" title="statement not covered" >        return(err)</span>
+    }
+}
+&nbsp;
+exports.removeUser = async(username, type) =&gt; {
+    const sql = 'DELETE from USERS WHERE username == ? AND type == ?';
+    try {
+        await dao.run(sql, [username, type], <span class="fstat-no" title="function not covered" >(e</span>rr) =&gt; {
+<span class="cstat-no" title="statement not covered" >            if (err) <span class="cstat-no" title="statement not covered" >throw(err);</span></span>
+            else <span class="cstat-no" title="statement not covered" >return;</span>
+        });
+        
+    } catch (error) {
+<span class="cstat-no" title="statement not covered" >        return(error)</span>
     }
     
-    getItems = async () =&gt;{ 
-&nbsp;
-        try{
-            //search on DB
-            let sql = "SELECT * FROM ITEMS";
-            let result = await this.daoi.all(sql);
-            
-            return result;
-            
-        }catch{
-<span class="cstat-no" title="statement not covered" >            return 500;</span>
-        }
-    }
-&nbsp;
-&nbsp;
-    getItemById = async (req) =&gt; { 
-&nbsp;
-        try {
-&nbsp;
-            //Find the item
-            //let sql = "SELECT * FROM ITEMS WHERE id==? AND supplierId==? "
-            let sql = "SELECT * FROM ITEMS WHERE id=(?)"
-            let result = await this.daoi.get(sql,[req.id]);
-&nbsp;
-            //Item doesn't exist
-            if(result==undefined){
-                return 404;
-            }
-&nbsp;
-            //deliver json file
-            return result;
-        } catch (error) {
-            return 500;
-        }
-    }
-&nbsp;
-&nbsp;
-    createItem = async (json) =&gt; {
-        
-        try {
-            //See if SKUId exist
-            let sql = "SELECT * FROM SKUS WHERE id == ?"
-            let result = await this.daoi.get(sql, [json.SKUId]);
-&nbsp;
-            //SKUID doesn't exist
-            if(result === undefined){
-                return 404;
-            }
-            
-            //Search if supplier already sell another item with same id
-            sql = "SELECT * FROM ITEMS WHERE Id == ? AND supplierId == ?"
-            let search = await this.daoi.get(sql,[json.id,json.supplierId]);
-            if(search!==undefined ){  
-                return 422;
-            } 
-&nbsp;
-            //Search if supplier already sell another item with same SKUId
-            sql = "SELECT * FROM ITEMS WHERE SKUId == ? AND supplierId == ?"
-            search = await this.daoi.get(sql,[json.SKUId,json.supplierId]);
-            if(search!==undefined ){  
-                return 422;
-            } 
-&nbsp;
-&nbsp;
-            //database immission 
-            sql = "INSERT INTO ITEMS(id,description, price, SKUId, supplierId) VALUES(?,?,?,?,?)";
-            await this.daoi.run(sql,[json.id, json.description, json.price, json.SKUId, json.supplierId]);
-&nbsp;
-            return 201;
-        } catch (error) {
-            return 503;
-        }
-    }
-&nbsp;
-&nbsp;
-    modifyItem = async(json,id) =&gt; { 
-        
-        try{
-            //Find if item exist
-            let sql = "SELECT * FROM ITEMS WHERE ITEMS.id == ?"
-            let result = await this.daoi.get(sql, [id]);
-&nbsp;
-            //Item doesn't exist
-            // console.log(result);
-            // if(result === undefined){
-            //     return 404;
-            // }
-&nbsp;
-            //Update the object if found
-            sql = `UPDATE ITEMS SET description=(?), price=(?) WHERE id==?`;
-            result = await this.daoi.run(sql,[json.newDescription,json.newPrice, id]);
-            return 200;
-        }
-        catch(error){
-            return 503;
-        }
 }
 &nbsp;
-&nbsp;
-&nbsp;
-    deleteItem = async (req) =&gt; {
-        try{
-&nbsp;
-            //Find if the item exist
-            let sql = "SELECT * FROM ITEMS WHERE id=(?)"
-            let result = await this.daoi.get(sql,[req.id]);
-&nbsp;
-            //Item doesn't exist
-            if(result==undefined){
-                return 404;
+exports.deleteAllUsers = async() =&gt; {
+        const sql = "DELETE FROM USERS";
+        await dao.run(sql, <span class="fstat-no" title="function not covered" >(e</span>rr)=&gt;{
+<span class="cstat-no" title="statement not covered" >            if (err) {</span>
+<span class="cstat-no" title="statement not covered" >                throw err</span>
             }
-&nbsp;
-            //delete item
-            sql = "DELETE FROM ITEMS WHERE id=(?)";
-            result = await this.daoi.run(sql,[req.id]);
-            return 204;
-        }catch(error){
-            return 503;
-        }
-    }
-  
-&nbsp;
-}
-&nbsp;
-module.exports = ItemController;
-&nbsp;</pre></td></tr></table></pre>
+        });
+}</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->

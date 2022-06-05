@@ -1,4 +1,4 @@
-const dao = require("../test_DB/mock_dao");
+const dao = require("../test_DB/mock_userDAO");
 const UserController = require("../../controller/UserController");
 const user = new UserController(dao);
 const bcrypt        = require('bcrypt');
@@ -168,9 +168,9 @@ deleteUser_TEST_mock(
 function newUser_TEST_mock(name, req, to_test, expected) {
     describe('new user', () => {
         beforeEach( () => {
-            dao.get.mockReset();
-            dao.run.mockReset();
-            dao.get.mockReturnValue(to_test)
+            dao.getUser.mockReset();
+            dao.createUser.mockReset();
+            dao.getUser.mockReturnValue(to_test)
         })
         
         test(name, async() => {
@@ -183,8 +183,8 @@ function newUser_TEST_mock(name, req, to_test, expected) {
 function getStoredUsers_TEST_mock(expected){
     describe('get users', () => {
         beforeEach( () => {
-            dao.all.mockReset();
-            dao.all.mockReturnValue([{
+            dao.getUsers.mockReset();
+            dao.getUsers.mockReturnValue([{
                 id: 2,
                 name: "Pippo",
                 surname: "Franco",
@@ -203,8 +203,8 @@ function getStoredUsers_TEST_mock(expected){
 function getSuppliers_TEST_mock(expected){
     describe('get suppliers', () => {
         beforeEach( () => {
-            dao.all.mockReset();
-            dao.all.mockReturnValue([{
+            dao.getSuppliers.mockReset();
+            dao.getSuppliers.mockReturnValue([{
                 id: 2,
                 name: "Pippo",
                 surname: "Franco",
@@ -223,12 +223,12 @@ function getSuppliers_TEST_mock(expected){
 function getUser_TEST_mock(name, req, to_test, expected){
     describe('login', ()=> {
         beforeEach(async () => {
-            dao.get.mockReset();
+            dao.getUser.mockReset();
             if (to_test){
                 const salt = await bcrypt.genSalt(10);
                 const hash = await bcrypt.hash(to_test.password, salt);
-                dao.get.mockReset();
-                dao.get.mockReturnValue({
+                dao.getUser.mockReset();
+                dao.getUser.mockReturnValue({
                     id: 1,
                     username: to_test.username,
                     name: to_test.name,
@@ -238,7 +238,7 @@ function getUser_TEST_mock(name, req, to_test, expected){
                 })
             }
             else {
-                dao.get.mockReturnValue(to_test)
+                dao.getUser.mockReturnValue(to_test)
             }
         })
 
@@ -252,9 +252,9 @@ function getUser_TEST_mock(name, req, to_test, expected){
 function editUser_TEST_mock(name, req, username, to_test, expected) {
     describe('edit user',() => {
         beforeEach(async () => {
-            dao.get.mockReset();
-            dao.run.mockReset();
-            dao.get.mockReturnValue(to_test)
+            dao.getUser.mockReset();
+            dao.modifyPermissions.mockReset();
+            dao.getUser.mockReturnValue(to_test)
         })
 
         test(name, async ()=> {
@@ -267,9 +267,9 @@ function editUser_TEST_mock(name, req, username, to_test, expected) {
 function deleteUser_TEST_mock(name, req, to_test, expected) {
     describe('delete user',() => {
         beforeEach( async () => {
-            dao.get.mockReset();
-            dao.run.mockReset();
-            dao.get.mockReturnValue(to_test)
+            dao.getUser.mockReset();
+            dao.removeUser.mockReset();
+            dao.getUser.mockReturnValue(to_test)
         })
 
         test(name, async ()=> {

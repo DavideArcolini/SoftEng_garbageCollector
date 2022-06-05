@@ -37,7 +37,7 @@ class UserController {
             let result = this.dao.getUsers();
             return result
         } catch (error) {
-            console.log(error)
+            //console.log(error)
         }
     }
 
@@ -46,7 +46,7 @@ class UserController {
             let result = this.dao.getUsers(true);
             return result
         } catch (error) {
-            console.log(error)
+            //console.log(error)
         }
     }
 
