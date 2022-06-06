@@ -53,7 +53,7 @@ describe('delete user', () => {
     })
 
     test("failed", async() => {
-        expect(dao.removeUser(undefined, undefined)).toThrow(Error)
+        expect(await dao.removeUser(undefined, undefined)).toThrow(Error)
     })
     testRemoveUser("remove successfully", {username: user.username, type: user.type}, undefined)
 

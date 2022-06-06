@@ -91,7 +91,8 @@ class UserController {
             let type = req.type;
             let username = req.username;
             let user = username.split("@")[0].concat("@ezwh.com");
-        
+            let res = await this.dao.getUser(user, type)
+            if(res === undefined) throw Error;
             await this.dao.removeUser(user, type);
             return 204
         } catch (error) {

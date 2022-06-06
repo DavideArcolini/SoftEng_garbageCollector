@@ -14,9 +14,8 @@ exports.createUser = async(username, name, surname, password, type) => {
 
     let hash = await bcrypt.hash(password, saltRounds);
     await dao.run(sql, [username, name, surname, hash, type], (err) => {
-        if(err) throw(err);
+        if(err) throw err;
     });
-    return
 }
 
 exports.getUser = async(username, type=undefined) => {
@@ -42,8 +41,7 @@ exports.getUser = async(username, type=undefined) => {
     }
 }
 
-exports.getUsers = (suppliers = undefined) => {
-    return new Promise(async(resolve, reject) => {
+exports.getUsers = async (suppliers = undefined) => {
         let sql='';
         if(suppliers){
             sql = "SELECT * FROM USERS WHERE type <> (?) and type = \"supplier\"";
@@ -52,7 +50,7 @@ exports.getUsers = (suppliers = undefined) => {
             sql = "SELECT * FROM USERS WHERE type <> (?)";
         }
         let result = await dao.all(sql, "manager", (err) => {
-            if(err) reject(err)
+            if(err) throw(err)
         });
         
         let final = result.map((e) => {
@@ -67,8 +65,7 @@ exports.getUsers = (suppliers = undefined) => {
             }
             return json;
         })
-        resolve(final)
-    })
+        return final
 }
 
 exports.modifyPermissions = async(username, old_type, new_type) => {
@@ -87,22 +84,15 @@ exports.modifyPermissions = async(username, old_type, new_type) => {
 
 exports.removeUser = async(username, type) => {
     const sql = 'DELETE from USERS WHERE username == ? AND type == ?';
-    let res = await dao.run(sql, [username, type], (err, row) => {
-        console.log(row)
+    await dao.run(sql, [username, type], (err, row) => {
         if (err || row.id===0) throw(err);
     });
-    console.log(res)
-    try{
-    if(!res) throw(err)
-    }catch(err) {
-        console.log(err)
-    }
     
 }
 
 exports.deleteAllUsers = async() => {
     const sql = "DELETE FROM USERS";
-    await dao.run(sql, (err)=>{
+    return await dao.run(sql, (err)=>{
         if (err) {
             throw err
         }
