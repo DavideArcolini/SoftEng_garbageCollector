@@ -1,44 +1,50 @@
 "use strict";
 
+/* --------- IMPORT MODULES --------- */
+const SKUitemDAO    = require("../db/skuItemDAO");
+const SKUDAO        = require("../db/skuDAO");
+const testDescriptorDAO=require("../db/testDescriptorsDAO");
+
+/* --------- ERROR MESSAGES --------- */
+const MESSG_200 = {code: 200, message: 'Ok'}
+const MESSG_201 = {code: 201, message: 'Created'};
+const MESSG_204 = {code: 204, message: 'No Content'};
+const ERROR_404 = {code: 404, message: 'Not Found'};
+const ERROR_405 = {code: 405, message: 'Not Found'};
+
+
+
+
 class TestDescriptorController {
-    constructor(daotd) {
-        this.daotd = daotd
+    constructor(generalPurposeDAO) {
+        this.skuItemDAO = new SKUitemDAO(generalPurposeDAO);
+        this.skuDAO     = new SKUDAO(generalPurposeDAO);
+        this.testDescriptorDAO= new testDescriptorDAO(generalPurposeDAO)
     }
 
     
     getTestDescriptors = async () =>{
 
-        //search on DB
         try{
-
-            const sql = "SELECT * FROM TEST_DESCRIPTORS GROUP BY id";
-            const result = await this.daotd.all(sql);
-            if(result.length !== 0 && result[0].idSKU==null){
-                throw(error);
-            }else{
-                return result;
-            }
-
+             //search on DB
+            const testdescriptors = await this.testDescriptorDAO.getTestDescriptors();
+            return {
+                code: 200,
+                message: testdescriptors
+            };
         }catch(error){
-            return 500;
+            throw error;
         }
-    }
-        
+    } 
 
-    getTestDescriptorById = async (req) => {
+    getTestDescriptorById = async (params) => {
+
+        const targetId=params.id;
 
         try{
-            //Find the ID
-            let sql = "SELECT * FROM TEST_DESCRIPTORS WHERE id==? "
-            let result = await this.daotd.get(sql,req.id);
-
-            //ID doesn't exist
-            if(result==undefined){
-                return 404;
-            }
-
-            //create and deliver json file
-            return result;
+            //search on DB
+            const testdescriptor = await this.testDescriptorDAO.getTestDescriptorById(targetId);
+            return (testdescriptor === undefined) ? ERROR_404 : {code: 200, message: testdescriptor};
 
         }catch(error){
             return 500;
@@ -46,85 +52,69 @@ class TestDescriptorController {
     }
 
 
-    createTestDescriptor = async (json) => {
+    createTestDescriptor = async (body) => {
         
         try{
-            //See if SKUId exist
-            let sql ="SELECT * FROM SKUS WHERE id==?"
-            let result = await this.daotd.get(sql,json.idSKU);
-
-            //SKUID doesn't exist
-            if(result==undefined){
-                return 404;
+            /* checking if SKUid actually exists */
+            const sku = await this.skuDAO.getSKUByID(body.idSKU);
+            if (sku === undefined) {
+                return ERROR_404;
             }
 
-            //database immission
-            sql = "INSERT INTO TEST_DESCRIPTORS(name, procedureDescription, idSKU) VALUES(?,?,?)";
-            await this.daotd.run(sql,[json.name, json.procedureDescription, json.idSKU]);
-            return 201;
+            /* creating test descriptor in the DB */
+            await this.testDescriptorDAO.createTestDescriptor(body);
+            return MESSG_201;
 
         }catch(error){
-            return 503;
+            throw error;
         }
     }
 
 
-    modifyTestDescriptor = async(json, req) => {
+    modifyTestDescriptor = async(body, params) => {
+
+        const targetId = params.id;
+        const data = body;
         
         try{
 
-            //See if SKUId exist
-            let sql ="SELECT * FROM SKUS WHERE id==?"
-            let result = await this.daotd.get(sql,json.newIdSKU);
-
-            //SKUID doesn't exist
-            if(result === undefined){
-                return 404;
-            }
-        
-            //Find the ID
-            sql = "SELECT * FROM TEST_DESCRIPTORS WHERE id==?";
-            result = await this.daotd.get(sql,req.id);
-
-            //ID doesn't exist    
-            if(result === undefined){
-                return 404;
+            /* checking if SKUid actually exists */
+            const sku = await this.skuDAO.getSKUByID(data.newIdSKU);
+            if (sku === undefined) {
+                return ERROR_404;
             }
 
-            //Update the object if found
-            sql = "UPDATE TEST_DESCRIPTORS SET name=?, procedureDescription=?, idSKU=?  WHERE id==?";
-            result = await this.daotd.run(sql,[json.newName, json.newProcedureDescription, json.newIdSKU, req.id]);
-            return 200;
+            /* check if TestDescriptor exists */
+            const testdescriptor = await this.testDescriptorDAO.getTestDescriptorById(targetId);
+            if (testdescriptor === undefined) {
+                return ERROR_404;
+            }
+
+            /* update testdescriptor */
+            await this.testDescriptorDAO.modifyTestDescriptor(targetId, data);
+            return MESSG_200;
 
         }catch(error){
-            return 503;
-        }
-}
-
-
-
-    deleteTestDescriptor = async (req) => {
-
-        try{
-            //Find the ID to check if exist
-            let sql = "SELECT * FROM TEST_DESCRIPTORS WHERE id==? "
-            let result = await this.daotd.get(sql,req.id);
-
-            //ID doesn't exist
-            if(result==undefined){
-                return 404;
-            }
-
-            // delete
-            sql = "DELETE FROM TEST_DESCRIPTORS WHERE id==?";
-            result = await this.daotd.run(sql,req.id);
-            return 204;
-
-        }catch(error){
-            return 503;
+            throw error;
         }
     }
+
+
+
+    deleteTestDescriptor = async (params) => {
+
+        const targetId=params.id;
+
+        try{
+            /* accessing DB through DAO */
+            await this.testDescriptorDAO.deleteTestDescriptor(targetId);
+            return MESSG_204;
+
+        }catch(error){
+            throw error;
+        }
+    }
+
 }
 
 module.exports = TestDescriptorController;
-

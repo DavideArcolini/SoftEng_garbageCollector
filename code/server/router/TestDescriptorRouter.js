@@ -1,15 +1,26 @@
 "use strict";
+
+/* IMPORT MODULES */
 const express = require('express'); 
-const router = express.Router(); 
 const TDController = require('../controller/TestDescriptorController');
 const DAO = require("../db/DAO")
-const dao = new DAO();
-const td = new TDController(dao);
-
 const { validationHandler } = require("../validator/validationHandler");
 const { param }             = require('express-validator');
 const { header }            = require('express-validator');
-const { body }              = require('express-validator');
+const { body }              = require('express-validator')
+
+
+/* INITIALIZATION */
+const dao = new DAO();
+const td = new TDController(dao);
+const router = express.Router(); 
+
+/* --------- ERROR MESSAGES --------- */
+const ERROR_404 = {error: '404 Not Found'};
+const ERROR_500 = {error: 'Internal Server Error'};
+const ERROR_503 = {error: 'Service Unavailable'};
+
+
 
 
 /**
@@ -28,12 +39,13 @@ router.get(
         })
     ], 
     validationHandler,
-    async (req,res)=>{
-        let result = await td.getTestDescriptors();
-        if(result==500){
-            return res.status(500).json();
-        }else{
-            return res.status(200).json(result);
+    async (request,response)=>{
+        try {
+            let result = await td.getTestDescriptors();
+            return response.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return response.status(500).json(ERROR_500);
         }
     }
 );
@@ -56,13 +68,12 @@ router.get(
     ],
     validationHandler,
     async (req,res)=>{
-        let result= await  td.getTestDescriptorById(req.params);
-        if(result==404){
-            return res.status(404).json();
-        }else if(result==500){
-            return res.status(500).json();
-        }else{
-            return res.status(200).json(result);
+        try {
+            let result= await  td.getTestDescriptorById(req.params);
+            return res.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(ERROR_500);
         }
     }
 );
@@ -90,13 +101,12 @@ router.post(
     ],
     validationHandler,
     async (req,res)=>{
-        let result= await   td.createTestDescriptor(req.body);
-        if(result==404){
-            return res.status(404).json();
-        }else if(result==503){
-            return res.status(503).json();
-        }else{
-            return res.status(201).json();
+        try {
+            let result= await   td.createTestDescriptor(req.body);
+            return res.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return res.status(503).json(ERROR_503);
         }
     }
 );
@@ -125,13 +135,12 @@ router.put(
     ],
     validationHandler,
     async (req,res)=>{
-        const result = await td.modifyTestDescriptor(req.body,req.params);
-        if(result==200){ //PUT success, no body
-            return res.status(200).json();
-        }else if(result==404){
-            return res.status(404).json();
-        }else{
-            return res.status(503).json();
+        try {
+            const result = await td.modifyTestDescriptor(req.body,req.params);
+            return res.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return res.status(503).json(ERROR_503);
         }
     }
 );
@@ -154,13 +163,12 @@ router.delete(
     ],
     validationHandler,
     async (req,res)=>{
-        const result= await     td.deleteTestDescriptor(req.params);
-        if(result==503){
-            return res.status(503).json();
-        }else if (result==404){
-            return res.status(404).json();
-        }else{
-            return res.status(204).json();
+        try {
+            const result= await     td.deleteTestDescriptor(req.params);
+            return res.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return res.status(503).json(ERROR_503);
         }
     }   
 );

@@ -1,52 +1,48 @@
 /**
  *  UNIT TEST: positionDAO
- *    VERSION: mock
+ *    VERSION: real
  * ===========================
  */
 
 /* --------- IMPORT MODULES --------- */
 const PositionDAO   = require('../../../db/positionDAO');
-const mockDAO       = require('../Database/mockDAO');
+const DAO           = require('../Database/testDAO');
 
 /* --------- INITIALIZATION --------- */
-const positionDAO = new PositionDAO(mockDAO);
+const dao         = new DAO();
+const positionDAO = new PositionDAO(dao);
 
-   
-/*
-    + -------------------- +
-    |         DATA         |
-    + -------------------- +
-*/
+const positionObject = {
+    positionID: "400140014001",
+    aisleID: "4001",
+    row: "4001",
+    col: "4001",
+    maxWeight: 1000,
+    maxVolume: 1000
+};
 const positionsTestArray = [
     {
-        positionID: "800234543412",
-        aisleID: "8002",
-        row: "3454",
-        col: "3412",
+        positionID: "400140014001",
+        aisleID: "4001",
+        row: "4001",
+        col: "4001",
         maxWeight: 1000,
         maxVolume: 1000,
-        occupiedWeight: 10,
-        occupiedVolume: 100
+        occupiedWeight: 0,
+        occupiedVolume: 0
     }, {
-        positionID: "100234543412",
-        aisleID: "1002",
-        row: "3454",
-        col: "3412",
-        maxWeight: 50,
-        maxVolume: 50,
-        occupiedWeight: 3654,
-        occupiedVolume: 2134
-    }, {
-        positionID: "200234543412",
-        aisleID: "2002",
-        row: "3454",
-        col: "3412",
-        maxWeight: 120,
-        maxVolume: 240,
-        occupiedWeight: 300,
-        occupiedVolume: 350
-    }
+        positionID: "400240024002",
+        aisleID: "4002",
+        row: "4002",
+        col: "4002",
+        maxWeight: 1000,
+        maxVolume: 1000,
+        occupiedWeight: 0,
+        occupiedVolume: 0
+    } 
 ];
+
+
 
 /*
     + -------------------- +
@@ -57,18 +53,11 @@ const positionsTestArray = [
  * UNIT TEST: positionDAO.getPositions()
  * ========================================================================
  */
-describe('UNIT TEST: positionDAO.getPositions()', () => {
-    beforeAll(() => {
-        mockDAO.all.mockReset();
-        mockDAO.all.mockImplementationOnce(() => {
-            return new Promise((resolve, reject) => {
-                resolve(positionsTestArray);
-            });
-        }).mockImplementationOnce(() => {
-            return new Promise((resolve, reject) => {
-                reject({message: "Error"});
-            });
-        });
+ describe('UNIT TEST: positionDAO.getPositions()', () => {
+    beforeAll(async () => {
+        const querySQL = "INSERT INTO POSITIONS VALUES (?, ?, ?, ?, ?, ?, 0, 0)";
+        await dao.run(querySQL, ["400140014001", "4001", "4001", "4001", 1000, 1000]);
+        await dao.run(querySQL, ["400240024002", "4002", "4002", "4002", 1000, 1000]);
     });
 
     /**
@@ -76,15 +65,16 @@ describe('UNIT TEST: positionDAO.getPositions()', () => {
      *      UNIT TEST: SUCCESS
      * ---------------------------------
      */
-    testGetPositions_MOCK('- Success: ', positionsTestArray);
+     testGetPositions_REAL(
+        '- Success: ', 
+        positionsTestArray
+    );
 
-    /**
-     * ---------------------------------
-     *      UNIT TEST: DATABASE ERROR
-     * ---------------------------------
-     */
-    testGetPositions_MOCK('- Database error: ', Error);
-    
+    afterAll(async () => {
+        const querySQL = "DELETE FROM POSITIONS";
+        await dao.run(querySQL);
+    });
+
 });
 
 /**
@@ -92,21 +82,9 @@ describe('UNIT TEST: positionDAO.getPositions()', () => {
  * ========================================================================
  */
  describe('UNIT TEST: positionDAO.getPositionByID()', () => {
-    beforeAll(() => {
-        mockDAO.get.mockReset();
-        mockDAO.get.mockImplementationOnce(() => {
-            return new Promise((resolve, reject) => {
-                resolve(positionsTestArray[0]);
-            });
-        }).mockImplementationOnce(() => {
-            return new Promise((resolve, reject) => {
-                resolve([]);
-            });
-        }).mockImplementationOnce(() => {
-            return new Promise((resolve, reject) => {
-                reject({message: "Error"});
-            });
-        });
+    beforeAll(async () => {
+        const querySQL = "INSERT INTO POSITIONS VALUES (?, ?, ?, ?, ?, ?, 0, 0)";
+        await dao.run(querySQL, ["400140014001", "4001", "4001", "4001", 1000, 1000]);
     });
 
     /**
@@ -114,77 +92,63 @@ describe('UNIT TEST: positionDAO.getPositions()', () => {
      *      UNIT TEST: SUCCESS
      * ---------------------------------
      */
-    testGetPositionByID_MOCK(
-        '- Success: ', 
-        positionsTestArray[0].positionID,
+     testGetPositionByID_REAL(
+        '- Success: ',
+        "400140014001",
         positionsTestArray[0]
     );
 
     /**
      * ---------------------------------
-     *      UNIT TEST: EMPTY RESULT
+     *      UNIT TEST: NOT FOUND
      * ---------------------------------
      */
-     testGetPositionByID_MOCK(
-        '- Success (empty): ', 
-        "123456789876",
-        []
+     testGetPositionByID_REAL(
+        '- Position not found: ',
+        "999999999999",
+        undefined
     );
 
-    /**
-     * ---------------------------------
-     *      UNIT TEST: DATABASE ERROR
-     * ---------------------------------
-     */
-    testGetPositionByID_MOCK(
-        '- Database error: ', 
-        positionsTestArray[0].positionID,
-        Error
-    );
-    
+    afterAll(async () => {
+        const querySQL = "DELETE FROM POSITIONS";
+        await dao.run(querySQL);
+    });
+
 });
-
 
 /**
  * UNIT TEST: positionDAO.newPosition()
  * ========================================================================
  */
  describe('UNIT TEST: positionDAO.newPosition()', () => {
-    beforeAll(() => {
-        mockDAO.run.mockReset();
-        mockDAO.run.mockImplementationOnce(() => {
-            return new Promise((resolve, reject) => {
-                resolve(positionsTestArray[0].positionID);
-            });
-        }).mockImplementationOnce(() => {
-            return new Promise((resolve, reject) => {
-                reject({message: "Error"});
-            });
-        });
-    });
 
     /**
      * ---------------------------------
      *      UNIT TEST: SUCCESS
      * ---------------------------------
      */
-     testNewPosition_MOCK(
-        '- Success: ', 
-        positionsTestArray[0],
-        positionsTestArray[0].positionID
+     testNewPosition_REAL(
+        '- Success: ',
+        positionObject,
+        {id: 1}
     );
 
     /**
      * ---------------------------------
-     *      UNIT TEST: DATABASE ERROR
+     *      UNIT TEST: ERROR
      * ---------------------------------
      */
-     testNewPosition_MOCK(
-        '- Database error: ', 
-        positionsTestArray[0],
+     testNewPosition_REAL(
+        '- positionID already existing: ',
+        positionObject,
         Error
     );
-    
+
+    afterAll(async () => {
+        const querySQL = "DELETE FROM POSITIONS";
+        await dao.run(querySQL);
+    });
+
 });
 
 /**
@@ -192,17 +156,10 @@ describe('UNIT TEST: positionDAO.getPositions()', () => {
  * ========================================================================
  */
  describe('UNIT TEST: positionDAO.updatePositionByPositionID()', () => {
-    beforeAll(() => {
-        mockDAO.run.mockReset();
-        mockDAO.run.mockImplementationOnce(() => {
-            return new Promise((resolve, reject) => {
-                resolve(positionsTestArray[1].positionID);
-            });
-        }).mockImplementationOnce(() => {
-            return new Promise((resolve, reject) => {
-                reject({message: "Error"});
-            });
-        });
+    beforeAll(async () => {
+        const querySQL = "INSERT INTO POSITIONS VALUES (?, ?, ?, ?, ?, ?, 0, 0)";
+        await dao.run(querySQL, ["400240024002", "4002", "4002", "4002", 1000, 1000]);
+        await dao.run(querySQL, ["400340034003", "4003", "4003", "4003", 1000, 1000]);
     });
 
     /**
@@ -210,44 +167,59 @@ describe('UNIT TEST: positionDAO.getPositions()', () => {
      *      UNIT TEST: SUCCESS
      * ---------------------------------
      */
-     testUpdatePositionByPositionID_MOCK(
+     testUpdatePositionByPositionID_REAL(
         '- Success: ',
-        positionsTestArray[0].positionID,
-        positionsTestArray[1],
-        positionsTestArray[1].positionID
+        "400240024002",
+        {
+            newPositionID: "400140014001",
+            newAisleID: "4001",
+            newRow: "4001",
+            newCol: "4001",
+            newMaxWeight: 1000,
+            newMaxVolume: 1000,
+            newOccupiedWeight: 0,
+            newOccupiedVolume: 0
+        },
+        {id: 2}
     );
 
     /**
      * ---------------------------------
-     *      UNIT TEST: DATABASE ERROR
+     *      UNIT TEST: ERROR
      * ---------------------------------
      */
-     testUpdatePositionByPositionID_MOCK(
-        '- Database error: ',
-        positionsTestArray[0].positionID,
-        positionsTestArray[1],
+     testUpdatePositionByPositionID_REAL(
+        '- positionID already existing: ',
+        positionObject.positionID,
+        {
+            newPositionID: "400340034003",
+            newAisleID: "4003",
+            newRow: "4003",
+            newCol: "4003",
+            newMaxWeight: 1000,
+            newMaxVolume: 1000,
+            newOccupiedWeight: 0,
+            newOccupiedVolume: 0
+        },
         Error
     );
-    
-});
 
+    afterAll(async () => {
+        const querySQL = "DELETE FROM POSITIONS";
+        await dao.run(querySQL);
+    });
+
+});
 
 /**
  * UNIT TEST: positionDAO.updatePositionID()
  * ========================================================================
  */
  describe('UNIT TEST: positionDAO.updatePositionID()', () => {
-    beforeAll(() => {
-        mockDAO.run.mockReset();
-        mockDAO.run.mockImplementationOnce(() => {
-            return new Promise((resolve, reject) => {
-                resolve(positionsTestArray[1].positionID);
-            });
-        }).mockImplementationOnce(() => {
-            return new Promise((resolve, reject) => {
-                reject({message: "Error"});
-            });
-        });
+    beforeAll(async () => {
+        const querySQL = "INSERT INTO POSITIONS VALUES (?, ?, ?, ?, ?, ?, 0, 0)";
+        await dao.run(querySQL, ["400240024002", "4002", "4002", "4002", 1000, 1000]);
+        await dao.run(querySQL, ["400340034003", "4003", "4003", "4003", 1000, 1000]);
     });
 
     /**
@@ -255,44 +227,40 @@ describe('UNIT TEST: positionDAO.getPositions()', () => {
      *      UNIT TEST: SUCCESS
      * ---------------------------------
      */
-     testUpdatePositionID_MOCK(
+     testUpdatePositionID_REAL(
         '- Success: ',
-        positionsTestArray[0].positionID,
-        positionsTestArray[1].positionID,
-        positionsTestArray[1].positionID
+        "400240024002",
+        "400140014001",
+        {id: 2}
     );
 
     /**
      * ---------------------------------
-     *      UNIT TEST: DATABASE ERROR
+     *      UNIT TEST: ERROR
      * ---------------------------------
      */
-     testUpdatePositionID_MOCK(
-        '- Database error: ',
-        positionsTestArray[0].positionID,
-        positionsTestArray[1].positionID,
+     testUpdatePositionID_REAL(
+        '- positionID already existing: ',
+        positionObject.positionID,
+        "400340034003",
         Error
     );
-    
-});
 
+    afterAll(async () => {
+        const querySQL = "DELETE FROM POSITIONS";
+        await dao.run(querySQL);
+    });
+
+});
 
 /**
  * UNIT TEST: positionDAO.updatePositionQuantity()
  * ========================================================================
  */
  describe('UNIT TEST: positionDAO.updatePositionQuantity()', () => {
-    beforeAll(() => {
-        mockDAO.run.mockReset();
-        mockDAO.run.mockImplementationOnce(() => {
-            return new Promise((resolve, reject) => {
-                resolve(positionsTestArray[0].positionID);
-            });
-        }).mockImplementationOnce(() => {
-            return new Promise((resolve, reject) => {
-                reject({message: "Error"});
-            });
-        });
+    beforeAll(async () => {
+        const querySQL = "INSERT INTO POSITIONS VALUES (?, ?, ?, ?, ?, ?, 0, 0)";
+        await dao.run(querySQL, ["400240024002", "4002", "4002", "4002", 1000, 1000]);
     });
 
     /**
@@ -300,45 +268,30 @@ describe('UNIT TEST: positionDAO.getPositions()', () => {
      *      UNIT TEST: SUCCESS
      * ---------------------------------
      */
-     testUpdatePositionQuantity_MOCK(
+     testUpdatePositionQuantity_REAL(
         '- Success: ',
-        positionsTestArray[0].positionID,
-        positionsTestArray[1].occupiedWeight,
-        positionsTestArray[1].occupiedVolume,
-        positionsTestArray[0].positionID
+        "400240024002",
+        1,
+        1,
+        {id: 1}
     );
 
-    /**
-     * ---------------------------------
-     *      UNIT TEST: DATABASE ERROR
-     * ---------------------------------
-     */
-     testUpdatePositionQuantity_MOCK(
-        '- Database error: ',
-        positionsTestArray[0].positionID,
-        positionsTestArray[1].occupiedWeight,
-        positionsTestArray[1].occupiedVolume,
-        Error
-    );
-    
+    afterAll(async () => {
+        const querySQL = "DELETE FROM POSITIONS";
+        await dao.run(querySQL);
+    });
+
 });
+
 
 /**
  * UNIT TEST: positionDAO.removePosition()
  * ========================================================================
  */
  describe('UNIT TEST: positionDAO.removePosition()', () => {
-    beforeAll(() => {
-        mockDAO.run.mockReset();
-        mockDAO.run.mockImplementationOnce(() => {
-            return new Promise((resolve, reject) => {
-                resolve(positionsTestArray[0].positionID);
-            });
-        }).mockImplementationOnce(() => {
-            return new Promise((resolve, reject) => {
-                reject({message: "Error"});
-            });
-        });
+    beforeAll(async () => {
+        const querySQL = "INSERT INTO POSITIONS VALUES (?, ?, ?, ?, ?, ?, 0, 0)";
+        await dao.run(querySQL, ["400240024002", "4002", "4002", "4002", 1000, 1000]);
     });
 
     /**
@@ -346,24 +299,14 @@ describe('UNIT TEST: positionDAO.getPositions()', () => {
      *      UNIT TEST: SUCCESS
      * ---------------------------------
      */
-     testRemovePosition_MOCK(
+     testRemovePosition_REAL(
         '- Success: ',
-        positionsTestArray[0].positionID,
-        positionsTestArray[0].positionID
+        "400240024002",
+        {id: 1}
     );
-
-    /**
-     * ---------------------------------
-     *      UNIT TEST: DATABASE ERROR
-     * ---------------------------------
-     */
-     testRemovePosition_MOCK(
-        '- Database error: ',
-        positionsTestArray[0].positionID,
-        Error
-    );
-    
 });
+
+
 
 /*
     + -------------------- +
@@ -376,7 +319,7 @@ describe('UNIT TEST: positionDAO.getPositions()', () => {
  * @param {String} testName Description of the test executed
  * @param {Object} expectedResult Either error or an object returned by the function
  */
-function testGetPositions_MOCK(testName, expectedResult) {
+ function testGetPositions_REAL(testName, expectedResult) {
     test(testName, async () => {
         try {
             const result = await positionDAO.getPositions();
@@ -393,7 +336,7 @@ function testGetPositions_MOCK(testName, expectedResult) {
  * @param {String} positionID identifier of the target position
  * @param {Object} expectedResult Either error or an object returned by the function
  */
- function testGetPositionByID_MOCK(testName, positionID, expectedResult) {
+ function testGetPositionByID_REAL(testName, positionID, expectedResult) {
     test(testName, async () => {
         try {
             const result = await positionDAO.getPositionByID(positionID);
@@ -411,7 +354,7 @@ function testGetPositions_MOCK(testName, expectedResult) {
  * @param {Object} positionObject new position to be inserted in the DB
  * @param {Object} expectedResult Either error or an object returned by the function
  */
- function testNewPosition_MOCK(testName, positionObject, expectedResult) {
+ function testNewPosition_REAL(testName, positionObject, expectedResult) {
     test(testName, async () => {
         try {
             const result = await positionDAO.newPosition(positionObject);
@@ -430,7 +373,7 @@ function testGetPositions_MOCK(testName, expectedResult) {
  * @param {Object} positionObject new position to be inserted in the DB
  * @param {Object} expectedResult Either error or an object returned by the function
  */
- function testUpdatePositionByPositionID_MOCK(testName, positionID, positionObject, expectedResult) {
+ function testUpdatePositionByPositionID_REAL(testName, positionID, positionObject, expectedResult) {
     test(testName, async () => {
         try {
             const result = await positionDAO.updatePositionByPositionID(positionID, positionObject);
@@ -449,7 +392,7 @@ function testGetPositions_MOCK(testName, expectedResult) {
  * @param {String} newPositionID new identifier of the target position
  * @param {Object} expectedResult Either error or an object returned by the function
  */
- function testUpdatePositionID_MOCK(testName, positionID, newPositionID, expectedResult) {
+ function testUpdatePositionID_REAL(testName, positionID, newPositionID, expectedResult) {
     test(testName, async () => {
         try {
             const result = await positionDAO.updatePositionID(positionID, newPositionID);
@@ -469,7 +412,7 @@ function testGetPositions_MOCK(testName, expectedResult) {
  * @param {Number} newOccupiedVolume new occupiedVolume value of the target position
  * @param {Object} expectedResult Either error or an object returned by the function
  */
- function testUpdatePositionQuantity_MOCK(testName, positionID, newOccupiedWeight, newOccupiedVolume, expectedResult) {
+ function testUpdatePositionQuantity_REAL(testName, positionID, newOccupiedWeight, newOccupiedVolume, expectedResult) {
     test(testName, async () => {
         try {
             const result = await positionDAO.updatePositionQuantity(positionID, newOccupiedWeight, newOccupiedVolume);
@@ -487,7 +430,7 @@ function testGetPositions_MOCK(testName, expectedResult) {
  * @param {String} positionID identifier of the target position
  * @param {Object} expectedResult Either error or an object returned by the function
  */
- function testRemovePosition_MOCK(testName, positionID, expectedResult) {
+ function testRemovePosition_REAL(testName, positionID, expectedResult) {
     test(testName, async () => {
         try {
             const result = await positionDAO.removePosition(positionID);

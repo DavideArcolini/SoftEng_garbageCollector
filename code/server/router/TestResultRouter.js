@@ -1,16 +1,23 @@
 "use strict";
+
+/* IMPORT MODULES */
 const express = require('express'); 
-const router = express.Router();
 const TDController = require('../controller/TestResultController');
 const DAO = require("../db/DAO")
-const dao = new DAO();
-const tr = new TDController(dao);
-
 const { validationHandler } = require("../validator/validationHandler");
 const { param }             = require('express-validator');
 const { header }            = require('express-validator');
 const { body }              = require('express-validator');
 
+/* INITIALIZATION */
+const dao = new DAO();
+const tr = new TDController(dao);
+const router = express.Router();
+
+/* --------- ERROR MESSAGES --------- */
+const ERROR_404 = {error: '404 Not Found'};
+const ERROR_500 = {error: 'Internal Server Error'};
+const ERROR_503 = {error: 'Service Unavailable'};
 
 /**
  * API:
@@ -30,13 +37,12 @@ router.get(
     ],
     validationHandler,
     async (req,res)=>{
-        const result= await  tr.getTestResults(req.params);
-        if(result==404){
-            return res.status(404).json();
-        }else if(result==500){
-            return res.status(500).json();
-        }else{
-            return res.status(200).json(result);
+        try {
+            const result= await  tr.getTestResults(req.params);
+            return res.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(ERROR_500);
         }
     }
 );
@@ -60,13 +66,12 @@ router.get(
     ],
     validationHandler,
     async (req,res)=>{
-        const result= await  tr.getTestResultById(req.params);
-        if(result==404){
-            return res.status(404).json();
-        }else if(result==500){
-            return res.status(500).json();
-        }else{
-            return res.status(200).json(result);
+        try {
+            const result= await  tr.getTestResultById(req.params);
+            return res.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(ERROR_500);
         }
     }
 );
@@ -96,13 +101,12 @@ router.post(
     ],
     validationHandler,
     async (req,res)=>{
-        const result= await  tr.createTestResult(req.body);
-        if(result==404){
-            return res.status(404).json();
-        }else if(result==503){
-            return res.status(503).json();
-        }else{
-            return res.status(201).json();
+        try {
+            const result= await  tr.createTestResult(req.body);
+            return res.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return res.status(503).json(ERROR_503);
         }
     }
 );
@@ -132,13 +136,12 @@ router.put(
     ],
     validationHandler,
     async (req,res)=>{
-        const result= await  tr.modifyTestResult(req.params,req.body);
-        if(result==200){ //PUT success, no body
-            return res.status(200).json();
-        }else if(result==404){
-            return res.status(404).json();
-        }else{
-            return res.status(503).json();
+        try {
+            const result= await  tr.modifyTestResult(req.params,req.body);
+            return res.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return res.status(503).json(ERROR_503);
         }
     }
 );
@@ -163,12 +166,12 @@ router.delete(
     validationHandler,
     async (req,res)=>{
         const result= await  tr.deleteTestResult(req.params);
-        if(result==404){
-            return res.status(404).json();
-        }else if(result==503){
-            return res.status(503).json();
-        }else{
-            return res.status(204).json();
+        try {
+            const result= await  tr.deleteTestResult(req.params);
+            return res.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return res.status(503).json(ERROR_503);
         }
     }
 );

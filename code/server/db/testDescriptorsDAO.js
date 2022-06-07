@@ -15,7 +15,7 @@
 
  'use strict'
 
- class TestDescriptorsDAO {
+ class TestDescriptorDAO {
  
      /**
       * CONSTRUCTOR: TestDescriptorsDAO
@@ -55,7 +55,145 @@
             throw new Error(error.message);
         });
     }
+
+    /**
+      * Retrieves the TestDescriptors 
+      * ------------------------------------------------------------------------
+      * @returns an Array object containing all TestDescriptors 
+    */
+
+     getTestDescriptors= async () => {
+        const querySQL = "SELECT * FROM TEST_DESCRIPTORS";
+        return this.dao.all(
+            querySQL,
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
+            throw new Error(error.message);
+        });
+    }
+
+
+     /**
+      * Retrieves the TestDescriptor with a particular ID
+      * ------------------------------------------------------------------------
+      * @returns an object with the same id
+    */
+      getTestDescriptorById = async (id) => {
+        const querySQL = "SELECT * FROM TEST_DESCRIPTORS WHERE id==?";
+        return this.dao.get(
+            querySQL,
+            [
+                id
+            ]
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
+            throw new Error(error.message);
+        });
+    }
+
+
+
+      /**
+      * Insert testDescriptorObject into DB
+      * ------------------------------------------------------------------------
+      * @returns nothing
+    */
+        createTestDescriptor  = async (testDescriptorObject) => {
+        const querySQL = "INSERT INTO TEST_DESCRIPTORS(name, procedureDescription, idSKU) VALUES(?,?,?)";
+        return this.dao.run(
+            querySQL,
+            [
+                testDescriptorObject.name,
+                testDescriptorObject.procedureDescription,
+                testDescriptorObject.idSKU
+            ]
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
+            throw new Error(error.message);
+        });
+    }
+
+
+
+
+    /**
+      * Update testDescriptorObject in DB
+      * ------------------------------------------------------------------------
+      * @returns nothing 
+      *          
+    */
+    modifyTestDescriptor  = async (id,testDescriptorObject) => {
+    const querySQL = "UPDATE TEST_DESCRIPTORS SET name=?, procedureDescription=?, idSKU=?  WHERE id==?";
+    return this.dao.run(
+        querySQL,
+        [
+            testDescriptorObject.newName,
+            testDescriptorObject.newProcedureDescription,
+            testDescriptorObject.newIdSKU,
+            id
+        ]
+    ).then((result) => {
+        return result;
+    }).catch((error) => {
+        throw new Error(error.message);
+    });
+}
+
+
+
+
+    /**
+      * Delete testDescriptorObject in DB
+      * ------------------------------------------------------------------------
+      * @returns nothing 
+      *          
+    */
+     deleteTestDescriptor  = async (id) => {
+        const querySQL = "DELETE FROM TEST_DESCRIPTORS WHERE id==?";
+        return this.dao.run(
+            querySQL,
+            [
+                id
+            ]
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
+            throw new Error(error.message);
+        });
+    }
+
+
+
+
+
+
+     /**
+      * Retrieves the TestDescriptors ID of a particular SKU identified by SKUid
+      * ------------------------------------------------------------------------
+      * @returns an Array object containing all TestDescriptors ID associated to 
+      *          a specific SKUid.
+      */
+    getTDIDbySKUid = async (SKUid) => {
+        const querySQL = "SELECT TD.id FROM TEST_DESCRIPTORS TD WHERE TD.idSKU == ?";
+        return this.dao.all(
+            querySQL,
+            [
+                SKUid
+            ]
+        ).then((result) => {
+            let resultArray = []
+            result.map((item) => {
+                resultArray.push(item.id);
+            });
+            return resultArray;
+        }).catch((error) => {
+            throw new Error(error.message);
+        });
+    }
  
  }
  
- module.exports = TestDescriptorsDAO;
+ module.exports = TestDescriptorDAO;
