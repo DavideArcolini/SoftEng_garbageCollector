@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">44.79% </span>
+                <span class="strong">46.19% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>86/192</span>
+                <span class='fraction'>85/184</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">29.09% </span>
+                <span class="strong">30.18% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>16/55</span>
+                <span class='fraction'>16/53</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">56.57% </span>
+                <span class="strong">58.9% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>43/76</span>
+                <span class='fraction'>43/73</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">45.02% </span>
+                <span class="strong">46.44% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>86/191</span>
+                <span class='fraction'>85/183</span>
             </div>
         
             
@@ -587,27 +587,7 @@
 <a name='L522'></a><a href='#L522'>522</a>
 <a name='L523'></a><a href='#L523'>523</a>
 <a name='L524'></a><a href='#L524'>524</a>
-<a name='L525'></a><a href='#L525'>525</a>
-<a name='L526'></a><a href='#L526'>526</a>
-<a name='L527'></a><a href='#L527'>527</a>
-<a name='L528'></a><a href='#L528'>528</a>
-<a name='L529'></a><a href='#L529'>529</a>
-<a name='L530'></a><a href='#L530'>530</a>
-<a name='L531'></a><a href='#L531'>531</a>
-<a name='L532'></a><a href='#L532'>532</a>
-<a name='L533'></a><a href='#L533'>533</a>
-<a name='L534'></a><a href='#L534'>534</a>
-<a name='L535'></a><a href='#L535'>535</a>
-<a name='L536'></a><a href='#L536'>536</a>
-<a name='L537'></a><a href='#L537'>537</a>
-<a name='L538'></a><a href='#L538'>538</a>
-<a name='L539'></a><a href='#L539'>539</a>
-<a name='L540'></a><a href='#L540'>540</a>
-<a name='L541'></a><a href='#L541'>541</a>
-<a name='L542'></a><a href='#L542'>542</a>
-<a name='L543'></a><a href='#L543'>543</a>
-<a name='L544'></a><a href='#L544'>544</a>
-<a name='L545'></a><a href='#L545'>545</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L525'></a><a href='#L525'>525</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -990,13 +970,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
@@ -1007,19 +980,6 @@
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1488,7 +1448,7 @@ class DAO {
       password: "testpassword"
     },
     {
-      username: "customer1@ezwh.com",
+      username: "user1@ezwh.com",
       name: "Davide",
       surname: "Arcolini",
       type: "customer",
@@ -1524,7 +1484,7 @@ class DAO {
     }
   ]
     return new Promise(async (res, rej)=&gt;{
-      let sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER, username VARCHAR, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR, PRIMARY KEY(id)) ";
+      let sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR, PRIMARY KEY(id)) ";
       this.db.run(sql, (err)=&gt;{
         <span class="missing-if-branch" title="if path not taken" >I</span>if (err) {
 <span class="cstat-no" title="statement not covered" >          rej(err);</span>
@@ -1533,13 +1493,6 @@ class DAO {
         res(this.lastID);
       });
 &nbsp;
-      let manager = {
-        username: "manager1@ezwh.com",
-        name: "Dave",
-        surname: "Grohl",
-        type: "manager",
-        password: "testpassword"
-      }
       sql = "INSERT OR IGNORE INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
       users.forEach(async (e) =&gt; {
         let hash = await bcrypt.hash(e.password, saltRounds);
@@ -1558,19 +1511,6 @@ class DAO {
 <span class="fstat-no" title="function not covered" >  dr</span>opTableUsers() {
 <span class="cstat-no" title="statement not covered" >    return new Promise(<span class="fstat-no" title="function not covered" >(r</span>es, rej) =&gt; {</span>
       const sql = <span class="cstat-no" title="statement not covered" >"DROP TABLE IF EXISTS USERS";</span>
-<span class="cstat-no" title="statement not covered" >      this.db.run(sql, <span class="fstat-no" title="function not covered" >(e</span>rr)=&gt;{</span>
-<span class="cstat-no" title="statement not covered" >          if (err) {</span>
-<span class="cstat-no" title="statement not covered" >              rej(err);</span>
-<span class="cstat-no" title="statement not covered" >              return;</span>
-          }
-<span class="cstat-no" title="statement not covered" >          res(this.lastID);</span>
-      });
-    });
-  }
-&nbsp;
-<span class="fstat-no" title="function not covered" >  de</span>leteAllUsers() {
-<span class="cstat-no" title="statement not covered" >    return new Promise(<span class="fstat-no" title="function not covered" >(r</span>es, rej) =&gt; {</span>
-      const sql = <span class="cstat-no" title="statement not covered" >"DELETE FROM USERS";</span>
 <span class="cstat-no" title="statement not covered" >      this.db.run(sql, <span class="fstat-no" title="function not covered" >(e</span>rr)=&gt;{</span>
 <span class="cstat-no" title="statement not covered" >          if (err) {</span>
 <span class="cstat-no" title="statement not covered" >              rej(err);</span>
@@ -1702,7 +1642,7 @@ module.exports = DAO;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue Jun 07 2022 19:13:13 GMT+0200 (Central European Summer Time)
+                at Tue Jun 07 2022 20:40:28 GMT+0200 (Central European Summer Time)
             </div>
         <script src="../prettify.js"></script>
         <script>

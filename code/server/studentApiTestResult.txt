@@ -3,7 +3,7 @@ Server listening at http://localhost:3001
 
   create internal order
 [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]
-    ✔ create internal order (1328ms)
+    ✔ create internal order (1479ms)
 [ { SKUId: 1, description: 'a product', price: -0.01, qty: 1 } ]
     ✔ create internal order - UNPROCESSABLE
 
@@ -74,19 +74,8 @@ Server listening at http://localhost:3001
     ✔ [422] Unprocessable Entity (id constraint failed)
 
   API: GET /api/skuitems/:rfid
-Here the response: 
-{
-  RFID: '91100000000000000000000000000001',
-  SKUId: 222,
-  Available: 0,
-  DateOfStock: '2021/11/29 12:30'
-}
-    ✔ [200] OK
-Here the response: 
-Not Found
+    1) [200] OK
     ✔ [404] Not Found (rfid non existing)
-Here the response: 
-{ error: 'Unprocessable Entity' }
     ✔ [422] Unprocessable Entity (id constraint failed)
 
   API: POST /api/skuitem
@@ -137,12 +126,10 @@ Here the response:
     ✔ skuid doesn't exist
 
   get test descriptor
-    ✔ 200 return
+    2) "before all" hook for "200 return"
 
   get test descriptor by id
-    ✔ 200 return
-    ✔ id non existing)
-    ✔ id constraint failed
+    3) "before all" hook for "200 return"
 
   modify test descriptor
     ✔ 200 return
@@ -150,7 +137,7 @@ Here the response:
     ✔ body format is wrong
 
   delete test descriptor
-    ✔ 204 No Content
+    4) "before all" hook for "204 No Content"
 
   new test result
     ✔ 201 return
@@ -280,12 +267,7 @@ Here the response:
     ✔ not empty body
 
   get user
-    ✔ getting user data from the system (57ms)
-    ✔ empty body
-    ✔ bad username format
-    ✔ bad password format
-    ✔ not found: wrong username
-    ✔ not found: wrong password (57ms)
+    5) "before all" hook for "getting user data from the system"
 
   new user
     ✔ user created (58ms)
@@ -310,5 +292,63 @@ Here the response:
     ✔ deleted
 
 
-  154 passing (2s)
+  142 passing (2s)
+  5 failing
+
+  1) API: GET /api/skuitems/:rfid
+       [200] OK:
+     AssertionError: expected { …(4) } to be an array
+      at /Users/davidearcolini/Desktop/PoliTo_CyberSecurity/Courses/Software_Engineering/Exam_Project/SoftEng_garbageCollector/code/server/test/testSKUitemRouter.js:357:41
+      at processTicksAndRejections (node:internal/process/task_queues:96:5)
+      at async Context.<anonymous> (test/testSKUitemRouter.js:353:9)
+
+  2) get test descriptor
+       "before all" hook for "200 return":
+
+      AssertionError: expected { Object (_events, _eventsCount, ...) } to have status code 201 but got 404
+      + expected - actual
+
+      -404
+      +201
+      
+      at /Users/davidearcolini/Desktop/PoliTo_CyberSecurity/Courses/Software_Engineering/Exam_Project/SoftEng_garbageCollector/code/server/test/testTestDescriptorRouter.js:130:29
+      at runMicrotasks (<anonymous>)
+      at processTicksAndRejections (node:internal/process/task_queues:96:5)
+      at async Context.<anonymous> (test/testTestDescriptorRouter.js:129:11)
+
+  3) get test descriptor by id
+       "before all" hook for "200 return":
+
+      AssertionError: expected { Object (_events, _eventsCount, ...) } to have status code 201 but got 404
+      + expected - actual
+
+      -404
+      +201
+      
+      at /Users/davidearcolini/Desktop/PoliTo_CyberSecurity/Courses/Software_Engineering/Exam_Project/SoftEng_garbageCollector/code/server/test/testTestDescriptorRouter.js:172:29
+      at runMicrotasks (<anonymous>)
+      at processTicksAndRejections (node:internal/process/task_queues:96:5)
+      at async Context.<anonymous> (test/testTestDescriptorRouter.js:171:11)
+
+  4) delete test descriptor
+       "before all" hook for "204 No Content":
+
+      AssertionError: expected { Object (_events, _eventsCount, ...) } to have status code 201 but got 404
+      + expected - actual
+
+      -404
+      +201
+      
+      at /Users/davidearcolini/Desktop/PoliTo_CyberSecurity/Courses/Software_Engineering/Exam_Project/SoftEng_garbageCollector/code/server/test/testTestDescriptorRouter.js:266:29
+      at runMicrotasks (<anonymous>)
+      at processTicksAndRejections (node:internal/process/task_queues:96:5)
+      at async Context.<anonymous> (test/testTestDescriptorRouter.js:265:11)
+
+  5) get user
+       "before all" hook for "getting user data from the system":
+     TypeError: dao.deleteAllUsers is not a function
+      at Context.<anonymous> (test/testUserRouter.js:49:19)
+      at processImmediate (node:internal/timers:466:21)
+
+
 

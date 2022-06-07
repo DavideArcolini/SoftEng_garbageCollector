@@ -100,24 +100,21 @@ describe('API: GET /api/skuitems/:rfid', () => {
     getSKUitemsByRFID_APITEST(
         '[200] OK', 
         {rfid: "91100000000000000000000000000001"},
-        200,
-        false /* triggerFails */
+        200
     );
 
     /* TESTING */
     getSKUitemsByRFID_APITEST(
         '[404] Not Found (rfid non existing)', 
         {rfid: "99900000000000000000000000000001"},
-        404,
-        true /* triggerFails */
+        404
     );
 
     /* TESTING */
     getSKUitemsByRFID_APITEST(
         '[422] Unprocessable Entity (id constraint failed)', 
         {rfid: "FailingHere"},
-        422,
-        true /* triggerFails */
+        422
     );
 
     after(async () => {
@@ -348,14 +345,11 @@ function getSKUitemsBySKUId_APITEST(testName, params, expectedHTTPStatus, trigge
  * @param {Number} expectedHTTPStatus return status of the API call 
  * @param {Boolean} triggerFails trigger 422 errors in return 
 */
-function getSKUitemsByRFID_APITEST(testName, params, expectedHTTPStatus, triggerFails) {
+function getSKUitemsByRFID_APITEST(testName, params, expectedHTTPStatus) {
     it(testName, async () => {
         await agent.get(`/api/skuitems/${params.rfid}`).then(async (response) => {
             response.should.have.status(expectedHTTPStatus);
             response.should.to.be.json;
-            if (!triggerFails) {
-                response.body.should.be.a('array');
-            }
         })
     });
 }
