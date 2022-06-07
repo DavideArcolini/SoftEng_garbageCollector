@@ -58,10 +58,8 @@ router.get(
     async(req,res)=>{
         try{
         const result = await rtoc.getReturnOrderById(req.params.id);
-        if(result.message){
-            return res.status(404).end();
-        }
-        return res.status(200).json(result);
+        
+        return res.status(result.code).json(result.message);
         }catch(error){
             return res.status(500).end();
         }
@@ -85,7 +83,7 @@ router.post(
                 }
             return true;
         }),
-        body('returnDate').custom((value) => {                                           /* [FROM API.md]: returnDate is in the format "YYYY/MM/DD HH:MM"     */
+       body('returnDate').custom((value) => {                                           /* [FROM API.md]: returnDate is in the format "YYYY/MM/DD HH:MM"     */
             if (/^\d{4}\/\d{2}\/\d{2} \d{2}\:\d{2}$/.test(value) !== true) {
                 throw new Error('Invalid DateOfStock format');
             }
@@ -111,12 +109,7 @@ router.post(
     async(req,res)=>{
         try{
         let result = await rtoc.createReturnOrder(req.body.returnDate,req.body.restockOrderId,req.body.products);
-        if(result.unprocessableEntity){
-            return res.status(422).end();
-        } else if (result === 404) {
-            return res.status(404).json();
-        }
-        return res.status(201).end();
+        return res.status(result.code).end();
         }catch(error){
             return res.status(503).end();
         }

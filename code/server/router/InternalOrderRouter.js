@@ -110,10 +110,7 @@ router.get(
     async(req,res)=>{
         try{
         const io = await ioc.getInternalOrderById(req.params.id);
-        if(io.message){
-            return res.status(404).end();
-        }
-        return res.status(200).json(io);
+        return res.status(io.code).json(io.message);
         }catch(error){
             return res.status(503).end();
         }
@@ -214,11 +211,7 @@ router.put(
     async(req,res)=>{
         try{
         let io = await ioc.modifyInternalOrderState(req.params.id,req.body.newState,req.body.products);
-
-        if(io.message){
-            return res.status(404).end();
-        }
-        return res.status(200).end();
+        return res.status(io.code).end();
         }catch(error){
             return res.status(503).end();
         }

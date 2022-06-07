@@ -1,44 +1,45 @@
 "use strict";
-const dayjs = require( 'dayjs');
+
+/* --------- IMPORT MODULES --------- */
+const dayjs         = require( 'dayjs');
+const { testEditRestockWrongOrderSkuItems } = require('../acceptanceTest/utils-restockorder');
+const reoDAO         = require("../db/ReturnOrderDAO");
+const roDAO          = require("../db/RestockOrderDAO");
+
+
+/* --------- ERROR MESSAGES --------- */
+const ERROR_422 = {code: 422, message: 'Unprocessable Entity'};
+const MESSG_200 = {code: 200, message: 'Ok'}
+const MESSG_201 = {code: 201, message: 'Created'};
+const MESSG_204 = {code: 204, message: 'No Content'};
+const ERROR_404 = {code: 404, message: 'Not Found'};
 
 class ReturnOrderController {
-    constructor(dao) {
-        this.dao = dao
+    constructor(generalPurposeDAO) {
+        this.reoDAO = new reoDAO(generalPurposeDAO);
+        this.roDAO  = new roDAO(generalPurposeDAO); 
     }
 
     createReturnOrder = async (returnDate,restockOrderId,products) => {
-        if (returnDate===undefined || restockOrderId===undefined ) {
-            //return res.status(422).end();  
-            return {unprocessableEntity: "invalid returnDate/restockOrderId"};         
-          }
+       /* if (returnDate===undefined || restockOrderId===undefined ) { 
+            return ERROR_422;         
+          }*/
         try{
-            let sql = "SELECT MAX(id) as id FROM RETURN_ORDERS"
-            let max_id = await this.dao.get(sql);
-            let id=1;
-            if(max_id.id!==null)
-                id = max_id.id+1;
             
-            /* checkinf restock order */
-            let sql_check = "SELECT * FROM RESTOCK_ORDERS WHERE RESTOCK_ORDERS.id == ?";
-            const result = await this.dao.get(sql_check, [restockOrderId]);
-            if (result === undefined) {
-                return 404;
+           let restockOrder = this.roDAO.getRestockOrderById(restockOrderId);
+            if(restockOrder[0]===undefined){
+                return ERROR_404;
             }
             
-            for (const prod of products)
-            { 
-                    sql = "INSERT INTO RETURN_ORDERS(id, returnDate, restockOrderId, SKUId, description, price, RFID) VALUES(?,?,?,?,?,?,?)"
-                    await this.dao.run(sql,[id, returnDate,  restockOrderId, prod.SKUId, prod.description, prod.price, prod.RFID])
-                
+            
+            await this.reoDAO.createReturnOrder(returnDate,restockOrderId,products);
+            
+            return {
+                code: 201
             }
-            
-        
-            
-            //return res.status(201).end();
-            return id;
     }catch(error){
-        //return res.status(503).end();
-        throw new TypeError();
+        
+        throw error;
     }
         
         
@@ -53,13 +54,12 @@ class ReturnOrderController {
 
 
     getReturnOrderById = async (id) => {
-        //let id = req.params.id;
+        
         try{
-            let sql = "SELECT id, returnDate, restockOrderId, SKUId, description, price, RFID FROM RETURN_ORDERS WHERE id==? GROUP BY id, returnDate, restockOrderId, SKUId, description, price,RFID"
-            let response = await this.dao.all(sql,id);
+           
+            let response = await this.reoDAO.getReturnOrderById(id);
             if(response==null || response[0]==null){
-                //return res.status(404).end();
-                return {message: "Not Found"}; 
+               return ERROR_404;
             }
         
             let result = {id: response[0].id, returnDate: response[0].returnDate, restockOrderId: response[0].restockOrderId};
@@ -71,50 +71,46 @@ class ReturnOrderController {
                 delete x.restockOrderId
                 return x;
                 
-    }) ;
-        result = {...result , products : products };   
-        return result;
-        //return res.status(200).json(result);
-    }catch(error){
-        //return res.status(500).end();
-        throw new TypeError('');
-    }
+            }) ;
+                result = {...result , products : products };   
+            return {
+                code: 200,
+                message: result
+            }
+        }catch(error){
+        
+            throw error;
+        }
 
     }
     getReturnOrders = async () =>{
         try{
-            let sql = "SELECT id, returnDate, restockOrderId FROM RETURN_ORDERS GROUP BY id, returnDate, restockOrderId";
-            let result = await this.dao.all(sql);
-            
-            await Promise.all(result.map(async (x) => {
-                    sql = "SELECT SKUId, description, price, RFID FROM RETURN_ORDERS WHERE id==? "
-                    x.products = await this.dao.all(sql,x.id);
-                    
+           
+                let result = await this.reoDAO.getReturnOrders();
                 
-            }));
+                await Promise.all(result.map(async (x) => {
+                        x.products = await this.reoDAO.getSkuItemsOfReturnOrder(x.id)
+                }));
 
-        
-        //return res.status(200).json(result);
-        return result;
-    }catch(error){
-        //return res.status(500).end();
-        throw new TypeError('');
+                return result;
+            }catch(error){
+            
+                throw error;
+            }
     }
-}
    
-deleteReturnOrder = async (id) => {
-   // let id = req.params.id;
-    try{
-        let sql = "DELETE FROM RETURN_ORDERS WHERE id==?";
-        let _ = await this.dao.run(sql,id);
-
-       // return res.status(204).end();
-       return id;
-    }catch(error){
-        //return res.status(503).end();
-        throw new TypeError();
+    deleteReturnOrder = async (id) => {
+    
+        try{
+        await this.reoDAO.deleteReturnOrder(id);
+        return {
+            code: 204
+        }
+        }catch(error){
+            
+            throw error;
+        }
     }
-}
     
 
     

@@ -1,137 +1,112 @@
 "use strict";
-const dayjs = require( 'dayjs');
+
+/* --------- IMPORT MODULES --------- */
+const dayjs         = require( 'dayjs');
+const { testEditRestockWrongOrderSkuItems, testEditRestockOrderTransportNoteNotFound } = require('../acceptanceTest/utils-restockorder');
+const ioDAO         = require("../db/InternalOrderDAO");
+
+
+/* --------- ERROR MESSAGES --------- */
+const ERROR_422 = {code: 422, message: 'Unprocessable Entity'};
+const MESSG_200 = {code: 200, message: 'Ok'}
+const MESSG_201 = {code: 201, message: 'Created'};
+const MESSG_204 = {code: 204, message: 'No Content'};
+const ERROR_404 = {code: 404, message: 'Not Found'};
+
+/**
+ * CLASS:   Restock Orders
+ * =================
+ * METHOD: 
+ *          - createRestockOrder()              --> API: POST /api/restockOrder
+ *          - getInternalOrders()                --> API: GET /api/restockOrders
+ *          - getRestockOrdersIssued()          --> API: GET /api/restockOrdersIssued
+ *          - getRestockOrderById               --> API: GET /api/restockOrders/:id
+ *          - getReturnItems()                  --> API: GET /api/restockOrders/:id/returnItems
+ *          - modifyRestockOrderState()         --> API: PUT /api/restockOrder/:id
+ *          - setSkuItems()                     --> API: PUT /api/restockOrder/:id/skuItems
+ *          - addTransportNote()                --> API: PUT /api/restockOrder/:id/transportNote
+ *          - deleteRestockOrder()              --> API: DELETE /api/restockOrder/:id
+*/
 
 
 class InternalOrderController {
-    constructor(dao) {
-        this.dao = dao
+    constructor(generalPurposeDAO) {
+        this.ioDAO = new ioDAO(generalPurposeDAO);
     }
 
     createInternalOrder = async (issueDate,products,customerId) => {
         try{
-            let sql = "SELECT MAX(id) as id FROM INTERNAL_ORDERS"
-            let max_id = await this.dao.get(sql);
-            
-            let id=1;
-            if(max_id !==null && max_id.id!==null)
-                id = max_id.id+1;
-        
-            
-            // let data = req.body;
-            for (let prod of products)
-            {
-            
-                await Promise.all([...Array(parseInt(prod.qty))].map(async () => {
-                    sql = "INSERT INTO INTERNAL_ORDERS(id, issueDate, state, customerId, SKUId, description, price) VALUES(?,?,?,?,?,?,?)"
-                    await this.dao.run(sql,[id, issueDate,"ISSUED", customerId, prod.SKUId, prod.description, prod.price])
-                }));
 
+            await this.ioDAO.createInternalOrder(issueDate,products,customerId);
+            return {
+                code: 201
             }
-
-            //return res.status(201).end()
-       
-            return id;
         }catch(error){
-            //return res.status(500).end();
-            throw new TypeError('');
+            throw error;
         }
     }
 
     getInternalOrders = async () =>{
         try{
-        let sql = "SELECT id, issueDate, state, customerId FROM INTERNAL_ORDERS GROUP BY id, issueDate, state, customerId";
-        let result = await this.dao.all(sql);
-        await Promise.all(result.map(async (x) => {
-            if(x.state!=="COMPLETED"){
-                sql = "SELECT id, SKUId, description, price, COUNT(*) as qty FROM INTERNAL_ORDERS WHERE id==? GROUP BY id, SKUId, description, price "
-                x.products = await this.dao.all(sql,x.id);
-                
-                x.products = x.products.map( (x)=>{
+            let result = await this.ioDAO.getInternalOrders();
+            await Promise.all(result.map(async (x) => {
+                if(x.state!=="COMPLETED"){
+                    x.products = await this.ioDAO.getProductsOfInternalOrder(x.id);
                     
+                }else{
                     
-                    delete x.id
-                    delete x.RFID
-                    return x;
+                    x.products = await this.ioDAO.getSkuItemsOfInternalOrder(x.id);
                     
-                })            
-                
-                
-            }else{
-                sql = "SELECT SKUId, description, price, RFID FROM INTERNAL_ORDERS WHERE id==?"
-                x.products = await this.dao.all(sql,x.id);
-                
-            }
-        }));
-        
-        
-        //return res.status(200).json(result);
-        return result;
-    }catch(error){
-        //return res.status(500).end();
-        throw error;
-    }
+                }
+            }));
+            
+            return result;
+        }catch(error){
+
+            throw error;
+        }
 }
+
     getInternalOrdersIssued = async () =>{
         try{
-            let sql = "SELECT id, issueDate, state, customerId FROM INTERNAL_ORDERS WHERE state==? GROUP BY id, issueDate, state, customerId";
-            let result = await this.dao.all(sql,["ISSUED"]);
+            
+            let result = await this.ioDAO.getInternalOrdersIssued();
            
             await Promise.all(result.map(async (x) => {
-                sql = "SELECT id, SKUId, description, price, COUNT(*) as qty FROM INTERNAL_ORDERS WHERE id==? GROUP BY id, SKUId, description, price "
-                   
-                    x.products = await this.dao.all(sql,x.id);
-                   
-                    x.products = x.products.map( (x)=>{
-                    
-                        delete x.id
-                        return x;
-                        
-                    })            
-                                 
-        }));
+                    x.products = await this.ioDAO.getProductsOfInternalOrder(x.id);                              
+            }));
         
-        
-        //return res.status(200).json(result);
-        return result;
-    }catch(error){
-        //return res.status(500).end();
-        throw error;
-    }
+            return result;
+        }catch(error){
+            console.log("MI SONO ROTTA"+ error.message)
+            throw error;
+        }
 }
 
     getInternalOrdersAccepted = async (req, res) =>{
         try{
-        let sql = "SELECT id, issueDate, state, customerId FROM INTERNAL_ORDERS WHERE state==? GROUP BY id, issueDate, state, customerId ";
-        let result = await this.dao.all(sql,["ACCEPTED"]);
+        
+        let result = await this.ioDAO.getInternalOrdersAccepted();
         await Promise.all(result.map(async (x) => {
-             sql = "SELECT id, SKUId, description, price, COUNT(*) as qty FROM INTERNAL_ORDERS WHERE id==? GROUP BY id, SKUId, description, price "
-                x.products = await this.dao.all(sql,x.id);
-                x.products = x.products.map( (x)=>{
-                   
-                    delete x.id
-                    return x;
-                    
-                })            
-            
-    }));
+             
+                x.products = await this.ioDAO.getSkuItemsOfInternalOrder(x.id);
+               
+            }));
 
-
-   // return res.status(200).json(result);
-   return result;
+        return result;
     }catch(error){
-        //return res.status(500).end();
+       
         throw error;
     }
  }
 
     getInternalOrderById = async (id) => {
-        //let id = req.params.id;
+       
         try{
-            let sql = "SELECT id, issueDate, state, customerId, SKUId, description, price, COUNT(*) as qty FROM INTERNAL_ORDERS WHERE id==? GROUP BY id, issueDate, state, customerId, SKUId, description, price "
-            let response = await this.dao.all(sql,id);
-            if(response.length==0){
-                //return res.status(404).json();
-                return {message: "Not Found"}; 
+            
+            let response = await this.ioDAO(id);
+            if(response===undefined || response.length===0){
+                return ERROR_404;
             }
             
             let result = {id: response[0].id, issueDate: response[0].issueDate, state: response[0].state,customerId: response[0].customerId};
@@ -151,61 +126,56 @@ class InternalOrderController {
             } 
             else{
 
-                sql = "SELECT SKUId, description, price, RFID FROM INTERNAL_ORDERS WHERE id==?"
-                result = {...result , products : await this.dao.all(sql,id)};
+                
+                result = {...result , products : await this.ioDAO.getSkuItemsOfInternalOrder(x,id)};
                 return result;
             }
             
-            //return res.status(200).json(result);
-            return result;
+            return {
+                code: 200,
+                message: result
+            };
         }catch(error){
-            //return res.status(500).end();
+            
             throw error;
         }
 }
 
     modifyInternalOrderState = async(id,newState,products) => {
-        //let id = req.params.id;
+     
         try{
-            let sql = "SELECT * FROM INTERNAL_ORDERS WHERE id==?";
-            let result = await this.dao.get(sql,id);
-            if(result==null){
-               // return res.status(404).end();
-               return {message: "Not Found"}; 
+            let result = await this.ioDAO.getInternalOrderById(id);
+            if(result==null || result.length===0){
+               return ERROR_404;
             }
 
-            sql = "UPDATE INTERNAL_ORDERS SET state=? WHERE id==?";
-            result = await this.dao.run(sql,[newState,id]);
+            await this.ioDAO.modifyInternalOrderState(id,newState);
+
             if(newState === "COMPLETED"){
-                    for(const prod of products){
-                        sql = "SELECT MIN(key) as min_id  FROM INTERNAL_ORDERS WHERE id==? AND SKUId==? AND RFID IS NULL "
-                        let pid= await this.dao.get(sql,[id,prod.SkuID]);
-                        sql = "UPDATE INTERNAL_ORDERS SET RFID=? WHERE SKUId==? AND id==? AND key == ?"
-                        await this.dao.run(sql,[prod.RFID, prod.SkuID, id, pid.min_id])
-                    }
-
-                
+                  await this.ioDAO.setSkuItems(id,products);
             }
-            //return res.status(200).end();
-            return id;
-    }catch(error){
-        //return res.status(503).end();
-        throw error;
-    }
+
+            return {
+                code: 200
+            }
+        }catch(error){
+            
+            throw error;
+        }
 
 }
 
 
 deleteInternalOrder = async (id) => {
-    //let id = req.params.id;
+    
     try{
-        let sql = "DELETE FROM INTERNAL_ORDERS WHERE id==?";
-        let _ = await this.dao.run(sql,id);
-        
-        //return res.status(204).end();
-        return id;
+       await this.ioDAO.deleteInternalOrder(id);
+
+        return {
+            code: 204
+        }
     }catch(error){
-        //return res.status(500).end();
+        
         throw error;
     }
 }

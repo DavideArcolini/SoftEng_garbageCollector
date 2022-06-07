@@ -1,16 +1,23 @@
 "use strict";
-const express = require('express');
-const router = express.Router();
-const ROController = require('../controller/RestockOrderController');
-const DAO = require("../db/DAO")
-const dao = new DAO();
-const roc = new ROController(dao);
 
+/* IMPORT MODULES */
+const express               = require("express");
+const ROController         = require('../controller/RestockOrderController');
+const DAO                   = require("../db/DAO");
 const { validationHandler } = require("../validator/validationHandler");
-const { param, Result }             = require('express-validator');
+const { param }             = require('express-validator');
 const { header }            = require('express-validator');
 const { body }              = require('express-validator');
-const { ValidationHalt } = require('express-validator/src/base');
+
+/* INITIALIZATION */
+const router            = express.Router();
+const dao               = new DAO();
+const roc               = new ROController(dao);
+
+/* --------- ERROR MESSAGES --------- */
+const ERROR_404 = {error: '404 Not Found'};
+const ERROR_500 = {error: 'Internal Server Error'};
+const ERROR_503 = {error: 'Service Unavailable'};
 
 /**
  * API:
@@ -83,10 +90,7 @@ router.get(
     validationHandler, async(req,res)=>{
         try{
         const ro = await roc.getRestockOrderById(req.params.id);
-        if(ro.message){
-            return res.status(404).end();
-        }
-        return res.status(200).json(ro);
+        return res.status(ro.code).json(ro.message);
         }catch(error){
             return res.status(503).end();
         }
@@ -114,12 +118,7 @@ router.get(
     async(req,res)=>{
         try{
         let result = await roc.getReturnItems(req.params.id);
-        if(result.message){
-            return res.status(404).end();
-        }else if(result.unprocessable){
-            return res.status(422).end();
-        }
-        return res.status(200).end();
+        return res.status(result.code).end(result.message);
         }catch(error){
             return res.status(500).end();
         }
@@ -169,9 +168,9 @@ router.post(
     validationHandler,
     async(req,res)=>{
         try{
-            console.log(JSON.stringify(req.body))
-        await roc.createRestockOrder(req.body.issueDate,req.body.supplierId,req.body.products);
-        return res.status(201).end();
+            //console.log(JSON.stringify(req.body))
+        let result = await roc.createRestockOrder(req.body.issueDate,req.body.supplierId,req.body.products);
+        return res.status(result.code).end();
         }catch(error){
             return res.status(503).end();
         }
@@ -209,10 +208,7 @@ router.put(
     async(req,res)=>{
         try{
         const ro = await roc.modifyRestockOrderState(req.params.id,req.body.newState);
-        if(ro.message){
-            return res.status(404).end();
-        }
-        return res.status(200).end();
+       return res.status(ro.code).end();
         }catch(error){
             return res.status(503).end();
         }
@@ -252,12 +248,7 @@ router.put(
     async(req,res)=>{
         try{
         let result = await roc.setSkuItems(req.params.id,req.body.skuItems);
-        if(result.message){
-            return res.status(404).end();
-        }else if(result.unprocessable){
-            return res.status(422).end();
-        }
-        return res.status(200).end();
+        return res.status(result.code).end();
         }catch(error){
             return res.status(503).end();
         }
@@ -292,12 +283,7 @@ router.put(
     async(req,res)=>{
         try{
         let result = await roc.addTransportNote(req.params.id,req.body.transportNote);
-        if(result.message){
-            return res.status(404).end();
-        }else if(result.unprocessable){
-            return res.status(422).end();
-        }
-        return res.status(200).end();
+        return res.status(result.code).end();
         }catch(error){
             return res.status(503).end();
         }
@@ -323,8 +309,8 @@ router.delete(
     validationHandler,
     async(req,res)=>{
         try{
-        await roc.deleteRestockOrder(req.params.id);
-        return res.status(204).end();
+        let result = await roc.deleteRestockOrder(req.params.id);
+        return res.status(result.code).end();
         }catch(error){
             return res.status(503).end();
         }
