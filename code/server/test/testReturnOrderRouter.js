@@ -63,6 +63,7 @@ var agent = chai.request.agent(app);
             res.should.have.status(200);
             res.should.to.be.json;
             res.body.should.be.a('array');
+            console.log(res.body)
             let id = res.body[res.body.length-1].id;
          
            await agent.delete('/api/returnOrder/'+id).then(function(res){

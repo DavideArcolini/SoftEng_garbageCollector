@@ -58,7 +58,7 @@
      getReturnOrders = async () => {
 
         const querySQL = "SELECT id, returnDate, restockOrderId FROM RETURN_ORDERS GROUP BY id, returnDate, restockOrderId";
-        return this.dao.all(
+        return await this.dao.all(
             querySQL
         ).then((result)=>{
             return result;

@@ -104,7 +104,7 @@ class InternalOrderController {
        
         try{
             
-            let response = await this.ioDAO(id);
+            let response = await this.ioDAO.getInternalOrderById(id);
             if(response===undefined || response.length===0){
                 return ERROR_404;
             }
@@ -127,7 +127,7 @@ class InternalOrderController {
             else{
 
                 
-                result = {...result , products : await this.ioDAO.getSkuItemsOfInternalOrder(x,id)};
+                result = {...result , products : await this.ioDAO.getSkuItemsOfInternalOrder(x.id)};
                 return result;
             }
             

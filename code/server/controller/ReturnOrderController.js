@@ -26,7 +26,7 @@ class ReturnOrderController {
           }*/
         try{
             
-           let restockOrder = this.roDAO.getRestockOrderById(restockOrderId);
+           let restockOrder = await this.roDAO.getRestockOrderById(restockOrderId);
             if(restockOrder[0]===undefined){
                 return ERROR_404;
             }

@@ -114,7 +114,7 @@
  
      getRestockOrderById = async (id) => {
          const querySQL = "SELECT id, issueDate, state, supplierId, SKUId, description, price, deliveryDate, COUNT(*) as qty FROM RESTOCK_ORDERS WHERE id==? GROUP BY id, issueDate, state, supplierId, SKUId, description, price ";
-         return this.dao.all(
+         return await this.dao.all(
              querySQL,
              [
                  id
