@@ -100,5 +100,5 @@ exports.removeUser = async(username, type) => {
 
 exports.deleteAllUsers = async() => {
     const sql = "DELETE FROM USERS";
-    return await dao.run(sql);
+    await dao.run(sql);
 }

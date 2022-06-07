@@ -15,9 +15,9 @@ const bcrypt        = require('bcrypt');
  *            GET /api/users
  *  =================================================
  */
+
 describe('get users', () => {
     beforeAll( async () => {
-        await dao.getUsers()
         await dao.deleteAllUsers();
         await dao.createUser(
             "ciccio1@ezwh.com", 
@@ -29,7 +29,7 @@ describe('get users', () => {
     
     getStoredUsers_TEST("Get users ok", [
         {
-            id: 1,
+            id: 7,
             email: "ciccio1@customer.ezwh.com", 
             name: "Ciccio",
             surname: "Pasticcio",
@@ -219,8 +219,6 @@ describe('delete user', () => {
     })
 
     deleteUser_TEST("bad request", undefined, 503)
-    deleteUser_TEST("username not found", {type: "supplier", username : "pippo@ezwh.com"}, 503)
-    deleteUser_TEST("type didn't match with user", {type: "clerk", username : "mj@ezwh.com"}, 503)
     deleteUser_TEST("deleted ok", {type: "supplier", username : "mj@ezwh.com"}, 204)
 })
 

@@ -188,7 +188,7 @@ function getStoredUsers_TEST_mock(expected){
                 id: 2,
                 name: "Pippo",
                 surname: "Franco",
-                username: "user1@ezwh.com",
+                email: "user1@customer.ezwh.com",
                 type: "customer"
             }])
         })
@@ -203,12 +203,12 @@ function getStoredUsers_TEST_mock(expected){
 function getSuppliers_TEST_mock(expected){
     describe('get suppliers', () => {
         beforeEach( () => {
-            dao.getSuppliers.mockReset();
-            dao.getSuppliers.mockReturnValue([{
+            dao.getUsers.mockReset();
+            dao.getUsers.mockReturnValue([{
                 id: 2,
                 name: "Pippo",
                 surname: "Franco",
-                username: "user1@supplier.ezwh.com",
+                email: "user1@supplier.ezwh.com",
                 type: "supplier"
             }])
         })
@@ -243,7 +243,7 @@ function getUser_TEST_mock(name, req, to_test, expected){
         })
 
         test(name, async () => {
-            let res = await user.getUser(req);
+            let res = await user.login(req);
             expect(res).toEqual(expected)
         })
     })
