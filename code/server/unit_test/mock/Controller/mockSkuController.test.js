@@ -30,19 +30,6 @@ const ERROR_422 = {code: 422, message: 'Unprocessable Entity'};
     |         DATA         |
     + -------------------- +
 */
-const skuItemObjects = [
-    {
-        RFID: "12345678901234567890123456789014",
-        SKUId: 1,
-        DateOfStock: "2021/11/29 12:30",
-    }, 
-    {
-        RFID: "12345678901234567890123456789015",
-        SKUId: 2,
-        DateOfStock: "2019/04/23 09:15",
-    }
-];
-
 const positionsTestArray = [
     {
         positionID: "800234543412",
@@ -99,28 +86,7 @@ const skusTestArray = [
     }
 ];
 
-const skuItemsTestArray = [
-    {
-        RFID: "12345678901234567890123456789014",
-        SKUId: 1,
-        Available: 0,
-        DateOfStock: "2021/11/29 12:30",
-    }, {
-        RFID: "12345678901234567890123456789015",
-        SKUId: 1,
-        Available: 1,
-        DateOfStock: "2021/11/29 12:30"
-    }, {
-        RFID: "12345678901234567890123456789016",
-        SKUId: 2,
-        Available: 0,
-        DateOfStock: "2019/01/29 09:00"
-    }, {
-        RFID: "12345678901234567890123456789017",
-        SKUId: 3,
-        Available: 0
-    }
-];
+
 
 
 /*

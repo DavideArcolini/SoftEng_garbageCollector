@@ -41,15 +41,6 @@ const newPositionObject = {
     newOccupiedVolume: 0
 };
 
-const skuObject = {
-    description: "a new sku",
-    weight: 100,
-    volume: 50,
-    notes: "first SKU",
-    price: 10.99,
-    availableQuantity: 2
-};
-
 
 const positionsTestArray = [
     {

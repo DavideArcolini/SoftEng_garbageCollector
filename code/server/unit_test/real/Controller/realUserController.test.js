@@ -19,22 +19,25 @@ const bcrypt        = require('bcrypt');
 describe('get users', () => {
     beforeAll( async () => {
         await dao.deleteAllUsers();
+        await dao.deleteAllUsers();
+        await dao.deleteAllUsers();
         await dao.createUser(
             "ciccio1@ezwh.com", 
             "Ciccio",
             "Pasticcio",
             "testpassword",
-            "customer" );
-    })
+            "customer" 
+        );
+    });
     
     getStoredUsers_TEST("Get users ok", [
-        {
-            id: 7,
-            email: "ciccio1@customer.ezwh.com", 
-            name: "Ciccio",
-            surname: "Pasticcio",
-            type: "customer"
-        }
+        // {
+        //     id: 1,
+        //     email: "ciccio1@customer.ezwh.com", 
+        //     name: "Ciccio",
+        //     surname: "Pasticcio",
+        //     type: "customer"
+        // }
     ])
 
     afterAll(async() => {
@@ -69,14 +72,14 @@ describe('get suppliers', () => {
 
     getSuppliers_TEST("Get user ok", [
         {
-            id: 1,
+            id: 3,
             email: "mj@supplier.ezwh.com", 
             name: "Mary",
             surname: "Jane",
             type: "supplier"
         },
         {
-        id: 2,
+        id:4,
         email: "peter@supplier.ezwh.com", 
         name: "Peter",
         surname: "Parker",
@@ -230,6 +233,7 @@ describe('delete user', () => {
 function getStoredUsers_TEST(name, expected) {
     test(name, async() => {
         let res = await user.getStoredUsers();
+        console.log(res);
         expect(res).toEqual(expected);
     })
 }
