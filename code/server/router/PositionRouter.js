@@ -9,11 +9,15 @@ const { param }             = require('express-validator');
 const { header }            = require('express-validator');
 const { body }              = require('express-validator');
 const { response, request } = require("express");
+const PositionDAO           = require("../db/positionDAO");
+const SKUDAO                = require("../db/skuDAO");
 
 /* INITIALIZATION */
 const router                = express.Router();
 const dao                   = new DAO();
-const positionController    = new PositionController(dao);
+const positionDAO           = new PositionDAO(dao);
+const skuDAO                = new SKUDAO(dao);
+const positionController    = new PositionController(positionDAO, skuDAO);
 
 /* --------- ERROR MESSAGES --------- */
 const ERROR_404 = {error: '404 Not Found'};

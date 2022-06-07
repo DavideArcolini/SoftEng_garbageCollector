@@ -7,16 +7,19 @@ const sqlite = require('sqlite3');
 const DAO = require("../db/DAO")
 
 // open the database
-const dao = new DAO();
+let dao = new DAO();
+
+exports.setDAO = async(user_dao) => {
+    dao = user_dao
+}
 
 exports.createUser = async(username, name, surname, password, type) => {
     const sql = "INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
 
     let hash = await bcrypt.hash(password, saltRounds);
-    await dao.run(sql, [username, name, surname, hash, type], (err) => {
-        if(err) throw(err);
-    });
-    return
+    await dao.run(sql, [username, name, surname, hash, type])
+        .catch((err) => {throw new Error(err.message);});
+    return undefined;
 }
 
 exports.getUser = async(username, type=undefined) => {
@@ -27,8 +30,9 @@ exports.getUser = async(username, type=undefined) => {
         SELECT * 
         FROM USERS 
         WHERE username = (?) AND type = (?)`;
-        return await dao.get(sql, [username, type], (err) => {
-            if (err) throw(err);
+        return await dao.get(sql, [username, type])
+        .catch((err) => {
+            if(err) throw new Error(err.message);
         });
     }
     else {
@@ -36,14 +40,14 @@ exports.getUser = async(username, type=undefined) => {
         SELECT * 
         FROM USERS 
         WHERE username = (?)`
-        return await dao.get(sql, [username], (err) => {
-            if (err) throw(err);
+        return await dao.get(sql, [username])
+        .catch((err) => {
+            if(err) throw new Error(err.message);
         });
     }
 }
 
-exports.getUsers = (suppliers = undefined) => {
-    return new Promise(async(resolve, reject) => {
+exports.getUsers = async (suppliers = undefined) => {
         let sql='';
         if(suppliers){
             sql = "SELECT * FROM USERS WHERE type <> (?) and type = \"supplier\"";
@@ -51,8 +55,9 @@ exports.getUsers = (suppliers = undefined) => {
         else {
             sql = "SELECT * FROM USERS WHERE type <> (?)";
         }
-        let result = await dao.all(sql, "manager", (err) => {
-            if(err) reject(err)
+        let result = await dao.all(sql, "manager")
+        .catch((err) => {
+            if(err) throw new Error(err.message);
         });
         
         let final = result.map((e) => {
@@ -67,8 +72,7 @@ exports.getUsers = (suppliers = undefined) => {
             }
             return json;
         })
-        resolve(final)
-    })
+        return final
 }
 
 exports.modifyPermissions = async(username, old_type, new_type) => {
@@ -79,32 +83,22 @@ exports.modifyPermissions = async(username, old_type, new_type) => {
     WHERE username = (?) AND type = (?)
     `;
 
-    let res = await dao.run(sql, [new_type, username, old_type], (err) => {
-        if(err) throw(err)
+    let res = await dao.run(sql, [new_type, username, old_type])
+    .catch((err) => {
+        if(err) throw new Error(err.message);
     });
-    return res
 }
 
 exports.removeUser = async(username, type) => {
     const sql = 'DELETE from USERS WHERE username == ? AND type == ?';
-    let res = await dao.run(sql, [username, type], (err, row) => {
-        console.log(row)
-        if (err || row.id===0) throw(err);
+    await dao.run(sql, [username, type])
+    .catch((err) => {
+        if(err) throw new Error(err.message);
     });
-    console.log(res)
-    try{
-    if(!res) throw(err)
-    }catch(err) {
-        console.log(err)
-    }
     
 }
 
 exports.deleteAllUsers = async() => {
     const sql = "DELETE FROM USERS";
-    await dao.run(sql, (err)=>{
-        if (err) {
-            throw err
-        }
-    });
+    await dao.run(sql);
 }

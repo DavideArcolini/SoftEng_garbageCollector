@@ -1,9 +1,5 @@
 "use strict";
 
-/* --------- IMPORT MODULES --------- */
-const SKUitemDAO    = require("../db/skuItemDAO");
-const SKUDAO        = require("../db/skuDAO");
-
 /* --------- ERROR MESSAGES --------- */
 const MESSG_200 = {code: 200, message: 'Ok'}
 const MESSG_201 = {code: 201, message: 'Created'};
@@ -29,9 +25,9 @@ class SKUitemController {
      * Constructor of the class
      * @param {DAO Object} generalPurposeDAO 
      */
-    constructor (generalPurposeDAO) {
-        this.skuItemDAO = new SKUitemDAO(generalPurposeDAO);
-        this.skuDAO     = new SKUDAO(generalPurposeDAO);
+    constructor (skuItemDAO, skuDAO) {
+        this.skuItemDAO = skuItemDAO;
+        this.skuDAO     = skuDAO;
     }
 
     /** 

@@ -1,9 +1,5 @@
 "use strict";
 
-/* --------- IMPORT MODULES --------- */
-const PositionDAO   = require('../db/positionDAO');
-const SKUDAO        = require('../db/skuDAO');
-
 /* --------- ERROR MESSAGES --------- */
 const MESSG_200 = {code: 200, message: 'Ok'}
 const MESSG_201 = {code: 201, message: 'Created'};
@@ -27,9 +23,9 @@ class PositionController {
      * Constructor of the class
      * @param {Object} generalPurposeDAO 
      */
-    constructor (generalPurposeDAO) {
-        this.positionDAO    = new PositionDAO(generalPurposeDAO);
-        this.skuDAO         = new SKUDAO(generalPurposeDAO);
+    constructor (positionDAO, skuDAO) {
+        this.positionDAO    = positionDAO;
+        this.skuDAO         = skuDAO;
     }
 
 
@@ -109,6 +105,9 @@ class PositionController {
                 const volume = sku.volume;
                 const availableQuantity = sku.availableQuantity;
                 if ((weight * availableQuantity) > body.newMaxWeight || (volume * availableQuantity) > body.newMaxVolume) {
+                    // console.log((weight * availableQuantity) > body.newMaxWeight);
+                    // console.log((volume * availableQuantity) > body.newMaxVolume);
+
                     return ERROR_422;
                 }
             }
