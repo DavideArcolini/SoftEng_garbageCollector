@@ -16,19 +16,13 @@ class UserController {
     newUser = async (req) => {
         let data = req;
         try {
-            const sql = "INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
-            //let data = req;
-            let control = await this.dao.get("SELECT * FROM USERS where username = (?) and type == ?", [data.username, data.type]);
-            /*
-            if (Object.keys(data).length === 0 || (data.type == "manager") || (data.type == "administrator") || (data.password.length < 8) || !this.regex.test(data.username)) {
-                return 422;
-            }*/
+            let control = await this.dao.getUser(data.username, data.type)
+            
             if (control != undefined) {
                 return 409;
             }
             else {
-                let hash = await bcrypt.hash(data.password, saltRounds);
-                await this.dao.run(sql, [data.username, data.name, data.surname, hash, data.type]);
+                await this.dao.createUser(data.username, data.name, data.surname, data.password, data.type)
                 return 201;
             }
         }
@@ -40,50 +34,23 @@ class UserController {
 
     getStoredUsers = async () =>{
         try {
-            const sql = "SELECT * FROM USERS WHERE type <> (?)";
-            let result = await this.dao.all(sql, "manager");
-
-            let final = result.map((e) => {
-                let user = e.username.split("@");
-                let email = user[0].concat(`@${e.type}.ezwh.com`);
-                let json = {
-                    id: e.id,
-                    name: e.name,
-                    surname: e.surname,
-                    email: email,
-                    type: e.type
-                }
-
-                return json;
-            })
-            return final;
+            let result = this.dao.getUsers();
+            return result
         } catch (error) {
-            
+            //console.log(error)
         }
-            //return res.status(200).json(final);
     }
 
     getSuppliers = async () => {
-        const sql = "SELECT * FROM USERS WHERE type <> (?) and type = \"supplier\"";
-        let result = await this.dao.all(sql, "manager");
-
-        let final = result.map((e) => {
-            let user = e.username.split("@");
-            let email = user[0].concat(`@${e.type}.ezwh.com`);
-            let json = {
-                id: e.id,
-                name: e.name,
-                surname: e.surname,
-                email: email,
-                type: e.type
-            }
-
-            return json;
-        })
-        return final;
+        try {
+            let result = this.dao.getUsers(true);
+            return result
+        } catch (error) {
+            //console.log(error)
+        }
     }
 
-    getUser = async(req) => {
+    login = async(req) => {
         const sql = `
         SELECT * 
         FROM USERS 
@@ -91,7 +58,7 @@ class UserController {
         `;
         /* AND password=(?);*/
         try{
-            let result = await this.dao.get(sql, req.username);
+            let result = await this.dao.getUser(req.username);
             if (result) {
                 let validPass = await bcrypt.compare(req.password, result.password);
                 return validPass ? {id: result.id, username: result.username, name: result.name} : 401;
@@ -104,21 +71,14 @@ class UserController {
     }
 
     editUser = async(req, username) => {
-        const sql = `
-            UPDATE USERS
-            SET
-                type = (?)
-            WHERE username = (?) AND type = (?)
-        `;
-        
         try {
             let user = username.split("@")[0].concat("@ezwh.com");
-            let control = await this.dao.get("SELECT username FROM USERS WHERE username=(?) AND type == ?", [user, req.oldType]);
-            if ((!this.types.includes(req.oldType)) || (!this.types.includes(req.newType)) || (control === undefined)) {
+            let control = await this.dao.getUser(user, req.oldType)
+            if (control === undefined) {
                 return 404
             }
             else {
-                await this.dao.run(sql, [req.newType, user , req.oldType]);
+                await this.dao.modifyPermissions(user, req.oldType, req.newType)
                 return 200
             }
         } catch (error) {
@@ -128,20 +88,10 @@ class UserController {
 
     deleteUser = async (req) => {
         try {
-            console.log(req.type);
-            console.log(req.username)
             let type = req.type;
             let username = req.username;
             let user = username.split("@")[0].concat("@ezwh.com");
-            if (type === 'manager' || type === 'administrator') {
-                return 422;
-            }
-            const sql = 'DELETE from USERS WHERE username == ? AND type == ?';
-            // let res = await this.dao.get("SELECT username FROM USERS WHERE username == ? AND type == ?", [user, type])
-            // if (res === undefined) {
-            //     return 422 ;
-            // }
-            await this.dao.run(sql, [user, type]);
+            await this.dao.removeUser(user, type);
             return 204
         } catch (error) {
             return 503

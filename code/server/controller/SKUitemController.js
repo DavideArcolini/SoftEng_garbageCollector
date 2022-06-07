@@ -1,9 +1,5 @@
 "use strict";
 
-/* --------- IMPORT MODULES --------- */
-const SKUitemDAO    = require("../db/skuItemDAO");
-const SKUDAO        = require("../db/skuDAO");
-
 /* --------- ERROR MESSAGES --------- */
 const MESSG_200 = {code: 200, message: 'Ok'}
 const MESSG_201 = {code: 201, message: 'Created'};

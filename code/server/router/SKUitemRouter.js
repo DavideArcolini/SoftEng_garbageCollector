@@ -16,7 +16,7 @@ const router                = express.Router();
 const dao                   = new DAO();
 const skuDAO                = new SKUDAO(dao);
 const skuItemDAO            = new SKUitemDAO(dao);
-const SKUitemController     = new SKUItemController(skuDAO, skuItemDAO);
+const SKUitemController     = new SKUItemController(skuItemDAO, skuDAO);
 
 /* --------- ERROR MESSAGES --------- */
 const ERROR_404 = {error: '404 Not Found'};
