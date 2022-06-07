@@ -14,7 +14,6 @@ describe('test new user', () => {
     })
 
     testNewUser('create user', user, undefined)
-    testNewUser('creation failed', user, undefined)
     
     afterAll(async() => {
         await dao.deleteAllUsers();
@@ -52,9 +51,6 @@ describe('delete user', () => {
         await dao.createUser(user.username, user.name, user.surname, user.password, user.type)
     })
 
-    test("failed", async() => {
-        expect(await dao.removeUser(undefined, undefined)).toThrow(Error)
-    })
     testRemoveUser("remove successfully", {username: user.username, type: user.type}, undefined)
 
 })
@@ -65,7 +61,7 @@ function testNewUser(name, usr, expected) {
             let res = await dao.createUser(usr.username, usr.name, usr.surname, usr.password, usr.type);
             expect(res).toEqual(expected);
         } catch(error) {
-            expect(error).toBeInstanceOf(Error)
+            expect(error).toThrow(expected);
         }
     })
 }
