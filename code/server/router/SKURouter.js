@@ -8,11 +8,19 @@ const { validationHandler } = require("../validator/validationHandler");
 const { param }             = require('express-validator');
 const { header }            = require('express-validator');
 const { body }              = require('express-validator');
+const SKUDAO                = require("../db/skuDAO");
+const TestDescriptorsDAO    = require("../db/testDescriptorsDAO");
+const PositionDAO           = require("../db/positionDAO");
+const SKUitemDAO            = require("../db/skuItemDAO");
 
 /* INITIALIZATION */
-const router            = express.Router();
-const dao               = new DAO();
-const skuController     = new SKUController(dao);
+const router                = express.Router();
+const dao                   = new DAO();
+const skuDAO                = new SKUDAO(dao);
+const testDescriptorsDAO    = new TestDescriptorsDAO(dao);
+const positionDAO           = new PositionDAO(dao);
+const skuItemDAO            = new SKUitemDAO(dao);
+const skuController         = new SKUController(skuDAO, testDescriptorsDAO, positionDAO, skuItemDAO);
 
 /* --------- ERROR MESSAGES --------- */
 const ERROR_404 = {error: '404 Not Found'};

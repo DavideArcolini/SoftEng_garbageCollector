@@ -134,7 +134,7 @@ class SKUDAO {
     /**
      * Update the positionID of a SKU given its id
      * ---------------------------------------------------
-     * @param {String} positionID 
+     * @param {Number} id 
      * @param {String} newPositionID 
      */
     updateSKUpositionID = async (id, newPositionID) => {
@@ -150,8 +150,6 @@ class SKUDAO {
         }).catch((error) => {
             throw new Error(error.message);
         });
-
-        return result;
     }
 
     /**

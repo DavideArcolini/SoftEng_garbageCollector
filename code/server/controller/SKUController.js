@@ -30,11 +30,11 @@ class SKUController {
      * Constructor of the class
      * @param {DAO Object} generalPurposeDAO 
      */
-    constructor (generalPurposeDAO) {
-        this.skuDAO             = new SKUDAO(generalPurposeDAO);
-        this.testDescriptorsDAO = new TestDescriptorsDAO(generalPurposeDAO);
-        this.positionDAO        = new PositionDAO(generalPurposeDAO);
-        this.skuItemDAO         = new SKUitemDAO(generalPurposeDAO);
+    constructor (skuDAO, testDescriptorsDAO, positionDAO, skuItemDAO) {
+        this.skuDAO             = skuDAO;
+        this.testDescriptorsDAO = testDescriptorsDAO;
+        this.positionDAO        = positionDAO;
+        this.skuItemDAO         = skuItemDAO;
     }
 
     /** 

@@ -29,9 +29,9 @@ class SKUitemController {
      * Constructor of the class
      * @param {DAO Object} generalPurposeDAO 
      */
-    constructor (generalPurposeDAO) {
-        this.skuItemDAO = new SKUitemDAO(generalPurposeDAO);
-        this.skuDAO     = new SKUDAO(generalPurposeDAO);
+    constructor (skuItemDAO, skuDAO) {
+        this.skuItemDAO = skuItemDAO;
+        this.skuDAO     = skuDAO;
     }
 
     /** 

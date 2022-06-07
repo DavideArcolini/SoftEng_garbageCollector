@@ -27,9 +27,9 @@ class PositionController {
      * Constructor of the class
      * @param {Object} generalPurposeDAO 
      */
-    constructor (generalPurposeDAO) {
-        this.positionDAO    = new PositionDAO(generalPurposeDAO);
-        this.skuDAO         = new SKUDAO(generalPurposeDAO);
+    constructor (positionDAO, skuDAO) {
+        this.positionDAO    = positionDAO;
+        this.skuDAO         = skuDAO;
     }
 
 
@@ -109,6 +109,9 @@ class PositionController {
                 const volume = sku.volume;
                 const availableQuantity = sku.availableQuantity;
                 if ((weight * availableQuantity) > body.newMaxWeight || (volume * availableQuantity) > body.newMaxVolume) {
+                    // console.log((weight * availableQuantity) > body.newMaxWeight);
+                    // console.log((volume * availableQuantity) > body.newMaxVolume);
+
                     return ERROR_422;
                 }
             }
