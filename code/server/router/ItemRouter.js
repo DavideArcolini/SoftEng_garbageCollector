@@ -1,16 +1,24 @@
 "use strict";
-const express = require('express'); //inseriamo express
-const router = express.Router(); //funzione di express come app
-const TDController = require('../controller/ItemController');//richiama il modulo e lo inserisce in variabile
-const DAO = require("../db/DAO")//richiama database
-const dao = new DAO();//nuovo database
-const i = new TDController(dao);//chiama il controller
 
-
+/* IMPORT MODULES */
+const IController = require('../controller/ItemController');
+const DAO = require("../db/DAO");
+const express = require('express'); 
 const { validationHandler } = require("../validator/validationHandler");
 const { param }             = require('express-validator');
 const { header }            = require('express-validator');
 const { body }              = require('express-validator');
+
+/* INITIALIZATION */
+
+const dao = new DAO();
+const i = new IController(dao);
+const router = express.Router(); 
+
+/* --------- ERROR MESSAGES --------- */
+const ERROR_404 = {error: '404 Not Found'};
+const ERROR_500 = {error: 'Internal Server Error'};
+const ERROR_503 = {error: 'Service Unavailable'};
 
 
 
@@ -31,11 +39,12 @@ router.get(
     ],
     validationHandler,
     async (req,res)=>{
-        const result= await  i.getItems();
-        if(result==500){
-            return res.status(500).json();
-        }else{
-            return res.status(200).json(result);
+        try {
+            const result= await  i.getItems();
+            return res.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(ERROR_500);
         }
     }
 );
@@ -58,13 +67,12 @@ router.get(
     ],
     validationHandler,
     async (req,res)=>{
-        const result= await  i.getItemById(req.params);
-        if(result==404){
-            return res.status(404).json();
-        }else if(result==500){
-            return res.status(500).json();
-        }else{
-            return res.status(200).json(result);
+        try {
+            const result= await  i.getItemById(req.params);
+            return res.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(ERROR_500);
         }
     }
 );
@@ -96,15 +104,12 @@ router.post(
     ],
     validationHandler,
     async (req,res)=>{
-        const result= await i.createItem(req.body);
-        if(result===404){
-            return res.status(404).json();
-        }else if(result===500){
-            return res.status(500).json();
-        }else if(result===422){
-            return res.status(422).json();
-        }else{
-            return res.status(201).json();
+        try {
+            const result= await i.createItem(req.body);
+            return res.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return res.status(503).json(ERROR_503);
         }
     }
 );
@@ -131,13 +136,12 @@ router.put(
     ],
     validationHandler,
     async (req,res)=>{
-        const result = await  i.modifyItem(req.body, req.id);
-        if(result==200){ //PUT success, no body
-            return res.status(200).json();
-        }else if(result==404){
-            return res.status(404).json();
-        }else if(result==503){
-            return res.status(503).json();
+        try {
+            const result = await  i.modifyItem(req.body, req.params);
+            return res.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return res.status(503).json(ERROR_503);
         }
     }
 );
@@ -160,13 +164,12 @@ router.delete(
     ],
     validationHandler,
     async (req,res)=>{
-        const result= await  i.deleteItem(req.params);
-        if(result==404){
-            return res.status(404).json();
-        }else if(result==503){
-            return res.status(503).json();
-        }else if(result==204){
-            return res.status(204).json();
+        try {
+            const result= await  i.deleteItem(req.params);
+            return res.status(result.code).json(result.message);
+        } catch (error) {
+            console.log(error);
+            return res.status(503).json(ERROR_503);
         }
     }   
 );

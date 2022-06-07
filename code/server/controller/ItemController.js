@@ -1,128 +1,130 @@
 "use strict";
 
+
+
+/* --------- IMPORT MODULES --------- */
+const SKUDAO        = require("../db/skuDAO");
+const testDescriptorDAO=require("../db/testDescriptorsDAO");
+const itemDAO        = require("../db/itemDAO");
+
+/* --------- ERROR MESSAGES --------- */
+const MESSG_200 = {code: 200, message: 'Ok'}
+const MESSG_201 = {code: 201, message: 'Created'};
+const MESSG_204 = {code: 204, message: 'No Content'};
+const ERROR_404 = {code: 404, message: 'Not Found'};
+const MESSG_422 = {code: 422, message: 'Unprocessable entity'};
+
+
 class ItemController {
-    constructor(daoi) {
-        this.daoi = daoi
+    constructor(generalPurposeDAO) {
+        this.skuDAO     = new SKUDAO(generalPurposeDAO);
+        this.testDescriptorDAO= new testDescriptorDAO(generalPurposeDAO);
+        this.itemDAO     = new itemDAO(generalPurposeDAO);
     }
     
     getItems = async () =>{ 
 
         try{
             //search on DB
-            let sql = "SELECT * FROM ITEMS";
-            let result = await this.daoi.all(sql);
-            
-            return result;
-            
+            const items = await this.itemDAO.getItems();
+            return {
+                code: 200,
+                message: items
+            };
+  
         }catch{
-            return 500;
+            throw error;
         }
     }
 
 
-    getItemById = async (req) => { 
+    getItemById = async (params) => { 
+        
+        const targetId=params.id;
 
         try {
-
-            //Find the item
-            //let sql = "SELECT * FROM ITEMS WHERE id==? AND supplierId==? "
-            let sql = "SELECT * FROM ITEMS WHERE id=(?)"
-            let result = await this.daoi.get(sql,[req.id]);
-
-            //Item doesn't exist
-            if(result==undefined){
-                return 404;
-            }
-
-            //deliver json file
-            return result;
+            //search on DB
+            const item = await this.itemDAO.getItemById(targetId);
+            if(item === undefined){
+                return ERROR_404
+            }else if(item.SKUId==null){
+                item.SKUId=1;
+                return {code: 200, message: item};
+            }else{
+                return{code: 200, message: item};
+            } 
+            
         } catch (error) {
-            return 500;
+            throw error;
         }
     }
 
 
-    createItem = async (json) => {
+    createItem = async (body) => {
         
         try {
-            //See if SKUId exist
-            let sql = "SELECT * FROM SKUS WHERE id == ?"
-            let result = await this.daoi.get(sql, [json.SKUId]);
-
-            //SKUID doesn't exist
-            if(result === undefined){
-                return 404;
+            /* checking if SKUid actually exists */
+            const sku = await this.skuDAO.getSKUByID(body.SKUId);
+            if (sku === undefined) {
+                return ERROR_404;
             }
             
-            //Search if supplier already sell another item with same id
-            sql = "SELECT * FROM ITEMS WHERE Id == ? AND supplierId == ?"
-            let search = await this.daoi.get(sql,[json.id,json.supplierId]);
-            if(search!==undefined ){  
-                return 422;
-            } 
+             /* checking  if supplier already sell another item with same id */ 
+             let item = await this.itemDAO.getItemBySupId(body.id, body.supplierId);
+             if (item !== undefined) {
+                 return MESSG_422;
+             }
 
-            //Search if supplier already sell another item with same SKUId
-            sql = "SELECT * FROM ITEMS WHERE SKUId == ? AND supplierId == ?"
-            search = await this.daoi.get(sql,[json.SKUId,json.supplierId]);
-            if(search!==undefined ){  
-                return 422;
-            } 
+             /* checking  if supplier already sell another item with same SKUId */
+             item = await this.itemDAO.getItemBySupSKUID(body.SKUId, body.supplierId);
+             if (item !== undefined) {
+                 return MESSG_422;
+             }
 
 
-            //database immission 
-            sql = "INSERT INTO ITEMS(id,description, price, SKUId, supplierId) VALUES(?,?,?,?,?)";
-            await this.daoi.run(sql,[json.id, json.description, json.price, json.SKUId, json.supplierId]);
+             /* creating item in the DB */
+            await this.itemDAO.createItem(body);
+            return MESSG_201;
 
-            return 201;
         } catch (error) {
-            return 503;
+            throw error;
         }
     }
 
 
-    modifyItem = async(json,id) => { 
+    modifyItem = async(body,params) => { 
+
+        const targetId=params.id;
         
         try{
-            //Find if item exist
-            let sql = "SELECT * FROM ITEMS WHERE ITEMS.id == ?"
-            let result = await this.daoi.get(sql, [id]);
+            /* checking  if exist item with same id */ 
+            let item = await this.itemDAO.getItemById(targetId);
+            if (item === undefined) {
+                return ERROR_404;
+            }
 
-            //Item doesn't exist
-            // console.log(result);
-            // if(result === undefined){
-            //     return 404;
-            // }
-
-            //Update the object if found
-            sql = `UPDATE ITEMS SET description=(?), price=(?) WHERE id==?`;
-            result = await this.daoi.run(sql,[json.newDescription,json.newPrice, id]);
-            return 200;
+            /* update item */
+            await this.itemDAO.modifyItem(targetId, body);
+            return MESSG_200;
         }
         catch(error){
-            return 503;
+            throw error;
         }
 }
 
 
 
-    deleteItem = async (req) => {
+    deleteItem = async (params) => {
+
+        const targetId=params.id;
+
         try{
 
-            //Find if the item exist
-            let sql = "SELECT * FROM ITEMS WHERE id=(?)"
-            let result = await this.daoi.get(sql,[req.id]);
-
-            //Item doesn't exist
-            if(result==undefined){
-                return 404;
-            }
-
-            //delete item
-            sql = "DELETE FROM ITEMS WHERE id=(?)";
-            result = await this.daoi.run(sql,[req.id]);
-            return 204;
+            /* accessing DB through DAO */
+            await this.itemDAO.deleteItem(targetId);
+            return MESSG_204;
         }catch(error){
-            return 503;
+            throw error;
         }
     }
   

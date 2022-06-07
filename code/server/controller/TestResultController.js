@@ -1,180 +1,177 @@
 "use strict";
 
+/* --------- IMPORT MODULES --------- */
+const SKUitemDAO    = require("../db/skuItemDAO");
+const SKUDAO        = require("../db/skuDAO");
+const testDescriptorDAO=require("../db/testDescriptorsDAO");
+const testResultDAO=require("../db/testResultDAO");
+
+/* --------- ERROR MESSAGES --------- */
+const MESSG_200 = {code: 200, message: 'Ok'}
+const MESSG_201 = {code: 201, message: 'Created'};
+const MESSG_204 = {code: 204, message: 'No Content'};
+const ERROR_404 = {code: 404, message: 'Not Found'};
+
+
+
+
+
 class TestResultController {
-    constructor(daotr) {
-        this.daotr = daotr
+    constructor(generalPurposeDAO) {
+        this.skuItemDAO = new SKUitemDAO(generalPurposeDAO);
+        this.skuDAO     = new SKUDAO(generalPurposeDAO);
+        this.testDescriptorDAO= new testDescriptorDAO(generalPurposeDAO);
+        this.testResultDAO= new testResultDAO(generalPurposeDAO);
     }
 
  
-    getTestResults = async (req) =>{
+    getTestResults = async (params) =>{
+
+        const targetRFID=params.rfid
 
         try{
-
-            //Find the RFID
-            let sql = "SELECT * FROM SKUITEMS WHERE RFID==?"
-            const existrfid = await this.daotr.get(sql,req.rfid);
-
-            //RFID doesn't exist
-            if(existrfid==undefined){
-                return 404;
+            /* check if SKUitem exists */
+            const skuitem = await this.skuItemDAO.getSKUitemByRFID(targetRFID);
+            if (skuitem === undefined) {
+                return ERROR_404;
             }
 
-            //Search on DB
-            sql = "SELECT id, idTestDescriptor, Date, Result FROM TEST_RESULTS WHERE rfid==?";
-            let result = await this.daotr.all(sql,req.rfid);
+            const testresults = await this.testResultDAO.getTestResults(targetRFID);
 
             //If empty return empty otherwisechange result 
-            if(result[0]==undefined){
-                return result;
+            if(testresults[0]==undefined){
+                return {
+                    code: 200,
+                    message: testresults
+                };
             }else{
-                result.map((object)=>{object.Result==0 ? object.Result=false :object.Result=true})
-                return result;
+                testresults.map((object)=>{object.Result==0 ? object.Result=false :object.Result=true})
+                return {
+                    code: 200,
+                    message: testresults
+                };
             }
 
         }catch(error){
-            return 500;
+            throw error;
         }
     }
 
 
-    getTestResultById = async (req) => {
+    getTestResultById = async (params) => {
 
+        const targetRFID=params.rfid
+        const targetId=params.id
         try{
-            //Find the RFID
-            let sql = "SELECT * FROM SKUITEMS WHERE RFID==?"
-            const testarray = await this.daotr.all(sql,req.rfid);
-
-            //RFID doesn't exist
-            if(testarray[0]==undefined){
-                return 404;
+            /* check if SKUitem exists */
+            const skuitem = await this.skuItemDAO.getSKUitemByRFID(targetRFID);
+            if (skuitem === undefined) {
+                return ERROR_404;
             }
-
-            //Search the ID
-            sql = "SELECT id, idTestDescriptor, Date, Result FROM TEST_RESULTS WHERE rfid==? AND id==?";
-            let result = await this.daotr.get(sql,[req.rfid,req.id]);
-
-            //ID doesn't exist
-            if(result==undefined){
-                return 404;
+            //check for null return or to modify the result(why SQL can't have boolean);
+            let testresult = await this.testResultDAO.getTestResultById(targetId,targetRFID);
+            if(testresult === undefined){
+                return ERROR_404;
+            }else{
+                testresult.Result==0 ? testresult.Result=false : testresult.Result=true;
+                return  {code: 200, message: testresult}
             }
-
-            //Deliver json file 
-            result.Result==0 ? result.Result=false : result.Result=true;
-            return result;
 
         }catch(error){
-            return 500
+            throw error;
         }
     }
 
 
 
-    createTestResult = async (req) => {
+    createTestResult = async (body) => {
+
+        const targetRFID=body.rfid;
+        const targetID=body.idTestDescriptor;
         
         try{
-             //Control of RFID
-            let sql ="SELECT * FROM SKUITEMS WHERE RFID==?"
-            let result = await this.daotr.get(sql,req.rfid);
-
-            //RFID doesn't exist
-            if(result==undefined){
-                return 404;
+            /* check if SKUitem exists */
+            const skuitem = await this.skuItemDAO.getSKUitemByRFID(targetRFID);
+            if (skuitem === undefined) {
+                return ERROR_404;
             }
 
-            //Control of idtest
-            sql ="SELECT * FROM TEST_DESCRIPTORS WHERE id==?"
-            result = await this.daotr.get(sql,[req.idTestDescriptor]);
-
-            //idTest doesn't exist
-            if (result== undefined){
-                return 404;
+            /* check if test descriptor exists */
+            const testdescriptor = await this.testDescriptorDAO.getTestDescriptorById(targetID);
+            if (testdescriptor === undefined) {
+                return ERROR_404;
             }
 
-            //Database immission
-            sql = "INSERT INTO TEST_RESULTS(rfid, idTestDescriptor, Date, Result) VALUES(?,?,?,?)";
-            await this.daotr.run(sql,[req.rfid, req.idTestDescriptor, req.Date, req.Result]);
+            /* creating new testreult in the DB */
+            await this.testResultDAO.createTestResult(body);
+            return MESSG_201;
 
-            return 201;
             }catch(error){
-                return 503;
+                throw error;
             }
     }
 
 
 
-    modifyTestResult = async(req1,req2) => {
+    modifyTestResult = async(params,body) => {
+
+        const targetRFID=params.rfid
+        const targetID=params.id
 
         try{
-            //Control of RFID
-            let sql ="SELECT * FROM SKUITEMS WHERE RFID==?"
-            let result = await this.daotr.get(sql,req1.rfid);
-
-            //RFID doesn't exist in general
-            if(result==undefined){
-                return 404;
-            }
-
-            //Control of idtest
-            sql ="SELECT * FROM TEST_DESCRIPTORS WHERE id==?"
-            result = await this.daotr.get(sql,req2.newIdTestDescriptor);
-
-            //idTest doesn't exist
-            if(result==undefined){
-                return 404;
-            }
+             /* check if SKUitem exists */
+             const skuitem = await this.skuItemDAO.getSKUitemByRFID(targetRFID);
+             if (skuitem === undefined) {
+                 return ERROR_404;
+             }
  
-            //Find all the test with that RFID
-            sql = "SELECT * FROM TEST_RESULTS WHERE rfid==? "
-            const testarray = await this.daotr.all(sql,req1.rfid);
-
-            //RFID doesn't exist (don't have a test result)
-            if(testarray[0]==undefined){
-                return 404;
+             /* check if test descriptor exists */
+             const testdescriptor = await this.testDescriptorDAO.getTestDescriptorById(targetID);
+             if (testdescriptor === undefined) {
+                 return ERROR_404;
+             }
+ 
+            //Find all the test with that RFID and ID
+            const testresult = await this.testResultDAO.getTestResultById(targetID,targetRFID);
+            if (testresult === undefined) {
+                return ERROR_404;
             }
 
-            //Search the ID
-            result=testarray.filter((test)=>(test.id==req1.id));
-
-            //ID doesn't exist
-            if(result[0]==undefined){
-                return 404;
-            }
-
-            //Update the object if found
-            sql = "UPDATE TEST_RESULTS SET IdtestDescriptor=?, Date=?, Result=?  WHERE id==?";
-            result = await this.daotr.run(sql,[req2.newIdTestDescriptor, req2.newDate, req2.newResult, req1.id]);
-            return 200;
+             /* update SKUitem */
+             await this.testDescriptorDAO.modifyTestDescriptor(targetID, body);
+             return MESSG_200;
 
             }catch(error){
-                return 503;
+                throw error;
             }
-}
+    }
 
 
 
-    deleteTestResult = async (req) => {
+    deleteTestResult = async (params) => {
+
+        const targetRFID=params.rfid;
+        const targetId=params.id;
 
         try{
-            //Find the RFID
-            let sql = "SELECT * FROM TEST_RESULTS WHERE rfid==? AND id==? "
-            let result = await this.daotr.all(sql,[req.rfid,req.id]);
-
-            //RFID doesn't exist
-            if(result[0]==undefined){
-                return 404;
+            /* check if SKUitem exists */
+            const skuitem = await this.skuItemDAO.getSKUitemByRFID(targetRFID);
+            if (skuitem === undefined) {
+                return ERROR_404;
             }
 
-            //Delete the object because it exists
-            sql = "DELETE FROM TEST_RESULTS WHERE rfid==? AND id==?";
-            result = await this.daotr.run(sql,[req.rfid, req.id]);
-            return 204;
+             /* accessing DB through DAO */
+             await this.testResultDAO.deleteTestResult(targetId);
+             return MESSG_204;
+
         }catch(error){
-            return 503;
+            throw error;
         }
     }
   
 
 }
+
 
 module.exports = TestResultController;
 
