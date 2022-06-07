@@ -1,6 +1,8 @@
 "use strict";
 
 const sqlite = require('sqlite3');
+const bcrypt        = require('bcrypt');
+const saltRounds    = 10;
 
 class DAO {
     static db;
@@ -30,7 +32,7 @@ class DAO {
         // this.dropTablePositions();
         // this.dropTableSKUItems();
         // this.dropTableTD();
-        //this.dropTableTR();
+        // this.dropTableTR();
         // this.dropTableI();
     }
 
@@ -46,9 +48,8 @@ class DAO {
         return new Promise((resolve, reject) => {
           this.db.run(sql, params, function (err) {
             if (err) {
-              console.log('Error running sql ' + sql)
-              console.log(err)
-              reject(err)
+              // console.log('Error running sql ' + sql)
+              reject(err);
             } else {
               resolve({ id: this.lastID })
             }
@@ -60,8 +61,7 @@ class DAO {
         return new Promise((resolve, reject) => {
           this.db.get(sql, params, (err, result) => {
             if (err) {
-              console.log('Error running sql: ' + sql)
-              console.log(err)
+              // console.log('Error running sql: ' + sql)
               reject(err)
             } else {
               resolve(result)
@@ -74,8 +74,7 @@ class DAO {
         return new Promise((resolve, reject) => {
           this.db.all(sql, params, (err, rows) => {
             if (err) {
-              console.log('Error running sql: ' + sql)
-              console.log(err)
+              // console.log('Error running sql: ' + sql)
               reject(err)
             } else {
               resolve(rows)
@@ -190,10 +189,10 @@ class DAO {
       return new Promise((resolve, reject) => {
         // const query_SQL = `CREATE TABLE IF NOT EXISTS POSITIONS(positionID INTEGER PRIMARY KEY, aisleID INTEGER, row INTEGER, col INTEGER, maxWeight FLOAT, maxVolume FLOAT, occupiedWeight FLOAT, occupiedVolume FLOAT)`;
         const query_SQL = "CREATE TABLE IF NOT EXISTS POSITIONS (                         \
-                              positionID              INTEGER,                            \
-                              aisleID                 INTEGER,                            \
-                              row                     INTEGER,                            \
-                              col                     INTEGER,                            \
+                              positionID              TEXT,                               \
+                              aisleID                 TEXT,                               \
+                              row                     TEXT,                               \
+                              col                     TEXT,                               \
                               maxWeight               FLOAT,                              \
                               maxVolume               FLOAT,                              \
                               occupiedWeight          FLOAT,                              \
@@ -254,18 +253,6 @@ class DAO {
         });
     });
   }
-  deleteAllRestockOrders(){
-    return new Promise((res, rej) => {
-      const sql = "DELETE FROM RESTOCK_ORDERS";
-      this.db.run(sql, (err)=>{
-          if (err) {
-              rej(err);
-              return;
-          }
-          res(this.lastID);
-      });
-    });
-  }
   
   /**
      * ========================
@@ -296,18 +283,6 @@ class DAO {
             }
             res(this.lastID);
         });
-    });
-  }
-  deleteAllReturnOrders(){
-    return new Promise((res, rej) => {
-      const sql = "DELETE FROM RETURN_ORDERS";
-      this.db.run(sql, (err)=>{
-          if (err) {
-              rej(err);
-              return;
-          }
-          res(this.lastID);
-      });
     });
   }
 
@@ -342,18 +317,6 @@ class DAO {
         });
     });
 }
-deleteAllInternalOrders(){
-  return new Promise((res, rej) => {
-    const sql = "DELETE FROM INTERNAL_ORDERS";
-    this.db.run(sql, (err)=>{
-        if (err) {
-            rej(err);
-            return;
-        }
-        res(this.lastID);
-    });
-  });
-}
 
   /**
   * ========================
@@ -363,8 +326,52 @@ deleteAllInternalOrders(){
   *  - dropTableUser(): drop the users table.
   */
   newTableUsers() {
-    return new Promise((res, rej)=>{
-      const sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR, PRIMARY KEY(id)) ";
+
+    let users = [{
+      username: "manager1@ezwh.com",
+      name: "Dave",
+      surname: "Grohl",
+      type: "manager",
+      password: "testpassword"
+    },
+    {
+      username: "customer1@ezwh.com",
+      name: "Davide",
+      surname: "Arcolini",
+      type: "customer",
+      password: "testpassword"
+    },
+    {
+      username: "qualityEmployee1@ezwh.com",
+      name: "Simran",
+      surname: "Singh",
+      type: "qualityEmployee",
+      password: "testpassword"
+    },
+    {
+      username: "clerk1@ezwh.com",
+      name: "Riccardo",
+      surname: "Medina",
+      type: "clerk",
+      password: "testpassword"
+    },
+    {
+      username: "deliveryEmployee1@ezwh.com",
+      name: "Maurizio",
+      surname: "Morisio",
+      type: "deliveryEmployee",
+      password: "testpassword"
+    },
+    {
+      username: "supplier1@ezwh.com",
+      name: "Luca",
+      surname: "Ardito",
+      type: "supplier",
+      password: "testpassword"
+    }
+  ]
+    return new Promise(async (res, rej)=>{
+      let sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER, username VARCHAR, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR, PRIMARY KEY(id)) ";
       this.db.run(sql, (err)=>{
         if (err) {
           rej(err);
@@ -372,6 +379,26 @@ deleteAllInternalOrders(){
           }
         res(this.lastID);
       });
+
+      let manager = {
+        username: "manager1@ezwh.com",
+        name: "Dave",
+        surname: "Grohl",
+        type: "manager",
+        password: "testpassword"
+      }
+      sql = "INSERT OR IGNORE INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
+      users.forEach(async (e) => {
+        let hash = await bcrypt.hash(e.password, saltRounds);
+        this.db.run(sql, [e.username, e.name, e.surname, hash, e.type], (err)=>{
+          if (err) {
+            rej(err);
+              return;
+            }
+          res(this.lastID);
+        });
+      })
+
     });
   }
   
@@ -400,7 +427,6 @@ deleteAllInternalOrders(){
       });
     });
   }
-
 
 
  /**

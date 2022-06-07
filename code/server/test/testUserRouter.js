@@ -2,7 +2,8 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 chai.should();
-const dao = require("../db/userDAO");
+const DAO = require("../db/DAO");
+const dao = new DAO();
 
 const app = require('../server');
 var agent = chai.request.agent(app);

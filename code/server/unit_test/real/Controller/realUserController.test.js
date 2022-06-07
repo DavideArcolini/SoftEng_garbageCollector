@@ -1,7 +1,7 @@
 "use strict";
 
-const UserController = require("../../controller/UserController");
-const dao = require("../../db/userDAO")
+const UserController = require("../../../controller/UserController");
+const dao = require("../../../db/userDAO")
 const user = new UserController(dao);
 const bcrypt        = require('bcrypt');
 
@@ -15,38 +15,25 @@ const bcrypt        = require('bcrypt');
  *            GET /api/users
  *  =================================================
  */
+
 describe('get users', () => {
     beforeAll( async () => {
-        await dao.deleteAllUsers()
+        await dao.deleteAllUsers();
         await dao.createUser(
             "ciccio1@ezwh.com", 
             "Ciccio",
             "Pasticcio",
             "testpassword",
-            "customer" ),
-        await dao.createUser(
-            "joe@ezwh.com", 
-            "Joe",
-            "Biden",
-            "testpassword",
-            "clerk"
-        )
+            "customer" );
     })
     
-    getStoredUsers_TEST("Get user ok", [
+    getStoredUsers_TEST("Get users ok", [
         {
-            id: 1,
+            id: 7,
             email: "ciccio1@customer.ezwh.com", 
             name: "Ciccio",
             surname: "Pasticcio",
             type: "customer"
-        },
-        {
-        id: 2,
-        email: "joe@clerk.ezwh.com", 
-        name: "Joe",
-        surname: "Biden",
-        type: "clerk"
         }
     ])
 
@@ -174,31 +161,31 @@ describe('get user', () => {
  *  =================================================
  */
 describe('edit user', () => {
+    let to_test = { 
+        username: "mj@ezwh.com", 
+        name: "Mary",
+        surname: "Jane",
+        password: "testpassword",
+        type: "supplier"
+    };
     beforeAll(async() => {
         await dao.deleteAllUsers()
-        let to_test = { 
-            username: "mj@ezwh.com", 
-            name: "Mary",
-            surname: "Jane",
-            password: "testpassword",
-            type: "supplier"
-        };
         await dao.createUser(to_test.username, to_test.name, to_test.surname, to_test.password, to_test.type)
     })
 
     //  200
     editUser_TEST("edited ok",
     {
-        "oldType" : "clerk",
+        "oldType" : "supplier",
         "newType" : "qualityEmployee"
     },
-    "mj@ezwh.com",200)
+    to_test.username,200)
 
     editUser_TEST("user not found",{
     "oldType" : "clerk",
     "newType" : "qualityEmployee"
     },
-    "user2@ezwh.com",404)
+    to_test.username,404)
 
     editUser_TEST("bad request", undefined, "mj@ezwh.com", 503)
 
@@ -232,8 +219,6 @@ describe('delete user', () => {
     })
 
     deleteUser_TEST("bad request", undefined, 503)
-    deleteUser_TEST("username not found", {type: "supplier", username : "pippo@ezwh.com"}, 503)
-    deleteUser_TEST("type didn't match with user", {type: "clerk", username : "mj@ezwh.com"}, 503)
     deleteUser_TEST("deleted ok", {type: "supplier", username : "mj@ezwh.com"}, 204)
 })
 
