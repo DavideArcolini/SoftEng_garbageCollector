@@ -105,8 +105,11 @@ describe('new item', () => {
 
 
     after(async() => {
-        let sql="DELETE FROM ITEMS"
-        await dao.run(sql)
+        // let sql="DELETE FROM ITEMS"
+        // await dao.run(sql)
+        await agent.delete(`/api/items/12`).then(async (response) => {
+            response.should.have.status(204);
+        });
         await agent.delete(`/api/skuitems/90000000000000000000000000000002`).then(async (response) => {
             response.should.have.status(204);
         });
