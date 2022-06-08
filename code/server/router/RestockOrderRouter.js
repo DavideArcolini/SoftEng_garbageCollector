@@ -117,8 +117,8 @@ router.get(
     validationHandler,
     async(req,res)=>{
         try{
-        let result = await roc.getReturnItems(req.params.id);
-        return res.status(result.code).end(result.message);
+        let result = await roc.getReturnItems(req.params.id)
+        return res.status(result.code).json(result.message);
         }catch(error){
             return res.status(500).end();
         }

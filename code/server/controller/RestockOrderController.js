@@ -210,6 +210,7 @@ class RestockOrderController {
     }
     
     getReturnItems = async(id) => {
+
   
         try{
             let restockOrder = await this.roDAO.getRestockOrderById(id);
@@ -235,11 +236,9 @@ class RestockOrderController {
                 }
                
             })
-            
             return {code: 200, message: result};
 
         }catch(error){
-        
             throw error;
         }
     }

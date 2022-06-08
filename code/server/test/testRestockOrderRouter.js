@@ -528,7 +528,7 @@ setSkuItems();
       res.body.should.be.a('array');
       let id = res.body[res.body.length-1].id;
       await agent.get('/api/restockOrders/'+id+'/returnItems').then(function(res){
-      res.should.have.status(200);
+        res.should.have.status(200);
 
       })
     })
@@ -542,7 +542,7 @@ setSkuItems();
       await agent.put('/api/restockOrder/'+id).send({newState: 'DELIVERY'}).then(async(res)=>{
         res.should.have.status(200);
       await agent.get('/api/restockOrders/'+id+'/returnItems').then(function(res){
-      res.should.have.status(422);
+        res.should.have.status(422);
       })
       })
     })
