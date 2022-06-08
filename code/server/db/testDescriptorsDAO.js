@@ -32,29 +32,6 @@
          + -------------------- +
      */
      
-     /**
-      * Retrieves the TestDescriptors ID of a particular SKU identified by SKUid
-      * ------------------------------------------------------------------------
-      * @returns an Array object containing all TestDescriptors ID associated to 
-      *          a specific SKUid.
-      */
-    getTDIDbySKUid = async (SKUid) => {
-        const querySQL = "SELECT TD.id FROM TEST_DESCRIPTORS TD WHERE TD.idSKU == ?";
-        return this.dao.all(
-            querySQL,
-            [
-                SKUid
-            ]
-        ).then((result) => {
-            let resultArray = []
-            result.map((item) => {
-                resultArray.push(item.id);
-            });
-            return resultArray;
-        }).catch((error) => {
-            throw new Error(error.message);
-        });
-    }
 
     /**
       * Retrieves the TestDescriptors 
