@@ -12,7 +12,8 @@
 
 | Version number | Change |
 | ----------------- |:-----------|
-| 1.0 | Added first version of Unit Test Report document. | 
+| 1.0 | Added first version of Unit Test Report document. |
+| 1.1 | Modifications due to the separation in Controllers and DAOs |
 
 # Contents
 
@@ -22,7 +23,7 @@
 
 # Black Box Unit Tests
 
-- [Class UserController](#class-usercontroller)
+- [Class UserDAO](#class-userdao)
 - [Class PositionController](#class-positioncontroller)
 - [Class SKUitemController](#class-skuitemcontroller)
 - [Class SKUController](#class-skucontroller)
@@ -33,60 +34,16 @@
 - [Class TestDescriptorController](#class-testdescriptorcontroller)
 - [Class TestResultController](#class-testresultcontroller)
 
-## **Class UserController**
+## **Class UserDAO**
 
-### Class *UserController* - method **getStoredUsers**
+### **Class *UserDAO* - method *createUser***
 
-**Criteria for method *getStoredUsers:***
-
-- Database is reachable
-
-**Predicates for method *getStoredUsers*:**
-
-| Criteria | Predicate |
-| -------- | --------- |
-| Database is reachable | Yes |
-|                       | No|
-
-**Combination of predicates**:
-
-Please note: There are users in the database
-
-| Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|
-| Yes | Valid | `getStoredUsers_TEST()` terminates retrieving the expected list of users | `function`<br> getStoredUsers_TEST(name, expected) |
-| No | Invalid | `getStoredUsers_TEST()` catch 500 and terminates with that error| `function`<br> getStoredUsers_TEST(name, expected) |
-
-### Class *UserController* - method **getSuppliers**
-
-**Criteria for method *getSuppliers:***
-
-- Database is reachable
-
-**Predicates for method *getSuppliers*:**
-
-| Criteria | Predicate |
-| -------- | --------- |
-| Database is reachable | Yes |
-|                       | No|
-
-**Combination of predicates**:
-
-Please note: There are users in the database
-
-| Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|
-| Yes | Valid | `getSuppliers_TEST()` terminates retrieving the expected list of users | `function`<br> getSuppliers_TEST(name, expected) |
-| No | Invalid | `getSuppliers_TEST()` catch 500 and terminates with that error| `function`<br> getSuppliers_TEST(name, expected) |
-
-### **Class *UserController* - method *newUser***
-
-**Criteria for method *newUser*:**
+**Criteria for method *createUser*:**
 
 - req is not empty
 - `username` is *unique* in the database
 
-**Predicates for method *newUser*:**
+**Predicates for method *createUser*:**
 
 | Criteria | Predicate |
 | -------- | --------- |
@@ -100,12 +57,11 @@ Please note: There are users in the database
 
 | req not empty | `username` is *unique* in the database | Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|
-| Valid | True | Valid | `newUser_TEST()` terminates with 201 | `function`<br>newUser_TEST("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, 201)|
-| Valid | False | Invalid | `newUser_TEST()` terminates with 409 | `function`<br>newUser_TEST("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, 201) <br><br>newUser_TEST("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, 409) |
-| undefined | undefined | Invalid | `newUser_TEST()` terminates with 503 | `function`<br>newUser_TEST("bad request", undefined, 503)|
+| Valid | True | Valid | `testNewUser()` terminates correctly | `function`<br>testNewUser("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, undefined)|
+| Valid | False | Invalid | `testNewUser()` throws `Error` | `function`<br>testNewUser("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, `Error`) |
+| undefined | undefined | Invalid | `testNewUser()` throws `Error` | `function`<br>testNewUser("failed", undefined, `Error`)|
 
-
-### **Class *UserController* - method *getUser***
+### **Class *UserDAO* - method *getUser***
 
 **Criteria for method *getUser*:**
 
@@ -142,20 +98,18 @@ User already exists in the db:
 
 | `username` is *unique* in the database | `password` valid | req not empty | Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|-------|
-| True | Yes | Yes | Valid | `getUser_TEST()` terminates returning the exact expected value | `function`<br>getUser_TEST("ok",<br>{username: "mj@ezwh.com",<br>password: "testpassword"},<br>{id:1,<br>username: "mj@ezwh.com",<br>name: "Mary"}) |
-| True | No | Yes | Invalid | `getUser_TEST()` terminates with 401 | `function`<br>getUser_TEST("wrong password", {id:1, username: "mj@ezwh.com", password: "ciaociao"}, 401) -> failed|
-| False | Yes | Yes | Invalid | `getUser_TEST()` terminates with 401 | `function`<br>getUser_TEST("wrong username", {id:1, username: "customer1@ezwh.com", password: "testpassword"}, 401) |
-| undefined | undefined | undefined | Invalid | `getUser_TEST()` terminates with `undefined`| `function`<br>getUser_TEST("bad request", undefined, undefined) |
+| True | Yes | Yes | Valid | `testGetUser()` terminates returning the exact expected value | `function`<br>testGetUser("login", {username : user.username,<br> type: user.type}, <br>{id:1, <br>username: user.username, <br>name: user.name}) |
+| True | Yes | Yes | Valid | `testGetUser()` terminates returning the exact expected value | `function`<br>testGetUser("get user", {username: user.username}, <br>{id:1, <br>username: user.username, <br>name: user.name}) |
+| True | Undefined | No | Invalid | `testGetUser()` throws `Error` | `function`<br>testGetUser("failed", undefined, `Error`) -> failed|
 
-### **Class *UserController* - method *editUser***
+### **Class *UserDAO* - method *modifyPermissions***
 
-**Criteria for method *editUser*:**
+**Criteria for method *modifyPermissions*:**
 
 - `username` exists in the database
-- req not empty
-- param not empty
+- `req` not empty
 
-**Predicates for method *editUser*:**
+**Predicates for method *modifyPermissions*:**
 
 | Criteria | Predicate |
 | -------- | --------- |
@@ -164,38 +118,27 @@ User already exists in the db:
 |          | undefined |
 | req not empty | Yes |
 |          | No |
-| param not empty | Yes |
-|          | No |
-
+||undefined|
 **Combination of predicates**:
 
-| `username` exists in the database | req not empty | param not empty | Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|-------|-------|
-| True | Yes | Yes | Valid | `editUser_TEST()` terminates with 200 | `function`<br>editUser_TEST("edited ok", {<br>"oldType" : "clerk",<br>"newType" : "qualityEmployee"},<br>"mj@ezwh.com",200) |
-| False | Yes | Yes | Invalid | `editUser_TEST()` terminates with 404 | `function`<br>editUser_TEST("user not found",{<br>"oldType" : "clerk",<br>"newType" : "qualityEmployee"},<br>"user2@ezwh.com",404) |
-| undefined | No | No | Invalid | `editUser_TEST()` terminates with 503 | `function`<br>editUser_TEST("bad request", undefined, "mj@ezwh.com", 503)|
-| undefined | No | No | Invalid |`editUser_TEST()` terminates with 503 | `function`<br>editUser_TEST("bad request", {"oldType" : "clerk",<br>"newType" : "qualityEmployee"},<br>undefined, 503) |
+| `username` exists in the database | req not empty | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|
+| True | Yes | Valid | `testModifyPermissions()` retrieve the exact value expected | `function`<br>testModifyPermissions('modified successfully', <br>{username: user.username, <br>oldType: user.type, <br>newType: "clerk"}, <br>{id:1}) |
+| False | Yes | Invalid | `testModifyPermissions()` terminates with `undefined` | `function` testModifyPermissions('modification failed', {}, undefined) |
+| False | No | Invalid | `testModifyPermissions()` throws `Error` | `function` testModifyPermissions('modification failed', undefined, `Error`) |
 
-### **Class *UserController* - method *deleteUser***
+### **Class *UserDAO* - method *removeUser***
 
-**Criteria for method *deleteUser*:**
+**Criteria for method *removeUser*:**
 
-- `username` exists in the database
-- `type` corresponds to inserted user
-- param not empty
+- `req` not empty
 
 **Predicates for method *name*:**
 
 | Criteria | Predicate |
 | -------- | --------- |
-| `username` exists in the database | True |
-|          | False |
-|          | undefined |
-| `type` corresponds to inserted user | True |
+| `req` not empty | True |
 || False |
-|| undefined |
-| param not empty | Yes |
-|          | No |
 
 **Combination of predicates**:
 
@@ -210,15 +153,14 @@ User already inserted:
 }
 ```
 
-| `username` exists in the database | `type` corresponds to inserted user | param not empty | Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|-------|-------|
-| True | True | Yes | Valid | `deleteUser_TEST()` terminates with 204 | `function`<br> deleteUser_TEST("deleted ok", {type: "supplier", username : "mj@ezwh.com"}, 204)|
-| True | False | Yes | Invalid | `deleteUser_TEST()` terminates with 503 | `function`<br> deleteUser_TEST("type didn't match with user", {type: "clerk", username : "mj@ezwh.com"}, 503)|
-| False | True | Yes | Invalid |  `deleteUser_TEST()` terminates with 503 | `function`<br> deleteUser_TEST("username not found", {type: "supplier", username : "pippo@ezwh.com"}, 503)|
-| undefined | undefined | No | Invalid | `deleteUser_TEST()` terminates with 503 | `function`<br> deleteUser_TEST("bad request", undefined, 503)|
+| `req` is not empty | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|
+| True  | Valid | `testRemoveUser()` terminates successfully | `function`<br> testRemoveUser("remove successfully", {<br> username: "mj@ezwh.com", <br> type: "supplier"}, <br> undefined)|+
+| False | Invalid | `testRemoveUser()` throws `Error` | `function`<br>testRemoveUser("failed", undefined, Error) |
 
-## **Class PositionController**
-### **Class *PositionController* - method *getPositions()***
+
+## **Class PositionDAO**
+### **Class *PositionDAO* - method *getPositions()***
 **Criteria for method *getPositions()*:**
  - Database is reachable
 
@@ -232,8 +174,29 @@ User already inserted:
 **Combination of predicates**:
 | Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|
-| *true* | valid |`getPositions_TEST()` terminates with <br>`{code: 200}`|`function` <br>`getPositions_TEST(describe_NAME, expectedResult)`|
-|*false*|invalid|`getPositions_TEST()` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}`|`function` <br>`getPositions_TEST(describe_NAME, expectedResult)`|
+| *true* | valid |`testGetPositions_REAL()` receives an `Array` object of positions and **passes the test**|`function` <br>`testGetPositions_REAL(testName, expectedResult)`|
+|*false*|invalid|`testGetPositions_REAL()` catch `Error` and **fails the test**|`function` <br>`testGetPositions_REAL(describe_NAME, expectedResult)`|
+
+
+### **Class *PositionDAO* - method *getPositionByID()***
+**Criteria for method *getPositionByID()*:**
+ - Database is reachable
+
+**Predicates for method *getPositionByID()*:**
+
+| Criteria              | Predicate |
+| :--------:            | :---------: |
+| Database is reachable | *true* |
+|                       | *false*|
+
+**Combination of predicates**:
+| Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|
+| *true* | valid |`testGetPositionByID_REAL()` receives position object correspoinding to `positionID` and **passes the test**|`function` <br>`testGetPositionByID_REAL(testName, positionID, expectedResult)`|
+|*false*|invalid|`testGetPositionByID_REAL()` catch `Error` and **fails the test**|`function` <br>`testGetPositionByID_REAL(describe_NAME, positionID, expectedResult)`|
+
+
+
 
 ### **Class *PositionController* - method *newPosition()***
 **Criteria for method *newPosition()*:**
@@ -251,10 +214,10 @@ User already inserted:
 **Combination of predicates**:
 | Database is reachable |`positionID` is *unique* in the database| Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|:-------:|
-| *true* |*true*| valid |`newPosition_TEST()` terminates with <br>`{code: 201, message: "CREATED"}` |`function` <br>`newPosition_TEST(describe_NAME, request, expectedResult)`|
-| *true* |*false*| invalid |`newPosition_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`newPosition_TEST(describe_NAME, request, expectedResult)`|
-| *false* |*true*| invalid |`newPosition_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`newPosition_TEST(describe_NAME, request, expectedResult)`|
-| *false* |*false*| invalid |`newPosition_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`newPosition_TEST(describe_NAME, request, expectedResult)`|
+| *true* |*true*| valid |`testNewPosition_REAL()` terminates with <br>`{code: 201, message: "CREATED"}` |`function` <br>`testNewPosition_REAL(describe_NAME, request, expectedResult)`|
+| *true* |*false*| invalid |`testNewPosition_REAL()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`testNewPosition_REAL(describe_NAME, request, expectedResult)`|
+| *false* |*true*| invalid |`testNewPosition_REAL()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`testNewPosition_REAL(describe_NAME, request, expectedResult)`|
+| *false* |*false*| invalid |`testNewPosition_REAL()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`testNewPosition_REAL(describe_NAME, request, expectedResult)`|
 
 
 ### **Class *PositionController* - method *editPosition()***
@@ -1888,12 +1851,12 @@ User already inserted:
 
 | Unit name | Jest test case |
 |--|--|
-| Class **UserController.js** method `getStoredUsers()` | `getStoredUsers_TEST()` |
-| Class **UserController.js** method `getSuppliers()` | `getSuppliers_TEST()` |
-| Class **UserController.js** method `newUser()` | `newUser_TEST()` |
-| Class **UserController.js** method `getUser()` | `getUser_TEST()` |
-| Class **UserController.js** method `editUser()` | `editUser_TEST()` |
-| Class **UserController.js** method `deleteUser()` | `deleteUser_TEST()` |
+| Class **UserDAO.js** method `getStoredUsers()` | `getStoredUsers_TEST()` |
+| Class **UserDAO.js** method `getSuppliers()` | `getSuppliers_TEST()` |
+| Class **UserDAO.js** method `createUser()` | `testNewUser()` |
+| Class **UserDAO.js** method `getUser()` | `testGetUser()` |
+| Class **UserDAO.js** method `modifyPermissions()` | `testModifyPermissions()` |
+| Class **UserDAO.js** method `removeUser()` | `testRemoveUser()` |
 | Class **PositionController.js** method `getPositions()` | `getPositions_TEST()` |
 | Class **PositionController.js** method `newPosition()` | `newPosition_TEST()` |
 | Class **PositionController.js** method `editPosition()` | `editPosition_TEST()` |
