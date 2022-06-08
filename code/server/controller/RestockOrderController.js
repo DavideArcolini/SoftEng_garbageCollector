@@ -35,7 +35,7 @@ class RestockOrderController {
     createRestockOrder = async (issueDate,supplierId,products) => {
 
         try{
-            console.log(JSON.stringify(issueDate, supplierId, products))
+            
             await this.roDAO.createRestockOrder(issueDate,supplierId,products);
             return MESSG_201;
         }
@@ -107,7 +107,7 @@ class RestockOrderController {
             try{
             /* retrieve the restock order associated to the ID */
             const restockOrder = await this.roDAO.getRestockOrderById(id);
-            if(restockOrder ===undefined || restockOrder.length===0){
+            if(restockOrder.length===0){
                 return ERROR_404;
             }
             
@@ -157,7 +157,7 @@ class RestockOrderController {
         try{
             /* check if the restock order exists */
             let result = await this.roDAO.getRestockOrderById(id)
-            if(result===undefined || result.length===0){
+            if(result.length===0){
                 return ERROR_404;
             }
             /* modify state */
@@ -174,7 +174,7 @@ class RestockOrderController {
 
         try{
             let restockOrder = await this.roDAO.getRestockOrderById(id);
-            if(restockOrder==null || restockOrder.length===0){
+            if(restockOrder.length===0){
                 return ERROR_404;
             }
 
@@ -194,7 +194,7 @@ class RestockOrderController {
     addTransportNote = async(id,transportNote) => {
         try{
             let restockOrder = await this.roDAO.getRestockOrderById(id);
-            if(restockOrder==null || restockOrder.length===0){
+            if(restockOrder.length===0){
                 return ERROR_404;
             }
             if(restockOrder[0].state!=="DELIVERY" || dayjs(transportNote.deliveryDate).isBefore(dayjs(restockOrder[0].issueDate))) {
@@ -203,7 +203,6 @@ class RestockOrderController {
             await this.roDAO.addTransportNote(id,transportNote);
             return MESSG_200;
         }catch(error){
-            console.log("PORCA"+error.message)
             throw error;
         }
 
@@ -214,7 +213,7 @@ class RestockOrderController {
   
         try{
             let restockOrder = await this.roDAO.getRestockOrderById(id);
-            if(restockOrder==null || restockOrder.length===0){
+            if(restockOrder.length===0){
                 return ERROR_404;
             }
 

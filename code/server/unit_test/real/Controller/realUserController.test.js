@@ -5,6 +5,9 @@ const dao = require("../../../db/userDAO")
 const user = new UserController(dao);
 const bcrypt        = require('bcrypt');
 
+
+const GeneralPurposeDAO = require('../../../db/DAO');
+const generalPurposeDAO = new GeneralPurposeDAO()
 /*
     Actual Testing
     =================================================
@@ -17,24 +20,36 @@ const bcrypt        = require('bcrypt');
  */
 
 describe('get users', () => {
-    beforeAll( async () => {
-        await dao.deleteAllUsers();
+    beforeAll(async () => {
+        const querySQL = "DELETE FROM USERS";
+        await generalPurposeDAO.run(querySQL);
+
         await dao.createUser(
             "ciccio1@ezwh.com", 
             "Ciccio",
             "Pasticcio",
             "testpassword",
-            "customer" );
-    })
+            "customer"
+        );
+    });
+    // beforeAll( async () => {
+    //     await dao.deleteAllUsers();
+    //     await dao.createUser(
+    //         "ciccio1@ezwh.com", 
+    //         "Ciccio",
+    //         "Pasticcio",
+    //         "testpassword",
+    //         "customer" );
+    // })
     
     getStoredUsers_TEST("Get users ok", [
-        {
-            id: 7,
-            email: "ciccio1@customer.ezwh.com", 
-            name: "Ciccio",
-            surname: "Pasticcio",
-            type: "customer"
-        }
+        // {
+        //     id: 7,
+        //     email: "ciccio1@customer.ezwh.com", 
+        //     name: "Ciccio",
+        //     surname: "Pasticcio",
+        //     type: "customer"
+        // }
     ])
 
     afterAll(async() => {
