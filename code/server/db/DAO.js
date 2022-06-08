@@ -377,7 +377,7 @@ class DAO {
     sql = "INSERT OR IGNORE INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
     users.forEach(async (e) => {
       let hash = await bcrypt.hash(e.password, saltRounds);
-      this.db.run(sql, [e.username, e.name, e.surname, hash, e.type], (err)=>{
+      await this.db.run(sql, [e.username, e.name, e.surname, hash, e.type], (err)=>{
         if (err) throw new Error();
       });
     })
