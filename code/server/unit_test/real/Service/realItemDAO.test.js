@@ -180,7 +180,7 @@ afterAll(async() => {
 
 
 //200
-modyfyItem("success",tis2,tis[0].id,tis1);
+modifyItem("success",tis2,tis[0].id,tis1);
 
 })
 
@@ -341,7 +341,7 @@ test(name, async () => {
 }
 
 
-function modyfyItem(name,expected,id,json){
+function modifyItem(name,expected,id,json){
 
 
 test(name, async () => {

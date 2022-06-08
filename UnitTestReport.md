@@ -25,10 +25,10 @@
 
 - [Class UserDAO](#class-userdao)
 - [Class PositionDAO](#class-positiondao)
-- [Class SKUitemController](#class-skuitemcontroller)
-- [Class SKUDAO](#class-sku_DAO)
-- [Class InternalOrderController](#class-internalordercontroller)
-- [Class ItemController](#class-itemcontroller)
+- [Class SKUitemDAO](#class-skuitemdao)
+- [Class SKUDAO](#class-skudao)
+- [Class InternalOrderDAO](#class-internalorderdao)
+- [Class ItemDAO](#class-itemdao)
 - [Class RestockOrderController](#class-restockordercontroller)
 - [Class ReturnOrderController](#class-returnordercontroller)
 - [Class TestDescriptorController](#class-testdescriptorcontroller)
@@ -350,7 +350,7 @@ User already inserted:
 | *true* | valid |`testGetSKUitemsByRFID_REAL()` receive an `Array` of SKUitems objects and **passes the test** |`function` <br>`testGetSKUitemsByRFID_REAL(testName, RFID, expectedResult)`|
 |*false*| invalid |`testGetSKUitemsByRFID_REAL()` catches `Error` and **fails the test** |`function` <br>`testGetSKUitemsByRFID_REAL(testName, RFID, expectedResult)`|
 
-### **Class *SKUitemController* - method *newSKUitem()***
+### **Class *SKUitemDAO* - method *newSKUitem()***
 **Criteria for method *newSKUitem()*:**
  - Database is reachable
  - `SKUid` *exists* in the database
@@ -376,7 +376,7 @@ User already inserted:
 | *false* | */* |*/*| invalid |`newSKUitem_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`newSKUitem_TEST(describe_NAME, request, expectedResult)`|
 
 
-### **Class *SKUitemController* - method *updateSKUitem()***
+### **Class *SKUitemDAO* - method *updateSKUitem()***
 **Criteria for method *updateSKUitem()*:**
  - Database is reachable
  - `RFID` *exists* in the database
@@ -398,7 +398,7 @@ User already inserted:
 | *false* | */* | invalid |`updateSKUitem_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`updateSKUitem_TEST(describe_NAME, params, request, expectedResult)`|
 
 
-### **Class *SKUitemController* - method *deleteSKUitem()***
+### **Class *SKUitemDAO* - method *deleteSKUitem()***
 **Criteria for method *deleteSKUitem()*:**
  - Database is reachable
 
@@ -415,9 +415,9 @@ User already inserted:
 | *true* | valid |`deleteSKUitem_TEST()` terminates with <br>`{code: 204, message: "No Content"}`|`function` <br>`deleteSKUitem_TEST(describe_NAME, params, expectedResult)`|
 | *false* | invalid |`deleteSKUitem_TEST()` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`deleteSKUitem_TEST(describe_NAME, params, expectedResult)`|
 
-## **Class SKU_DAO**
+## **Class SKUDAO**
 
-### **Class *SKU_DAO* - method *getSKUByID()***
+### **Class *SKUDAO* - method *getSKUByID()***
 
 **Criteria for method *getSKUByID()*:**
  - Database is reachable
@@ -438,7 +438,7 @@ User already inserted:
 | *true* |*true*| valid |`testGetSKUByID_REAL()` terminates with the expected value |`function` <br>`testGetSKUByID_REAL('- Success: ', 1, skusTestArray[0]);`|
 | *true* |*false*| invalid |`testGetSKUByID_REAL()` terminates with <br>`undefined`|`function` <br>`testGetSKUByID_REAL('- Success: ', 1, undefined);`|
 
-### **Class *SKU_DAO* - method *newSKU()***
+### **Class *SKUDAO* - method *newSKU()***
 **Criteria for method *newSKU()*:**
  - Database is reachable
 
@@ -455,7 +455,7 @@ User already inserted:
 | *true* | valid |`testNewSKU_REAL()` terminates with expected array |`function` <br>`testNewSKU_REAL('- Success: ', {description: "A new SKU", weight: 100, volume: 100, notes: "First SKU", price: 10.99, availableQuantity: 1}, {id: 1});`|
 | *false* | Invalid | `testNewSKU_REAL()` throws `Error` | `function` <br> `testNewSKU_MOCK('- Database error: ', skusTestArray[0], Error);` |
 
-### **Class *SKU_DAO* - method *updateSKU()***
+### **Class *SKUDAO* - method *updateSKU()***
 **Criteria for method *updateSKU()*:**
  - Database is reachable
  - `SKUid` *exists* in the database
@@ -479,7 +479,7 @@ User already inserted:
 | *true* | *false* | */* | invalid |`testUpdateSKU_REAL()` terminates with the expected value |`function` <br>`testUpdateSKU_REAL(testName, ID, skuObject, expectedResult)`|
 | *false* | */* | */* | invalid |`testUpdateSKU_REAL()` throws `Error`|`function` <br>`testUpdateSKU_MOCK(testName, ID, skuObject, expectedResult)`|
 
-### **Class *SKU_DAO* - method *updateSKUpositionID()***
+### **Class *SKUDAO* - method *updateSKUpositionID()***
 
 **Criteria for method *updateSKUpositionID()*:**
  - Database is reachable
@@ -509,7 +509,7 @@ User already inserted:
 | *true* | *false* | *true* | *true* | *true* | valid |`testUpdateSKUpositionID_REAL()` terminates with the expected value |`function` <br>`testUpdateSKUpositionID_REAL(testName, ID, newPositionID, expectedResult)` |
 | *false* | */* | */* | */* | */* | invalid |`testUpdateSKUpositionID_REAL()` throws `Error` |`function` <br>`testUpdateSKUpositionID_MOCK(testName, ID, newPositionID, expectedResult)`|
 
-### **Class *SKU_DAO* - method *deleteSKU()***
+### **Class *SKUDAO* - method *deleteSKU()***
 
 **Criteria for method *deleteSKU()*:**
 
@@ -536,7 +536,7 @@ User already inserted:
 `function` <br>`testDeleteSKU_REAL(testName, ID, expectedResult)`|
 | *false* | */* | */* | invalid |`testDeleteSKU_REAL()` throws `Error` |`function` <br>`testDeleteSKU_MOCK(testName, ID, expectedResult)`|
 
-## **Class InternalOrderController**
+## **Class InternalOrderDAO**
 
 **Criteria for method *getInternalOrders*:**
 
@@ -552,72 +552,10 @@ User already inserted:
 
 | Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|
-| *true* | valid |`getInternalOrders(expected)` returns <br>an array of the internal orders retrieved |`function` <br>`getInternalOrders(expected)`|
+| *true* | valid |`getInternalOrders(expected)` returns <br>an array of the internal orders retrieved |`function` <br> `getInternalOrders(expected)`|
 |*false*|invalid|`getInternalOrders(expected)` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}`|`function` <br>`getInternalOrders(expected)`|
 
-
-### **Class *InternalOrderController* - method *getInternalOrdersIssued***
-
-
-
-**Criteria for method *getInternalOrdersIssued*:**
-    
- - Database is reachable
-
-
-
-
-
-**Predicates for method *getInternalOrdersIssued*:**
-
-| Criteria              | Predicate |
-| :--------:            | :---------: |
-| Database is reachable | *true* |
-|                       | *false*|
-
-
-
-**Combination of predicates**:
-
-
-| Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
-|:-------:|:-------:|:-------:|:-------:|
-| *true* | valid |`getInternalOrdersIssued(expected)` returns <br>an array of the internal orders retrieved |`function` <br>`getInternalOrdersIssued(expected)`|
-|*false*|invalid|`getInternalOrdersIssued(expected)` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}`|`function` <br>`getInternalOrdersIssued(expected)`|
-
-
-### **Class *InternalOrderController* - method *getInternalOrdersAccepted***
-
-
-
-**Criteria for method *getInternalOrdersAccepted*:**
-    
- - Database is reachable
-
-
-
-
-
-**Predicates for method *getInternalOrdersAccepted*:**
-
-| Criteria              | Predicate |
-| :--------:            | :---------: |
-| Database is reachable | *true* |
-|                       | *false*|
-
-
-
-
-**Combination of predicates**:
-
-
-| Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
-|:-------:|:-------:|:-------:|:-------:|
-| *true* | valid |`getInternalOrdersAccepted(expected)` returns <br>an array of the internal orders retrieved |`function` <br>`getInternalOrdersAccepted(expected)`|
-|*false*|invalid|`getInternalOrdersAccepted(expected)` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}`|`function` <br>`getInternalOrdersAccepted(expected)`|
-
-
-### **Class *InternalOrderController* - method *getInternalOrderById***
+### **Class *InternalOrderDAO* - method *getInternalOrderById***
 
 
 
@@ -638,16 +576,7 @@ User already inserted:
 | internal order associated to the `id` *exists* in the database|*true*|
 ||*false*|
 
-
-
-
-
-
-
-
-
 **Combination of predicates**:
-
 
 | Database reachable | `id` *exists* in the database | Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|:-------:|
@@ -655,10 +584,10 @@ User already inserted:
 | *true* | *false* | invalid | `getInternalOrderById` terminates with <br>`{message: "Not Found"}`|  `function` <br> `getInternalOrderById(req,expected)` |
 | *false* | */* | invalid | `getInternalOrderById` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}` | `function` <br>` getInternalOrderById(req,expected)` |
 
-### **Class *InternalOrderController* - method *createInternalOrder***
+### **Class *InternalOrderDAO* - method *createInternalOrder***
 
 
-### **Class *InternalOrderController* - method *createInternalOrder***
+### **Class *InternalOrderDAO* - method *createInternalOrder***
 
 
 
@@ -702,7 +631,7 @@ User already inserted:
 
 
 
-### **Class *InternalOrderController* - method *modifyInternalOrderState***
+### **Class *InternalOrderDAO* - method *modifyInternalOrderState***
 
 
 
@@ -755,7 +684,7 @@ User already inserted:
 
 
 
-### **Class *InternalOrderController* - method *deleteInternalOrder***
+### **Class *InternalOrderDAO* - method *deleteInternalOrder***
 
 
 
@@ -774,64 +703,21 @@ User already inserted:
 | Database is reachable | *true* |
 |                       | *false*|
 
-
-
-
-
 **Combination of predicates**:
-
 
 | Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|
 | *true* | valid |`deleteInternalOrder(req)` return the `id` of the internal order deleted successfully|`function` <br>`deleteInternalOrder(req)`|
 | *false* | invalid |`deleteInternalOrder(req)` catch `TypeError` and terminates with <br>`{code: 503, message: "Unprocessable Entity"}`|`function` <br>`deleteInternalOrder(req)`|
 
-## **Class ItemController**
-### **Class *ItemController* - method *getItems***
+## **Class ItemDAO**
 
-
-
-**Criteria for method *getItems*:**
-    
-
- - Database is reachable
-
-
-
-
-**Predicates for method *getItems*:**
-
-| Criteria | Predicate |
-| -------- | --------- |
-|  DB is reachable        | true          |
-|          |    false       |
-
-
-
-
-**Combination of predicates**:
-
-
-| DB is reachable  | Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|
-|true|valid|getItems() terminates with results returned|function getItems([{id:1,description : "a new item",price : 10.99, SKUId : 1, supplierId : 2},{id:2, description : "another item", price : 12.99, SKUId : 2, supplierId : 1}]) |
-|false|invalid|getItems() catches an error and return 500 |function getItems(500)|
-
-
-
-### **Class *ItemController*- method *getItemById***
-
-
+### **Class *ItemDAO*- method *getItemById***
 
 **Criteria for method *getItemById*:**
-    
 
- - Database is reachable  
- - id is unique in the DB
-
-
-
-
+- Database is reachable  
+- id is unique in the DB
 
 **Predicates for method *getItemById*:**
 
@@ -842,34 +728,20 @@ User already inserted:
 |    id exists in the DB      |     true      |
 |          |    false       |
 
-
-
 **Combination of predicates**:
-
 
 | DB is reachable | Id exists in the DB |  Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|------|-------|-------|
-|true|true|     valid                   |getItemById() terminates with result returned|function getItemById({id: 1},{id:1, description :"a new item", price : 10.99, SKUId : 1, supplierId : 2})|
-|true|false|invalid                     |getItemById() fails on id check and return 404 |function getItemById({id: 2}, 404)|
-|false|true|     invalid                           |getItemById() catches an error and return 500|function getItemById(undefined, 500)|
-|false|true|            invalid                    |getItemById() catches an error and return 500|function getItemById(undefined, 500)|
+|true|true| valid | `getItemById()` terminates with the expected value|`function`<br>`getItemById(name,id,expected)` | `getItemById()` throws `Error` |`function` <br> `getItemById(name,id,expected)` |
 
-### **Class *ItemController*- method *createItem***
-
-
+### **Class *ItemDAO*- method *createItem***
 
 **Criteria for method *createItem*:**
-    
 
  - Database is reachable
  - SKUId exists in database
  - supplier doesn't sell same id
  - supplier doesn't sell same SKUid
-
-
-
-
-
 
 **Predicates for method *createItem*:**
 
@@ -891,26 +763,15 @@ User already inserted:
 
 | DB is reachable | SKUId exists in the DB|supplier doesn't sell same id|supplier doesn't sell same SKUId| Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|-------|-------|
-|true|true|true|true|valid|createItem() terminates with 201|function createItem( 201, {id : 12, description : "a new item", price : 10.99, SKUId : 25, supplierId : 2})|
-|true|true|true|false|invalid|createItem() fails on SKUid check|function createItem( 404, {  id : 12, description : "a new item", price : 10.99,  SKUId : 30,  supplierId : 2})|
-|true|true|false|/|invalid|createItem() fails on id check|function createItem(422, { id : 13, description : "a new item", price : 10.99, SKUId : 28, supplierId : 2})|
-|true|false|/|/|invalid|createItem() fails on SKUId check|function createItem( 404, {  id : 12, description : "a new item", price : 10.99, SKUId : 30, supplierId : 2})|
-|false|/|/|/|invalid|createItem() catches an error and return 503|function createItem(503, undefined)|
+|true|true|true|true|valid|`createItem()` terminates with the expected value |`function`<br> `createItem(name,expected,json)`|
+|false|/|/|/|invalid| `createItem()` throws `Error` | `function`<br>  `createItem(name,expected,json)`|
 
-### **Class *ItemController*- method *modifyItem***
-
-
+### **Class *ItemDAO*- method *modifyItem***
 
 **Criteria for method *modifyItem*:**
-    
 
- - Database is reachable
- - id exists in the database
-
-
-
-
-
+- Database is reachable
+- id exists in the database
 
 **Predicates for method *modifyItem*:**
 
@@ -921,31 +782,18 @@ User already inserted:
 |  id exists in the DB        |   true        |
 |          |    false       |
 
-
-
-
 **Combination of predicates**:
-
 
 | DB is reachable | id exists in the DB | Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|
-|true|true|valid|modifytestDescriptor() terminates with 200|function modifyItem(200, { newDescription : "a new sku", newPrice : 10.99}, {id: 13})|
-|true|false|invalid|modifyItem() fails on id search|function modifyItem(404,{ newDescription : "a new sku", newPrice : 10.99}, {id: 12})
-|false|/|invalid|modifyItem() catches an error and return 503|function modifyItem(503, undefined, undefined)|
+|true|true|valid|`modifyItem()` terminates with 200|`function` `modifyItem(name,expected,id,json)`|
+|false|/|invalid| `modifyItem()` throws `Error` | `function` `modifyItem(name,expected,id,json)`|
 
-### **Class *ItemController*- method *deleteItem***
-
-
+### **Class *ItemDAO*- method *deleteItem***
 
 **Criteria for method *deleteItem*:**
-    
 
- - Database is reachable
- - 
-
-
-
-
+- Database is reachable
 
 **Predicates for method *deleteItem*:**
 
@@ -954,33 +802,20 @@ User already inserted:
 |     DB is reachable     |      true     |
 |          |    false       |
 
-
-
-
-
 **Combination of predicates**:
-
 
 | DB is reachable|Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|
-|true|valid|deleteItem() terminates with 204|function deleteItem(204,{id: 13})|
-|false|invalid|deleteItem catches an error and return 503|function deleteItem(503,undefined)|
-
+|true|valid| `deleteItem()` terminates with expected value |`function` <br> `deleteItem(name,expected,id)`|
+|false|invalid| `deleteItem()` throws `Error`|`function` <br> `deleteItem(name,expected,id)`|
 
 ## **Class RestockOrderController**
 
-
 ### **Class *RestockOrderController* - method *getRestockOrders***
 
-
-
 **Criteria for method *getRestockOrders*:**
-    
- - Database is reachable
 
-
-
-
+- Database is reachable
 
 **Predicates for method *getRestockOrders*:**
 
@@ -989,31 +824,18 @@ User already inserted:
 | Database is reachable | *true* |
 |                       | *false*|
 
-
-
-
-
 **Combination of predicates**:
-
-
 
 | Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|
 | *true* | valid |`getRestockOrders(expected)` returns <br>an array of the restock orders retrieved |`function` <br>`getRestockOrders(expected)`|
 |*false*|invalid|`getRestockOrders(expected)` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}`|`function` <br>`getRestockOrders(expected)`|
 
-
 ### **Class *RestockOrderController* - method *getRestockOrdersIssued***
 
-
-
 **Criteria for method *getRestockOrdersIssued*:**
-    
- - Database is reachable
 
-
-
-
+- Database is reachable
 
 **Predicates for method *getRestockOrdersIssued*:**
 
@@ -1028,17 +850,13 @@ User already inserted:
 |:-------:|:-------:|:-------:|:-------:|
 | *true* | valid |`getRestockOrdersIssued(expected)` returns <br>an array of the restock orders issued retrieved |`function` <br>`getRestockOrdersIssued(expected)`|
 |*false*|invalid|`getRestockOrders(expected)` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}`|`function` <br>`getRestockOrdersIssued(expected)`|
+
 ### **Class *RestockOrderController* - method *getRestockOrderById***
 
-
-
 **Criteria for method *getRestockOrderById*:**
-- Database is reachable 
+
+- Database is reachable
 - restock order associated to the `id` *exists* in the db
-
-
-
-
 
 **Predicates for method *getRestockOrderById*:**
 
@@ -1049,16 +867,7 @@ User already inserted:
 | restock order associated to the `id` *exists* in the database|*true*|
 ||*false*|
 
-
-
-
-
-
-
-
-
 **Combination of predicates**:
-
 
 | Database reachable | `id` *exists* in the database | Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|:-------:|
@@ -1066,27 +875,14 @@ User already inserted:
 | *true* | *false* | invalid | `getRestockOrderById` terminates with <br>`{message: "Not Found"}`|  `function` <br> `getRestockOrderById(req,expected)` |
 | *false* | */* | invalid | `getRestockOrderById` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}` | `function` <br>` getRestockOrderById(req,expected)` |
 
-
-
-
-
-
-
-
-
 ### **Class *RestockOrderController* - method *createRestockOrder***
 
-
-
 **Criteria for method *createRestockOrder*:**
-    
+
 - Database is reachable
 - `issueDate` saved in the db as expected
 - `supplierId` saved in the db as expected
 - `products` saved in the db as expected
-
-
-
 
 **Predicates for method *createRestockOrder*:**
 
@@ -1101,11 +897,7 @@ User already inserted:
 | `products` | *true* |
 |                       | *false*|
 
-
-
-
 **Combination of predicates**:
-
 
 | Database is reachable | `issueDate` | `supplierId` | `products` | Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
@@ -1117,16 +909,11 @@ User already inserted:
 
 ### **Class *RestockOrderController* - method *modifyRestockOrderState***
 
-
-
 **Criteria for method *modifyRestockOrderState*:**
-    
+
  - Database is reachable
  - internal order associated to the `id`  *exists* in the database
- - `newState` 
-
-
-
+ - `newState`
 
 **Predicates for method *modifyRestockOrderState*:**
 
@@ -1143,11 +930,7 @@ User already inserted:
 | |"COMPLETEDRETURN"|
 | |"COMPLETED"|
 
-
-
-
 **Combination of predicates**:
-
 
 | Database is reachable |`id` *exists* in the database| `newState` | Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
@@ -1816,23 +1599,23 @@ User already inserted:
 | Class **UserDAO.js** method `getUser()` | `testGetUser()` |
 | Class **UserDAO.js** method `modifyPermissions()` | `testModifyPermissions()` |
 | Class **UserDAO.js** method `removeUser()` | `testRemoveUser()` |
-| Class **PositionController.js** method `getPositions()` | `getPositions_TEST()` |
-| Class **PositionController.js** method `newPosition()` | `newPosition_TEST()` |
-| Class **PositionController.js** method `editPosition()` | `editPosition_TEST()` |
-| Class **PositionController.js** method `editPositionID()` | `editPositionID_TEST()` |
-| Class **PositionController.js** method `deletePosition()` | `deletePosition_TEST()` |
-| Class **SKUitemController.js** method `getSKUitems()` | `getSKUitems_TEST()` |
-| Class **SKUitemController.js** method `getSKUitemsBySKUId()` | `getSKUitemsBySKUId_TEST()` |
-| Class **SKUitemController.js** method `getSKUitemsByRFID()` | `getSKUitemsByRFID_TEST()` |
-| Class **SKUitemController.js** method `newSKUitem()` | `newSKUitem_TEST()` |
-| Class **SKUitemController.js** method `updateSKUitem()` | `updateSKUitem()` |
-| Class **SKUitemController.js** method `deleteSKUitem()` | `deleteSKUitem_TEST()` |
-| Class **SKU_DAO.js** method `getSKUs()` | `testGetSKUs_REAL()` |
-| Class **SKU_DAO.js** method `getSKUByID()` | `testGetSKUByID_REAL()` |
-| Class **SKU_DAO.js** method `newSKU()` | `testNewSKU_REAL()` |
-| Class **SKU_DAO.js** method `updateSKU()` | `testUpdateSKU_REAL()` |
-| Class **SKU_DAO.js** method `updateSKUpositionID()` | `testUpdateSKUpositionID_REAL()` |
-| Class **SKU_DAO.js** method `deleteSKU()` | `testDeleteSKU_REAL()` |
+| Class **PositionDAO.js** method `getPositions()` | `getPositions_TEST()` |
+| Class **PositionDAO.js** method `newPosition()` | `newPosition_TEST()` |
+| Class **PositionDAO.js** method `editPosition()` | `editPosition_TEST()` |
+| Class **PositionDAO.js** method `editPositionID()` | `editPositionID_TEST()` |
+| Class **PositionDAO.js** method `deletePosition()` | `deletePosition_TEST()` |
+| Class **SKUitemDAO.js** method `getSKUitems()` | `getSKUitems_TEST()` |
+| Class **SKUitemDAO.js** method `getSKUitemsBySKUId()` | `getSKUitemsBySKUId_TEST()` |
+| Class **SKUitemDAO.js** method `getSKUitemsByRFID()` | `getSKUitemsByRFID_TEST()` |
+| Class **SKUitemDAO.js** method `newSKUitem()` | `newSKUitem_TEST()` |
+| Class **SKUitemDAO.js** method `updateSKUitem()` | `updateSKUitem()` |
+| Class **SKUitemDAO.js** method `deleteSKUitem()` | `deleteSKUitem_TEST()` |
+| Class **SKUDAO.js** method `getSKUs()` | `testGetSKUs_REAL()` |
+| Class **SKUDAO.js** method `getSKUByID()` | `testGetSKUByID_REAL()` |
+| Class **SKUDAO.js** method `newSKU()` | `testNewSKU_REAL()` |
+| Class **SKUDAO.js** method `updateSKU()` | `testUpdateSKU_REAL()` |
+| Class **SKUDAO.js** method `updateSKUpositionID()` | `testUpdateSKUpositionID_REAL()` |
+| Class **SKUDAO.js** method `deleteSKU()` | `testDeleteSKU_REAL()` |
 | Class **RestockOrderController.js** method `createRestockOrder()` | `createRestockOrder()` |
 | Class **RestockOrderController.js** method `getRestockOrderById()` | `getRestockOrderById()` |
 | Class **RestockOrderController.js** method `getRestockOrders()` | `getRestockOrders()` |
@@ -1841,21 +1624,21 @@ User already inserted:
 | Class **RestockOrderController.js** method `addTransportNote()` | `addTransportNote()` |
 | Class **RestockOrderController.js** method `setSkuItems()` | `addSkuItems()` |
 | Class **RestockOrderController.js** method `deleteRestockOrder()` | `deleteRestockOrder()` |
-| Class **InternalOrderController.js** method `createInternalOrder()` | `createInternalOrder()` |
-| Class **InternalOrderController.js** method `getInternalOrders()` | `getInternalOrders()` |
-| Class **InternalOrderController.js** method `getInternalOrdersIssued()` | `getInternalOrdersIssued()` |
-| Class **InternalOrderController.js** method `getInternalOrdersAccepted()` | `getInternalOrdersAccepted()` |
-| Class **InternalOrderController.js** method `modifyInternalOrderState()` | `modifyInternalOrderState()` |
-| Class **InternalOrderController.js** method `deleteInternalOrder()` | `deleteInternalOrder()` |
+| Class **InternalOrderDAO.js** method `createInternalOrder()` | `createInternalOrder()` |
+| Class **InternalOrderDAO.js** method `getInternalOrders()` | `getInternalOrders()` |
+| Class **InternalOrderDAO.js** method `getInternalOrdersIssued()` | `getInternalOrdersIssued()` |
+| Class **InternalOrderDAO.js** method `getInternalOrdersAccepted()` | `getInternalOrdersAccepted()` |
+| Class **InternalOrderDAO.js** method `modifyInternalOrderState()` | `modifyInternalOrderState()` |
+| Class **InternalOrderDAO.js** method `deleteInternalOrder()` | `deleteInternalOrder()` |
 | Class **ReturnOrderController.js** method `createReturnOrder()` | `createReturnOrder()` |
 | Class **ReturnOrderController.js** method `getReturnOrderById()` | `getReturnOrderById()` |
 | Class **ReturnOrderController.js** method `getReturnOrders()` | `getReturnOrders()` |
 | Class **ReturnOrderController.js** method `deleteReturnOrder()` | `deleteReturnOrder()` |
-| Class **ItemController.js** method `getItems()`| `getItems()`|
-| Class **ItemController.js** method `getItemById()`| `getItemById()`|
-| Class **ItemController.js** method `createItem()`| `createItem()`|
-| Class **ItemController.js** method `modifyItem()`| `modifyItem()`|
-| Class **ItemController.js** method `deleteItem()`| `deleteItem()`|
+| Class **ItemDAO.js** method `getItems()`| `getItems()`|
+| Class **ItemDAO.js** method `getItemById()`| `getItemById()`|
+| Class **ItemDAO.js** method `createItem()`| `createItem()`|
+| Class **ItemDAO.js** method `modifyItem()`| `modifyItem()`|
+| Class **ItemDAO.js** method `deleteItem()`| `deleteItem()`|
 | Class **TestDescriptorController.js** method `getTestDescriptors()`| `getTestDescriptors()`|
 | Class **TestDescriptorController.js** method `getTestDescriptorById()`| `getTestDescriptorById()`|
 | Class **TestDescriptorController.js** method `createTestDescriptor()`| `createTestDescriptor()`|
@@ -1886,12 +1669,12 @@ Please note: TestDAO is not testable due to the server architecture. It creates 
 | Class **RestockOrderController.js**  method `createRestockOrder()`        | 27-35 | products.length | `createRestockOrder_TEST(issueDate,supplierId,products,expected)` |
 | Class **RestockOrderController.js**  method `setSkuItems()`               | 201-2015 | skuItems.length | `addSkuItems(id,skuItems,expected)` |
 | Class **RestockOrderController.js**  method `getRestockOrders()`          | 56-63 | one for each restock order retrieved | `getRestockOrders(id,skuItems,expected)` |
-| Class **InternalOrderController.js** method `createInternalOrder()`       | 26-34 | products.length | `createInternalOrder(issueDate,products,customerId,expected)` |
-| Class **InternalOrderController.js** method `modifyInternalOrderState()`  | 188-193 | products.length | `modifyInternalOrderState(id,newState,products,expected)` |
-| Class **InternalOrderController.js** method `getInternalOrders()`         | 51-63 | products.length | ` getInternalOrders(expected)` |
-| Class **InternalOrderController.js** method `getInternalOrdersIssued()`   | 86-97 | products.length | ` getInternalOrdersIssued(expected)` |
-| Class **InternalOrderController.js** method `getInternalOrdersAccepted()` | 113-123 | products.length | ` getInternalOrdersAccepted(expected)` |
-| Class **SKU_DAO.js**           method `getSKUs()`             | 80-86 | number of SKUS in the DB | `testGetSKUs_REAL(testName, expectedResult)` |
+| Class **InternalOrderDAO.js** method `createInternalOrder()`       | 26-34 | products.length | `createInternalOrder(issueDate,products,customerId,expected)` |
+| Class **InternalOrderDAO.js** method `modifyInternalOrderState()`  | 188-193 | products.length | `modifyInternalOrderState(id,newState,products,expected)` |
+| Class **InternalOrderDAO.js** method `getInternalOrders()`         | 51-63 | products.length | ` getInternalOrders(expected)` |
+| Class **InternalOrderDAO.js** method `getInternalOrdersIssued()`   | 86-97 | products.length | ` getInternalOrdersIssued(expected)` |
+| Class **InternalOrderDAO.js** method `getInternalOrdersAccepted()` | 113-123 | products.length | ` getInternalOrdersAccepted(expected)` |
+| Class **SKUDAO.js**           method `getSKUs()`             | 80-86 | number of SKUS in the DB | `testGetSKUs_REAL(testName, expectedResult)` |
 | Class **TestResultController.js**    method `getTestResults()`            | 30     |number of Test Result retrieved|`getTestResults(expected,rfid)`|
 | Class **ReturnOrderController.js**   method `createReturnOrder()`         | 24 | products.length | `createInternalOrder(issueDate,products,customerId,expected)` |
 | Class **TestResultController.js**    method `modifyTestResult()`          | 136    |number of Test Result retrieved|`modifyTestResult(expected,req1,req2)`|
