@@ -1,7 +1,6 @@
 "use strict";
 
 /* --------- IMPORT MODULES --------- */
-const SKUitemDAO    = require("../db/skuItemDAO");
 const SKUDAO        = require("../db/skuDAO");
 const testDescriptorDAO=require("../db/testDescriptorsDAO");
 
@@ -10,14 +9,10 @@ const MESSG_200 = {code: 200, message: 'Ok'}
 const MESSG_201 = {code: 201, message: 'Created'};
 const MESSG_204 = {code: 204, message: 'No Content'};
 const ERROR_404 = {code: 404, message: 'Not Found'};
-const ERROR_405 = {code: 405, message: 'Not Found'};
-
-
 
 
 class TestDescriptorController {
     constructor(generalPurposeDAO) {
-        this.skuItemDAO = new SKUitemDAO(generalPurposeDAO);
         this.skuDAO     = new SKUDAO(generalPurposeDAO);
         this.testDescriptorDAO= new testDescriptorDAO(generalPurposeDAO)
     }
@@ -47,7 +42,7 @@ class TestDescriptorController {
             return (testdescriptor === undefined) ? ERROR_404 : {code: 200, message: testdescriptor};
 
         }catch(error){
-            return 500;
+            throw error;
         }
     }
 

@@ -58,7 +58,7 @@
      /**
       * Retrieves the TestResult with a particular ID
       * ------------------------------------------------------------------------
-      * @returns an object with the same id
+      * @returns an object with the same id, and it didn't take the rfid
     */
       getTestResultById = async (id,rfid) => {
         const querySQL = "SELECT id, idTestDescriptor, Date, Result FROM TEST_RESULTS WHERE rfid==? AND id==?";

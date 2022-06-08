@@ -4,7 +4,7 @@
 
 /* --------- IMPORT MODULES --------- */
 const SKUDAO        = require("../db/skuDAO");
-const testDescriptorDAO=require("../db/testDescriptorsDAO");
+//const testDescriptorDAO=require("../db/testDescriptorsDAO");
 const itemDAO        = require("../db/itemDAO");
 
 /* --------- ERROR MESSAGES --------- */
@@ -18,7 +18,7 @@ const MESSG_422 = {code: 422, message: 'Unprocessable entity'};
 class ItemController {
     constructor(generalPurposeDAO) {
         this.skuDAO     = new SKUDAO(generalPurposeDAO);
-        this.testDescriptorDAO= new testDescriptorDAO(generalPurposeDAO);
+       // this.testDescriptorDAO= new testDescriptorDAO(generalPurposeDAO);
         this.itemDAO     = new itemDAO(generalPurposeDAO);
     }
     
