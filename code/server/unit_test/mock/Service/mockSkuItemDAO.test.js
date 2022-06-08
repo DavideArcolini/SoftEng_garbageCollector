@@ -1,5 +1,7 @@
 /**
- *  UNIT TEST: SkuItemDAO
+ *  UNIT TEST: positionDAO
+ *    VERSION: mock
+ * ===========================
  */
 
 /* --------- IMPORT MODULES --------- */
