@@ -78,7 +78,6 @@ class InternalOrderController {
         
             return result;
         }catch(error){
-            console.log("MI SONO ROTTA"+ error.message)
             throw error;
         }
 }
