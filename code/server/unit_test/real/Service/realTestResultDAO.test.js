@@ -60,6 +60,17 @@ trs2={
 
 describe('get tests result', ()=> { 
 beforeAll(async() => {
+    trs=[{
+        id: 20,
+        idTestDescriptor: 12,
+        Date: "2021/11/28",
+        Result: false
+    },{
+        id: 21,
+        idTestDescriptor: 13,
+        Date: "2021/11/28",
+        Result: true
+    }]
 let sql = "INSERT INTO TEST_RESULTS(id,rfid,idTestDescriptor,  Date, Result) VALUES(?,?,?,?,?)"
 await dao.run(sql,[trs[0].id,"44",trs[0].idTestDescriptor,trs[0]. Date,trs[0]. Result]);
 await dao.run(sql,[trs[1].id,"44",trs[1].idTestDescriptor,trs[1]. Date,trs[1]. Result]);
