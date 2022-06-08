@@ -18,13 +18,13 @@ const i      = new IDAO(dao);
                          ======================================================
 */
 tis=[{
-    id:1,
+    id:14,
     description : "a new item",
     price : 10.99,
     SKUId : 1,
     supplierId : 2
 },{
-    id:2,
+    id:15,
     description : "another item",
     price : 12.99,
     SKUId : 2,
@@ -37,7 +37,7 @@ tis1={
 }
 
 tis2={
-    id:1,
+    id:6,
     description : "a new sku",
     price : 10.99,
     SKUId : 1,
@@ -52,16 +52,29 @@ tis2={
 
 
 
-describe('get tests', ()=> { 
+describe('get items', ()=> { 
 beforeAll(async() => {
-let sql = "INSERT INTO TEST_ITEMS(id,description, price, SKUId,supplierId) VALUES(?,?,?,?,?)"
+    tis=[{
+        id:3,
+        description : "a new item",
+        price : 10.99,
+        SKUId : 1,
+        supplierId : 2
+    },{
+        id:4,
+        description : "another item",
+        price : 12.99,
+        SKUId : 2,
+        supplierId : 1
+    }];
+let sql = "INSERT INTO ITEMS(id,description, price, SKUId,supplierId) VALUES(?,?,?,?,?)"
 await dao.run(sql,[tis[0].id,tis[0].description,tis[0].price,tis[0].SKUId,tis[0].supplierId]);
 await dao.run(sql,[tis[1].id,tis[1].description,tis[1].price,tis[1].SKUId,tis[1].supplierId]);
 })
 
 
 afterAll(async() => {
-sql = "DELETE FROM TEST_ITEMS"
+sql = "DELETE FROM ITEMS"
 await dao.run(sql);
 })
 
@@ -78,14 +91,27 @@ getItems("Success",tis);
  ------------------------------------------------------
 */
 
-describe('get test by id', ()=> { 
+describe('get item by id', ()=> { 
 beforeAll(async () => {
-    let sql = "INSERT INTO TEST_ITEMS(id,description, price, SKUId,supplierId) VALUES(?,?,?,?,?)"
+    tis=[{
+        id:5,
+        description : "a new item",
+        price : 10.99,
+        SKUId : 1,
+        supplierId : 2
+    },{
+        id:2,
+        description : "another item",
+        price : 12.99,
+        SKUId : 2,
+        supplierId : 1
+    }];
+    let sql = "INSERT INTO ITEMS(id,description, price, SKUId,supplierId) VALUES(?,?,?,?,?)"
     await dao.run(sql,[tis[0].id, tis[0].description, tis[0].price, tis[0].SKUId, tis[0].supplierId]);
 })
 
 afterAll(async() => {
-sql = "DELETE FROM TEST_ITEMS"
+sql = "DELETE FROM ITEMS"
 await dao.run(sql);
 })
 
@@ -105,10 +131,10 @@ getItemById("Success",tis[0].id,tis[0]);
 
 
 
-describe('add test', ()=> { 
+describe('add item', ()=> { 
 
 afterAll(async() => {
-    sql = "DELETE FROM TEST_ITEMS"
+    sql = "DELETE FROM ITEMS"
     await dao.run(sql);
 })
 
@@ -128,20 +154,33 @@ createItem("success",tis[0],tis[0]);
 
 
 
-describe('edit test', ()=> { 
+describe('edit item', ()=> { 
 beforeAll(async() => {
-    let sql = "INSERT INTO TEST_ITEMS(id,description, price, SKUId,supplierId) VALUES(?,?,?,?,?)"
+    tis=[{
+        id:6,
+        description : "a new item",
+        price : 10.99,
+        SKUId : 1,
+        supplierId : 2
+    },{
+        id:2,
+        description : "another item",
+        price : 12.99,
+        SKUId : 2,
+        supplierId : 1
+    }];
+    let sql = "INSERT INTO ITEMS(id,description, price, SKUId,supplierId) VALUES(?,?,?,?,?)"
     await dao.run(sql,[tis[0].id, tis[0].description, tis[0].price, tis[0].SKUId, tis[0].supplierId]);
 })
 
 afterAll(async() => {
-    sql = "DELETE FROM TEST_ITEMS"
+    sql = "DELETE FROM ITEMS"
     await dao.run(sql);
 })
 
 
 //200
-modyfyItem("success",tis2,1,tis1);
+modyfyItem("success",tis2,tis[0].id,tis1);
 
 })
 
@@ -154,15 +193,28 @@ modyfyItem("success",tis2,1,tis1);
 */
 
 
-describe('delete test', ()=> { //
+describe('delete item', ()=> { //
 beforeAll(async() => {
-    let sql = "INSERT INTO TEST_ITEMS(id,description, price, SKUId,supplierId) VALUES(?,?,?,?,?)"
+    tis=[{
+        id:7,
+        description : "a new item",
+        price : 10.99,
+        SKUId : 1,
+        supplierId : 2
+    },{
+        id:2,
+        description : "another item",
+        price : 12.99,
+        SKUId : 2,
+        supplierId : 1
+    }];
+    let sql = "INSERT INTO ITEMS(id,description, price, SKUId,supplierId) VALUES(?,?,?,?,?)"
     await dao.run(sql,[tis[0].id, tis[0].description, tis[0].price, tis[0].SKUId, tis[0].supplierId]);
 })
 
 
 //204
-deleteItem("Success",tis[0],1)
+deleteItem("Success",tis[0],tis[0].id)
 
 
 
@@ -176,9 +228,22 @@ deleteItem("Success",tis[0],1)
 */
 
 
-describe('get test descriptor by skuid', ()=> { //
+describe('get item skuid an supplier', ()=> { //
     beforeAll(async() => {
-        let sql = "INSERT INTO TEST_ITEMS(id,description, price, SKUId,supplierId) VALUES(?,?,?,?,?)"
+        tis=[{
+            id:8,
+            description : "a new item",
+            price : 10.99,
+            SKUId : 1,
+            supplierId : 2
+        },{
+            id:2,
+            description : "another item",
+            price : 12.99,
+            SKUId : 2,
+            supplierId : 1
+        }];
+        let sql = "INSERT INTO ITEMS(id,description, price, SKUId,supplierId) VALUES(?,?,?,?,?)"
         await dao.run(sql,[tis[0].id, tis[0].description, tis[0].price, tis[0].SKUId, tis[0].supplierId]);
     })
     
@@ -201,9 +266,22 @@ describe('get test descriptor by skuid', ()=> { //
 */
 
 
-describe('get test descriptor by skuid', ()=> { //
+describe('get item id and supplier', ()=> { //
     beforeAll(async() => {
-        let sql = "INSERT INTO TEST_ITEMS(id,description, price, SKUId,supplierId) VALUES(?,?,?,?,?)"
+        tis=[{
+            id:9,
+            description : "a new item",
+            price : 10.99,
+            SKUId : 1,
+            supplierId : 2
+        },{
+            id:2,
+            description : "another item",
+            price : 12.99,
+            SKUId : 2,
+            supplierId : 1
+        }];
+        let sql = "INSERT INTO ITEMS(id,description, price, SKUId,supplierId) VALUES(?,?,?,?,?)"
         await dao.run(sql,[tis[0].id, tis[0].description, tis[0].price, tis[0].SKUId, tis[0].supplierId]);
     })
     
@@ -230,7 +308,7 @@ test(name, async () => {
         let res = await i.getItems();
         expect(res).toEqual(expected)
     } catch (error) {
-        expect(error).toBeInstanceOf(expected);
+        expect(error).toBeInstanceOf(Error);
     }
 })
 }
@@ -244,7 +322,7 @@ test(name, async () => {
         let res = await i.getItemById(id);
         expect(res).toEqual(expected)
     } catch (error) {
-        expect(error).toBeInstanceOf(expected);
+        expect(error).toBeInstanceOf(Error);
     }
 })
 }
@@ -257,7 +335,7 @@ test(name, async () => {
         let res = await i.createItem(json);
         expect(res).toEqual(expected)
     } catch (error) {
-        expect(error).toBeInstanceOf(expected);
+        expect(error).toBeInstanceOf(Error);
     }
 })
 }
@@ -271,7 +349,7 @@ test(name, async () => {
         let res = await i.modifyItem(id,json);
         expect(res).toEqual(expected)
     } catch (error) {
-        expect(error).toBeInstanceOf(expected);
+        expect(error).toBeInstanceOf(Error);
     }
 })
 }
@@ -284,7 +362,7 @@ test(name, async () => {
         let res = await i.deleteItem(id);
         expect(res).toEqual(expected)
     } catch (error) {
-        expect(error).toBeInstanceOf(expected);
+        expect(error).toBeInstanceOf(Error);
     }
 })
 
@@ -298,7 +376,7 @@ function getItemBySupSKUID(name,expected,skuid,supplierid){
             let res = await i.getItemBySupSKUID(skuid,supplierid);
             expect(res).toEqual(expected)
         } catch (error) {
-            expect(error).toBeInstanceOf(expected);
+            expect(error).toBeInstanceOf(Error);
         }
     })
     
@@ -313,7 +391,7 @@ function getItemBySupSKUID(name,expected,skuid,supplierid){
                 let res = await i.getItemBySupId(id,supplierid);
                 expect(res).toEqual(expected)
             } catch (error) {
-                expect(error).toBeInstanceOf(expected);
+                expect(error).toBeInstanceOf(Error);
             }
         })
         

@@ -58,9 +58,9 @@ trs2={
 
 
 
-describe('get tests', ()=> { 
+describe('get tests result', ()=> { 
 beforeAll(async() => {
-let sql = "INSERT INTO TEST_RESULTS(id,rfid,idTestDescriptor,  Date, idSKU) VALUES(?,?,?,?,?)"
+let sql = "INSERT INTO TEST_RESULTS(id,rfid,idTestDescriptor,  Date, Result) VALUES(?,?,?,?,?)"
 await dao.run(sql,[trs[0].id,"44",trs[0].idTestDescriptor,trs[0]. Date,trs[0]. Result]);
 await dao.run(sql,[trs[1].id,"44",trs[1].idTestDescriptor,trs[1]. Date,trs[1]. Result]);
 })
@@ -84,9 +84,9 @@ getTestResults("Success",trs,"44");
  ------------------------------------------------------
 */
 
-describe('get test by id', ()=> { 
+describe('get test result by id', ()=> { 
 beforeAll(async () => {
-    let sql = "INSERT INTO TEST_RESULTS(id,rfid,idTestDescriptor,  Date, idSKU) VALUES(?,?,?,?,?)"
+    let sql = "INSERT INTO TEST_RESULTS(id,rfid,idTestDescriptor,  Date, Result) VALUES(?,?,?,?,?)"
     await dao.run(sql,[trs[0].id,"44",trs[0].idTestDescriptor,trs[0]. Date,trs[0]. Result]);
 })
 
@@ -111,7 +111,7 @@ getTestResultById("Success",trs[0],1,"44");
 
 
 
-describe('add test', ()=> { 
+describe('add test result', ()=> { 
 
 afterAll(async() => {
     sql = "DELETE FROM TEST_RESULTS"
@@ -134,9 +134,9 @@ createTestResult("success",trs0,trs0);
 
 
 
-describe('edit test', ()=> { 
+describe('edit test result', ()=> { 
 beforeAll(async() => {
-    let sql = "INSERT INTO TEST_RESULTS(id,rfid,idTestDescriptor,  Date, idSKU) VALUES(?,?,?,?,?)"
+    let sql = "INSERT INTO TEST_RESULTS(id,rfid,idTestDescriptor,  Date, Result) VALUES(?,?,?,?,?)"
     await dao.run(sql,[trs[0].id,"44",trs[0].idTestDescriptor,trs[0]. Date,trs[0]. Result]);
 })
 
@@ -160,9 +160,9 @@ modyfyTestResult("success",trs2,1,trs1);
 */
 
 
-describe('delete test', ()=> { //
+describe('delete test result', ()=> { //
 beforeAll(async() => {
-    let sql = "INSERT INTO TEST_RESULTS(id,rfid,idTestDescriptor,  Date, idSKU) VALUES(?,?,?,?,?)"
+    let sql = "INSERT INTO TEST_RESULTS(id,rfid,idTestDescriptor,  Date, Result) VALUES(?,?,?,?,?)"
     await dao.run(sql,[trs[0].id,"44",trs[0].idTestDescriptor,trs[0]. Date,trs[0]. Result]);
 })
 
@@ -188,7 +188,7 @@ test(name, async () => {
         let res = await tr.getTestResults(rifd);
         expect(res).toEqual(expected)
     } catch (error) {
-        expect(error).toBeInstanceOf(expected);
+        expect(error).toBeInstanceOf(Error);
     }
 })
 }
@@ -202,7 +202,7 @@ test(name, async () => {
         let res = await tr.getTestResultById(id,rfid);
         expect(res).toEqual(expected)
     } catch (error) {
-        expect(error).toBeInstanceOf(expected);
+        expect(error).toBeInstanceOf(Error);
     }
 })
 }
@@ -215,7 +215,7 @@ test(name, async () => {
         let res = await tr.createTestResult(json);
         expect(res).toEqual(expected)
     } catch (error) {
-        expect(error).toBeInstanceOf(expected);
+        expect(error).toBeInstanceOf(Error);
     }
 })
 }
@@ -229,7 +229,7 @@ test(name, async () => {
         let res = await tr.modifyTestResult(id,json);
         expect(res).toEqual(expected)
     } catch (error) {
-        expect(error).toBeInstanceOf(expected);
+        expect(error).toBeInstanceOf(Error);
     }
 })
 }
@@ -242,7 +242,7 @@ test(name, async () => {
         let res = await tr.deleteTestResult(rfid,id);
         expect(res).toEqual(expected)
     } catch (error) {
-        expect(error).toBeInstanceOf(expected);
+        expect(error).toBeInstanceOf(Error);
     }
 })
 
