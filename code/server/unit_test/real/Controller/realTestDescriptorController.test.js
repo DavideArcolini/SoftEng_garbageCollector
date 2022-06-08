@@ -174,21 +174,21 @@ describe('edit test descriptor', ()=> {
 
 
 //200
-modyfyTestDescriptor(MESSG_200, {
+i(MESSG_200, {
     newName: "test descriptor 1",
     newProcedureDescription: "put successful",
     newIdSKU :33
 }, {id: 1})
 
 // ERROR_404 SKUID doesn't exist
-modyfyTestDescriptor( ERROR_404, {
+i( ERROR_404, {
     newName: "test descriptor 1",
     newProcedureDescription: "This test is described by...",
     newIdSKU :39
 }, {id: 1})
 
 // ERROR_404 ID doesn't exist
-modyfyTestDescriptor( ERROR_404, {
+i( ERROR_404, {
     newName: "test descriptor 1",
     newProcedureDescription: "This test is described by...",
     newIdSKU :1
@@ -271,7 +271,7 @@ function createTestDescriptor(expected,json){
 }
 
 
-function modyfyTestDescriptor(expected,json,id){
+function modifyTestDescriptor(expected,json,id){
     
     
         test('edit test', async () => {

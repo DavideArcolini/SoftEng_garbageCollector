@@ -31,8 +31,8 @@
 - [Class ItemDAO](#class-itemdao)
 - [Class RestockOrderController](#class-restockordercontroller)
 - [Class ReturnOrderController](#class-returnordercontroller)
-- [Class TestDescriptorController](#class-testdescriptorcontroller)
-- [Class TestResultController](#class-testresultcontroller)
+- [Class TestDescriptorDAO](#class-testdescriptordao)
+- [Class TestResultDAO](#class-testresultdao)
 
 ## **Class UserDAO**
 
@@ -1210,39 +1210,9 @@ User already inserted:
 | *true* | valid |`deleteReturnOrder(req)` returns the `id` of the return order deleted successfully|`function` <br>`deleteReturnOrder(req)`|
 | *false* | invalid |`deleteReturnOrder(req)` catch `TypeError` and terminates with <br>`{code: 503, message: "Unprocessable Entity"}`|`function` <br>`deleteReturnOrder(req)`|
 
-## **Class TestDescriptorController**
-### **Class *TestDescriptorController* - method *getTestDescriptors***
+## **Class TestDescriptorDAO**
 
-
-
-**Criteria for method *getTestDescriptors*:**
-    
-
- - Database is reachable 
-
-
-
-**Predicates for method *getTestDescriptors*:**
-
-| Criteria | Predicate |
-| -------- | --------- |
-|  DB is reachable        | true          |
-|          |    false       |
-
-
-
-
-**Combination of predicates**:
-
-
-| DB is reachable  | Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|
-|true|valid|getTestDescriptors() terminates with results returned|function getTestDescriptors([{ id: 1,  name: "test descriptor 3",  procedureDescription: "This test is described by...",  idSKU: 1},{ id: 2,  name: "test descriptor 4",  procedureDescription: "test2",  idSKU: 1}])|
-|false|invalid|getTestDescriptors() catches an error and return 500 |function getTestDescriptors(500)|
-
-
-
-### **Class *TestDescriptorController* - method *getTestDescriptorById***
+### **Class *TestDescriptorDAO* - method *getTestDescriptorById***
 
 
 
@@ -1272,12 +1242,10 @@ User already inserted:
 
 | DB is reachable | Id exists in the DB |  Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|------|-------|-------|
-|true|true|     valid                   |getTestDescriptorById() terminates with result returned|function getTestDescriptorById({id: 1}, {  id: 1,  name: "test descriptor 3",  procedureDescription: "This test is described by...",  idSKU: 1})|
-|true|false|invalid                     |getTestDescriptorById() fails on id check and return 404 |function getTestDescriptorById({id: 2}, 404)|
-|false|true|     invalid                           |getTestDescriptorById() catches an error and return 500|function getTestDescriptorById(undefined, 500)|
-|false|true|            invalid                    |getTestDescriptorById() catches an error and return 500|function getTestDescriptorById(undefined, 500)|
+|true|true| valid |`getTestDescriptorById()` terminates with expected value |`function` <br> `getTestDescriptorById(id,expected)`|
+|false|true| invalid | `getTestDescriptorById()` throws `Error` |`function` `getTestDescriptorById(id,expected)`|
 
-### **Class *TestDescriptorController* - method *createTestDescriptor***
+### **Class *TestDescriptorDAO* - method *createTestDescriptor***
 
 
 
@@ -1308,12 +1276,10 @@ User already inserted:
 
 | DB is reachable | idSKU exists in the DB| Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|
-|true|true|valid| `createTestDescriptor()` terminates with 201|`function createTestDescriptor(201, {  name: "test descriptor 3", procedureDescription: "This test is described by...",  idSKU: 32})`|
-|true|false|invalid|`createTestDescriptor()` fails on idSKU check|`function createTestDescriptor( 404, { name: "test descriptor 3", procedureDescription: "This test is described by...", idSKU: 37})`|
-|false|true|invalid| `createTestDescriptor()` catches an error and return `503`|`function createTestDescriptor(503, undefined)`|
-|false|false|invalid|`createTestDescriptor(3)` catches an error and return `503`|function `createTestDescriptor(503, undefined)`|
+|true|true|valid| `createTestDescriptor()` terminates with the expected value|`function` <br> `createTestDescriptor(expected,json)`|
+|false|false|invalid|`createTestDescriptor()` throws `Error` |`function` <br> `createTestDescriptor(expected,json)`|
 
-### **Class *TestDescriptorController* - method *modifyTestDescriptor***
+### **Class *TestDescriptorDAO* - method *modifyTestDescriptor***
 
 
 
@@ -1347,16 +1313,10 @@ User already inserted:
 
 | DB is reachable | id exists in the DB |newidSKU exist in the DB| Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|-------|
-|true|true|true|valid|modifytestDescriptor() terminates with 200|function modifyTestDescriptor(200, { newName: "test descriptor 1",  newProcedureDescription: "put successful", newIdSKU :33}, {id: 1})|
-|true|true|false|invalid|modifyTestDescriptor() fails on newidSKU check|function modifyTestDescriptor(404, {  newName: "test descriptor 1",  newProcedureDescription: "This test is described by...",  newIdSKU :39}, {id: 1})|
-|true|false|true|invalid|modifyTestDescriptor() fails on id search|function modifyTestDescriptor(404, {  newName: "test descriptor 1", newProcedureDescription: "This test is described by...",  newIdSKU :1}, {id: 2})|
-|true|false|false|invalid|modifyTestDescriptor() fails on newidSKU check|function modifyTestDescriptor(404, { newName: "test descriptor 1", newProcedureDescription: "This test is described by...", newIdSKU :39}, {id: 1})|
-|false|true|true|invalid|modifyTestDescriptor() catches an error and return 503|function modifyTestDescriptor(503, undefined, {id: 1})|
-|false|true|false|invalid|modifyTestDescriptor() catches an error and return 503|function modifyTestDescriptor(503, undefined, {id: 1})|
-|false|false|true|invalid|modifyTestDescriptor() catches an error and return 503|function modifyTestDescriptor(503, undefined, {id: 1})|
-|false|false|false|invalid|modifyTestDescriptor() catches an error and return 503|function modifyTestDescriptor(503, undefined, {id: 1})|
+|true|true|true|valid| `modifytestDescriptor()` terminates with expected value |`function` <br> `modifyTestDescriptor(expected,json,id)`|
+|false|false|false|invalid|`modifyTestDescriptor()` throws `Error`|`function` <br> `modifyTestDescriptor(expected,json,id)`|
 
-### **Class *TestDescriptorController* - method *deleteTestDescriptor***
+### **Class *TestDescriptorDAO* - method *deleteTestDescriptor***
 
 
 
@@ -1385,62 +1345,20 @@ User already inserted:
 
 | DB is reachable|Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|
-|true|valid|deleteTestDescriptor() terminates with 204|function deleteTestDescriptor(204,{id: 1})|
-|false|invalid|deleteTestDescriptor catches an error and return 503|function deleteTestDescriptor(503,undefined)|
+|true|valid|`deleteTestDescriptor()` terminates with expected value|`function` <br> `deleteTestDescriptor(expected,id)`|
+|true|invalid|`deleteTestDescriptor()` can't delete a undefined test |`function` <br> `deleteTestDescriptor(expected,id)`|
+|false|invalid|`deleteTestDescriptor()` throws `Error`|`function` <br> `deleteTestDescriptor(expected,id)`|
 
 
-## **Class TestResultController**
-### **Class *TestResultController* - method *getTestResults***
+## **Class TestResultDAO**
 
-
-
-**Criteria for method *getTestResults*:**
-    
-
- - Database is reachable
- - rfid exist in the database
-
-
-
-
-
-**Predicates for method *getTestResults*:**
-
-| Criteria | Predicate |
-| -------- | --------- |
-|     DB is reachable     |  true         |
-|          |    false       |
-|     rfid exists in the DB     |   true        |
-|          |   false        |
-
-
-
-
-**Combination of predicates**:
-
-
-| DB is reachable | rfid exists in the DB   | Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|-------|
-|true|true|valid|getTestResults()terminates with result returned|function getTestResults([{ id: 1, idTestDescriptor: 12, Date: "2021/11/28", Result: false},{  id: 2,  idTestDescriptor: 13,  Date: "2021/11/28",  Result: true}],{rfid: "40"})|
-|true|false|invalid|getTestResults() fails on rfid check and return 404|function getTestResults(404, {rfid: "47"})|
-|false|true|invalid|getTestResults() catches an error and return 500|function getTestResults(500, undefined)|
-|false|false|invalid|getTestResults() catches an error and return 500|function getTestResults(500, undefined)|
-
-
-### **Class *TestResultController* - method *getTestResultById***
-
-
+### **Class *TestResultDAO* - method *getTestResultById***
 
 **Criteria for method *getTestResultById*:**
-    
 
  - Database is reachable
  - rfid exists in the database
  -id exists in the database
-
-
-
-
 
 **Predicates for method *getTestResultById*:**
 
@@ -1453,35 +1371,22 @@ User already inserted:
 |id exists in the DB|true|
 ||false|
 
-
-
 **Combination of predicates**:
-
 
 | DB is reachable |  rfid exist in the DB    |  id exist in the DB    | Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|-------|
-|true|true|true|valid|getTestResultById() terminates with result returned|function getTestResultById({ id: 2, idTestDescriptor: 14, Date: "2021/11/28",  Result: true},{rfid: "43", id: 2})|
-|true|true|false|invalid|getTestResultById() fails on id check and return 404|function getTestResultById(404, {rfid: "43", id: 0})|
-|true|false|true|invalid|getTestResultById() fails on rfid check and return 404|function getTestResultById(404,{rfid: "47", id: 1})|
-|true|false|false|invalid|getTestResultById() fails on rfid check and return 404|function getTestResultById(404,{rfid: "47", id: 1})|
-|false|true|true|invalid|getTestResultById() catches an error and return 500|function getTestResultById(500,undefined)|
-|false|true|false|invalid|getTestResultById() catches an error and return 500|function getTestResultById(500,undefined)|
-|false|false|true|invalid|getTestResultById() catches an error and return 500|function getTestResultById(500,undefined)|
-|false|false|false|invalid|getTestResultById() catches an error and return 500|function getTestResultById(500,undefined)|
+|true|true|true|valid|`getTestResultById()` terminates with expected value |`function` <br> `getTestResultById(expected,req)`|
+|true|true|false|invalid|`getTestResultById()` fails on id check and return 404|`function` <br> `getTestResultById(expected,req)`|
+|true|false|true|invalid|`getTestResultById()` fails on rfid check and return 404|`function` <br> `getTestResultById(expected,req)`|
+|true|false|false|invalid|`getTestResultById()` fails on rfid check and return 404|`function` <br> `getTestResultById(expected,req)`|
+|false|true|true|invalid|`getTestResultById()` throws `Error`|`function` <br> `getTestResultById(expected,req)`|
 
 
-### **Class *TestResultController* - method *createTestResult***
-
-
+### **Class *TestResultDAO* - method *createTestResult***
 
 **Criteria for method *createTestResult*:**
-    
 
- - Database is reachable
-
-
-
-
+- Database is reachable
 
 **Predicates for method *createTestResult*:**
 
@@ -1494,37 +1399,24 @@ User already inserted:
 |idTestDescriptor exists in the DB|true|
 ||false|
 
-
 **Combination of predicates**:
-
 
 | DB is reachable |rfid exist in the DB  |idTestDescriptor exists in the DB | Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|-------|
-|true|true|true|valid|createTestResult() terminates with 201 returned|function createTestResult(201,{ rfid: "44", idTestDescriptor: 28, Date: "2021/11/28", Result: true})|
-|true|true|false|invalid|createTestResult() fails on idTestDescriptor check and return 404|function createTestResult(404,{ rfid: "44", idTestDescriptor: 29, Date: "2021/11/28", Result: true})|
-|true|false|true|invalid|createTestResult() fails on rfid check and return 404|function createTestResult(404,{ rfid: "47", idTestDescriptor: 28, Date: "2021/11/28", Result: true})|
-|true|false|false|invalid|createTestResult() fails on rfidcheck and return 404|function createTestResult(404,{  rfid: "47",  idTestDescriptor: 28,  Date: "2021/11/28", Result: true})|
-|false|true|true|invalid|createTestResult() catches an error and return 503|function createTestResult(503,undefined)|
-|false|true|false|invalid|createTestResult() catches an error and return 503|function createTestResult(503,undefined)|
-|false|false|true|invalid|createTestResult() catches an error and return 503|function createTestResult(503,undefined)|
-|false|false|false|invalid|createTestResult() catches an error and return 503|function createTestResult(503,undefined)|
+|true|true|true|valid|`createTestResult()` terminates with expected value|`function` <br> `createTestResult(expected, req)`|
+|true|true|false|invalid|`createTestResult()` fails on idTestDescriptor check and return 404|`function` <br> `createTestResult(expected, req)`|
+|true|false|true|invalid|`createTestResult()` fails on rfid check and return 404|`function` <br> `createTestResult(expected, req)`|
+|true|false|false|invalid|`createTestResult()` fails on rfidcheck and return 404|`function` <br> `createTestResult(expected, req)`|
+|false|true|true|invalid|`createTestResult()` throws `Error`|`function` <br> `createTestResult(expected, req)`|
 
-
-### **Class *TestResultController* - method *modifyTestResult***
-
-
+### **Class *TestResultDAO* - method *modifyTestResult***
 
 **Criteria for method *modifyTestResult*:**
-    
 
  - Database is reachable
  - rfid exists in database
  - newIdTestDescriptor exist in the database
  - id exist in the database
-
-
-
-
 
 **Predicates for method *modifyTestResult*:**
 
@@ -1539,32 +1431,21 @@ User already inserted:
 |newIdTestDescriptor exist in the DB|true|
 |          |    false       |
 
-
-
 **Combination of predicates**:
-
 
 | DB is reachable |   rfid exists DB   |newIdTestDescriptor exist in the DB    | id exists in DB| Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|-------|-------|
-|true|true|true|true|valid|modifyTestResult() terminates with 200 returned|function modifyTestResult(200,{id: 1, rfid: "45"},{  newIdTestDescriptor:31, newDate:"2021/11/28", newResult: true})|
-|true|true|true|false|invalid|modifyTestResult() fails on id check and return 404|function modifyTestResult(404,{id: 12, rfid: "45"},{ newIdTestDescriptor:31, newDate:"2021/11/28", newResult: true})|
-|true|true|false|/|invalid|modifyTestResult() fails on newIdTestDescriptor check and return 404|function modifyTestResult(404,{id: 1, rfid: "45"},{ newIdTestDescriptor:47,newDate:"2021/11/28", newResult: true})|
-|true|false|/|/|invalid|modifyTestResult() fails on rfid check and return 404|function modifyTestResult(404,{id: 1, rfid: "47"},{ newIdTestDescriptor:31, newDate:"2021/11/28", newResult: true})|
-|false|/|/|/|invalid|modifyTestResult() catches an error and return 503|function modifyTestResult(503,undefined,{  newIdTestDescriptor:2, newDate:"2021/11/28", newResult: true})|
+|true|true|true|true|valid|`modifyTestResult()` terminates with 200 returned|`function` <br> `modifyTestResult(expected, req1, req2)`|
+|true|true|true|false|invalid|`modifyTestResult()` fails on id check and return 404|`function` <br> `modifyTestResult(expected, req1, req2)`|
+|true|true|false|/|invalid|`modifyTestResult()` fails on newIdTestDescriptor check and return 404|`function` <br> `modifyTestResult(expected, req1, req2)`|
+|true|false|/|/|invalid|`modifyTestResult()` fails on rfid check and return 404|`function` <br> `modifyTestResult(expected, req1, req2)`|
+|false|/|/|/|invalid|`modifyTestResult()` throws `Error`|`function` <br> `modifyTestResult(expected, req1, req2)`|
 
-
-### **Class *TestResultController* - method *deleteTestResult***
-
-
+### **Class *TestResultDAO* - method *deleteTestResult***
 
 **Criteria for method *deleteTestResult*:**
-    
 
- - Database is reachable
-
-
-
-
+- Database is reachable
 
 **Predicates for method *deleteTestResult*:**
 
@@ -1573,19 +1454,12 @@ User already inserted:
 |     DB is reachable     |  true         |
 |          |    false       |
 
-
-
-
 **Combination of predicates**:
-
 
 | DB is reachable |  Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|
-|true|valid|deleteTestResult() terminates with 204 returned|function deleteTestResult(204,{id: 1, rfid: "1"})|
-|false|invalid|deleteTestResult() catches an error and return 503|function deleteTestResult(503,undefined)|
-
-
-
+|true|valid|`deleteTestResult()` terminates with 204 returned|`function` <br> `deleteTestResult(expected, req)`|
+|false|invalid|`deleteTestResult()` throws `Error`|`function` <br> `deleteTestResult(expected, req)`|
 
 # White Box Unit Tests
 
@@ -1593,24 +1467,19 @@ User already inserted:
 
 | Unit name | Jest test case |
 |--|--|
-| Class **UserDAO.js** method `getStoredUsers()` | `getStoredUsers_TEST()` |
-| Class **UserDAO.js** method `getSuppliers()` | `getSuppliers_TEST()` |
 | Class **UserDAO.js** method `createUser()` | `testNewUser()` |
 | Class **UserDAO.js** method `getUser()` | `testGetUser()` |
 | Class **UserDAO.js** method `modifyPermissions()` | `testModifyPermissions()` |
 | Class **UserDAO.js** method `removeUser()` | `testRemoveUser()` |
-| Class **PositionDAO.js** method `getPositions()` | `getPositions_TEST()` |
 | Class **PositionDAO.js** method `newPosition()` | `newPosition_TEST()` |
 | Class **PositionDAO.js** method `editPosition()` | `editPosition_TEST()` |
 | Class **PositionDAO.js** method `editPositionID()` | `editPositionID_TEST()` |
 | Class **PositionDAO.js** method `deletePosition()` | `deletePosition_TEST()` |
-| Class **SKUitemDAO.js** method `getSKUitems()` | `getSKUitems_TEST()` |
 | Class **SKUitemDAO.js** method `getSKUitemsBySKUId()` | `getSKUitemsBySKUId_TEST()` |
 | Class **SKUitemDAO.js** method `getSKUitemsByRFID()` | `getSKUitemsByRFID_TEST()` |
 | Class **SKUitemDAO.js** method `newSKUitem()` | `newSKUitem_TEST()` |
 | Class **SKUitemDAO.js** method `updateSKUitem()` | `updateSKUitem()` |
 | Class **SKUitemDAO.js** method `deleteSKUitem()` | `deleteSKUitem_TEST()` |
-| Class **SKUDAO.js** method `getSKUs()` | `testGetSKUs_REAL()` |
 | Class **SKUDAO.js** method `getSKUByID()` | `testGetSKUByID_REAL()` |
 | Class **SKUDAO.js** method `newSKU()` | `testNewSKU_REAL()` |
 | Class **SKUDAO.js** method `updateSKU()` | `testUpdateSKU_REAL()` |
@@ -1625,30 +1494,23 @@ User already inserted:
 | Class **RestockOrderController.js** method `setSkuItems()` | `addSkuItems()` |
 | Class **RestockOrderController.js** method `deleteRestockOrder()` | `deleteRestockOrder()` |
 | Class **InternalOrderDAO.js** method `createInternalOrder()` | `createInternalOrder()` |
-| Class **InternalOrderDAO.js** method `getInternalOrders()` | `getInternalOrders()` |
-| Class **InternalOrderDAO.js** method `getInternalOrdersIssued()` | `getInternalOrdersIssued()` |
-| Class **InternalOrderDAO.js** method `getInternalOrdersAccepted()` | `getInternalOrdersAccepted()` |
 | Class **InternalOrderDAO.js** method `modifyInternalOrderState()` | `modifyInternalOrderState()` |
 | Class **InternalOrderDAO.js** method `deleteInternalOrder()` | `deleteInternalOrder()` |
 | Class **ReturnOrderController.js** method `createReturnOrder()` | `createReturnOrder()` |
 | Class **ReturnOrderController.js** method `getReturnOrderById()` | `getReturnOrderById()` |
-| Class **ReturnOrderController.js** method `getReturnOrders()` | `getReturnOrders()` |
 | Class **ReturnOrderController.js** method `deleteReturnOrder()` | `deleteReturnOrder()` |
-| Class **ItemDAO.js** method `getItems()`| `getItems()`|
 | Class **ItemDAO.js** method `getItemById()`| `getItemById()`|
 | Class **ItemDAO.js** method `createItem()`| `createItem()`|
 | Class **ItemDAO.js** method `modifyItem()`| `modifyItem()`|
 | Class **ItemDAO.js** method `deleteItem()`| `deleteItem()`|
-| Class **TestDescriptorController.js** method `getTestDescriptors()`| `getTestDescriptors()`|
-| Class **TestDescriptorController.js** method `getTestDescriptorById()`| `getTestDescriptorById()`|
-| Class **TestDescriptorController.js** method `createTestDescriptor()`| `createTestDescriptor()`|
-| Class **TestDescriptorController.js** method `modifyTestDescriptor()`| `modifyTestDescriptor()`|
-| Class **TestDescriptorController.js** method `deleteTestDescriptor()`| `deleteTestDescriptor()`|
-| Class **TestResultController.js** method `getTestResults()`| `getTestResults()`|
-| Class **TestResultController.js** method `getTestResultById()`| `getTestResultById()`|
-| Class **TestResultController.js** method `createTestResult()`| `createTestResult()`|
-| Class **TestResultController.js** method `modifyTestResult()`| `modifyTestResult()`|
-| Class **TestResultController.js** method `deleteTestResult()`| `deleteTestResult()`|
+| Class **TestDescriptorDAO.js** method `getTestDescriptorById()`| `getTestDescriptorById()`|
+| Class **TestDescriptorDAO.js** method `createTestDescriptor()`| `createTestDescriptor()`|
+| Class **TestDescriptorDAO.js** method `modifyTestDescriptor()`| `modifyTestDescriptor()`|
+| Class **TestDescriptorDAO.js** method `deleteTestDescriptor()`| `deleteTestDescriptor()`|
+| Class **TestResultDAO.js** method ``getTestResultById()``| ``getTestResultById()``|
+| Class **TestResultDAO.js** method ``createTestResult()``| ``createTestResult()``|
+| Class **TestResultDAO.js** method ``modifyTestResult()``| ``modifyTestResult()``|
+| Class **TestResultDAO.js** method `deleteTestResult()`| `deleteTestResult()`|
 
 
 
@@ -1675,9 +1537,9 @@ Please note: TestDAO is not testable due to the server architecture. It creates 
 | Class **InternalOrderDAO.js** method `getInternalOrdersIssued()`   | 86-97 | products.length | ` getInternalOrdersIssued(expected)` |
 | Class **InternalOrderDAO.js** method `getInternalOrdersAccepted()` | 113-123 | products.length | ` getInternalOrdersAccepted(expected)` |
 | Class **SKUDAO.js**           method `getSKUs()`             | 80-86 | number of SKUS in the DB | `testGetSKUs_REAL(testName, expectedResult)` |
-| Class **TestResultController.js**    method `getTestResults()`            | 30     |number of Test Result retrieved|`getTestResults(expected,rfid)`|
+| Class **TestResultDAO.js**    method `getTestResults()`            | 30     |number of Test Result retrieved|`getTestResults(expected,rfid)`|
 | Class **ReturnOrderController.js**   method `createReturnOrder()`         | 24 | products.length | `createInternalOrder(issueDate,products,customerId,expected)` |
-| Class **TestResultController.js**    method `modifyTestResult()`          | 136    |number of Test Result retrieved|`modifyTestResult(expected,req1,req2)`|
+| Class **TestResultDAO.js**    method ``modifyTestResult()``          | 136    |number of Test Result retrieved|`modifyTestResult(expected,req1,req2)`|
 
 
 
