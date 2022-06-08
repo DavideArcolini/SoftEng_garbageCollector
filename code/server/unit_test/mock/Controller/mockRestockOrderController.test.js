@@ -772,7 +772,7 @@ const restockOrderDelivered =
  * INTEGRATION TEST: RestockOrderController.getReturnItems()
  * ========================================================================
  */
- describe.only('INTEGRATION TEST: RestockOrderController.getReturnItems', () => {
+ describe('INTEGRATION TEST: RestockOrderController.getReturnItems', () => {
     
     /* reset mock implementation before every tests */
     beforeAll(() => {

@@ -4,10 +4,6 @@ const UserController = require("../../../controller/UserController");
 const dao = require("../../../db/userDAO")
 const user = new UserController(dao);
 const bcrypt        = require('bcrypt');
-
-
-const GeneralPurposeDAO = require('../../../db/DAO');
-const generalPurposeDAO = new GeneralPurposeDAO()
 /*
     Actual Testing
     =================================================
@@ -20,27 +16,17 @@ const generalPurposeDAO = new GeneralPurposeDAO()
  */
 
 describe('get users', () => {
-    beforeAll(async () => {
-        const querySQL = "DELETE FROM USERS";
-        await generalPurposeDAO.run(querySQL);
-
-        await dao.createUser(
-            "ciccio1@ezwh.com", 
-            "Ciccio",
-            "Pasticcio",
-            "testpassword",
-            "customer"
-        );
-    });
-    // beforeAll( async () => {
-    //     await dao.deleteAllUsers();
-    //     await dao.createUser(
-    //         "ciccio1@ezwh.com", 
-    //         "Ciccio",
-    //         "Pasticcio",
-    //         "testpassword",
-    //         "customer" );
-    // })
+    beforeAll( async () => {
+        await dao.deleteAllUsers();
+        await dao.deleteAllUsers();
+        await dao.deleteAllUsers();
+        // await dao.createUser(
+        //     "ciccio1@ezwh.com", 
+        //     "Ciccio",
+        //     "Pasticcio",
+        //     "testpassword",
+        //     "customer" );
+    })
     
     getStoredUsers_TEST("Get users ok", [
         // {
@@ -53,7 +39,9 @@ describe('get users', () => {
     ])
 
     afterAll(async() => {
-        await dao.deleteAllUsers()
+        await dao.deleteAllUsers();
+        await dao.deleteAllUsers();
+        await dao.deleteAllUsers();
     })
 }) 
 
@@ -64,7 +52,12 @@ describe('get users', () => {
  */
 describe('get suppliers', () => {
     beforeAll( async () => {
-        await dao.deleteAllUsers()
+        await dao.deleteAllUsers();
+        await dao.deleteAllUsers();
+        await dao.deleteAllUsers();
+        await dao.deleteAllUsers();
+        await dao.deleteAllUsers();
+        await dao.deleteAllUsers();
         const salt = await bcrypt.genSalt(10);
         await dao.createUser(
             "mj@ezwh.com", 
@@ -84,14 +77,21 @@ describe('get suppliers', () => {
 
     getSuppliers_TEST("Get user ok", [
         {
-            id: 1,
+            "email": "supplier1@supplier.ezwh.com",
+            "id": 1,
+            "name": "Luca",
+            "surname": "Ardito",
+            "type": "supplier",
+        }, 
+        {
+            id: 3,
             email: "mj@supplier.ezwh.com", 
             name: "Mary",
             surname: "Jane",
             type: "supplier"
         },
         {
-        id: 2,
+        id: 4,
         email: "peter@supplier.ezwh.com", 
         name: "Peter",
         surname: "Parker",

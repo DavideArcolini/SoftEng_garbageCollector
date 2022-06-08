@@ -4,7 +4,7 @@ const bcrypt        = require('bcrypt');
 const saltRounds    = 10;
 
 const sqlite = require('sqlite3');
-const DAO = require("../db/DAO")
+const DAO = require("../unit_test/real/Database/testDAO")
 
 // open the database
 let dao = new DAO();

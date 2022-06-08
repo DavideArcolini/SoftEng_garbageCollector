@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">36.44% </span>
+                <span class="strong">39.62% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>39/107</span>
+                <span class='fraction'>42/106</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/36</span>
+                <span class='fraction'>0/26</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">53.33% </span>
+                <span class="strong">60% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>8/15</span>
+                <span class='fraction'>9/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">36.79% </span>
+                <span class="strong">40% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>39/106</span>
+                <span class='fraction'>42/105</span>
             </div>
         
             
@@ -347,7 +347,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -523,22 +523,9 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -546,11 +533,24 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -594,7 +594,7 @@ class RestockOrderController {
     createRestockOrder = <span class="fstat-no" title="function not covered" >as</span>ync (issueDate,supplierId,products) =&gt; {
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        try{</span>
-<span class="cstat-no" title="statement not covered" >            console.log(JSON.stringify(issueDate, supplierId, products))</span>
+            
 <span class="cstat-no" title="statement not covered" >            await this.roDAO.createRestockOrder(issueDate,supplierId,products);</span>
 <span class="cstat-no" title="statement not covered" >            return MESSG_201;</span>
         }
@@ -666,7 +666,7 @@ class RestockOrderController {
             try{
             /* retrieve the restock order associated to the ID */
             const restockOrder = await this.roDAO.getRestockOrderById(id);
-<span class="cstat-no" title="statement not covered" >            if(restockOrder ===undefined || restockOrder.length===0){</span>
+<span class="cstat-no" title="statement not covered" >            if(restockOrder.length===0){</span>
 <span class="cstat-no" title="statement not covered" >                return ERROR_404;</span>
             }
             
@@ -716,7 +716,7 @@ class RestockOrderController {
         try{
             /* check if the restock order exists */
             let result = await this.roDAO.getRestockOrderById(id)
-<span class="cstat-no" title="statement not covered" >            if(result===undefined || result.length===0){</span>
+<span class="cstat-no" title="statement not covered" >            if(result.length===0){</span>
 <span class="cstat-no" title="statement not covered" >                return ERROR_404;</span>
             }
             /* modify state */
@@ -733,7 +733,7 @@ class RestockOrderController {
 &nbsp;
         try{
             let restockOrder = await this.roDAO.getRestockOrderById(id);
-<span class="cstat-no" title="statement not covered" >            if(restockOrder==null || restockOrder.length===0){</span>
+<span class="cstat-no" title="statement not covered" >            if(restockOrder.length===0){</span>
 <span class="cstat-no" title="statement not covered" >                return ERROR_404;</span>
             }
 &nbsp;
@@ -753,7 +753,7 @@ class RestockOrderController {
     addTransportNote = async(id,transportNote) =&gt; {
         try{
             let restockOrder = await this.roDAO.getRestockOrderById(id);
-<span class="cstat-no" title="statement not covered" >            if(restockOrder==null || restockOrder.length===0){</span>
+<span class="cstat-no" title="statement not covered" >            if(restockOrder.length===0){</span>
 <span class="cstat-no" title="statement not covered" >                return ERROR_404;</span>
             }
 <span class="cstat-no" title="statement not covered" >            if(restockOrder[0].state!=="DELIVERY" || dayjs(transportNote.deliveryDate).isBefore(dayjs(restockOrder[0].issueDate))) {</span>
@@ -767,12 +767,12 @@ class RestockOrderController {
 &nbsp;
     }
     
-    getReturnItems = <span class="fstat-no" title="function not covered" >as</span>ync(id) =&gt; {
+    getReturnItems = async(id) =&gt; {
 &nbsp;
   
-<span class="cstat-no" title="statement not covered" >        try{</span>
-            let restockOrder = <span class="cstat-no" title="statement not covered" >await this.roDAO.getRestockOrderById(id);</span>
-<span class="cstat-no" title="statement not covered" >            if(restockOrder==null || restockOrder.length===0){</span>
+        try{
+            let restockOrder = await this.roDAO.getRestockOrderById(id);
+<span class="cstat-no" title="statement not covered" >            if(restockOrder.length===0){</span>
 <span class="cstat-no" title="statement not covered" >                return ERROR_404;</span>
             }
 &nbsp;
@@ -797,7 +797,7 @@ class RestockOrderController {
 <span class="cstat-no" title="statement not covered" >            return {code: 200, message: result};</span>
 &nbsp;
         }catch(error){
-<span class="cstat-no" title="statement not covered" >            throw error;</span>
+            throw error;
         }
     }
 &nbsp;
@@ -811,7 +811,7 @@ module.exports = RestockOrderController;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed Jun 08 2022 16:34:28 GMT+0200 (Central European Summer Time)
+                at Wed Jun 08 2022 18:59:38 GMT+0200 (Central European Summer Time)
             </div>
         <script src="../prettify.js"></script>
         <script>
