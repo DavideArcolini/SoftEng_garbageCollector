@@ -14,7 +14,7 @@ exports.setDAO = async(user_dao) => {
 }
 
 exports.createUser = async(username, name, surname, password, type) => {
-    const sql = "INSERT INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
+    const sql = "INSERT OR IGNORE INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
 
     let hash = await bcrypt.hash(password, saltRounds);
     await dao.run(sql, [username, name, surname, hash, type])

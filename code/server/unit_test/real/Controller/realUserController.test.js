@@ -4,6 +4,9 @@ const UserController = require("../../../controller/UserController");
 const dao = require("../../../db/userDAO")
 const user = new UserController(dao);
 const bcrypt        = require('bcrypt');
+const DAO = require("../Database/testDAO")
+const gendao = new DAO()
+dao.setDAO(gendao)
 /*
     Actual Testing
     =================================================
@@ -77,21 +80,14 @@ describe('get suppliers', () => {
 
     getSuppliers_TEST("Get user ok", [
         {
-            "email": "supplier1@supplier.ezwh.com",
-            "id": 1,
-            "name": "Luca",
-            "surname": "Ardito",
-            "type": "supplier",
-        }, 
-        {
-            id: 3,
+            id: 1,
             email: "mj@supplier.ezwh.com", 
             name: "Mary",
             surname: "Jane",
             type: "supplier"
         },
         {
-        id: 4,
+        id: 2,
         email: "peter@supplier.ezwh.com", 
         name: "Peter",
         surname: "Parker",

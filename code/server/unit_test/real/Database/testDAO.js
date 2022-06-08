@@ -10,6 +10,7 @@ class DAO {
         this.db = new sqlite.Database("ezwh_tests.db", (err)=>{
             if(err) throw err;
         });
+        this.db.get("PRAGMA busy_timeout = 10000");
 
         /* ----- TABLES CREATION ----- */
         this.newTableUsers();
@@ -325,7 +326,7 @@ class DAO {
   *  - newTableUser(): create the users table, if it does not already exist.
   *  - dropTableUser(): drop the users table.
   */
-  newTableUsers() {
+   async newTableUsers() {
 
     let users = [{
       username: "manager1@ezwh.com",
@@ -335,7 +336,7 @@ class DAO {
       password: "testpassword"
     },
     {
-      username: "customer1@ezwh.com",
+      username: "user1@ezwh.com",
       name: "Davide",
       surname: "Arcolini",
       type: "customer",
@@ -369,9 +370,20 @@ class DAO {
       type: "supplier",
       password: "testpassword"
     }
-  ]
-    return new Promise(async (res, rej)=>{
-      let sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER, username VARCHAR, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR, PRIMARY KEY(id)) ";
+    ]
+    let sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR, PRIMARY KEY(id)) ";
+    await this.db.run(sql, (err)=>{
+      if (err) throw new Error();})
+
+    sql = "INSERT OR IGNORE INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
+    users.forEach(async (e) => {
+      let hash = await bcrypt.hash(e.password, saltRounds);
+      await this.db.run(sql, [e.username, e.name, e.surname, hash, e.type], (err)=>{
+        if (err) throw new Error();
+      });
+    })
+    /* return new Promise(async (res, rej)=>{
+      let sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR, PRIMARY KEY(id)) ";
       this.db.run(sql, (err)=>{
         if (err) {
           rej(err);
@@ -380,13 +392,6 @@ class DAO {
         res(this.lastID);
       });
 
-      let manager = {
-        username: "manager1@ezwh.com",
-        name: "Dave",
-        surname: "Grohl",
-        type: "manager",
-        password: "testpassword"
-      }
       sql = "INSERT OR IGNORE INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
       users.forEach(async (e) => {
         let hash = await bcrypt.hash(e.password, saltRounds);
@@ -399,7 +404,7 @@ class DAO {
         });
       })
 
-    });
+    }); */
   }
   
   dropTableUsers() {

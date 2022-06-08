@@ -30,7 +30,8 @@ const ERROR_404 = {code: 404, message: 'Not Found'};
 
 class InternalOrderController {
     constructor(generalPurposeDAO) {
-        this.ioDAO = new ioDAO(generalPurposeDAO);
+        //this.ioDAO = new ioDAO(generalPurposeDAO);
+        this.ioDAO = generalPurposeDAO
     }
 
     createInternalOrder = async (issueDate,products,customerId) => {

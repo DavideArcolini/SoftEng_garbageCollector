@@ -1,10 +1,12 @@
 "use strict";
-const express = require('express');
-const router = express.Router();
-const IOController = require('../controller/InternalOrderController');
-const DAO = require("../db/DAO")
-const dao = new DAO();
-const ioc = new IOController(dao);
+const express = require('express'); 
+const router = express.Router(); 
+const IOController = require('../controller/InternalOrderController'); 
+const InternalOrderDAO = require('../db/InternalOrderDAO'); 
+const DAO = require("../db/DAO") 
+const dao = new DAO(); 
+const ioDAO = new InternalOrderDAO(dao); 
+const ioc = new IOController(ioDAO);
 
 const { validationHandler } = require("../validator/validationHandler");
 const { param }             = require('express-validator');

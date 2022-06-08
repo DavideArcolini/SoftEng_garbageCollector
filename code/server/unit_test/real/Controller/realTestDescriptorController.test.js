@@ -174,21 +174,21 @@ describe('edit test descriptor', ()=> {
 
 
 //200
-i(MESSG_200, {
+modifyTestDescriptor(MESSG_200, {
     newName: "test descriptor 1",
     newProcedureDescription: "put successful",
     newIdSKU :33
 }, {id: 1})
 
 // ERROR_404 SKUID doesn't exist
-i( ERROR_404, {
+modifyTestDescriptor( ERROR_404, {
     newName: "test descriptor 1",
     newProcedureDescription: "This test is described by...",
     newIdSKU :39
 }, {id: 1})
 
 // ERROR_404 ID doesn't exist
-i( ERROR_404, {
+modifyTestDescriptor( ERROR_404, {
     newName: "test descriptor 1",
     newProcedureDescription: "This test is described by...",
     newIdSKU :1

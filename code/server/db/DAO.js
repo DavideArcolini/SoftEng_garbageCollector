@@ -10,6 +10,7 @@ class DAO {
         this.db = new sqlite.Database("ezwh.db", (err)=>{
             if(err) throw err;
         });
+        this.db.get("PRAGMA busy_timeout = 10000");
 
         /* ----- TABLES CREATION ----- */
         this.newTableUsers();
