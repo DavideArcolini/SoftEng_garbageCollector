@@ -196,7 +196,7 @@ function getTestResults(name,expected,rfid){
 
 test(name, async () => {
     try {
-        let res = await tr.getTestResults(rifd);
+        let res = await tr.getTestResults(rfid);
         expect(res).toEqual(expected)
     } catch (error) {
         expect(error).toBeInstanceOf(Error);

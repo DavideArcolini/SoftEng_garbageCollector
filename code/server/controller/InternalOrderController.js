@@ -2,7 +2,6 @@
 
 /* --------- IMPORT MODULES --------- */
 const dayjs         = require( 'dayjs');
-const { testEditRestockWrongOrderSkuItems, testEditRestockOrderTransportNoteNotFound } = require('../acceptanceTest/utils-restockorder');
 const ioDAO         = require("../db/InternalOrderDAO");
 
 
@@ -104,7 +103,7 @@ class InternalOrderController {
         try{
             
             let response = await this.ioDAO.getInternalOrderById(id);
-            if(response===undefined || response.length===0){
+            if(response.length===0){
                 return ERROR_404;
             }
             
@@ -144,7 +143,7 @@ class InternalOrderController {
      
         try{
             let result = await this.ioDAO.getInternalOrderById(id);
-            if(result==null || result.length===0){
+            if(result.length===0){
                return ERROR_404;
             }
 

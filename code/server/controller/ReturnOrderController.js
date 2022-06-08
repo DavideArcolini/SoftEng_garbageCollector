@@ -58,7 +58,7 @@ class ReturnOrderController {
         try{
            
             let response = await this.reoDAO.getReturnOrderById(id);
-            if(response==null || response[0]==null){
+            if(response.length===0){
                return ERROR_404;
             }
         
