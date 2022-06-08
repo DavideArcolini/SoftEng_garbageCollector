@@ -5,7 +5,7 @@ const user = {
     name : "Ciccio",
     surname: "Pasticcio",
     password: "testpassword",
-    type: "customer"
+    type: "supplier"
 }
 
 describe('test new user', () => {
@@ -14,13 +14,14 @@ describe('test new user', () => {
     })
 
     testNewUser('create user', user, undefined)
-    
+    testNewUser('create user: failed', user, Error)
+    testNewUser('failed', undefined, Error)
     afterAll(async() => {
         await dao.deleteAllUsers();
     })
 })
 
-describe('get users', () => {
+describe('get user', () => {
     beforeAll(async() => {
         await dao.deleteAllUsers();
         await dao.createUser(user.username, user.name, user.surname, user.password, user.type)
@@ -28,7 +29,7 @@ describe('get users', () => {
 
     testGetUser("login", {username : user.username, type: user.type}, {id:1, username: user.username, name: user.name})
     testGetUser("get user", {username: user.username}, {id:1, username: user.username, name: user.name})
-
+    testGetUser("failed", undefined, Error)
 })
 
 describe('modify permissions', () => {
@@ -39,7 +40,7 @@ describe('modify permissions', () => {
 
     testModifyPermissions('modified successfully', {username: user.username, oldType: user.type, newType: "clerk"}, {id:1})
     testModifyPermissions('modification failed', {}, undefined)
-
+    testModifyPermissions("error", undefined, Error)
     afterAll(async() => {
         await dao.deleteAllUsers();
     })
@@ -52,7 +53,7 @@ describe('delete user', () => {
     })
 
     testRemoveUser("remove successfully", {username: user.username, type: user.type}, undefined)
-
+    testRemoveUser("failed", undefined, Error)
 })
 
 function testNewUser(name, usr, expected) {
@@ -61,7 +62,7 @@ function testNewUser(name, usr, expected) {
             let res = await dao.createUser(usr.username, usr.name, usr.surname, usr.password, usr.type);
             expect(res).toEqual(expected);
         } catch(error) {
-            expect(error).toThrow(expected);
+            expect(error).toBeInstanceOf(expected);
         }
     })
 }

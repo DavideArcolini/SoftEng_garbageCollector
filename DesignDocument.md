@@ -84,7 +84,9 @@ We use a MVC pattern because the user of EZWH application can modify data and, c
 Here there are routers that calling models, called by the server.
 
 ## it.polito.ezwh.model
-N.B. All the classes are linked to the class `DataImpl` of `it.polito.ezwh.controller`
+
+N.B. All the classes are linked to the class `DataImpl` of `it.polito.ezwh.controller`, represented by the class `EzWarehouse` in the sequence diagrams.
+N.B. All the classes rely on their respective DAOs, and each DAO rely on class DAO.
 
 ```plantuml
 package it.polito.ezwh.model {
@@ -312,7 +314,7 @@ package it.polito.ezshop.exceptions {
 actor Manager as Manager
 participant HTTPCalls as HTTPCalls
 participant EzWarehouse as EzWarehouse
-participant SKU as SKU
+participant SKUController as SKU
 participant DAO as DAO
 
 group create SKU
@@ -354,6 +356,8 @@ end
 actor Manager as Manager
 participant HTTPCalls as HTTPCalls
 participant EzWarehouse as EzWarehouse
+participant SKUController as SKU
+participant PositionController as Position
 
 group Modify SKU Location
 group HTTP GET Request
@@ -408,7 +412,7 @@ end
 actor Manager as Manager
 participant HTTPCalls as HTTPCalls
 participant EzWarehouse as EzWarehouse
-participant Position as Position
+participant PositionController as Position
 participant DAO as DAO
 
 group create Position
@@ -452,7 +456,7 @@ end
 actor Manager as Manager
 participant HTTPCalls as HTTPCalls
 participant EzWarehouse as EzWarehouse
-participant Position as Position
+participant PositionController as Position
 participant DAO as DAO
 
 group modify Position
@@ -500,7 +504,7 @@ end
 actor Manager 
 participant HTTPCalls
 participant EzWarehouse
-participant RestockOrder
+participant RestockOrderController as RestockOrder
 participant DAO
 
 group Create RestockOrder
@@ -548,7 +552,7 @@ end
 actor Admin 
 participant HTTPCalls
 participant EzWarehouse
-participant User
+participant UserController as User
 participant DAO
 
 group create User
@@ -586,13 +590,15 @@ HTTPCalls-->Admin: 201 success
 deactivate HTTPCalls
 end
 ```
+
 ## **SC5.1.1**: *Record restock order arrival*
+
 ```plantuml
 @startuml
 actor Clerk 
 participant HTTPCalls
 participant EzWarehouse
-participant SKUItem
+participant SKUItemController as SKUItem
 participant DAO
 
 group Record Restock Order Arrival
@@ -665,8 +671,8 @@ end
 actor QualityEmployee 
 participant HTTPCalls
 participant EzWarehouse
-participant TestResult
-participant RestockOrder
+participant TestResultController as TestResult
+participant RestockOrderController as RestockOrder
 participant DAO
 
 group Test Item in Restock Order
@@ -741,9 +747,9 @@ group Stock all SKU items of a RO
 actor Clerk
 participant HTTPCalls as HTTPCalls
 participant EzWarehouse as EzWarehouse
-participant Position as Position
-participant SKU as SKU
-participant RestockOrder
+participant PositionController as Position
+participant SKUController as SKU
+participant RestockOrderController as RestockOrder
 participant DAO as DAO
 group HTTPRequest PUT
 Clerk -> HTTPCalls : select RFID
@@ -840,8 +846,8 @@ group Manage return order of SKU items
 actor Manager
 participant HTTPCalls as HTTPCalls
 participant EzWarehouse as EzWarehouse
-participant SKUItem 
-participant ReturnOrder
+participant SKUItemController as SKUItem 
+participant ReturnOrderController as ReturnOrder
 participant DAO as DAO
 
 group HTTP Request GET
@@ -911,7 +917,7 @@ HTTPCalls->Manager: '201 Success'
 deactivate HTTPCalls
 
 end
-``` 
+```
 
 ## **SC6.1** *Login*
 
@@ -937,7 +943,6 @@ HTTPCalls->User: return response.json
 end
 ```
 
-
 ## **SC9.1** *Internal Order IO accepted*
 
 ```plantuml
@@ -946,10 +951,10 @@ actor Customer
 actor Manager
 participant HTTPCalls as HTTPCalls
 participant EzWarehouse as EzWarehouse
-participant SKUItem 
-participant InternalOrder
-participant Position
-participant SKU
+participant SKUItemController as SKUItem 
+participant InternalOrderController as InternalOrder
+participant PositionController as Position
+participant SKUController as SKU
 participant DAO as DAO
 
 
@@ -1095,9 +1100,9 @@ actor Manager as M
 
 participant HTTPCalls as H
 participant EzWarehouse as ezwh
-participant InternalOrder as I
-participant SKU as S
-participant Position as P
+participant InternalOrderController as I
+participant SKUController as S
+participant PositionController as P
 participant DAO as DAO
 
 C -> H : starts internal order
@@ -1166,8 +1171,8 @@ deactivate H
 actor DeliveryEmployee as D
 participant HTTPCalls
 participant EzWarehouse as ezwh
-participant InternalOrder as I
-participant SKUItem as S
+participant InternalOrderController as I
+participant SKUItemController as S
 participant DAO as DAO
 
 D -> HTTPCalls : select internal order
@@ -1233,7 +1238,7 @@ deactivate HTTPCalls
 actor Supplier as S
 participant HTTPCalls as H
 participant EzWarehouse as ezwh
-participant Item as I
+participant ItemController as I
 participant DAO as DAO
 
 S -> H : insert item description
@@ -1266,7 +1271,7 @@ deactivate H
 actor Manager as M
 participant HTTPCalls as H
 participant EzWarehouse as ezwh
-participant TestDescriptor as T
+participant TestDescriptorController as T
 participant DAO as DAO
 
 M -> H : insert name

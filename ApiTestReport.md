@@ -1,4 +1,4 @@
-# Integration and API Test Report
+e# Integration and API Test Report
 
 **Authors**:
  * Riccardo Medina
@@ -6,13 +6,13 @@
  * Davide Arcolini
  * Giuseppe Atanasio
 
-**Date**: 25 May 2022
+**Date**: 8th June 2022
 
 **Version**: 
 | Version | Changes |
 | ------- |---------|
 | 1.0 | Added first version of API Test Report document. |
-
+| 1.1 | Add new dependency graph |
 # Contents
 
 - [Integration and API Test Report](#integration-and-api-test-report)
