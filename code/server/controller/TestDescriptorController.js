@@ -47,7 +47,7 @@ class TestDescriptorController {
             return (testdescriptor === undefined) ? ERROR_404 : {code: 200, message: testdescriptor};
 
         }catch(error){
-            return 500;
+            throw error;
         }
     }
 
