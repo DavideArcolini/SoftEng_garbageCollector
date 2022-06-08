@@ -325,7 +325,7 @@ class DAO {
   *  - newTableUser(): create the users table, if it does not already exist.
   *  - dropTableUser(): drop the users table.
   */
-  newTableUsers() {
+  async newTableUsers() {
 
     let users = [{
       username: "manager1@ezwh.com",
@@ -369,8 +369,19 @@ class DAO {
       type: "supplier",
       password: "testpassword"
     }
-  ]
-    return new Promise(async (res, rej)=>{
+    ]
+    let sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR, PRIMARY KEY(id)) ";
+    await this.db.run(sql, (err)=>{
+      if (err) throw new Error();})
+
+    sql = "INSERT OR IGNORE INTO USERS(USERNAME, NAME, SURNAME, PASSWORD, TYPE) VALUES (?,?,?,?,?)";
+    users.forEach(async (e) => {
+      let hash = await bcrypt.hash(e.password, saltRounds);
+      this.db.run(sql, [e.username, e.name, e.surname, hash, e.type], (err)=>{
+        if (err) throw new Error();
+      });
+    })
+    /* return new Promise(async (res, rej)=>{
       let sql = "CREATE TABLE IF NOT EXISTS USERS(id INTEGER, username VARCHAR UNIQUE, name VARCHAR, surname VARCHAR, password VARCHAR, type VARCHAR, PRIMARY KEY(id)) ";
       this.db.run(sql, (err)=>{
         if (err) {
@@ -392,7 +403,7 @@ class DAO {
         });
       })
 
-    });
+    }); */
   }
   
   dropTableUsers() {
