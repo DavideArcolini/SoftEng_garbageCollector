@@ -189,7 +189,7 @@ modifyTestResult("ERROREEEE",{id: 1, rfid: "1"},trar[0])
 
 
 describe('delete test', ()=> { //
-        beforeEach(() => {
+        beforeAll(() => {
             skuItemDAO.getSKUitemByRFID.mockReset();
             skuItemDAO.getSKUitemByRFID.mockReturnValueOnce(trar[0]).mockReturnValueOnce(undefined)
             .mockReturnValueOnce(trar[0]).mockImplementationOnce(() => {
