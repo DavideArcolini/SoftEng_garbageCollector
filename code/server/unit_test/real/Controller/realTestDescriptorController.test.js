@@ -16,7 +16,7 @@ const TestDAO               = require('../Database/testDAO');
 const testDAO               = new TestDAO();
 const skuDAO                = new SkuDAO(testDAO);
 const testDescriptorsDAO    = new TestDescriptorsDAO(testDAO);
-const td         = new TDController(skuDAO, testDescriptorsDAO);
+const td         = new TDController(testDAO);
 
 /* --------- ERROR MESSAGES --------- */
 const MESSG_200 = {code: 200, message: 'Ok'}
@@ -191,7 +191,7 @@ modifyTestDescriptor( ERROR_404, {
 modifyTestDescriptor( ERROR_404, {
     newName: "test descriptor 1",
     newProcedureDescription: "This test is described by...",
-    newIdSKU :1
+    newIdSKU :33
 }, {id: 2})
 
 })

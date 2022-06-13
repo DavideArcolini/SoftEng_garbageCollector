@@ -147,7 +147,7 @@ createTestResult([1,1],201,503,undefined)
 
 
 describe('edit test', ()=> { //
-        beforeEach(() => {
+        beforeAll(() => {
             skuItemDAO.getSKUitemByRFID.mockReset();
             skuItemDAO.getSKUitemByRFID.mockReturnValueOnce(trar[0]).mockReturnValueOnce(undefined).mockReturnValue(trar[0])
             .mockReturnValueOnce(trar[0]).mockImplementationOnce(() => {

@@ -32,7 +32,7 @@ class ItemController {
                 message: items
             };
   
-        }catch{
+        }catch(error){
             throw error;
         }
     }
@@ -48,7 +48,7 @@ class ItemController {
             if(item === undefined){
                 return ERROR_404
             }else if(item.SKUId==null){
-                item.SKUId=1;
+                item.SKUId=1; //official put skuid =null, then try to read it as array but null can't be readed
                 return {code: 200, message: item};
             }else{
                 return{code: 200, message: item};

@@ -20,7 +20,7 @@ const skuDAO                = new SkuDAO(testDAO);
 const skuItemDAO            = new SkuItemDAO(testDAO);
 const testDescriptorsDAO    = new TestDescriptorsDAO(testDAO);
 const testResultDAO    = new TestResultDAO(testDAO);
-const tr         = new TRController(skuItemDAO,skuDAO, testDescriptorsDAO ,testResultDAO);
+const tr         = new TRController(testDAO);
 
 /* --------- ERROR MESSAGES --------- */
 const MESSG_200 = {code: 200, message: 'Ok'}
@@ -272,21 +272,31 @@ modifyTestResult(ERROR_404,{id: 12, rfid: "45"},{
 
 describe('delete test', ()=> { 
     beforeAll(async() => {
-        let sql = "INSERT INTO TEST_RESULTS(rfid, idTestDescriptor, Date, Result) VALUES(?,?,?,?)";
-        await testDAO.run(sql,["1",14,"2021/11/28",false]);
+        let sql="INSERT INTO SKUITEMS (RFID, SKUId, Available, DateOfStock) VALUES (?, ?, 0, ?)";
+        await testDAO.run(sql,["48",48,"2021/11/29 12:30"]);
+        sql = "INSERT INTO TEST_RESULTS(rfid, idTestDescriptor, Date, Result) VALUES(?,?,?,?)";
+        await testDAO.run(sql,["48",14,"2021/11/28",false]);
     })
+
+    afterAll(async()=>{
+    sql= "DELETE FROM TEST_RESULTS"
+    await testDAO.run(sql);
+    sql="DELETE FROM SKUITEMS WHERE SKUId=(?)"
+    await testDAO.run(sql,48);
+})
 
 
 //204
-deleteTestResult(MESSG_204,{id: 1, rfid: "1"})
+deleteTestResult(MESSG_204,{id: 1, rfid: "48"})
 
 //ERROR_404 RFID doesn't exist
-deleteTestResult(ERROR_404,{id: 1, rfid: "2"})
+deleteTestResult(ERROR_404,{id: 1, rfid: "50"})
 
 //ERROR_404 ID doesn't exist
-deleteTestResult(ERROR_404,{id: 24, rfid: "1"})
+deleteTestResult(ERROR_404,{id: 24, rfid: "48"})
 
 })
+
 
 
 

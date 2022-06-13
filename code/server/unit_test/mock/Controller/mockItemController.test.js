@@ -48,7 +48,7 @@ let ih=[{
 */
 
 describe('get items', ()=> { 
-    beforeEach(() => {
+    beforeAll(() => {
         itemDAO.getItems.mockReset();
         itemDAO.getItems.mockReturnValueOnce(ih).mockImplementationOnce(() => {
             throw new Error();
@@ -70,7 +70,7 @@ getItems("Quasiii");
 
 
 describe('get item by id', ()=> { 
-    beforeEach(() => {
+    beforeAll(() => {
         itemDAO.getItemById.mockReset();
         itemDAO.getItemById.mockReturnValue(ih[0]).mockReturnValue(ih[1]).mockReturnValue(undefined).mockImplementationOnce(() => {
             throw new Error();
@@ -99,7 +99,7 @@ getItemById({id: 1}, "Arcane final is ABSURD");
 
 
 describe('add item', ()=> { 
-    beforeEach(() => {
+    beforeAll(() => {
         skuDAO.getSKUByID.mockReset();
         skuDAO.getSKUByID.mockReturnValueOnce(ih[0]).mockReturnValueOnce(ih[1]).mockReturnValueOnce(ih[0]).mockReturnValueOnce(undefined)
         .mockImplementationOnce(() => {
@@ -137,7 +137,7 @@ createItem("Mancano altri 3 file =(",ih[0])
 
 
 describe('edit item', ()=> { 
-    beforeEach(() => {
+    beforeAll(() => {
         itemDAO.getItemById.mockReset();
         itemDAO.getItemById.mockReturnValueOnce(ih[0]).mockReturnValueOnce(undefined).mockImplementationOnce(() => {
             throw new Error();
@@ -165,7 +165,7 @@ modyfyItem("Zanzara vaffanculo!!!!!!",ih[0], {id: 1})
 
 
 describe('delete item', ()=> { //
-    beforeEach(() => {
+    beforeAll(() => {
         itemDAO.deleteItem.mockReset();
         itemDAO.deleteItem.mockReturnValueOnce(ih[0]).mockImplementationOnce(() => {
             throw new Error();
@@ -239,7 +239,7 @@ function modyfyItem(expected,json,id){
         })
 }
 
-function deleteItem(resultget,resultrun,expected,id){
+function deleteItem(expected,id){
  
         test('delete item', async () => {
             try {
