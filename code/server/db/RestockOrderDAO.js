@@ -38,7 +38,17 @@
     */
          getProductsOfRestockOrder = async (id) => {
 
-            const querySQL = "SELECT id, SKUId, description, price, COUNT(*) as qty FROM RESTOCK_ORDERS WHERE id==? GROUP BY id, SKUId, description, price ";
+            const querySQL = `
+                SELECT  RO.id, 
+                        RO.SKUId, 
+                        RO.description, 
+                        RO.price, 
+                        COUNT(*) AS qty 
+                        I.id AS itemId
+                FROM    RESTOCK_ORDERS RO, ITEMS I
+                WHERE   id==? 
+                        AND RO.SKUId=I.SKUId
+                GROUP BY RO.id, RO.SKUId, RO.description, RO.price, itemId`;
             return this.dao.all(
                 querySQL,id
             ).then((result)=>{
@@ -60,7 +70,12 @@
     */
           getSkuItemsOfRestockOrder = async (id) => {
 
-            const querySQL = "SELECT SKUId, RFID FROM RESTOCK_ORDERS WHERE id==? AND RFID IS NOT NULL";
+            const querySQL = `
+            SELECT  RO.SKUId, RO.RFID, I.id as itemId
+            FROM    RESTOCK_ORDERS RO, ITEMS I
+            WHERE   RO.id==? 
+                    AND RO.SKUId = I.id
+                    AND RFID IS NOT NULL`;
             return this.dao.all(
                 querySQL,id
             ).then((result)=>{
@@ -113,7 +128,27 @@
     */
  
      getRestockOrderById = async (id) => {
-         const querySQL = "SELECT id, issueDate, state, supplierId, SKUId, description, price, deliveryDate, COUNT(*) as qty FROM RESTOCK_ORDERS WHERE id==? GROUP BY id, issueDate, state, supplierId, SKUId, description, price ";
+         const querySQL = `
+            SELECT      RO.id, 
+                        RO.issueDate, 
+                        RO.state, 
+                        RO.supplierId, 
+                        RO.SKUId, 
+                        RO.description, 
+                        RO.price, 
+                        RO.deliveryDate, 
+                        COUNT(*) as qty,
+                        I.id AS itemId
+            FROM        RESTOCK_ORDERS RO, ITEMS I
+            WHERE       RO.id==? 
+                        AND RO.SKUId=I.SKUId
+            GROUP BY    id, 
+                        issueDate, 
+                        state, 
+                        supplierId, 
+                        SKUId, 
+                        description, 
+                        price `;
          return await this.dao.all(
              querySQL,
              [
