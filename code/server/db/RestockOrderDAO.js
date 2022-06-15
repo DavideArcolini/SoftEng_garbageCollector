@@ -113,7 +113,7 @@
     */
  
      getRestockOrderById = async (id) => {
-         const querySQL = "SELECT id, issueDate, state, supplierId, SKUId, description, price, deliveryDate, COUNT(*) as qty FROM RESTOCK_ORDERS WHERE id==? GROUP BY id, issueDate, state, supplierId, SKUId, description, price ";
+         const querySQL = "SELECT id, issueDate, state, supplierId, SKUId,itemId, description, price, deliveryDate, COUNT(*) as qty FROM RESTOCK_ORDERS WHERE id==? GROUP BY id, issueDate, state, supplierId, SKUId,itemId, description, price ";
          return await this.dao.all(
              querySQL,
              [
@@ -147,9 +147,9 @@
             products.forEach(async (prod)=>
             {
                 await Promise.all([...Array(parseInt(prod.qty))].map(async () => {
-                    querySQL = "INSERT INTO RESTOCK_ORDERS(id, issueDate, state, supplierId, SKUId, description, price) VALUES(?,?,?,?,?,?,?)";
+                    querySQL = "INSERT INTO RESTOCK_ORDERS(id, issueDate, state, supplierId, SKUId,itemId ,description, price) VALUES(?,?,?,?,?,?,?,?)";
                     /* add a new row for every product */
-                    await this.dao.run(querySQL,[id, issueDate, "ISSUED", supplierId, prod.SKUId, prod.description, prod.price])
+                    await this.dao.run(querySQL,[id, issueDate, "ISSUED", supplierId, prod.SKUId,prod.itemId, prod.description, prod.price])
                 }));
 
             })
@@ -207,9 +207,9 @@
                 /* update the record associated to the skuItem */
                 sql = `
                     UPDATE RESTOCK_ORDERS 
-                    SET RFID = (?) 
+                    SET RFID = (?) AND itemId=(?)
                     WHERE SKUId = (?) AND id = (?) AND key = (?)`
-                await this.dao.run(sql,[s.rfid, s.SKUId, id, pid.min_id])
+                await this.dao.run(sql,[s.rfid,s.itemId, s.SKUId, id, pid.min_id])
                
             }
     

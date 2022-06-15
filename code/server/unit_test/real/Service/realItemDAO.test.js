@@ -117,7 +117,7 @@ await dao.run(sql);
 
 
 //200
-getItemById("Success",tis[0].id,tis[0]);
+getItemById("Success",tis[0].id,tis[0],tis[0].supplierId);
 
 })
 
@@ -180,7 +180,7 @@ afterAll(async() => {
 
 
 //200
-modifyItem("success",tis2,tis[0].id,tis1);
+modifyItem("success",tis2,tis[0].id,tis[0].supplierId,tis1);
 
 })
 
@@ -214,7 +214,7 @@ beforeAll(async() => {
 
 
 //204
-deleteItem("Success",tis[0],tis[0].id)
+deleteItem("Success",tis[0],tis[0].id,tis[0].supplierId)
 
 
 
@@ -314,12 +314,12 @@ test(name, async () => {
 }
 
 
-function getItemById(name,id,expected){
+function getItemById(name,id,supplierId,expected){
 
 test(name, async () => {
 
     try {
-        let res = await i.getItemById(id);
+        let res = await i.getItemById(id,supplierId);
         expect(res).toEqual(expected)
     } catch (error) {
         expect(error).toBeInstanceOf(Error);
@@ -341,12 +341,12 @@ test(name, async () => {
 }
 
 
-function modifyItem(name,expected,id,json){
+function modifyItem(name,expected,id,supplierId,json){
 
 
 test(name, async () => {
     try {
-        let res = await i.modifyItem(id,json);
+        let res = await i.modifyItem(id,supplierId,json);
         expect(res).toEqual(expected)
     } catch (error) {
         expect(error).toBeInstanceOf(Error);
@@ -354,12 +354,12 @@ test(name, async () => {
 })
 }
 
-function deleteItem(name,expected,id){
+function deleteItem(name,expected,id,supplierId){
 
 test(name, async () => {
 
     try {
-        let res = await i.deleteItem(id);
+        let res = await i.deleteItem(id,supplierId);
         expect(res).toEqual(expected)
     } catch (error) {
         expect(error).toBeInstanceOf(Error);

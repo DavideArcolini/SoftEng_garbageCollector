@@ -79,16 +79,16 @@ describe('get item by id', ()=> {
 
 
 //200 skuid not null
-getItemById({id: 1},ih[0]);
+getItemById({id: 1,supplierId : 2},ih[0]);
 
 //200 skuid not null
-getItemById({id: 1},ih[1]);
+getItemById({id: 1,supplierId : 2},ih[1]);
 
 //404
-getItemById({id: 1}, ERROR_404);
+getItemById({id: 1,supplierId : 2}, ERROR_404);
 
 //500
-getItemById({id: 1}, "Arcane final is ABSURD");
+getItemById({id: 1,supplierId : 2}, "Arcane final is ABSURD");
 })
 
 /*
@@ -147,13 +147,13 @@ describe('edit item', ()=> {
     })
 
 //200
-modyfyItem(MESSG_200,ih[0], {id: 1})
+modyfyItem(MESSG_200,ih[0], {id: 1,supplierId : 2})
 
 //404 Item doesn't exist
-modyfyItem(ERROR_404,ih[0], {id: 1})
+modyfyItem(ERROR_404,ih[0], {id: 1,supplierId : 2})
 
 //503
-modyfyItem("Zanzara vaffanculo!!!!!!",ih[0], {id: 1})
+modyfyItem("Zanzara vaffanculo!!!!!!",ih[0], {id: 1,supplierId : 2})
 })
 
 
@@ -174,11 +174,11 @@ describe('delete item', ()=> { //
     })
 
 //204
-deleteItem(MESSG_204,{id: 1})
+deleteItem(MESSG_204,{id: 1,supplierId : 2})
 
 
 //503
-deleteItem("Fossi viva ti riammazzerei con piacere stronza zanzara",{id: 1})
+deleteItem("Fossi viva ti riammazzerei con piacere stronza zanzara",{id: 1,supplierId : 2})
 })
 
 
@@ -202,11 +202,11 @@ function getItems(expected){
 }
 
 
-function getItemById(id,expected){
+function getItemById(params,expected){
     
         test('get item by id', async () => {
             try {
-                let res = await i.getItemById(id);
+                let res = await i.getItemById(params);
                 expect(res).toEqual(expected);
             } catch (error) {
                 expect(error).toBeInstanceOf(Error);
@@ -227,11 +227,11 @@ function createItem(expected,json){
     })
 }
 
-function modyfyItem(expected,json,id){
+function modyfyItem(expected,json,params){
    
         test('edit item', async () => {
             try {
-                let res = await i.modifyItem(json,id);
+                let res = await i.modifyItem(json,params);
                 expect(res).toEqual(expected);
             } catch (error) {
                 expect(error).toBeInstanceOf(Error);
@@ -239,11 +239,11 @@ function modyfyItem(expected,json,id){
         })
 }
 
-function deleteItem(expected,id){
+function deleteItem(expected,params){
  
         test('delete item', async () => {
             try {
-                let res = await i.deleteItem(id);
+                let res = await i.deleteItem(params);
                 expect(res).toEqual(expected);
             } catch (error) {
                 expect(error).toBeInstanceOf(Error);

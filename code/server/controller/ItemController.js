@@ -41,10 +41,11 @@ class ItemController {
     getItemById = async (params) => { 
         
         const targetId=params.id;
+        const targetSupId=params.supplierId;
 
         try {
             //search on DB
-            const item = await this.itemDAO.getItemById(targetId);
+            const item = await this.itemDAO.getItemById(targetId,targetSupId);
             if(item === undefined){
                 return ERROR_404
             }else if(item.SKUId==null){
@@ -95,16 +96,17 @@ class ItemController {
     modifyItem = async(body,params) => { 
 
         const targetId=params.id;
+        const targetSupId=params.supplierId;
         
         try{
             /* checking  if exist item with same id */ 
-            let item = await this.itemDAO.getItemById(targetId);
+            let item = await this.itemDAO.getItemById(targetId,targetSupId);
             if (item === undefined) {
                 return ERROR_404;
             }
 
             /* update item */
-            await this.itemDAO.modifyItem(targetId, body);
+            await this.itemDAO.modifyItem(targetId,targetSupId, body);
             return MESSG_200;
         }
         catch(error){
@@ -117,11 +119,12 @@ class ItemController {
     deleteItem = async (params) => {
 
         const targetId=params.id;
+        const targetSupId=params.supplierId;
 
         try{
 
             /* accessing DB through DAO */
-            await this.itemDAO.deleteItem(targetId);
+            await this.itemDAO.deleteItem(targetId,targetSupId);
             return MESSG_204;
         }catch(error){
             throw error;
