@@ -59,7 +59,7 @@ function testPostNewTestDescriptor(agent, mytd, expCode){
             else {
                 testdescriptor = newTestDescriptor(mytd.name, mytd.procedureDescription, id[mytd.idSKU]);
             }
-            // console.log(testdescriptor);
+            //console.log(testdescriptor);
             agent.post('/api/testDescriptor')
             .send(testdescriptor)
             .then(res2 => {
@@ -159,7 +159,6 @@ function testModifyTestDescriptorById(agent, newtd, tdidith, expCode){
             agent.put('/api/testDescriptor/'+myid)
             .send(sendnewtd)
             .then(function(res){
-                console.log(res.status)
                 res.should.have.status(expCode);
                 done();
             }).catch(err=>done(err));               

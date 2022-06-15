@@ -37,6 +37,7 @@ const restockOrderArray = [
         state: 'ISSUED',
         supplierId: 1,
         SKUId: 12,
+        itemId: 10,
         description: 'a product',
         price: 10.99,
         deliveryDate: null,
@@ -48,6 +49,7 @@ const restockOrderArray = [
         state: 'COMPLEDRETURN',
         supplierId: 1,
         SKUId: 180,
+        itemId: 11,
         description: 'another product',
         price: 11.99,
         deliveryDate: null,
@@ -69,15 +71,15 @@ const restockOrderProducts = [
 
         id: 1,
         SKUId: 180,
-        itemId: 18,
+        itemId: 11,
         description: 'another product',
         price: 11.99,
         qty: 2
       },
 ]
 const skuItems = [
-    { SKUId: 1, itemId: 10, RFID: '00000000000000000000000000000001' } ,
-    { SKUId: 1, itemId: 10, RFID: '00000000000000000000000000000002' } 
+    { SKUId: 12, itemId: 10, RFID: '00000000000000000000000000000001' } ,
+    { SKUId: 180, itemId: 11, RFID: '00000000000000000000000000000002' } 
 
 ]
 const products =  restockOrderProducts.map((x)=>{

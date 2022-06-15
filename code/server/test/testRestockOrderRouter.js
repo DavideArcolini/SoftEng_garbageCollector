@@ -5,6 +5,8 @@
 */
 'use strict'
 const { expect } = require('chai');
+const DAO = require('../db/DAO')
+const dao = new DAO()
 /* ------------ MODULE IMPORT ------------ */
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -28,6 +30,9 @@ var agent = chai.request.agent(app);
  *          POST /api/restockOrder
  * ==========================================================
  */
+
+
+
 /**
  * API:
  *         GET /api/restockOrders/:id
@@ -38,12 +43,12 @@ var agent = chai.request.agent(app);
   describe('get restock order by id',()=>{
      before(async() => {
         await agent.post('/api/restockOrder/')
-        .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+        .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, itemId:1, description: 'a product', price: 0.01, qty: 1 } ]})
         .then(function (res) {
             res.should.have.status(201);
         })
         await agent.post('/api/restockOrder/')
-        .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+        .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 2, itemId: 2, description: 'a product', price: 0.01, qty: 1 } ]})
         .then(function (res) {
             res.should.have.status(201);
         })
@@ -107,7 +112,7 @@ getRestockOrderById();
   describe('create restock order',()=>{
 
   it('create restock order',async()=>{
-    let req = {issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]};
+    let req = {issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, itemId:1, description: 'a product', price: 0.01, qty: 1 } ]};
 
     await agent.post('/api/restockOrder/').send(req).then(function(res){
       res.should.have.status(201);
@@ -116,7 +121,7 @@ getRestockOrderById();
       })
     })
     it('create restock order - UNPROCESSABLE ENTITY',async()=>{
-      let req = {issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: -0.01, qty: 1 } ]};
+      let req = {issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, itemId:1, description: 'a product', price: -0.01, qty: 1 } ]};
 
       await agent.post('/api/restockOrder/').send(req).then(function(res){
         res.should.have.status(422);
@@ -155,12 +160,12 @@ createRestockOrder();
 
     before(async() => {
       await agent.post('/api/restockOrder/')
-      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, itemId:1, description: 'a product', price: 0.01, qty: 1 } ]})
       .then(function (res) {
           res.should.have.status(201);
       })
       await agent.post('/api/restockOrder/')
-      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, itemId:1, description: 'a product', price: 0.01, qty: 1 } ]})
       .then(function (res) {
           res.should.have.status(201);
       })
@@ -208,12 +213,12 @@ getRestockOrders(200);
 
     before(async() => {
       await agent.post('/api/restockOrder/')
-      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, itemId:1, description: 'a product', price: 0.01, qty: 1 } ]})
       .then(function (res) {
           res.should.have.status(201);
       })
       await agent.post('/api/restockOrder/')
-      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, itemId:1, description: 'a product', price: 0.01, qty: 1 } ]})
       .then(function (res) {
           res.should.have.status(201);
       })
@@ -259,7 +264,7 @@ getRestockOrdersIssued(200);
   describe('modify restock order state',()=>{
     before(async() => {
       await agent.post('/api/restockOrder/')
-      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, itemId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
       .then(function (res) {
           res.should.have.status(201);
       })
@@ -330,7 +335,7 @@ modifyRestockOrderState();
   describe('add transport note',()=>{
     before(async() => {
       await agent.post('/api/restockOrder/')
-      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, itemId:1, description: 'a product', price: 0.01, qty: 1 } ]})
       .then(function (res) {
           res.should.have.status(201);
       })
@@ -408,7 +413,7 @@ addTransportNote();
   describe('set skuItems',()=>{
     before(async() => {
       await agent.post('/api/restockOrder/')
-      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, itemId:1, description: 'a product', price: 0.01, qty: 1 } ]})
       .then(function (res) {
           res.should.have.status(201);
       })
@@ -431,7 +436,7 @@ addTransportNote();
       res.should.to.be.json;
       res.body.should.be.a('array');
       let id = res.body[res.body.length-1].id;
-      await agent.put('/api/restockOrder/'+id+'/skuItems').send({skuItems: [{SKUId: 1, rfid: "12345678901234567890123456789016"}]}).then(function(res){
+      await agent.put('/api/restockOrder/'+id+'/skuItems').send({skuItems: [{SKUId: 1, itemId:1, rfid: "12345678901234567890123456789016"}]}).then(function(res){
       res.should.have.status(200);
     
       })
@@ -444,7 +449,7 @@ addTransportNote();
       res.should.to.be.json;
       res.body.should.be.a('array');
       let id = res.body[res.body.length-1].id+100;
-    await agent.put('/api/restockOrder/'+id+'/skuItems').send({skuItems: [{SKUId: 1, rfid: "12345678901234567890123456789016"}]}).then(function(res){
+    await agent.put('/api/restockOrder/'+id+'/skuItems').send({skuItems: [{SKUId: 1, itemId:1, rfid: "12345678901234567890123456789016"}]}).then(function(res){
       res.should.have.status(404);
     
       })
@@ -459,7 +464,7 @@ addTransportNote();
       let id = res.body[res.body.length-1].id;
       await agent.put('/api/restockOrder/'+id).send({newState: 'DELIVERY'}).then(async(res)=>{
         res.should.have.status(200);
-      await agent.put('/api/restockOrder/'+id+'/skuItems').send({skuItems: [{SKUId: 1, rfid: "12345678901234567890123456789016"}]}).then(function(res){
+      await agent.put('/api/restockOrder/'+id+'/skuItems').send({skuItems: [{SKUId: 1, itemId:1, rfid: "12345678901234567890123456789016"}]}).then(function(res){
       res.should.have.status(422);
       })
       })
@@ -492,7 +497,7 @@ setSkuItems();
 
     before(async() => {
       await agent.post('/api/restockOrder/')
-      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, itemId:1, description: 'a product', price: 0.01, qty: 1 } ]})
       .then(function (res) {
           res.should.have.status(201);
       })
@@ -574,7 +579,7 @@ getReturnItems();
   describe('delete restock order',()=>{
     before(async() => {
       await agent.post('/api/restockOrder/')
-      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]})
+      .send({issueDate: '2022/05/12 17:44', supplierId: 7, products: [ { SKUId: 1, itemId:1, description: 'a product', price: 0.01, qty: 1 } ]})
       .then(function (res) {
           res.should.have.status(201);
       })

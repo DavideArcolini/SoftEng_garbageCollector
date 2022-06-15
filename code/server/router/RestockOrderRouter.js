@@ -247,7 +247,7 @@ router.put(
     validationHandler,
     async(req,res)=>{
         try{
-        let result = await roc.setSkuItems(req.params.id,req.body.skuItems);
+        let result = await roc.setSkuItems(req.params.id,req.body.skuItems, req.body.ItemId);
         return res.status(result.code).end();
         }catch(error){
             return res.status(503).end();

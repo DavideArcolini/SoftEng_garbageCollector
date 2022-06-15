@@ -38,17 +38,7 @@
     */
          getProductsOfRestockOrder = async (id) => {
 
-            const querySQL = `
-                SELECT  RO.id, 
-                        RO.SKUId, 
-                        RO.description, 
-                        RO.price, 
-                        COUNT(*) AS qty 
-                        I.id AS itemId
-                FROM    RESTOCK_ORDERS RO, ITEMS I
-                WHERE   id==? 
-                        AND RO.SKUId=I.SKUId
-                GROUP BY RO.id, RO.SKUId, RO.description, RO.price, itemId`;
+            const querySQL = "SELECT id, SKUId, description, price, COUNT(*) as qty FROM RESTOCK_ORDERS WHERE id==? GROUP BY id, SKUId, description, price ";
             return this.dao.all(
                 querySQL,id
             ).then((result)=>{
@@ -71,11 +61,9 @@
           getSkuItemsOfRestockOrder = async (id) => {
 
             const querySQL = `
-            SELECT  RO.SKUId, RO.RFID, I.id as itemId
-            FROM    RESTOCK_ORDERS RO, ITEMS I
-            WHERE   RO.id==? 
-                    AND RO.SKUId = I.id
-                    AND RFID IS NOT NULL`;
+                SELECT  SKUId, RFID, ItemId 
+                FROM RESTOCK_ORDERS 
+                WHERE id==? AND RFID IS NOT NULL`;
             return this.dao.all(
                 querySQL,id
             ).then((result)=>{
@@ -128,27 +116,7 @@
     */
  
      getRestockOrderById = async (id) => {
-         const querySQL = `
-            SELECT      RO.id, 
-                        RO.issueDate, 
-                        RO.state, 
-                        RO.supplierId, 
-                        RO.SKUId, 
-                        RO.description, 
-                        RO.price, 
-                        RO.deliveryDate, 
-                        COUNT(*) as qty,
-                        I.id AS itemId
-            FROM        RESTOCK_ORDERS RO, ITEMS I
-            WHERE       RO.id==? 
-                        AND RO.SKUId=I.SKUId
-            GROUP BY    id, 
-                        issueDate, 
-                        state, 
-                        supplierId, 
-                        SKUId, 
-                        description, 
-                        price `;
+         const querySQL = "SELECT id, issueDate, state, supplierId, SKUId, itemId description, price, deliveryDate, COUNT(*) as qty FROM RESTOCK_ORDERS WHERE id==? GROUP BY id, issueDate, state, supplierId, SKUId, itemId, description, price ";
          return await this.dao.all(
              querySQL,
              [
@@ -169,7 +137,7 @@
       * @param {Number} supplierId
       * @param {products} Array  
       */
-     createRestockOrder = async (issueDate,supplierId,products) => {
+      createRestockOrder = async (issueDate,supplierId,products) => {
         /*  assign the ID to the new restock order*/
         try{
         let querySQL = "SELECT MAX(id) as id FROM RESTOCK_ORDERS"
@@ -182,9 +150,9 @@
             products.forEach(async (prod)=>
             {
                 await Promise.all([...Array(parseInt(prod.qty))].map(async () => {
-                    querySQL = "INSERT INTO RESTOCK_ORDERS(id, issueDate, state, supplierId, SKUId, description, price) VALUES(?,?,?,?,?,?,?)";
+                    querySQL = "INSERT INTO RESTOCK_ORDERS(id, issueDate, state, supplierId, SKUId,itemId ,description, price) VALUES(?,?,?,?,?,?,?,?)";
                     /* add a new row for every product */
-                    await this.dao.run(querySQL,[id, issueDate, "ISSUED", supplierId, prod.SKUId, prod.description, prod.price])
+                    await this.dao.run(querySQL,[id, issueDate, "ISSUED", supplierId, prod.SKUId,prod.itemId, prod.description, prod.price])
                 }));
 
             })
@@ -204,21 +172,21 @@
       * @param {Number} id 
       * @param {String} newState
       */
-     modifyRestockOrderState = async (id, newState) => {
-         const querySQL = "UPDATE RESTOCK_ORDERS SET state=? WHERE id==?";
-         return this.dao.run(
-             querySQL,
-             [
-                 newState, 
-                 id
-             ]
-         ).then((result) => {
-             return result
-         }).catch((error) => {
-            
-             throw new Error(error.message);
-         });
-     }
+      modifyRestockOrderState = async (id, newState) => {
+        const querySQL = "UPDATE RESTOCK_ORDERS SET state=? WHERE id==?";
+        return this.dao.run(
+            querySQL,
+            [
+                newState, 
+                id
+            ]
+        ).then((result) => {
+            return result
+        }).catch((error) => {
+           
+            throw new Error(error.message);
+        });
+    }
  
  
      /**

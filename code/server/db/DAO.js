@@ -232,7 +232,19 @@ class DAO {
     */
     newTableRO() {
       return new Promise((res, rej)=>{
-          const sql = "CREATE TABLE IF NOT EXISTS RESTOCK_ORDERS(key INTEGER PRIMARY KEY, id INTEGER, issueDate DATE, state VARCHAR, supplierId INTEGER, deliveryDate DATE, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR) ";
+          const sql = `
+          CREATE TABLE IF NOT EXISTS RESTOCK_ORDERS(
+            key                       INTEGER PRIMARY KEY, 
+            id                        INTEGER, 
+            issueDate                 DATE, 
+            state                     VARCHAR, 
+            supplierId                INTEGER, 
+            deliveryDate              DATE, 
+            SKUId                     INTEGER ,
+            itemId                    Integer, 
+            description               VARCHAR, 
+            price                     FLOAT, 
+            RFID                      VARCHAR)`;
           this.db.run(sql, (err)=>{
               if (err) {
                   rej(err);

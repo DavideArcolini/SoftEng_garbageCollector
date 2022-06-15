@@ -42,7 +42,8 @@ function testPostNewItem(agent, myitem, expCode){
             let currentItem = newItem(myitem.id, myitem.description, myitem.price, currskuid, idsupp[myitem.supplierId]);
             agent.post('/api/item')
             .send(currentItem)
-            .then((res) => {
+            .then(res => {
+                //console.log(res);
                 assert.equal(res.status, expCode);
                 done();
             }).catch(err => done(err));
