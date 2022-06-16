@@ -1,0 +1,317 @@
+Server listening at http://localhost:3001
+
+
+  create internal order
+[ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]
+    ✔ create internal order (1346ms)
+[ { SKUId: 1, description: 'a product', price: -0.01, qty: 1 } ]
+    ✔ create internal order - UNPROCESSABLE
+
+  get internal order by id
+[ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]
+[ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]
+    ✔ get internal order by id
+    ✔ get internal order by id
+    ✔ get internal order by id - NOT FOUND
+    ✔ get internal order by id - UNPROCESSABLE ENTITY
+
+  get internal orders
+[ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]
+[ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]
+    ✔ get internal orders
+    ✔ get internal orders
+
+  get internal orders issued
+[ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]
+[ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]
+    ✔ get internal orders issued
+    ✔ get internal orders issued
+
+  get internal orders accepted
+[ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]
+[ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]
+    ✔ get internal orders accepted
+
+  modify internal order state
+[ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]
+    ✔ modify internal order state accpeted
+    ✔ modify internal order state - NOT FOUND
+    ✔ modify internal order state - NOT FOUND
+    ✔ modify internal order state completed
+
+  delete internal order
+[ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]
+    ✔ delete internal order
+
+  API: GET /api/positions
+    ✔ [200] OK
+
+  API: POST /api/position
+    ✔ [201] Created
+    ✔ [422] Unprocessable Entity (constraints on positionID failed)
+    ✔ [422] Unprocessable Entity (constraints on maxWeight/maxVolume failed)
+    ✔ [422] Unprocessable Entity (missing parameters)
+
+  API: PUT /api/position/:positionID
+    ✔ [200] OK
+    ✔ [422] Unprocessable Entity (constraints on maxWeight/maxVolume failed)
+    ✔ [404] Not Found (positionID non existing in DB)
+
+  PUT /api/position/:positionID/changeID
+    ✔ [200] OK
+    ✔ [422] Unprocessable Entity (constraints on newPositionID failed)
+    ✔ [404] Not Found (positionID non existing in DB)
+
+  DELETE /api/position/:positionID
+    ✔ [204] No Content
+    ✔ [422] Unprocessable Entity (constraints on positionID failed)
+
+  API: GET /api/skuitems
+    ✔ [200] OK
+
+  API: GET /api/skuitems/sku/:id
+    ✔ [200] OK
+    ✔ [422] Unprocessable Entity (id constraint failed)
+
+  API: GET /api/skuitems/:rfid
+    ✔ [200] OK
+    ✔ [404] Not Found (rfid non existing)
+    ✔ [422] Unprocessable Entity (id constraint failed)
+
+  API: POST /api/skuitem
+    ✔ [201] Created
+    ✔ [404] Not Found (SKUid non existing)
+    ✔ [422] Unprocessable Entity (body parameters constraints failed)
+
+  API: PUT /api/skuitems/:rfid
+    ✔ [200] OK
+    ✔ [404] Not Found (rfid non existing)
+    ✔ [422] Unprocessable Entity (body parameters constraints failed)
+    ✔ [422] Unprocessable Entity (rfid constraints failed)
+
+  API: DELETE /api/skuitems/:rfid
+    ✔ [204] No Content
+    ✔ [422] Unprocessable Entity
+
+  API: GET /api/skus
+    ✔ [200] OK
+
+  API: GET /api/skus/:id
+    ✔ [200] OK
+    ✔ [404] Not Found (id non existing)
+    ✔ [422] Unprocessable Entity (id constraints failed)
+
+  API: POST /api/sku
+    ✔ [201] Created
+    ✔ [422] Unprocessable Entity (body constraints failed)
+
+  API: PUT /api/sku/:id
+    ✔ [200] OK
+    ✔ [404] Not Found (id non existing)
+    ✔ [422] Unprocessable Entity (body constraints failed)
+
+  API: PUT /api/sku/:id/position
+    ✔ [200] OK
+    ✔ [404] Not Found (id non existing)
+    ✔ [404] Not Found (position non existing)
+    ✔ [422] Unprocessable Entity (body constraints failed)
+
+  API: DELETE /api/skus/:id
+    ✔ 204 No Content
+
+  new test descriptor
+    ✔ 201 return
+    ✔ empty body
+    ✔ wrong idsku type
+    ✔ skuid doesn't exist
+
+  get test descriptor
+    ✔ 200 return
+
+  get test descriptor by id
+    ✔ 200 return
+    ✔ id non existing)
+    ✔ id constraint failed
+
+  modify test descriptor
+    ✔ 200 return
+    ✔ id doesn't exist
+    ✔ body format is wrong
+
+  delete test descriptor
+    ✔ 204 No Content
+
+  new test result
+    ✔ 201 return
+    ✔ empty body
+    ✔ wrong rfid length
+    ✔ rfid doesn't exist
+    ✔ id doesn't exist
+
+  get test result
+    ✔ 200 return
+    ✔ rfid short
+
+  get test result by id
+    ✔ 200 return
+    ✔ id non existing)
+    ✔ rfid non existing)
+    ✔ id constraint failed
+    ✔ rfid constraint failed
+
+  modify test result
+    ✔ 200 return
+    ✔ id doesn't exist
+    ✔ body format is wrong
+
+  delete test result
+    ✔ 204 No Content
+
+  new item
+    ✔ 201 return
+    ✔ empty body
+    ✔ wrong price type
+    ✔ skuid doesn't exist
+
+  get item
+    ✔ 200 return
+
+  get item by id
+    ✔ 200 return
+    ✔ id non existing)
+    ✔ id constraint failed
+
+  modify item
+    ✔ 200 return
+    ✔ id doesn't exist
+    ✔ body format is wrong
+
+  delete item
+    ✔ 204 No Content
+
+  get restock order by id
+    ✔ get restock order by id
+    ✔ get restock order by id - NOT FOUND
+    ✔ get restock order by id - UNPROCESSABLE ENTITY
+DELETED RO
+DELETED RO
+
+  create restock order
+    ✔ create restock order
+    ✔ create restock order - UNPROCESSABLE ENTITY
+DELETED RO
+
+  get restock orders
+    ✔ get restock orders
+DELETED RO
+DELETED RO
+
+  get restock orders issued
+    ✔ get restock orders issued
+DELETED RO
+DELETED RO
+
+  modify restock order state
+    ✔ modify restock order state
+    ✔ modify restock order state - NOT FOUND
+    ✔ modify restock order state
+DELETED RO
+
+  add transport note
+    ✔ add transport note
+    ✔ add transport note - NOT FOUND
+    ✔ add transport note - UNPROCESSABLE
+DELETED RO
+
+  set skuItems
+{ SKUId: 1, rfid: '12345678901234567890123456789016' }
+    ✔ set skuItems
+{ SKUId: 1, rfid: '12345678901234567890123456789016' }
+    ✔ set skuItems-NOT FOUND
+{ SKUId: 1, rfid: '12345678901234567890123456789016' }
+    ✔ set skuItems- UNPROCESSABLE
+DELETED RO
+
+  get return items
+    ✔ get return items - NOT FOUND
+    ✔ get return items
+    ✔ get return items - UNPROCESSABLE
+DELETED RO
+
+  delete restock order
+DELETED RO
+    ✔ delete restock order
+    ✔ delete restock order - UNPROCESSABLE
+
+  create return order
+    ✔ create return order
+    ✔ create return order
+[
+  {
+    id: 1,
+    returnDate: '2022/05/16 23:33',
+    restockOrderId: 2,
+    products: [ [Object], [Object] ]
+  },
+  {
+    id: 2,
+    returnDate: '2021/11/29 09:33',
+    restockOrderId: 1,
+    products: [ [Object], [Object] ]
+  }
+]
+
+  get return orders
+    ✔ get return orders
+
+  get return order by id
+    ✔ get return order by id
+    ✔ get return order by id- not found
+    ✔ get return order by id- unprocessable
+
+  delete return order
+    ✔ delete return order
+    ✔ delete return order
+    ✔ delete return order
+
+  get users
+    ✔ retrieve users
+    ✔ not empty body
+
+  get suppliers
+    ✔ retrieve users
+    ✔ not empty body
+
+  get user
+    ✔ getting user data from the system (60ms)
+    ✔ empty body
+    ✔ bad username format
+    ✔ bad password format
+    ✔ not found: wrong username
+    ✔ not found: wrong password (58ms)
+
+  new user
+    ✔ user created (58ms)
+    ✔ empty body
+    ✔ wrong username format
+    ✔ password too short
+    ✔ Types administrator/manager cannot be registered
+    ✔ user already exists
+
+  modify permissions
+    ✔ edited
+    ✔ empty body
+    ✔ cannot modify manager rights
+    ✔ cannot upgrade to manager
+    ✔ is not email
+    ✔ user not found
+
+  delete user
+    ✔ wrong user
+    ✔ trying to delete a manager
+    ✔ empty params
+    ✔ deleted
+
+
+  154 passing (2s)
+
