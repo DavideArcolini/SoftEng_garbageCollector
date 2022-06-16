@@ -161,7 +161,11 @@
         }
         catch(error){
            
+<<<<<<< HEAD
             throw new Error(error.message);
+=======
+            return new Error(error.message);
+>>>>>>> delivery_changes
 
         }
      }

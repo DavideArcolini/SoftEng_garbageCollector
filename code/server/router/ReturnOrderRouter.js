@@ -99,6 +99,11 @@ router.post(
                     throw new Error('Invalid product value');
                 } else if (product.RFID.length != 32 || /^[0-9]+$/.test(product.RFID) === false) {
                     throw new Error('Invalid skuItem value');
+<<<<<<< HEAD
+=======
+                } else if (isNaN(product.itemId)) {
+                    throw new Error('Invalid product value');
+>>>>>>> delivery_changes
                 }
             });
             return true;

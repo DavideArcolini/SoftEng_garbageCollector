@@ -87,7 +87,11 @@ describe('get item by id', ()=> {
 
 
 //500
+<<<<<<< HEAD
 getItemById("Error",tis[0].id,tis[0]);
+=======
+getItemById("Error",tis[0].id,tis[0].supplierId,tis[0]);
+>>>>>>> delivery_changes
 
 })
 
@@ -141,7 +145,11 @@ describe('edit item', ()=> {
 
 
 //200
+<<<<<<< HEAD
 modyfyItem("error",tis2,tis[0].id,tis1);
+=======
+modyfyItem("error",tis2,tis[0].id,tis[0].supplierId,tis1);
+>>>>>>> delivery_changes
 
 })
 
@@ -167,7 +175,11 @@ describe('delete item', ()=> { //
 
 
 //204
+<<<<<<< HEAD
 deleteItem("Error",tis[0],tis[0].id)
+=======
+deleteItem("Error",tis[0],tis[0].id,tis[0].supplierId)
+>>>>>>> delivery_changes
 
 
 
@@ -242,6 +254,7 @@ getItemBySupId("error",Error,tis[0].id, tis[0].supplierId);
 function getItems(name,expected){
 
 test(name, async () => {
+<<<<<<< HEAD
 try {
 let res = await i.getItems();
 expect(res).toEqual(expected)
@@ -253,11 +266,28 @@ expect(error).toBeInstanceOf(expected);
 
 
 function getItemById(name,id,expected){
+=======
+    try {
+        let res = await i.getItems();
+        expect(res).toEqual(expected)
+    } catch (error) {
+        expect(error).toBeInstanceOf(expected);
+    }
+    })
+}
+
+
+function getItemById(name,id,supplierId,expected){
+>>>>>>> delivery_changes
 
 test(name, async () => {
 
 try {
+<<<<<<< HEAD
 let res = await i.getItemById(id);
+=======
+let res = await i.getItemById(id,supplierId);
+>>>>>>> delivery_changes
 expect(res).toEqual(expected)
 } catch (error) {
 expect(error).toBeInstanceOf(Error);
@@ -279,12 +309,20 @@ expect(error).toBeInstanceOf(Error);
 }
 
 
+<<<<<<< HEAD
 function modyfyItem(name,expected,id,json){
+=======
+function modyfyItem(name,expected,id,supplierId,json){
+>>>>>>> delivery_changes
 
 
 test(name, async () => {
 try {
+<<<<<<< HEAD
 let res = await i.modifyItem(id,json);
+=======
+let res = await i.modifyItem(id,supplierId,json);
+>>>>>>> delivery_changes
 expect(res).toEqual(expected)
 } catch (error) {
 expect(error).toBeInstanceOf(Error);
@@ -292,12 +330,20 @@ expect(error).toBeInstanceOf(Error);
 })
 }
 
+<<<<<<< HEAD
 function deleteItem(name,expected,id){
+=======
+function deleteItem(name,expected,id,supplierId){
+>>>>>>> delivery_changes
 
 test(name, async () => {
 
 try {
+<<<<<<< HEAD
 let res = await i.deleteItem(id);
+=======
+let res = await i.deleteItem(id,supplierId);
+>>>>>>> delivery_changes
 expect(res).toEqual(expected)
 } catch (error) {
 expect(error).toBeInstanceOf(Error);

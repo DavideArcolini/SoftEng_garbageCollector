@@ -147,7 +147,11 @@ createTestResult([1,1],201,503,undefined)
 
 
 describe('edit test', ()=> { //
+<<<<<<< HEAD
         beforeEach(() => {
+=======
+        beforeAll(() => {
+>>>>>>> delivery_changes
             skuItemDAO.getSKUitemByRFID.mockReset();
             skuItemDAO.getSKUitemByRFID.mockReturnValueOnce(trar[0]).mockReturnValueOnce(undefined).mockReturnValue(trar[0])
             .mockReturnValueOnce(trar[0]).mockImplementationOnce(() => {
@@ -189,7 +193,11 @@ modifyTestResult("ERROREEEE",{id: 1, rfid: "1"},trar[0])
 
 
 describe('delete test', ()=> { //
+<<<<<<< HEAD
         beforeEach(() => {
+=======
+        beforeAll(() => {
+>>>>>>> delivery_changes
             skuItemDAO.getSKUitemByRFID.mockReset();
             skuItemDAO.getSKUitemByRFID.mockReturnValueOnce(trar[0]).mockReturnValueOnce(undefined)
             .mockReturnValueOnce(trar[0]).mockImplementationOnce(() => {

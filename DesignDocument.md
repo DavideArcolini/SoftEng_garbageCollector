@@ -6,13 +6,14 @@
  * Davide Arcolini
  * Giuseppe Atanasio
 
-**Date**: 25 May 2022
+**Date**: 08 June 2022
 
 **Version**: `1.1`
 | Version number | Change |
 | ----------------- |:-----------|
 | `1.0` | Added first version of Design document. | 
 | `1.1` | Re-designed in according to the code `v1.0`. | 
+| `1.2` | General fixings  | 
 
 # Contents
 

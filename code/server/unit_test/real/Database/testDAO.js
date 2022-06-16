@@ -230,9 +230,21 @@ class DAO {
      *  - newTableRO(): create the restock orders table, if it does not already exist.
      *  - dropTableRO(): drop the restock order table.
     */
-    newTableRO() {
+     newTableRO() {
       return new Promise((res, rej)=>{
-          const sql = "CREATE TABLE IF NOT EXISTS RESTOCK_ORDERS(key INTEGER PRIMARY KEY, id INTEGER, issueDate DATE, state VARCHAR, supplierId INTEGER, deliveryDate DATE, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR) ";
+          const sql = `
+          CREATE TABLE IF NOT EXISTS RESTOCK_ORDERS(
+            key                       INTEGER PRIMARY KEY, 
+            id                        INTEGER, 
+            issueDate                 DATE, 
+            state                     VARCHAR, 
+            supplierId                INTEGER, 
+            deliveryDate              DATE, 
+            SKUId                     INTEGER ,
+            itemId                    Integer, 
+            description               VARCHAR, 
+            price                     FLOAT, 
+            RFID                      VARCHAR)`;
           this.db.run(sql, (err)=>{
               if (err) {
                   rej(err);
@@ -241,7 +253,7 @@ class DAO {
               res(this.lastID);
           });
       });
-  }
+    }
   dropTableRO() {
     return new Promise((res, rej) => {
         const sql = "DROP TABLE IF EXISTS RESTOCK_ORDERS";
@@ -254,7 +266,22 @@ class DAO {
         });
     });
   }
+<<<<<<< HEAD
   
+=======
+  deleteAllRestockOrders() {
+    return new Promise((res, rej) => {
+      const sql = "DELETE FROM RESTOCK_ORDERS";
+      this.db.run(sql, (err)=>{
+          if (err) {
+              rej(err);
+              return;
+          }
+          res(this.lastID);
+      });
+    });
+  }
+>>>>>>> delivery_changes
   /**
      * ========================
      *     RETURN ORDERS TABLE
@@ -264,7 +291,7 @@ class DAO {
     */
   newTableRTO() {
     return new Promise((res, rej)=>{
-        const sql = "CREATE TABLE IF NOT EXISTS RETURN_ORDERS(key INTEGER PRIMARY KEY, id INTEGER, returnDate DATE,restockOrderId  INTEGER, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR )";
+        const sql = "CREATE TABLE IF NOT EXISTS RETURN_ORDERS(key INTEGER PRIMARY KEY, id INTEGER, returnDate DATE,restockOrderId  INTEGER, SKUId INTEGER , itemId INTEGER, description VARCHAR, price FLOAT, RFID VARCHAR)";
         this.db.run(sql, (err)=>{
             if (err) {
                 rej(err);
@@ -318,7 +345,22 @@ class DAO {
         });
     });
 }
+<<<<<<< HEAD
 
+=======
+deleteAllIO() {
+  return new Promise((res, rej) => {
+    const sql = "DELETE FROM INTERNAL_ORDERS";
+    this.db.run(sql, (err)=>{
+        if (err) {
+            rej(err);
+            return;
+        }
+        res(this.lastID);
+    });
+  });
+}
+>>>>>>> delivery_changes
   /**
   * ========================
   *       USER TABLE

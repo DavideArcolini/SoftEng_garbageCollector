@@ -3,7 +3,11 @@ Server listening at http://localhost:3001
 
   create internal order
 [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]
+<<<<<<< HEAD
     ✔ create internal order (1479ms)
+=======
+    ✔ create internal order (1463ms)
+>>>>>>> delivery_changes
 [ { SKUId: 1, description: 'a product', price: -0.01, qty: 1 } ]
     ✔ create internal order - UNPROCESSABLE
 
@@ -74,22 +78,68 @@ Server listening at http://localhost:3001
     ✔ [422] Unprocessable Entity (id constraint failed)
 
   API: GET /api/skuitems/:rfid
+<<<<<<< HEAD
     1) [200] OK
+=======
+{
+  id: 222,
+  description: 'TestDescription',
+  weight: 50,
+  volume: 50,
+  notes: 'TestNote',
+  position: null,
+  price: 10.99,
+  availableQuantity: 1
+}
+    ✔ [200] OK
+>>>>>>> delivery_changes
     ✔ [404] Not Found (rfid non existing)
     ✔ [422] Unprocessable Entity (id constraint failed)
 
   API: POST /api/skuitem
+<<<<<<< HEAD
     ✔ [201] Created
+=======
+{
+  id: 555,
+  description: 'TestDescription',
+  weight: 50,
+  volume: 50,
+  notes: 'TestNote',
+  position: null,
+  price: 10.99,
+  availableQuantity: 1
+}
+    ✔ [201] Created
+undefined
+>>>>>>> delivery_changes
     ✔ [404] Not Found (SKUid non existing)
     ✔ [422] Unprocessable Entity (body parameters constraints failed)
 
   API: PUT /api/skuitems/:rfid
+<<<<<<< HEAD
+=======
+{
+  id: 777,
+  description: 'TestDescription',
+  weight: 50,
+  volume: 50,
+  notes: 'TestNote',
+  position: null,
+  price: 10.99,
+  availableQuantity: 1
+}
+>>>>>>> delivery_changes
     ✔ [200] OK
     ✔ [404] Not Found (rfid non existing)
     ✔ [422] Unprocessable Entity (body parameters constraints failed)
     ✔ [422] Unprocessable Entity (rfid constraints failed)
 
   API: DELETE /api/skuitems/:rfid
+<<<<<<< HEAD
+=======
+undefined
+>>>>>>> delivery_changes
     ✔ [204] No Content
     ✔ [422] Unprocessable Entity
 
@@ -120,26 +170,98 @@ Server listening at http://localhost:3001
     ✔ 204 No Content
 
   new test descriptor
+<<<<<<< HEAD
+=======
+{
+  id: 1,
+  description: 'newSku',
+  weight: 100,
+  volume: 50,
+  notes: 'first SKU',
+  position: null,
+  price: 10.99,
+  availableQuantity: 50
+}
+>>>>>>> delivery_changes
     ✔ 201 return
     ✔ empty body
     ✔ wrong idsku type
     ✔ skuid doesn't exist
 
   get test descriptor
+<<<<<<< HEAD
     2) "before all" hook for "200 return"
 
   get test descriptor by id
     3) "before all" hook for "200 return"
+=======
+{
+  id: 1,
+  description: 'newSku',
+  weight: 100,
+  volume: 50,
+  notes: 'first SKU',
+  position: null,
+  price: 10.99,
+  availableQuantity: 50
+}
+    ✔ 200 return
+
+  get test descriptor by id
+{
+  id: 1,
+  description: 'newSku',
+  weight: 100,
+  volume: 50,
+  notes: 'first SKU',
+  position: null,
+  price: 10.99,
+  availableQuantity: 50
+}
+    ✔ 200 return
+    ✔ id non existing)
+    ✔ id constraint failed
+>>>>>>> delivery_changes
 
   modify test descriptor
     ✔ 200 return
     ✔ id doesn't exist
     ✔ body format is wrong
+<<<<<<< HEAD
 
   delete test descriptor
     4) "before all" hook for "204 No Content"
 
   new test result
+=======
+undefined
+undefined
+
+  delete test descriptor
+{
+  id: 1,
+  description: 'newSku',
+  weight: 100,
+  volume: 50,
+  notes: 'first SKU',
+  position: null,
+  price: 10.99,
+  availableQuantity: 50
+}
+    ✔ 204 No Content
+
+  new test result
+{
+  id: 1,
+  description: 'newSku',
+  weight: 100,
+  volume: 50,
+  notes: 'first SKU',
+  position: null,
+  price: 10.99,
+  availableQuantity: 50
+}
+>>>>>>> delivery_changes
     ✔ 201 return
     ✔ empty body
     ✔ wrong rfid length
@@ -147,10 +269,36 @@ Server listening at http://localhost:3001
     ✔ id doesn't exist
 
   get test result
+<<<<<<< HEAD
+=======
+{
+  id: 1,
+  description: 'newSku',
+  weight: 100,
+  volume: 50,
+  notes: 'first SKU',
+  position: null,
+  price: 10.99,
+  availableQuantity: 50
+}
+>>>>>>> delivery_changes
     ✔ 200 return
     ✔ rfid short
 
   get test result by id
+<<<<<<< HEAD
+=======
+{
+  id: 1,
+  description: 'newSku',
+  weight: 100,
+  volume: 50,
+  notes: 'first SKU',
+  position: null,
+  price: 10.99,
+  availableQuantity: 50
+}
+>>>>>>> delivery_changes
     ✔ 200 return
     ✔ id non existing)
     ✔ rfid non existing)
@@ -158,23 +306,88 @@ Server listening at http://localhost:3001
     ✔ rfid constraint failed
 
   modify test result
+<<<<<<< HEAD
+=======
+{
+  id: 1,
+  description: 'newSku',
+  weight: 100,
+  volume: 50,
+  notes: 'first SKU',
+  position: null,
+  price: 10.99,
+  availableQuantity: 50
+}
+>>>>>>> delivery_changes
     ✔ 200 return
     ✔ id doesn't exist
     ✔ body format is wrong
 
   delete test result
+<<<<<<< HEAD
     ✔ 204 No Content
 
   new item
+=======
+{
+  id: 1,
+  description: 'newSku',
+  weight: 100,
+  volume: 50,
+  notes: 'first SKU',
+  position: null,
+  price: 10.99,
+  availableQuantity: 50
+}
+    ✔ 204 No Content
+
+  new item
+{
+  id: 1,
+  description: 'newSku',
+  weight: 100,
+  volume: 50,
+  notes: 'first SKU',
+  position: null,
+  price: 10.99,
+  availableQuantity: 50
+}
+>>>>>>> delivery_changes
     ✔ 201 return
     ✔ empty body
     ✔ wrong price type
     ✔ skuid doesn't exist
 
   get item
+<<<<<<< HEAD
     ✔ 200 return
 
   get item by id
+=======
+{
+  id: 1,
+  description: 'newSku',
+  weight: 100,
+  volume: 50,
+  notes: 'first SKU',
+  position: null,
+  price: 10.99,
+  availableQuantity: 50
+}
+    ✔ 200 return
+
+  get item by id and sup id
+{
+  id: 1,
+  description: 'newSku',
+  weight: 100,
+  volume: 50,
+  notes: 'first SKU',
+  position: null,
+  price: 10.99,
+  availableQuantity: 50
+}
+>>>>>>> delivery_changes
     ✔ 200 return
     ✔ id non existing)
     ✔ id constraint failed
@@ -185,6 +398,7 @@ Server listening at http://localhost:3001
     ✔ body format is wrong
 
   delete item
+<<<<<<< HEAD
     ✔ 204 No Content
 
   get restock order by id
@@ -238,22 +452,110 @@ Server listening at http://localhost:3001
 
   delete restock order
 {"issueDate":"2022/05/12 17:44","supplierId":7,"products":[{"SKUId":1,"description":"a product","price":0.01,"qty":1}]}
+=======
+{
+  id: 1,
+  description: 'newSku',
+  weight: 100,
+  volume: 50,
+  notes: 'first SKU',
+  position: null,
+  price: 10.99,
+  availableQuantity: 50
+}
+    ✔ 204 No Content
+
+  get restock order by id
+    ✔ get restock order by id
+    ✔ get restock order by id - NOT FOUND
+    ✔ get restock order by id - UNPROCESSABLE ENTITY
+DELETED RO
+DELETED RO
+
+  create restock order
+    ✔ create restock order
+    ✔ create restock order - UNPROCESSABLE ENTITY
+DELETED RO
+
+  get restock orders
+    ✔ get restock orders
+DELETED RO
+DELETED RO
+
+  get restock orders issued
+    ✔ get restock orders issued
+DELETED RO
+DELETED RO
+
+  modify restock order state
+    ✔ modify restock order state
+    ✔ modify restock order state - NOT FOUND
+    ✔ modify restock order state
+DELETED RO
+
+  add transport note
+    ✔ add transport note
+    ✔ add transport note - NOT FOUND
+    ✔ add transport note - UNPROCESSABLE
+DELETED RO
+
+  set skuItems
+{ SKUId: 1, itemId: 1, rfid: '12345678901234567890123456789016' }
+    ✔ set skuItems
+{ SKUId: 1, itemId: 1, rfid: '12345678901234567890123456789016' }
+    ✔ set skuItems-NOT FOUND
+{ SKUId: 1, itemId: 1, rfid: '12345678901234567890123456789016' }
+    ✔ set skuItems- UNPROCESSABLE
+DELETED RO
+
+  get return items
+    ✔ get return items - NOT FOUND
+    ✔ get return items
+    ✔ get return items - UNPROCESSABLE
+DELETED RO
+
+  delete restock order
+DELETED RO
+>>>>>>> delivery_changes
     ✔ delete restock order
     ✔ delete restock order - UNPROCESSABLE
 
   create return order
     ✔ create return order
     ✔ create return order
+<<<<<<< HEAD
 
   get return orders
     ✔ get return orders
+=======
+DELETED RO
+[
+  {
+    id: 1,
+    returnDate: '2021/11/29 09:33',
+    restockOrderId: 1,
+    products: [ [Object], [Object] ]
+  }
+]
+
+  get return orders
+    ✔ get return orders
+DELETED RO
+>>>>>>> delivery_changes
 
   get return order by id
     ✔ get return order by id
     ✔ get return order by id- not found
     ✔ get return order by id- unprocessable
+<<<<<<< HEAD
 
   delete return order
+=======
+DELETED RO
+
+  delete return order
+DELETED RO
+>>>>>>> delivery_changes
     ✔ delete return order
     ✔ delete return order
     ✔ delete return order
@@ -267,10 +569,22 @@ Server listening at http://localhost:3001
     ✔ not empty body
 
   get user
+<<<<<<< HEAD
     5) "before all" hook for "getting user data from the system"
 
   new user
     ✔ user created (58ms)
+=======
+    ✔ getting user data from the system (59ms)
+    ✔ empty body
+    ✔ bad username format
+    ✔ bad password format
+    ✔ not found: wrong username
+    ✔ not found: wrong password (59ms)
+
+  new user
+    ✔ user created (59ms)
+>>>>>>> delivery_changes
     ✔ empty body
     ✔ wrong username format
     ✔ password too short
@@ -292,6 +606,7 @@ Server listening at http://localhost:3001
     ✔ deleted
 
 
+<<<<<<< HEAD
   142 passing (2s)
   5 failing
 
@@ -351,4 +666,7 @@ Server listening at http://localhost:3001
       at processImmediate (node:internal/timers:466:21)
 
 
+=======
+  154 passing (2s)
+>>>>>>> delivery_changes
 

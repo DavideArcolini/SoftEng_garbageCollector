@@ -35,10 +35,20 @@ var agent = chai.request.agent(app);
     it('create return order',async()=>{
       let req = {
         returnDate:"2021/11/29 09:33",
-        products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
-                    {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+        products: [{SKUId:12, itemId: 10, description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                  {SKUId:180, itemId: 18, description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
         restockOrderId : 1
     };
+      await agent.post('/api/restockOrder/').send({
+        issueDate: '2022/05/12 17:44', 
+        supplierId: 7, 
+        products: [ 
+          { SKUId: 12, itemId:10, description: 'a product', price: 0.01, qty: 1 } ,
+          { SKUId:180, itemId: 18, description:"another product",price:11.99, qty: 1 } 
+        ]
+      }).then((res) => {
+        res.should.have.status(201);
+      });
       await agent.post('/api/returnOrder/').send(req).then(function(res){
         res.should.have.status(201);
   
@@ -47,8 +57,8 @@ var agent = chai.request.agent(app);
       it('create return order',async()=>{
         let req = {
           returnDate:"2021/11/29 09:33",
-          products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
-                      {SKUId:180,description:"another product",price:-11.99,RFID:"12345678901234567890123456789038"}],
+          products: [{SKUId:12, itemId: 10,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                      {SKUId:180, itemId: 18,description:"another product",price:-11.99,RFID:"12345678901234567890123456789038"}],
           restockOrderId : 1
       };
         await agent.post('/api/returnOrder/').send(req).then(function(res){
@@ -58,6 +68,10 @@ var agent = chai.request.agent(app);
         })
 
         after(async()=>{
+
+          await agent.delete('/api/restockOrder/1').then((res) => {
+            res.should.have.status(204);  
+          })
 
           await agent.get('/api/returnOrders/').then(async(res)=>{
             res.should.have.status(200);
@@ -91,17 +105,27 @@ var agent = chai.request.agent(app);
       before(async() => {
         let req = {
           returnDate:"2021/11/29 09:33",
-          products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
-                      {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+          products: [{SKUId:12, itemId: 10,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                      {SKUId:180, itemId: 18,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
           restockOrderId : 1
       };
+        await agent.post('/api/restockOrder/').send({
+          issueDate: '2022/05/12 17:44', 
+          supplierId: 7, 
+          products: [ 
+            { SKUId: 12, itemId:10, description: 'a product', price: 0.01, qty: 1 } ,
+            { SKUId:180, itemId: 18, description:"another product",price:11.99, qty: 1 } 
+          ]
+        }).then((res) => {
+          res.should.have.status(201);
+        });
         await agent.post('/api/returnOrder/').send(req).then(function(res){
           res.should.have.status(201);
         })
         req = {
           returnDate:"2021/11/29 09:33",
-          products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
-                      {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+          products: [{SKUId:12, itemId: 10,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                      {SKUId:180, itemId: 18,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
           restockOrderId : 1
       };
         await agent.post('/api/returnOrder/').send(req).then(function(res){
@@ -121,6 +145,9 @@ var agent = chai.request.agent(app);
         })
     })
     after(async()=>{
+      await agent.delete('/api/restockOrder/1').then((res) => {
+        res.should.have.status(204);  
+      })
 
       await agent.get('/api/returnOrders/').then(async(res)=>{
         res.should.have.status(200);
@@ -151,17 +178,27 @@ getReturnOrders(200);
       before(async() => {
         let req = {
           returnDate:"2021/11/29 09:33",
-          products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
-                      {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+          products: [{SKUId:12, itemId: 10,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                      {SKUId:180, itemId: 18,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
           restockOrderId : 1
       };
+        await agent.post('/api/restockOrder/').send({
+          issueDate: '2022/05/12 17:44', 
+          supplierId: 7, 
+          products: [ 
+            { SKUId: 12, itemId:10, description: 'a product', price: 0.01, qty: 1 } ,
+            { SKUId:180, itemId: 18, description:"another product",price:11.99, qty: 1 } 
+          ]
+        }).then((res) => {
+          res.should.have.status(201);
+        });
         await agent.post('/api/returnOrder/').send(req).then(function(res){
           res.should.have.status(201);
         })
         req = {
           returnDate:"2021/11/29 09:33",
-          products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
-                      {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+          products: [{SKUId:12, itemId: 10,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                      {SKUId:180, itemId: 18,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
           restockOrderId : 1
       };
         await agent.post('/api/returnOrder/').send(req).then(function(res){
@@ -202,6 +239,10 @@ it('get return order by id- unprocessable',async()=>{
 })
     after(async()=>{
 
+      await agent.delete('/api/restockOrder/1').then((res) => {
+        res.should.have.status(204);  
+      })
+
       await agent.get('/api/returnOrders/').then(async(res)=>{
         res.should.have.status(200);
         res.should.to.be.json;
@@ -232,17 +273,28 @@ it('get return order by id- unprocessable',async()=>{
           before(async() => {
             let req = {
               returnDate:"2021/11/29 09:33",
-              products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
-                          {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+              products: [{SKUId:12, itemId: 10,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                          {SKUId:180, itemId: 18,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
               restockOrderId : 1
           };
+
+            await agent.post('/api/restockOrder/').send({
+              issueDate: '2022/05/12 17:44', 
+              supplierId: 7, 
+              products: [ 
+                { SKUId: 12, itemId:10, description: 'a product', price: 0.01, qty: 1 } ,
+                { SKUId:180, itemId: 18, description:"another product",price:11.99, qty: 1 } 
+              ]
+            }).then((res) => {
+              res.should.have.status(201);
+            });
             await agent.post('/api/returnOrder/').send(req).then(function(res){
               res.should.have.status(201);
             })
             req = {
               returnDate:"2021/11/29 09:33",
-              products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
-                          {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+              products: [{SKUId:12, itemId: 10,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                          {SKUId:180, itemId: 18,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
               restockOrderId : 1
           };
             await agent.post('/api/returnOrder/').send(req).then(function(res){
@@ -250,7 +302,11 @@ it('get return order by id- unprocessable',async()=>{
             })
         });
 
+
         it('delete return order',async()=>{
+          await agent.delete('/api/restockOrder/1').then((res) => {
+            res.should.have.status(204);  
+          })
           await agent.get('/api/returnOrders/').then(async(res)=>{
             res.should.have.status(200);
             res.should.to.be.json;

@@ -55,7 +55,7 @@ router.get(
  * =================================================
  */
 router.get(
-    "/items/:id",
+    "/items/:id/:supplierId",
     [
         param('id').isNumeric(),                                                /* [FROM API.md]: id is a numeric value                                                 */
         body().custom(value => {                                                /* [FROM API.md]: body should be empty                                                  */
@@ -120,7 +120,7 @@ router.post(
  * =================================================
  */
 router.put(
-    "/item/:id",
+    "/item/:id/:supplierId",
     [
         param('id').isNumeric(),                                                /* [FROM API.md]: id is a numeric value                                                 */
         header('Content-Type').equals('application/json'),                      /* [FROM API.md]: Request header has a line: Content-Type: application/json.            */
@@ -152,7 +152,7 @@ router.put(
  * =================================================
  */
 router.delete(
-    "/items/:id",
+    "/items/:id/:supplierId",
     [
         param('id').isNumeric(),                                                /* [FROM API.md]: id is a numeric value                                                 */
         body().custom(value => {                                                /* [FROM API.md]: body should be empty                                                  */

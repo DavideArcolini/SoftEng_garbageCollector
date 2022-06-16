@@ -230,7 +230,7 @@ class DAO {
      *  - newTableRO(): create the restock orders table, if it does not already exist.
      *  - dropTableRO(): drop the restock order table.
     */
-    newTableRO() {
+     newTableRO() {
       return new Promise((res, rej)=>{
           const sql = `
           CREATE TABLE IF NOT EXISTS RESTOCK_ORDERS(
@@ -253,7 +253,7 @@ class DAO {
               res(this.lastID);
           });
       });
-  }
+    }
   dropTableRO() {
     return new Promise((res, rej) => {
         const sql = "DROP TABLE IF EXISTS RESTOCK_ORDERS";
@@ -276,7 +276,7 @@ class DAO {
     */
   newTableRTO() {
     return new Promise((res, rej)=>{
-        const sql = "CREATE TABLE IF NOT EXISTS RETURN_ORDERS(key INTEGER PRIMARY KEY, id INTEGER, returnDate DATE,restockOrderId  INTEGER, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR )";
+      const sql = "CREATE TABLE IF NOT EXISTS RETURN_ORDERS(key INTEGER PRIMARY KEY, id INTEGER, returnDate DATE,restockOrderId  INTEGER, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR, itemId INTEGER)";
         this.db.run(sql, (err)=>{
             if (err) {
                 rej(err);

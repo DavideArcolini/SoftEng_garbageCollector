@@ -6,7 +6,7 @@
  * Davide Arcolini
  * Giuseppe Atanasio
 
-**Date**: 25 May 2022
+**Date**: 08 June 2022
 
 **Version**: `1.0`
 
@@ -14,6 +14,10 @@
 | ----------------- |:-----------|
 | 1.0 | Added first version of Unit Test Report document. |
 | 1.1 | Modifications due to the separation in Controllers and DAOs |
+<<<<<<< HEAD
+=======
+| 2.0 | Remodeled unit tests |
+>>>>>>> delivery_changes
 
 # Contents
 

@@ -40,7 +40,7 @@ class RestockOrderController {
             return MESSG_201;
         }
         catch(error){
-            throw error;
+            return new Error();
 
         }  
         
@@ -61,13 +61,10 @@ class RestockOrderController {
                     /*add skuItems to restock order */
                     x.skuItems = await this.roDAO.getSkuItemsOfRestockOrder(x.id);
     
-                    if(x.state==="ISSUED"){
-                        delete x.deliveryDate;
-                    }else{
-                        /* remodeling transport note */
+                    if(x.state!=="ISSUED"){
                         x.transportNote = {"deliveryDate" : x.deliveryDate};
-                        delete x.deliveryDate;
                     }
+                    delete x.deliveryDate;
                     return x;
                 }));
                 return restockOrders;
@@ -111,13 +108,7 @@ class RestockOrderController {
                 return ERROR_404;
             }
             
-            let result = {
-                id:             restockOrder[0].id, 
-                issueDate:      restockOrder[0].issueDate, 
-                state:          restockOrder[0].state, 
-                supplierId:     restockOrder[0].supplierId, 
-                itemId:         restockOrder[0].itemId, 
-                transportNote : {"deliveryDate" : restockOrder[0].deliveryDate}};
+            let result = {id: restockOrder[0].id, issueDate: restockOrder[0].issueDate, state: restockOrder[0].state, supplierId: restockOrder[0].supplierId,  transportNote : {"deliveryDate" : restockOrder[0].deliveryDate}};
             
             /* retrieve products from restock order records*/
             let products = restockOrder.map( (x)=>{
@@ -127,14 +118,13 @@ class RestockOrderController {
                 delete x.supplierId
                 delete x.deliveryDate
                 delete x.RFID
+                
                 return x;
                 
     }) ;
             result = {...result , products : Array.from(products) };   
             /* add skuItems to the result */
-            result = {...result , 
-                skuItems : await this.roDAO.getSkuItemsOfRestockOrder(id),
-             };
+            result = {...result , skuItems : await this.roDAO.getSkuItemsOfRestockOrder(id) };
             /*if state==ISSUED there is no transportNote */
             if(result.state==="ISSUED"){
                 delete result.transportNote;

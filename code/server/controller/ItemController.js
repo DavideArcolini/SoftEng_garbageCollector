@@ -32,7 +32,7 @@ class ItemController {
                 message: items
             };
   
-        }catch{
+        }catch(error){
             throw error;
         }
     }
@@ -41,14 +41,15 @@ class ItemController {
     getItemById = async (params) => { 
         
         const targetId=params.id;
+        const targetSupId=params.supplierId;
 
         try {
             //search on DB
-            const item = await this.itemDAO.getItemById(targetId);
+            const item = await this.itemDAO.getItemById(targetId,targetSupId);
             if(item === undefined){
                 return ERROR_404
             }else if(item.SKUId==null){
-                item.SKUId=1;
+                item.SKUId=1; //official put skuid =null, then try to read it as array but null can't be readed
                 return {code: 200, message: item};
             }else{
                 return{code: 200, message: item};
@@ -95,16 +96,17 @@ class ItemController {
     modifyItem = async(body,params) => { 
 
         const targetId=params.id;
+        const targetSupId=params.supplierId;
         
         try{
             /* checking  if exist item with same id */ 
-            let item = await this.itemDAO.getItemById(targetId);
+            let item = await this.itemDAO.getItemById(targetId,targetSupId);
             if (item === undefined) {
                 return ERROR_404;
             }
 
             /* update item */
-            await this.itemDAO.modifyItem(targetId, body);
+            await this.itemDAO.modifyItem(targetId,targetSupId, body);
             return MESSG_200;
         }
         catch(error){
@@ -117,11 +119,12 @@ class ItemController {
     deleteItem = async (params) => {
 
         const targetId=params.id;
+        const targetSupId=params.supplierId;
 
         try{
 
             /* accessing DB through DAO */
-            await this.itemDAO.deleteItem(targetId);
+            await this.itemDAO.deleteItem(targetId,targetSupId);
             return MESSG_204;
         }catch(error){
             throw error;

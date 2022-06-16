@@ -599,7 +599,23 @@
 <a name='L534'></a><a href='#L534'>534</a>
 <a name='L535'></a><a href='#L535'>535</a>
 <a name='L536'></a><a href='#L536'>536</a>
+<<<<<<< HEAD
 <a name='L537'></a><a href='#L537'>537</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+=======
+<a name='L537'></a><a href='#L537'>537</a>
+<a name='L538'></a><a href='#L538'>538</a>
+<a name='L539'></a><a href='#L539'>539</a>
+<a name='L540'></a><a href='#L540'>540</a>
+<a name='L541'></a><a href='#L541'>541</a>
+<a name='L542'></a><a href='#L542'>542</a>
+<a name='L543'></a><a href='#L543'>543</a>
+<a name='L544'></a><a href='#L544'>544</a>
+<a name='L545'></a><a href='#L545'>545</a>
+<a name='L546'></a><a href='#L546'>546</a>
+<a name='L547'></a><a href='#L547'>547</a>
+<a name='L548'></a><a href='#L548'>548</a>
+<a name='L549'></a><a href='#L549'>549</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+>>>>>>> delivery_changes
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -834,6 +850,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
+<<<<<<< HEAD
+=======
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+>>>>>>> delivery_changes
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1367,9 +1398,27 @@ class DAO {
      *  - newTableRO(): create the restock orders table, if it does not already exist.
      *  - dropTableRO(): drop the restock order table.
     */
+<<<<<<< HEAD
     newTableRO() {
       return new Promise((res, rej)=&gt;{
           const sql = "CREATE TABLE IF NOT EXISTS RESTOCK_ORDERS(key INTEGER PRIMARY KEY, id INTEGER, issueDate DATE, state VARCHAR, supplierId INTEGER, deliveryDate DATE, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR) ";
+=======
+     newTableRO() {
+      return new Promise((res, rej)=&gt;{
+          const sql = `
+          CREATE TABLE IF NOT EXISTS RESTOCK_ORDERS(
+            key                       INTEGER PRIMARY KEY, 
+            id                        INTEGER, 
+            issueDate                 DATE, 
+            state                     VARCHAR, 
+            supplierId                INTEGER, 
+            deliveryDate              DATE, 
+            SKUId                     INTEGER ,
+            itemId                    Integer, 
+            description               VARCHAR, 
+            price                     FLOAT, 
+            RFID                      VARCHAR)`;
+>>>>>>> delivery_changes
           this.db.run(sql, (err)=&gt;{
               <span class="missing-if-branch" title="if path not taken" >I</span>if (err) {
 <span class="cstat-no" title="statement not covered" >                  rej(err);</span>
@@ -1378,7 +1427,11 @@ class DAO {
               res(this.lastID);
           });
       });
+<<<<<<< HEAD
   }
+=======
+    }
+>>>>>>> delivery_changes
 <span class="fstat-no" title="function not covered" >  dr</span>opTableRO() {
 <span class="cstat-no" title="statement not covered" >    return new Promise(<span class="fstat-no" title="function not covered" >(r</span>es, rej) =&gt; {</span>
         const sql = <span class="cstat-no" title="statement not covered" >"DROP TABLE IF EXISTS RESTOCK_ORDERS";</span>
@@ -1401,7 +1454,11 @@ class DAO {
     */
   newTableRTO() {
     return new Promise((res, rej)=&gt;{
+<<<<<<< HEAD
         const sql = "CREATE TABLE IF NOT EXISTS RETURN_ORDERS(key INTEGER PRIMARY KEY, id INTEGER, returnDate DATE,restockOrderId  INTEGER, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR )";
+=======
+      const sql = "CREATE TABLE IF NOT EXISTS RETURN_ORDERS(key INTEGER PRIMARY KEY, id INTEGER, returnDate DATE,restockOrderId  INTEGER, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR, itemId INTEGER)";
+>>>>>>> delivery_changes
         this.db.run(sql, (err)=&gt;{
             <span class="missing-if-branch" title="if path not taken" >I</span>if (err) {
 <span class="cstat-no" title="statement not covered" >                rej(err);</span>
@@ -1678,7 +1735,11 @@ module.exports = DAO;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+<<<<<<< HEAD
                 at Wed Jun 08 2022 23:27:36 GMT+0200 (Ora legale dell’Europa centrale)
+=======
+                at Thu Jun 16 2022 21:10:57 GMT+0200 (Central European Summer Time)
+>>>>>>> delivery_changes
             </div>
         <script src="../prettify.js"></script>
         <script>

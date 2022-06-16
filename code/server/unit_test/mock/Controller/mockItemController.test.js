@@ -48,7 +48,11 @@ let ih=[{
 */
 
 describe('get items', ()=> { 
+<<<<<<< HEAD
     beforeEach(() => {
+=======
+    beforeAll(() => {
+>>>>>>> delivery_changes
         itemDAO.getItems.mockReset();
         itemDAO.getItems.mockReturnValueOnce(ih).mockImplementationOnce(() => {
             throw new Error();
@@ -70,7 +74,11 @@ getItems("Quasiii");
 
 
 describe('get item by id', ()=> { 
+<<<<<<< HEAD
     beforeEach(() => {
+=======
+    beforeAll(() => {
+>>>>>>> delivery_changes
         itemDAO.getItemById.mockReset();
         itemDAO.getItemById.mockReturnValue(ih[0]).mockReturnValue(ih[1]).mockReturnValue(undefined).mockImplementationOnce(() => {
             throw new Error();
@@ -79,6 +87,7 @@ describe('get item by id', ()=> {
 
 
 //200 skuid not null
+<<<<<<< HEAD
 getItemById({id: 1},ih[0]);
 
 //200 skuid not null
@@ -89,6 +98,18 @@ getItemById({id: 1}, ERROR_404);
 
 //500
 getItemById({id: 1}, "Arcane final is ABSURD");
+=======
+getItemById({id: 1,supplierId : 2},ih[0]);
+
+//200 skuid not null
+getItemById({id: 1,supplierId : 2},ih[1]);
+
+//404
+getItemById({id: 1,supplierId : 2}, ERROR_404);
+
+//500
+getItemById({id: 1,supplierId : 2}, "Arcane final is ABSURD");
+>>>>>>> delivery_changes
 })
 
 /*
@@ -99,7 +120,11 @@ getItemById({id: 1}, "Arcane final is ABSURD");
 
 
 describe('add item', ()=> { 
+<<<<<<< HEAD
     beforeEach(() => {
+=======
+    beforeAll(() => {
+>>>>>>> delivery_changes
         skuDAO.getSKUByID.mockReset();
         skuDAO.getSKUByID.mockReturnValueOnce(ih[0]).mockReturnValueOnce(ih[1]).mockReturnValueOnce(ih[0]).mockReturnValueOnce(undefined)
         .mockImplementationOnce(() => {
@@ -137,7 +162,11 @@ createItem("Mancano altri 3 file =(",ih[0])
 
 
 describe('edit item', ()=> { 
+<<<<<<< HEAD
     beforeEach(() => {
+=======
+    beforeAll(() => {
+>>>>>>> delivery_changes
         itemDAO.getItemById.mockReset();
         itemDAO.getItemById.mockReturnValueOnce(ih[0]).mockReturnValueOnce(undefined).mockImplementationOnce(() => {
             throw new Error();
@@ -147,6 +176,7 @@ describe('edit item', ()=> {
     })
 
 //200
+<<<<<<< HEAD
 modyfyItem(MESSG_200,ih[0], {id: 1})
 
 //404 Item doesn't exist
@@ -154,6 +184,15 @@ modyfyItem(ERROR_404,ih[0], {id: 1})
 
 //503
 modyfyItem("Zanzara vaffanculo!!!!!!",ih[0], {id: 1})
+=======
+modyfyItem(MESSG_200,ih[0], {id: 1,supplierId : 2})
+
+//404 Item doesn't exist
+modyfyItem(ERROR_404,ih[0], {id: 1,supplierId : 2})
+
+//503
+modyfyItem("Zanzara vaffanculo!!!!!!",ih[0], {id: 1,supplierId : 2})
+>>>>>>> delivery_changes
 })
 
 
@@ -165,7 +204,11 @@ modyfyItem("Zanzara vaffanculo!!!!!!",ih[0], {id: 1})
 
 
 describe('delete item', ()=> { //
+<<<<<<< HEAD
     beforeEach(() => {
+=======
+    beforeAll(() => {
+>>>>>>> delivery_changes
         itemDAO.deleteItem.mockReset();
         itemDAO.deleteItem.mockReturnValueOnce(ih[0]).mockImplementationOnce(() => {
             throw new Error();
@@ -174,11 +217,19 @@ describe('delete item', ()=> { //
     })
 
 //204
+<<<<<<< HEAD
 deleteItem(MESSG_204,{id: 1})
 
 
 //503
 deleteItem("Fossi viva ti riammazzerei con piacere stronza zanzara",{id: 1})
+=======
+deleteItem(MESSG_204,{id: 1,supplierId : 2})
+
+
+//503
+deleteItem("Fossi viva ti riammazzerei con piacere stronza zanzara",{id: 1,supplierId : 2})
+>>>>>>> delivery_changes
 })
 
 
@@ -202,11 +253,19 @@ function getItems(expected){
 }
 
 
+<<<<<<< HEAD
 function getItemById(id,expected){
     
         test('get item by id', async () => {
             try {
                 let res = await i.getItemById(id);
+=======
+function getItemById(params,expected){
+    
+        test('get item by id', async () => {
+            try {
+                let res = await i.getItemById(params);
+>>>>>>> delivery_changes
                 expect(res).toEqual(expected);
             } catch (error) {
                 expect(error).toBeInstanceOf(Error);
@@ -227,11 +286,19 @@ function createItem(expected,json){
     })
 }
 
+<<<<<<< HEAD
 function modyfyItem(expected,json,id){
    
         test('edit item', async () => {
             try {
                 let res = await i.modifyItem(json,id);
+=======
+function modyfyItem(expected,json,params){
+   
+        test('edit item', async () => {
+            try {
+                let res = await i.modifyItem(json,params);
+>>>>>>> delivery_changes
                 expect(res).toEqual(expected);
             } catch (error) {
                 expect(error).toBeInstanceOf(Error);
@@ -239,11 +306,19 @@ function modyfyItem(expected,json,id){
         })
 }
 
+<<<<<<< HEAD
 function deleteItem(resultget,resultrun,expected,id){
  
         test('delete item', async () => {
             try {
                 let res = await i.deleteItem(id);
+=======
+function deleteItem(expected,params){
+ 
+        test('delete item', async () => {
+            try {
+                let res = await i.deleteItem(params);
+>>>>>>> delivery_changes
                 expect(res).toEqual(expected);
             } catch (error) {
                 expect(error).toBeInstanceOf(Error);
