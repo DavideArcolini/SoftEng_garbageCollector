@@ -266,7 +266,18 @@ class DAO {
         });
     });
   }
-  
+  deleteAllRestockOrders() {
+    return new Promise((res, rej) => {
+      const sql = "DELETE FROM RESTOCK_ORDERS";
+      this.db.run(sql, (err)=>{
+          if (err) {
+              rej(err);
+              return;
+          }
+          res(this.lastID);
+      });
+    });
+  }
   /**
      * ========================
      *     RETURN ORDERS TABLE
@@ -276,7 +287,7 @@ class DAO {
     */
   newTableRTO() {
     return new Promise((res, rej)=>{
-        const sql = "CREATE TABLE IF NOT EXISTS RETURN_ORDERS(key INTEGER PRIMARY KEY, id INTEGER, returnDate DATE,restockOrderId  INTEGER, SKUId INTEGER , description VARCHAR, price FLOAT, RFID VARCHAR )";
+        const sql = "CREATE TABLE IF NOT EXISTS RETURN_ORDERS(key INTEGER PRIMARY KEY, id INTEGER, returnDate DATE,restockOrderId  INTEGER, SKUId INTEGER , itemId INTEGER, description VARCHAR, price FLOAT, RFID VARCHAR)";
         this.db.run(sql, (err)=>{
             if (err) {
                 rej(err);
@@ -330,7 +341,18 @@ class DAO {
         });
     });
 }
-
+deleteAllIO() {
+  return new Promise((res, rej) => {
+    const sql = "DELETE FROM INTERNAL_ORDERS";
+    this.db.run(sql, (err)=>{
+        if (err) {
+            rej(err);
+            return;
+        }
+        res(this.lastID);
+    });
+  });
+}
   /**
   * ========================
   *       USER TABLE

@@ -51,8 +51,6 @@ const restockOrdersResult = [
         skuItems: [ { SKUId: 1, RFID: '00000000000000000000000000000001' },
                     { SKUId: 1, RFID: '00000000000000000000000000000002' } ]
     }
-
-
 ]
 const restockOrderArray = [
     {
@@ -77,6 +75,31 @@ const restockOrderArray = [
         deliveryDate: '2022/07/12 17:44',
         qty: 2
       },
+]
+
+const restockOrderArray1 = [
+    {
+        id: 1,
+        issueDate: '2021/11/29 09:33',
+        state: 'ISSUED',
+        supplierId: 1,
+        SKUId: 12,
+        description: 'a product',
+        price: 10.99,
+        deliveryDate: null,
+        qty: 3
+      },
+      {
+        id: 2,
+        issueDate: '2022/05/12 17:44',
+        state: 'COMPLEDRETURN',
+        supplierId: 1,
+        SKUId: 1,
+        description: 'another product',
+        price: 11.99,
+        deliveryDate: '2022/07/12 17:44',
+        qty: 2
+    }
 ]
 
 
@@ -304,6 +327,7 @@ const restockOrderDelivered =
     beforeAll(() => {
 
         /* reset mocked implementations */
+        roDAO.getRestockOrders.mockReset();
         roDAO.getRestockOrderById.mockReset();
         roDAO.getProductsOfRestockOrder.mockReset();
         roDAO.getSkuItemsOfRestockOrder.mockReset();
@@ -327,8 +351,25 @@ const restockOrderDelivered =
             return skuItems
         })
 
+        roDAO.getRestockOrders.mockImplementationOnce(() => {
+            return restockOrderArray;
+        });
+
 
     });
+
+    /**
+     * ---------------------------------
+     *    INTEGRATION TEST: SUCCESS
+     * ---------------------------------
+     */
+     testGetRestockOrdersByID_MOCK(
+        '- Success (state !== issued): ',
+        {
+            code: 200,
+            message: restockOrdersResult[1]
+        }
+    );
 
     /**
      * ---------------------------------
@@ -373,6 +414,7 @@ const restockOrderDelivered =
             message: restockOrdersResult[1]
         }
     );
+
 });
 
 /**
@@ -703,20 +745,12 @@ const restockOrderDelivered =
     beforeAll(() => {
 
         /* reset mocked implementations */
-        roDAO.getRestockOrderById.mockReset();
         roDAO.deleteRestockOrder.mockReset();
-       
-
-        /* mocking implementation of roDAO.getRestockOrderById */
-        roDAO.getRestockOrderById.mockImplementationOnce(() => {
-            throw new Error();
-        }).mockImplementationOnce(() => {
-            return new Array(restockOrderArray[0]);
-        })
-
         
-        /* mocking implementation of roDAO.roDAO.getSkuItemsOfRestockOrder */
-        roDAO.deleteRestockOrder.mockImplementationOnce(()=>{
+        /* mocking implementation of roDAO.getSkuItemsOfRestockOrder */
+        roDAO.deleteRestockOrder.mockImplementationOnce(() => {
+            throw new Error();
+        }).mockImplementationOnce(()=>{
             return 1
         })
 
@@ -756,13 +790,13 @@ const restockOrderDelivered =
  * @param {String} testName Description of the test executed
  * @param {Object} expectedResult Either error or an object returned by the function
  */
- function testDeleteRestockOrder_MOCK(testName,  ID) {
+ function testDeleteRestockOrder_MOCK(testName, ID, expectedResult) {
     test(testName, async () => {
         try {
             const result = await restockOrderController.deleteRestockOrder(ID);
             expect(result).toEqual(expectedResult);
         } catch (error) {
-            expect(error).toBeInstanceOf(Error);
+            expect(error).toBeInstanceOf(expectedResult);
         }
     }); 
 }
@@ -857,4 +891,56 @@ const restockOrderDelivered =
         }
     }); 
 }
+
+/**
+ * INTEGRATION TEST: RestockOrderController.testCreateRestockOrder_MOCK()
+ * ========================================================================
+ */
+ describe('INTEGRATION TEST: RestockOrderController.testCreateRestockOrder_MOCK', () => {
+    
+    /* reset mock implementation before every tests */
+    beforeAll(() => {
+
+        /* reset mocked implementations */
+        roDAO.createRestockOrder.mockReset();
+
+       roDAO.createRestockOrder.mockImplementationOnce(()=>{
+        throw new Error()
+       })
+
+    });
+
+    /**
+     * ---------------------------------
+     *    INTEGRATION TEST: ERROR
+     * ---------------------------------
+     */
+     testCreateRestockOrder_MOCK(
+        '- Error: ',
+        reqBody.issueDate,
+        reqBody.supplierId,
+        reqBody.products,
+        Error
+    );
+  
+
+});
+
+/**
+ * INTEGRATION TEST: RestockOrderController.getReturnItems()
+ * ========================================================================
+ * @param {String} testName Description of the test executed
+ * @param {Object} expectedResult Either error or an object returned by the function
+ */
+ function testCreateRestockOrder_MOCK(testName, issueDate, supplierId, products,expectedResult) {
+    test(testName, async () => {
+        try {
+            const result = await restockOrderController.createRestockOrder(issueDate, supplierId, products);
+            expect(result).toEqual(expectedResult);
+        } catch (error) {
+            expect(error).toBeInstanceOf(Error);
+        }
+    }); 
+}
+
 

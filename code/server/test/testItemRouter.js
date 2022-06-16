@@ -107,7 +107,7 @@ describe('new item', () => {
     after(async() => {
         // let sql="DELETE FROM ITEMS"
         // await dao.run(sql)
-        await agent.delete(`/api/items/12`).then(async (response) => {
+        await agent.delete(`/api/items/12/2`).then(async (response) => {
             response.should.have.status(204);
         });
         await agent.delete(`/api/skuitems/90000000000000000000000000000002`).then(async (response) => {
@@ -164,11 +164,11 @@ describe('get item', () => {
 
 /*
 * ---------------------------------------------
-*          API: GET /api/items/:id
+*          API: GET /api/items/:id/:supplierId
 * =============================================
 */
 
-describe('get item by id', () => {
+describe('get item by id and sup id', () => {
 
     before(async () => {
         await agent.post(`/api/sku`).send(sku).then(function(res){
@@ -183,13 +183,13 @@ describe('get item by id', () => {
     });
 
     //200
-    getItemById('200 return', {id: 12},200);
+    getItemById('200 return', {id: 12, supplierId : 2},200);
 
     //404
-    getItemById('id non existing)', {id: 3},404);
+    getItemById('id non existing)', {id: 3,supplierId : 2},404);
 
     //422
-    getItemById('id constraint failed', {id: "FailureHere"},422);
+    getItemById('id constraint failed', {id: "FailureHere",supplierId : 2},422);
 
     after(async() => {
 
@@ -218,17 +218,17 @@ describe('modify item', () => {
     });
 
     //200 
-    modifyItem('200 return',{id: 12},tst2,200);
+    modifyItem('200 return',{id: 12,supplierId : 2},tst2,200);
 
     //404
-    modifyItem("id doesn't exist",{id: 2},
+    modifyItem("id doesn't exist",{id: 2,supplierId : 2},
     {
         newDescription : "a new sku",
         newPrice : 10.99
     },422);
 
     //422
-    modifyItem("body format is wrong",{id: 12},
+    modifyItem("body format is wrong",{id: 12,supplierId : 2},
     {
         newDescription : "a new sku",
         newPrice : "FailureHere10.99"
@@ -266,7 +266,7 @@ describe("delete item", () => {
     });
 
     //204
-    deleteItem('204 No Content',{id: 12},204);
+    deleteItem('204 No Content',{id: 12,supplierId : 2},204);
 
 
     after(async() => {
@@ -320,7 +320,7 @@ function getItems(testName, expectedHTTPStatus) {
 
 function getItemById(testName, params, expectedHTTPStatus) {
     it(testName, function (done) {
-        agent.get(`/api/items/${params.id}`).then(function(response){
+        agent.get(`/api/items/${params.id}/${params.supplierId}`).then(function(response){
             response.should.have.status(expectedHTTPStatus);
             response.should.to.be.json;
         })
@@ -331,7 +331,7 @@ function getItemById(testName, params, expectedHTTPStatus) {
 
 function modifyItem(testName, params, request, expectedHTTPStatus) {
     it(testName, function(done){
-            agent.put(`/api/item/${params.id}`).send(request).then(function(response){
+            agent.put(`/api/item/${params.id}/${params.supplierId}`).send(request).then(function(response){
             response.should.have.status(expectedHTTPStatus);
         });
         done();
@@ -342,7 +342,7 @@ function modifyItem(testName, params, request, expectedHTTPStatus) {
 
 function deleteItem(testName, params, expectedHTTPStatus) {
     it(testName, function(done)  {
-            agent.delete(`/api/items/${params.id}`).then(function (response) {
+            agent.delete(`/api/items/${params.id}/${params.supplierId}`).then(function (response) {
             response.should.have.status(expectedHTTPStatus);
         });
         done();

@@ -40,7 +40,7 @@ class RestockOrderController {
             return MESSG_201;
         }
         catch(error){
-            throw error;
+            return new Error();
 
         }  
         
@@ -61,13 +61,10 @@ class RestockOrderController {
                     /*add skuItems to restock order */
                     x.skuItems = await this.roDAO.getSkuItemsOfRestockOrder(x.id);
     
-                    if(x.state==="ISSUED"){
-                        delete x.deliveryDate;
-                    }else{
-                        /* remodeling transport note */
+                    if(x.state!=="ISSUED"){
                         x.transportNote = {"deliveryDate" : x.deliveryDate};
-                        delete x.deliveryDate;
                     }
+                    delete x.deliveryDate;
                     return x;
                 }));
                 return restockOrders;

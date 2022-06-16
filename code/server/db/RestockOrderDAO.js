@@ -161,7 +161,7 @@
         }
         catch(error){
            
-            throw new Error(error.message);
+            return new Error(error.message);
 
         }
      }

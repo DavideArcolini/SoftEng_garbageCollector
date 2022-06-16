@@ -57,12 +57,13 @@
       * ------------------------------------------------------------------------
       * @returns an object with the same id
     */
-      getItemById = async (id) => {
-        const querySQL = "SELECT * FROM ITEMS WHERE id=(?)"
+      getItemById = async (id,supId) => {
+        const querySQL = "SELECT * FROM ITEMS WHERE id=(?) AND supplierId=(?)"
         return await this.dao.get(
             querySQL,
             [
-                id
+                id,
+                supId
             ]
         ).then((result) => {
             return result;
@@ -105,14 +106,15 @@
       * @returns nothing 
       *          
     */
-    modifyItem  = async (id,itemObject) => {
-    const querySQL = `UPDATE ITEMS SET description=(?), price=(?) WHERE id==?`;
+    modifyItem  = async (id,supId,itemObject) => {
+    const querySQL = `UPDATE ITEMS SET description=(?), price=(?) WHERE id==? AND supplierId=(?)`;
     return this.dao.run(
         querySQL,
         [
             itemObject.newPrice,
             itemObject.newDescription,
-            id
+            id,
+            supId
         ]
     ).then((result) => {
         return result;
@@ -130,12 +132,14 @@
       * @returns nothing 
       *          
     */
-     deleteItem  = async (id) => {
-        const querySQL ="DELETE FROM ITEMS WHERE id=(?)";
+     deleteItem  = async (id,supplierId) => {
+
+        const querySQL ="DELETE FROM ITEMS WHERE id=(?) AND supplierId=(?)";
         return this.dao.run(
             querySQL,
             [
-                id
+                id,
+                supplierId
             ]
         ).then((result) => {
             return result;
@@ -145,7 +149,7 @@
     }
 
 
-    //needed for modify
+    //needed for create
     getItemBySupSKUID=async (SKUid,supplierId)=>{
         const querySQL = "SELECT * FROM ITEMS WHERE SKUId=(?) and supplierId=(?)"
         return this.dao.get(
