@@ -106,7 +106,7 @@ router.get(
 router.get(
     "/restockOrders/:id/returnItems",
     [
-        param('id').isNumeric(),                                                /* [FROM API.md]: id is a numeric value                                                 */
+        param('id').isNumeric({min:1}),                                                /* [FROM API.md]: id is a numeric value                                                 */
         body().custom(value => {                                                /* [FROM API.md]: body should be empty                                                  */
             if (Object.keys(value).length !== 0) {
                 throw new Error('Body should be empty');

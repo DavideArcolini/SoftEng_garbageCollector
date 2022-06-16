@@ -17,3 +17,4 @@ exports.modifyRestockOrderState             = jest.fn();
 exports.setSkuItems                         = jest.fn();
 exports.addTransportNote                    = jest.fn();
 exports.deleteRestockOrder                  = jest.fn();
+exports.getReturnItems                      = jest.fn();

@@ -3,7 +3,7 @@ Server listening at http://localhost:3001
 
   create internal order
 [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]
-    ✔ create internal order (1463ms)
+    1) create internal order
 [ { SKUId: 1, description: 'a product', price: -0.01, qty: 1 } ]
     ✔ create internal order - UNPROCESSABLE
 
@@ -74,54 +74,22 @@ Server listening at http://localhost:3001
     ✔ [422] Unprocessable Entity (id constraint failed)
 
   API: GET /api/skuitems/:rfid
-{
-  id: 222,
-  description: 'TestDescription',
-  weight: 50,
-  volume: 50,
-  notes: 'TestNote',
-  position: null,
-  price: 10.99,
-  availableQuantity: 1
-}
     ✔ [200] OK
     ✔ [404] Not Found (rfid non existing)
     ✔ [422] Unprocessable Entity (id constraint failed)
 
   API: POST /api/skuitem
-{
-  id: 555,
-  description: 'TestDescription',
-  weight: 50,
-  volume: 50,
-  notes: 'TestNote',
-  position: null,
-  price: 10.99,
-  availableQuantity: 1
-}
     ✔ [201] Created
-undefined
     ✔ [404] Not Found (SKUid non existing)
     ✔ [422] Unprocessable Entity (body parameters constraints failed)
 
   API: PUT /api/skuitems/:rfid
-{
-  id: 777,
-  description: 'TestDescription',
-  weight: 50,
-  volume: 50,
-  notes: 'TestNote',
-  position: null,
-  price: 10.99,
-  availableQuantity: 1
-}
     ✔ [200] OK
     ✔ [404] Not Found (rfid non existing)
     ✔ [422] Unprocessable Entity (body parameters constraints failed)
     ✔ [422] Unprocessable Entity (rfid constraints failed)
 
   API: DELETE /api/skuitems/:rfid
-undefined
     ✔ [204] No Content
     ✔ [422] Unprocessable Entity
 
@@ -152,45 +120,15 @@ undefined
     ✔ 204 No Content
 
   new test descriptor
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 201 return
     ✔ empty body
     ✔ wrong idsku type
     ✔ skuid doesn't exist
 
   get test descriptor
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 200 return
 
   get test descriptor by id
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 200 return
     ✔ id non existing)
     ✔ id constraint failed
@@ -198,34 +136,14 @@ undefined
   modify test descriptor
     ✔ 200 return
     ✔ id doesn't exist
+undefined
+undefined
     ✔ body format is wrong
-undefined
-undefined
 
   delete test descriptor
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 204 No Content
 
   new test result
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 201 return
     ✔ empty body
     ✔ wrong rfid length
@@ -233,30 +151,10 @@ undefined
     ✔ id doesn't exist
 
   get test result
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 200 return
     ✔ rfid short
 
   get test result by id
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 200 return
     ✔ id non existing)
     ✔ rfid non existing)
@@ -264,73 +162,23 @@ undefined
     ✔ rfid constraint failed
 
   modify test result
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 200 return
     ✔ id doesn't exist
     ✔ body format is wrong
 
   delete test result
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 204 No Content
 
   new item
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 201 return
     ✔ empty body
     ✔ wrong price type
     ✔ skuid doesn't exist
 
   get item
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 200 return
 
   get item by id and sup id
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 200 return
     ✔ id non existing)
     ✔ id constraint failed
@@ -341,16 +189,6 @@ undefined
     ✔ body format is wrong
 
   delete item
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 204 No Content
 
   get restock order by id
@@ -445,15 +283,15 @@ DELETED RO
     ✔ not empty body
 
   get user
-    ✔ getting user data from the system (59ms)
+    ✔ getting user data from the system (93ms)
     ✔ empty body
     ✔ bad username format
     ✔ bad password format
     ✔ not found: wrong username
-    ✔ not found: wrong password (59ms)
+    ✔ not found: wrong password (91ms)
 
   new user
-    ✔ user created (59ms)
+    ✔ user created (92ms)
     ✔ empty body
     ✔ wrong username format
     ✔ password too short
@@ -475,5 +313,14 @@ DELETED RO
     ✔ deleted
 
 
-  154 passing (2s)
+  153 passing (3s)
+  1 failing
+
+  1) create internal order
+       create internal order:
+     Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure "done()" is called; if returning a Promise, ensure it resolves. (/Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/test/testInternalOrderRouter.js)
+      at listOnTimeout (node:internal/timers:564:17)
+      at process.processTimers (node:internal/timers:507:7)
+
+
 

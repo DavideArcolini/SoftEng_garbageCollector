@@ -145,7 +145,7 @@ class RestockOrderController {
             await this.roDAO.deleteRestockOrder(id);
             return MESSG_204;
         }catch(error){
-            throw error;
+            throw new Error(error.message);
         }
     }
   
@@ -217,15 +217,11 @@ class RestockOrderController {
             if(restockOrder[0].state!=="COMPLETEDRETURN") {
                return ERROR_422;
             }
-
             let skuItems = await this.roDAO.getSkuItemsOfRestockOrder(id);
-            
+
             let result = await skuItems.filter(async (x)=>{
-                
                 sql = "SELECT rfid, Result FROM TEST_RESULTS WHERE rfid==?"
-                
                 let TestResults = await this.roDAO.dao.all(sql,[x.RFID]);
-                
 
                 if(TestResults!==undefined && TestResults.filter((x)=>x.Result==false).length!=0 ){
                     return x;
@@ -235,7 +231,7 @@ class RestockOrderController {
             return {code: 200, message: result};
 
         }catch(error){
-            throw error;
+            return new Error(error.message);
         }
     }
 
