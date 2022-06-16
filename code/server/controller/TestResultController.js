@@ -126,7 +126,7 @@ class TestResultController {
              }
  
              /* check if test descriptor exists */
-             const testdescriptor = await this.testDescriptorDAO.getTestDescriptorById(targetID);
+             const testdescriptor = await this.testDescriptorDAO.getTestDescriptorById(body.newIdTestDescriptor);
              if (testdescriptor === undefined) {
                  return ERROR_404;
              }

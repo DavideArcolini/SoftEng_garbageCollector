@@ -32,31 +32,38 @@
      */
 
      
-         /**
-      * Retrieves all the skuItems object associated to the return order in the DB
-      * ----------------------------------------------------------------------
-      * @returns an Array object containing all skuItems objects in the DB.
+    /**
+     * Retrieves all the skuItems object associated to the return order in the DB
+     * ------------------------------------------------------------
+     * CHANGE1 - ISSUE 24: products[i].itemId is now defined
+     * DELIVERY_2022-06-22
+     * ----------------------------------------------------------------------
+     * @returns an Array object containing all skuItems objects in the DB.
     */
-          getSkuItemsOfReturnOrder = async (id) => {
+    getSkuItemsOfReturnOrder = async (id) => {
+        const querySQL =  "SELECT SKUId, description, price, RFID, itemId FROM RETURN_ORDERS WHERE id == ? ";
+        return this.dao.all(
+            querySQL, 
+            [
+                id
+            ]
+        ).then((result)=>{
+            return result;
+        }).catch((error)=>{
+            throw new Error(error.message);
+        })
+    }
 
-            const querySQL =  "SELECT SKUId, description, price, RFID FROM RETURN_ORDERS WHERE id==? ";
-            return this.dao.all(
-                querySQL,id
-            ).then((result)=>{
-                return result;
-            }).catch((error)=>{
-                throw new Error(error.message);
-            })
-        }
+
      /**
       * Retrieves all the ReturnOrders object in the DB
+      * ------------------------------------------------------------
+      * CHANGE1 - ISSUE 24: products[i].itemId is now defined
+      * DELIVERY_2022-06-22
       * ----------------------------------------------------------------------
       * @returns an Array object containing all ReturnOrders objects in the DB.
       */
-
-
-     getReturnOrders = async () => {
-
+    getReturnOrders = async () => {
         const querySQL = "SELECT id, returnDate, restockOrderId FROM RETURN_ORDERS GROUP BY id, returnDate, restockOrderId";
         return await this.dao.all(
             querySQL
@@ -70,55 +77,60 @@
 
 
     /**
-      * Retrieves return order object by its ID in the DB
-      * ----------------------------------------------------------------------
-      * @returns an object containing the Return Order associated to the ID in the DB.
+     * Retrieves return order object by its ID in the DB
+     * ------------------------------------------------------------
+     * CHANGE1 - ISSUE 24: products[i].itemId is now defined
+     * DELIVERY_2022-06-22
+     * ----------------------------------------------------------------------
+     * @returns an object containing the Return Order associated to the ID in the DB.
     */
- 
-     getReturnOrderById = async (id) => {
-         const querySQL = "SELECT id, returnDate, restockOrderId, SKUId, description, price, RFID FROM RETURN_ORDERS WHERE id==? GROUP BY id, returnDate, restockOrderId, SKUId, description, price, RFID";
-         return this.dao.all(
-             querySQL,
-             [
-                 id
-             ]
-         ).then((result) => {
-             return result;
-         }).catch((error) => {
-             throw new Error(error.message);
-         });
-     }
+    getReturnOrderById = async (id) => {
+        const querySQL = "SELECT id, returnDate, restockOrderId, SKUId, description, price, RFID, itemId FROM RETURN_ORDERS WHERE id==? GROUP BY id, returnDate, restockOrderId, SKUId, description, price, RFID, itemId";
+        return this.dao.all(
+            querySQL,
+            [
+                id
+            ]
+        ).then((result) => {
+            return result;
+        }).catch((error) => {
+            throw new Error(error.message);
+        });
+    }
  
 
      /**
       * Create a new Internal Order in the DB
       * --------------------------
+      * CHANGE1 - ISSUE 24: products[i].itemId is now defined
+      * DELIVERY_2022-06-22
+      * --------------------------
       * @param {Date} issueDate
       * @param {Number} supplierId
       * @param {products} Array  
       */
-      createReturnOrder = async (returnDate,restockOrderId,products)  => {
-        /*  assign the ID to the new Return order*/
-        try{
-        let querySQL = "SELECT MAX(id) as id FROM RETURN_ORDERS";
-        let max_id = await this.dao.get(querySQL);
-        let id=1;
-        if(max_id !==undefined && max_id.id!==null)
-            id = max_id.id+1;
-      
-            for (const prod of products)
-            {       
-                     querySQL = "INSERT INTO RETURN_ORDERS(id, returnDate, restockOrderId, SKUId, description, price, RFID) VALUES(?,?,?,?,?,?,?)"
-                     await this.dao.run(querySQL,[id, returnDate,  restockOrderId, prod.SKUId, prod.description, prod.price, prod.RFID])
-                 
-             }
-            return id;
-        }catch(error){
-           
-            throw new Error(error.message);
+    createReturnOrder = async (returnDate,restockOrderId,products)  => {
+        try {
 
+            /*  assign the ID to the new Return order*/
+            let querySQL = "SELECT MAX(id) as id FROM RETURN_ORDERS";
+            let max_id = await this.dao.get(querySQL);
+            let id = 1;
+            if (max_id !== undefined && max_id.id !== null) {
+                id = max_id.id+1;
+            }
+            
+            /* storing products */
+            querySQL = "INSERT INTO RETURN_ORDERS(id, returnDate, restockOrderId, SKUId, description, price, RFID, itemId) VALUES(?,?,?,?,?,?,?,?)"
+            for (const prod of products) {       
+                await this.dao.run(querySQL,[id, returnDate,  restockOrderId, prod.SKUId, prod.description, prod.price, prod.RFID, prod.itemId]);
+            }
+            return id;
+
+        } catch(error) {
+            throw new Error(error.message);
         }
-     }
+    }
  
     
 

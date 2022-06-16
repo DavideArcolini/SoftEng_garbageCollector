@@ -52,13 +52,15 @@ const returnOrderResult = [
             SKUId: 12,
             description: 'a product',
             price: 10.99,
-            RFID: '12345678901234567890123456789016'
+            RFID: '12345678901234567890123456789016',
+            itemId: 10
           },
           {
             SKUId: 180,
             description: 'another product',
             price: 11.99,
-            RFID: '12345678901234567890123456789038'
+            RFID: '12345678901234567890123456789038',
+            itemId: 18
           }
         ]
       },{
@@ -70,13 +72,15 @@ const returnOrderResult = [
             SKUId: 12,
             description: 'a product',
             price: 10.99,
-            RFID: '12345678901234567890123456789016'
+            RFID: '12345678901234567890123456789016', 
+            itemId: 11
           },
           {
             SKUId: 180,
             description: 'another product',
             price: 11.99,
-            RFID: '12345678901234567890123456789038'
+            RFID: '12345678901234567890123456789038',
+            itemId: 19
           }
         ],
       }
@@ -101,7 +105,8 @@ const returnOrderArray = [
         SKUId: 12,
         description: 'a product',
         price: 10.99,
-        RFID: '12345678901234567890123456789016'
+        RFID: '12345678901234567890123456789016',
+        itemId: 10
       },
       {
         id: 2,
@@ -110,13 +115,14 @@ const returnOrderArray = [
         SKUId: 180,
         description: 'another product',
         price: 11.99,
-        RFID: '12345678901234567890123456789038'
+        RFID: '12345678901234567890123456789038',
+        itemId: 18
       }
 ]
 const reqBody = {
     returnDate : "2021/11/29 09:33",
     products : [{SKUId:12,description:"a product",price:10.99,RFID: '12345678901234567890123456789038'},
-                        {SKUId:180,description: "another product",price:11.99,RFID: '12345678901234567890123456789038'}],
+                {SKUId:180,description: "another product",price:11.99,RFID: '12345678901234567890123456789038'}],
     restockOrderId: 1
 
 }

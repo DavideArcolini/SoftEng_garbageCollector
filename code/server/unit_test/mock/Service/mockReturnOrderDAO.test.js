@@ -9,6 +9,10 @@ const mockDAO           = require('../Database/mockDAO');
 /* --------- INITIALIZATION --------- */
 const reoDAO = new ReturnOrderDAO(mockDAO);
 
+/**
+ * CHANGE1 - ISSUE 24: products[i].itemId is now defined
+ * DELIVERY_2022-06-22
+*/
 const returnOrderArray = [
     {
         id: 1,
@@ -17,7 +21,8 @@ const returnOrderArray = [
         SKUId: 12,
         description: 'a product',
         price: 10.99,
-        RFID: '12345678901234567890123456789016'
+        RFID: '12345678901234567890123456789016',
+        itemId: 10
       },
       {
         id: 2,
@@ -26,7 +31,8 @@ const returnOrderArray = [
         SKUId: 180,
         description: 'another product',
         price: 11.99,
-        RFID: '12345678901234567890123456789038'
+        RFID: '12345678901234567890123456789038',
+        itemId: 18
       }
 ]
 
@@ -47,8 +53,8 @@ const skuItems = [
 
 const reqBody = {
     returnDate : "2021/11/29 09:33",
-    products : [{SKUId:12,description:"a product",price:10.99,RFID: '12345678901234567890123456789038'},
-                        {SKUId:180,description: "another product",price:11.99,RFID: '12345678901234567890123456789038'}],
+    products : [{SKUId:12, itemId: 10, description:"a product",price:10.99,RFID: '12345678901234567890123456789038'},
+                {SKUId:180, itemId: 18, description: "another product",price:11.99,RFID: '12345678901234567890123456789038'}],
     restockOrderId: 1
 
 }

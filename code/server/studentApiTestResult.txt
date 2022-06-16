@@ -3,7 +3,7 @@ Server listening at http://localhost:3001
 
   create internal order
 [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]
-    ✔ create internal order (1346ms)
+    1) create internal order
 [ { SKUId: 1, description: 'a product', price: -0.01, qty: 1 } ]
     ✔ create internal order - UNPROCESSABLE
 
@@ -120,26 +120,23 @@ Server listening at http://localhost:3001
     ✔ 204 No Content
 
   new test descriptor
-    ✔ 201 return
-    ✔ empty body
-    ✔ wrong idsku type
-    ✔ skuid doesn't exist
+    2) "before all" hook for "201 return"
 
   get test descriptor
-    ✔ 200 return
+    3) "before all" hook for "200 return"
 
   get test descriptor by id
-    ✔ 200 return
-    ✔ id non existing)
-    ✔ id constraint failed
+    4) "before all" hook for "200 return"
 
   modify test descriptor
     ✔ 200 return
     ✔ id doesn't exist
+undefined
     ✔ body format is wrong
+undefined
 
   delete test descriptor
-    ✔ 204 No Content
+    5) "before all" hook for "204 No Content"
 
   new test result
     ✔ 201 return
@@ -172,14 +169,19 @@ Server listening at http://localhost:3001
     ✔ empty body
     ✔ wrong price type
     ✔ skuid doesn't exist
+    6) "after all" hook for "skuid doesn't exist"
 
   get item
-    ✔ 200 return
+Error running sql INSERT INTO SKUITEMS (RFID, SKUId, Available, DateOfStock) VALUES (?, ?, 0, ?)
+Error: SQLITE_CONSTRAINT: UNIQUE constraint failed: SKUITEMS.RFID
+    at /Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/db/skuItemDAO.js:111:19
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async SKUitemController.newSKUitem (/Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/controller/SKUitemController.js:128:13)
+    at async /Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/router/SKUitemRouter.js:138:28
+    7) "before all" hook for "200 return"
 
   get item by id
-    ✔ 200 return
-    ✔ id non existing)
-    ✔ id constraint failed
+    8) "before all" hook for "200 return"
 
   modify item
     ✔ 200 return
@@ -187,7 +189,7 @@ Server listening at http://localhost:3001
     ✔ body format is wrong
 
   delete item
-    ✔ 204 No Content
+    9) "before all" hook for "204 No Content"
 
   get restock order by id
     ✔ get restock order by id
@@ -224,11 +226,11 @@ DELETED RO
 DELETED RO
 
   set skuItems
-{ SKUId: 1, rfid: '12345678901234567890123456789016' }
+{ SKUId: 1, itemId: 1, rfid: '12345678901234567890123456789016' }
     ✔ set skuItems
-{ SKUId: 1, rfid: '12345678901234567890123456789016' }
+{ SKUId: 1, itemId: 1, rfid: '12345678901234567890123456789016' }
     ✔ set skuItems-NOT FOUND
-{ SKUId: 1, rfid: '12345678901234567890123456789016' }
+{ SKUId: 1, itemId: 1, rfid: '12345678901234567890123456789016' }
     ✔ set skuItems- UNPROCESSABLE
 DELETED RO
 
@@ -244,35 +246,21 @@ DELETED RO
     ✔ delete restock order - UNPROCESSABLE
 
   create return order
+    10) create return order
     ✔ create return order
-    ✔ create return order
-[
-  {
-    id: 1,
-    returnDate: '2022/05/16 23:33',
-    restockOrderId: 2,
-    products: [ [Object], [Object] ]
-  },
-  {
-    id: 2,
-    returnDate: '2021/11/29 09:33',
-    restockOrderId: 1,
-    products: [ [Object], [Object] ]
-  }
-]
+[]
+    11) "after all" hook for "create return order"
 
   get return orders
-    ✔ get return orders
+    12) "before all" hook for "get return orders"
+    13) "after all" hook for "get return orders"
 
   get return order by id
-    ✔ get return order by id
-    ✔ get return order by id- not found
-    ✔ get return order by id- unprocessable
+    14) "before all" hook for "get return order by id"
+    15) "after all" hook for "get return order by id- unprocessable"
 
   delete return order
-    ✔ delete return order
-    ✔ delete return order
-    ✔ delete return order
+    16) "before all" hook for "delete return order"
 
   get users
     ✔ retrieve users
@@ -283,15 +271,15 @@ DELETED RO
     ✔ not empty body
 
   get user
-    ✔ getting user data from the system (60ms)
+    ✔ getting user data from the system (104ms)
     ✔ empty body
     ✔ bad username format
     ✔ bad password format
     ✔ not found: wrong username
-    ✔ not found: wrong password (58ms)
+    ✔ not found: wrong password (92ms)
 
   new user
-    ✔ user created (58ms)
+    ✔ user created (93ms)
     ✔ empty body
     ✔ wrong username format
     ✔ password too short
@@ -313,5 +301,191 @@ DELETED RO
     ✔ deleted
 
 
-  154 passing (2s)
+  131 passing (4s)
+  16 failing
+
+  1) create internal order
+       create internal order:
+     Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure "done()" is called; if returning a Promise, ensure it resolves. (/Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/test/testInternalOrderRouter.js)
+      at listOnTimeout (node:internal/timers:564:17)
+      at process.processTimers (node:internal/timers:507:7)
+
+  2) new test descriptor
+       "before all" hook for "201 return":
+
+      AssertionError: expected { Object (_events, _eventsCount, ...) } to have status code 201 but got 404
+      + expected - actual
+
+      -404
+      +201
+      
+      at /Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/test/testTestDescriptorRouter.js:74:29
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async Context.<anonymous> (test/testTestDescriptorRouter.js:73:11)
+
+  3) get test descriptor
+       "before all" hook for "200 return":
+
+      AssertionError: expected { Object (_events, _eventsCount, ...) } to have status code 201 but got 404
+      + expected - actual
+
+      -404
+      +201
+      
+      at /Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/test/testTestDescriptorRouter.js:130:29
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async Context.<anonymous> (test/testTestDescriptorRouter.js:129:11)
+
+  4) get test descriptor by id
+       "before all" hook for "200 return":
+
+      AssertionError: expected { Object (_events, _eventsCount, ...) } to have status code 201 but got 404
+      + expected - actual
+
+      -404
+      +201
+      
+      at /Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/test/testTestDescriptorRouter.js:172:29
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async Context.<anonymous> (test/testTestDescriptorRouter.js:171:11)
+
+  5) delete test descriptor
+       "before all" hook for "204 No Content":
+
+      AssertionError: expected { Object (_events, _eventsCount, ...) } to have status code 201 but got 404
+      + expected - actual
+
+      -404
+      +201
+      
+      at /Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/test/testTestDescriptorRouter.js:266:29
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async Context.<anonymous> (test/testTestDescriptorRouter.js:265:11)
+
+  6) new item
+       "after all" hook for "skuid doesn't exist":
+
+      AssertionError: expected { Object (_events, _eventsCount, ...) } to have status code 204 but got 404
+      + expected - actual
+
+      -404
+      +204
+      
+      at /Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/test/testItemRouter.js:111:34
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async Context.<anonymous> (test/testItemRouter.js:110:9)
+
+  7) get item
+       "before all" hook for "200 return":
+
+      AssertionError: expected { Object (_events, _eventsCount, ...) } to have status code 201 but got 503
+      + expected - actual
+
+      -503
+      +201
+      
+      at /Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/test/testItemRouter.js:140:29
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async Context.<anonymous> (test/testItemRouter.js:139:11)
+
+  8) get item by id
+       "before all" hook for "200 return":
+
+      AssertionError: expected { Object (_events, _eventsCount, ...) } to have status code 201 but got 404
+      + expected - actual
+
+      -404
+      +201
+      
+      at /Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/test/testItemRouter.js:178:29
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async Context.<anonymous> (test/testItemRouter.js:177:11)
+
+  9) delete item
+       "before all" hook for "204 No Content":
+
+      AssertionError: expected { Object (_events, _eventsCount, ...) } to have status code 201 but got 404
+      + expected - actual
+
+      -404
+      +201
+      
+      at /Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/test/testItemRouter.js:261:29
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async Context.<anonymous> (test/testItemRouter.js:260:11)
+
+  10) create return order
+       create return order:
+
+      AssertionError: expected { Object (_events, _eventsCount, ...) } to have status code 201 but got 404
+      + expected - actual
+
+      -404
+      +201
+      
+      at /Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/test/testReturnOrderRouter.js:43:25
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async Context.<anonymous> (test/testReturnOrderRouter.js:42:7)
+
+  11) create return order
+       "after all" hook for "create return order":
+     TypeError: Cannot read properties of undefined (reading 'id')
+      at /Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/test/testReturnOrderRouter.js:67:50
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async Context.<anonymous> (test/testReturnOrderRouter.js:62:11)
+
+  12) get return orders
+       "before all" hook for "get return orders":
+
+      AssertionError: expected { Object (_events, _eventsCount, ...) } to have status code 201 but got 404
+      + expected - actual
+
+      -404
+      +201
+      
+      at /Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/test/testReturnOrderRouter.js:99:27
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async Context.<anonymous> (test/testReturnOrderRouter.js:98:9)
+
+  13) get return orders
+       "after all" hook for "get return orders":
+     TypeError: Cannot read properties of undefined (reading 'id')
+      at /Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/test/testReturnOrderRouter.js:129:46
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async Context.<anonymous> (test/testReturnOrderRouter.js:125:7)
+
+  14) get return order by id
+       "before all" hook for "get return order by id":
+
+      AssertionError: expected { Object (_events, _eventsCount, ...) } to have status code 201 but got 404
+      + expected - actual
+
+      -404
+      +201
+      
+      at /Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/test/testReturnOrderRouter.js:159:27
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async Context.<anonymous> (test/testReturnOrderRouter.js:158:9)
+
+  15) get return order by id
+       "after all" hook for "get return order by id- unprocessable":
+     TypeError: Cannot read properties of undefined (reading 'id')
+      at /Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/test/testReturnOrderRouter.js:209:46
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async Context.<anonymous> (test/testReturnOrderRouter.js:205:7)
+
+  16) delete return order
+       "before all" hook for "delete return order":
+
+      AssertionError: expected { Object (_events, _eventsCount, ...) } to have status code 201 but got 404
+      + expected - actual
+
+      -404
+      +201
+      
+      at /Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/test/testReturnOrderRouter.js:240:31
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async Context.<anonymous> (test/testReturnOrderRouter.js:239:13)
+
+
 

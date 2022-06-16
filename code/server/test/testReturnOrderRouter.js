@@ -35,8 +35,8 @@ var agent = chai.request.agent(app);
     it('create return order',async()=>{
       let req = {
         returnDate:"2021/11/29 09:33",
-        products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
-                    {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+        products: [{SKUId:12, itemId: 10, description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                  {SKUId:180, itemId: 18, description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
         restockOrderId : 1
     };
       await agent.post('/api/returnOrder/').send(req).then(function(res){
@@ -47,8 +47,8 @@ var agent = chai.request.agent(app);
       it('create return order',async()=>{
         let req = {
           returnDate:"2021/11/29 09:33",
-          products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
-                      {SKUId:180,description:"another product",price:-11.99,RFID:"12345678901234567890123456789038"}],
+          products: [{SKUId:12, itemId: 10,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                      {SKUId:180, itemId: 18,description:"another product",price:-11.99,RFID:"12345678901234567890123456789038"}],
           restockOrderId : 1
       };
         await agent.post('/api/returnOrder/').send(req).then(function(res){
@@ -91,8 +91,8 @@ var agent = chai.request.agent(app);
       before(async() => {
         let req = {
           returnDate:"2021/11/29 09:33",
-          products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
-                      {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+          products: [{SKUId:12, itemId: 10,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                      {SKUId:180, itemId: 18,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
           restockOrderId : 1
       };
         await agent.post('/api/returnOrder/').send(req).then(function(res){
@@ -100,8 +100,8 @@ var agent = chai.request.agent(app);
         })
         req = {
           returnDate:"2021/11/29 09:33",
-          products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
-                      {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+          products: [{SKUId:12, itemId: 10,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                      {SKUId:180, itemId: 18,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
           restockOrderId : 1
       };
         await agent.post('/api/returnOrder/').send(req).then(function(res){
@@ -151,8 +151,8 @@ getReturnOrders(200);
       before(async() => {
         let req = {
           returnDate:"2021/11/29 09:33",
-          products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
-                      {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+          products: [{SKUId:12, itemId: 10,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                      {SKUId:180, itemId: 18,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
           restockOrderId : 1
       };
         await agent.post('/api/returnOrder/').send(req).then(function(res){
@@ -160,8 +160,8 @@ getReturnOrders(200);
         })
         req = {
           returnDate:"2021/11/29 09:33",
-          products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
-                      {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+          products: [{SKUId:12, itemId: 10,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                      {SKUId:180, itemId: 18,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
           restockOrderId : 1
       };
         await agent.post('/api/returnOrder/').send(req).then(function(res){
@@ -232,8 +232,8 @@ it('get return order by id- unprocessable',async()=>{
           before(async() => {
             let req = {
               returnDate:"2021/11/29 09:33",
-              products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
-                          {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+              products: [{SKUId:12, itemId: 10,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                          {SKUId:180, itemId: 18,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
               restockOrderId : 1
           };
             await agent.post('/api/returnOrder/').send(req).then(function(res){
@@ -241,8 +241,8 @@ it('get return order by id- unprocessable',async()=>{
             })
             req = {
               returnDate:"2021/11/29 09:33",
-              products: [{SKUId:12,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
-                          {SKUId:180,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
+              products: [{SKUId:12, itemId: 10,description:"a product",price:10.99, RFID:"12345678901234567890123456789016"},
+                          {SKUId:180, itemId: 18,description:"another product",price:11.99,RFID:"12345678901234567890123456789038"}],
               restockOrderId : 1
           };
             await agent.post('/api/returnOrder/').send(req).then(function(res){

@@ -16,7 +16,7 @@ const TestDAO               = require('../Database/testDAO');
 const testDAO               = new TestDAO();
 const skuDAO                = new SkuDAO(testDAO);
 const itemDAO    = new ItemDAO(testDAO);
-const i         = new IController(skuDAO ,itemDAO);
+const i         = new IController(testDAO);
 
 /* --------- ERROR MESSAGES --------- */
 const MESSG_200 = {code: 200, message: 'Ok'}
@@ -69,7 +69,7 @@ describe('get items', ()=> {
     })
 
     //200
-    getItems([{
+    getItems({code :200,message:[{
         id:1,
         description : "a new item",
         price : 10.99,
@@ -81,7 +81,7 @@ describe('get items', ()=> {
         price : 12.99,
         SKUId : 2,
         supplierId : 1
-    }]);
+    }]});
 
 })
 
@@ -97,6 +97,7 @@ describe('get item by id', ()=> {
     beforeAll(async() => {
         let sql = "INSERT INTO ITEMS(id,description, price, SKUId, supplierId) VALUES(?,?,?,?,?)";
         await testDAO.run(sql,[1, "a new item", 10.99, 1, 2]);
+        await testDAO.run(sql,[2, "a new item", 10.99, null, 2]);
     })
 
     afterAll(async() => {
@@ -106,7 +107,7 @@ describe('get item by id', ()=> {
 
 
 //200
-getItemById({id: 1},{
+getItemById({id: 1,supplierId : 2},{
     id:1,
     description : "a new item",
     price : 10.99,
@@ -114,8 +115,16 @@ getItemById({id: 1},{
     supplierId : 2
 });
 
+getItemById({id: 2,supplierId : 2},{
+    id:2,
+    description : "a new item",
+    price : 10.99,
+    SKUId : 1,
+    supplierId : 2
+});
+
 //ERROR_404
-getItemById({id: 2}, ERROR_404);
+getItemById({id: 3,supplierId : 2}, ERROR_404);
 
 })
 
@@ -129,18 +138,19 @@ getItemById({id: 2}, ERROR_404);
 
 describe('add item', ()=> { 
     beforeAll(async() => {
-        let sql="INSERT INTO SKUITEMS (RFID, SKUId, Available, DateOfStock) VALUES (?, ?, 0, ?)";
-        await testDAO.run(sql,["25",25,"2021/11/29 12:30"]);
-        await testDAO.run(sql,["26",26,"2021/11/29 12:30"]);
-        await testDAO.run(sql,["28",28,"2021/11/29 12:30"]);
+        let sql="INSERT INTO SKUS (id, description, weight, volume,notes,price,availableQuantity) VALUES (?,?,?,?,?,?,?)";
+        await testDAO.run(sql,[25, "a new sku",100,50,"first SKU" ,10.99,50]);
+        await testDAO.run(sql,[26, "a new sku",100,50,"first SKU" ,10.99,50]);
+        await testDAO.run(sql,[28, "a new sku",100,50,"first SKU" ,10.99,50]);
         sql = "INSERT INTO ITEMS(id,description, price, SKUId, supplierId) VALUES(?,?,?,?,?)";
         await testDAO.run(sql,[13, "thing", 99, 27, 2]);
         await testDAO.run(sql,[1, "hello", 99, 26, 2]);
     })
+
     afterAll(async() => {
         sql = "DELETE FROM ITEMS"
         await testDAO.run(sql);
-        sql="DELETE FROM SKUITEMS WHERE SKUId==?"
+        sql="DELETE FROM SKUS WHERE Id==?"
         await testDAO.run(sql,25);
         await testDAO.run(sql,26);
         await testDAO.run(sql,28);
@@ -148,7 +158,7 @@ describe('add item', ()=> {
 
 
 //201
-createItem( 201, {
+createItem( MESSG_201, {
     id : 12,
     description : "a new item",
     price : 10.99,
@@ -176,7 +186,7 @@ createItem(ERROR_422, {
 
 //422 supplier already sell skuid
 createItem( ERROR_422, {
-    id : 12,
+    id : 19,
     description : "a new item",
     price : 10.99,
     SKUId : 26,
@@ -208,13 +218,13 @@ describe('edit item', ()=> {
 modyfyItem(200, {
     newDescription : "a new sku",
     newPrice : 10.99
-}, {id: 13})
+}, {id: 13,supplierId : 2})
 
 //ERROR_404 Item doesn't exist
 modyfyItem(ERROR_404,{
     newDescription : "a new sku",
     newPrice : 10.99
-}, {id: 12})
+}, {id: 12,supplierId : 2})
 
 })
 
@@ -241,10 +251,10 @@ describe('delete item', ()=> { //
      })
  
 //204
-deleteItem(MESSG_204,{id: 13})
+deleteItem(MESSG_204,{id: 13,supplierId : 2})
 
 //ERROR_404
-deleteItem(ERROR_404,{id: 12})
+deleteItem(ERROR_404,{id: 12,supplierId : 2})
 
     })
 
@@ -255,27 +265,23 @@ deleteItem(ERROR_404,{id: 12})
 */
 
 
-
-
-
-
-
 function getItems(expected){
     test('get items', async () => {
         try {
             let res = await i.getItems();
             expect(res).toEqual(expected);
         } catch (error) {
+            console.log(error);
             expect(error).toBeInstanceOf(Error);
         }
     })
 }
 
 
-function getItemById(id,expected){
+function getItemById(params,expected){
         test('get item by id', async () => {
             try {
-                let res = await i.getItemById(id);
+                let res = await i.getItemById(params);
                 expect(res).toEqual(expected);
             } catch (error) {
                 expect(error).toBeInstanceOf(Error);
@@ -297,11 +303,11 @@ function createItem(expected,json){
 }
 
 
-function modyfyItem(expected,json,id){
+function modyfyItem(expected,json,params){
     
         test('edit item', async () => {
             try {
-                let res = await i.modifyItem(json,id);
+                let res = await i.modifyItem(json,params);
                 expect(res).toEqual(expected);
             } catch (error) {
                 expect(error).toBeInstanceOf(Error);
@@ -309,11 +315,11 @@ function modyfyItem(expected,json,id){
         })
 }
 
-function deleteItem(expected,id){
+function deleteItem(expected,params){
     
         test('delete item', async () => {
             try {
-                let res = await i.deleteItem(id);
+                let res = await i.deleteItem(params);
                 expect(res).toEqual(expected);
             } catch (error) {
                 expect(error).toBeInstanceOf(Error);

@@ -87,7 +87,7 @@ describe('get item by id', ()=> {
 
 
 //500
-getItemById("Error",tis[0].id,tis[0]);
+getItemById("Error",tis[0].id,tis[0].supplierId,tis[0]);
 
 })
 
@@ -141,7 +141,7 @@ describe('edit item', ()=> {
 
 
 //200
-modyfyItem("error",tis2,tis[0].id,tis1);
+modyfyItem("error",tis2,tis[0].id,tis[0].supplierId,tis1);
 
 })
 
@@ -167,7 +167,7 @@ describe('delete item', ()=> { //
 
 
 //204
-deleteItem("Error",tis[0],tis[0].id)
+deleteItem("Error",tis[0],tis[0].id,tis[0].supplierId)
 
 
 
@@ -242,22 +242,22 @@ getItemBySupId("error",Error,tis[0].id, tis[0].supplierId);
 function getItems(name,expected){
 
 test(name, async () => {
-try {
-let res = await i.getItems();
-expect(res).toEqual(expected)
-} catch (error) {
-expect(error).toBeInstanceOf(expected);
-}
-})
+    try {
+        let res = await i.getItems();
+        expect(res).toEqual(expected)
+    } catch (error) {
+        expect(error).toBeInstanceOf(expected);
+    }
+    })
 }
 
 
-function getItemById(name,id,expected){
+function getItemById(name,id,supplierId,expected){
 
 test(name, async () => {
 
 try {
-let res = await i.getItemById(id);
+let res = await i.getItemById(id,supplierId);
 expect(res).toEqual(expected)
 } catch (error) {
 expect(error).toBeInstanceOf(Error);
@@ -279,12 +279,12 @@ expect(error).toBeInstanceOf(Error);
 }
 
 
-function modyfyItem(name,expected,id,json){
+function modyfyItem(name,expected,id,supplierId,json){
 
 
 test(name, async () => {
 try {
-let res = await i.modifyItem(id,json);
+let res = await i.modifyItem(id,supplierId,json);
 expect(res).toEqual(expected)
 } catch (error) {
 expect(error).toBeInstanceOf(Error);
@@ -292,12 +292,12 @@ expect(error).toBeInstanceOf(Error);
 })
 }
 
-function deleteItem(name,expected,id){
+function deleteItem(name,expected,id,supplierId){
 
 test(name, async () => {
 
 try {
-let res = await i.deleteItem(id);
+let res = await i.deleteItem(id,supplierId);
 expect(res).toEqual(expected)
 } catch (error) {
 expect(error).toBeInstanceOf(Error);
