@@ -271,7 +271,6 @@ function getItems(expected){
             let res = await i.getItems();
             expect(res).toEqual(expected);
         } catch (error) {
-            console.log(error);
             expect(error).toBeInstanceOf(Error);
         }
     })

@@ -3,8 +3,12 @@ const express = require('express');
 const router = express.Router();
 const RTOController = require('../controller/ReturnOrderController');
 const DAO = require("../db/DAO")
+const REODAO = require('../db/ReturnOrderDAO');
+const RODAO = require('../db/RestockOrderDAO');
 const dao = new DAO();
-const rtoc = new RTOController(dao);
+const roDAO = new RODAO(dao);
+const reoDAO = new REODAO(dao);
+const rtoc = new RTOController(reoDAO, roDAO);
 
 const { validationHandler } = require("../validator/validationHandler");
 const { param }             = require('express-validator');

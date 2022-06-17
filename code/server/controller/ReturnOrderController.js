@@ -2,9 +2,6 @@
 
 /* --------- IMPORT MODULES --------- */
 const dayjs         = require( 'dayjs');
-const { testEditRestockWrongOrderSkuItems } = require('../acceptanceTest/utils-restockorder');
-const reoDAO         = require("../db/ReturnOrderDAO");
-const roDAO          = require("../db/RestockOrderDAO");
 
 
 /* --------- ERROR MESSAGES --------- */
@@ -15,9 +12,9 @@ const MESSG_204 = {code: 204, message: 'No Content'};
 const ERROR_404 = {code: 404, message: 'Not Found'};
 
 class ReturnOrderController {
-    constructor(generalPurposeDAO) {
-        this.reoDAO = new reoDAO(generalPurposeDAO);
-        this.roDAO  = new roDAO(generalPurposeDAO); 
+    constructor(reoDAO, roDAO) {
+        this.reoDAO = reoDAO;
+        this.roDAO = roDAO;
     }   
 
     /**
@@ -114,8 +111,7 @@ class ReturnOrderController {
         return {
             code: 204
         }
-        }catch(error){
-            
+        }catch(error){     
             throw error;
         }
     }

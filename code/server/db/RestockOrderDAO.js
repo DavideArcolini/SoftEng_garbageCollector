@@ -258,7 +258,6 @@
                  id
              ]
          ).then((result) => {
-             console.log("DELETED RO")
              return result
          }).catch((error) => {
              throw new Error(error.message);

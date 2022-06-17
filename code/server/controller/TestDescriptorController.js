@@ -75,7 +75,6 @@ class TestDescriptorController {
 
             /* checking if SKUid actually exists */
             const sku = await this.skuDAO.getSKUByID(data.newIdSKU);
-            console.log(sku)
             if (sku === undefined) {
                 return ERROR_404;
             }

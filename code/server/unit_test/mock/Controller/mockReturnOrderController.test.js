@@ -10,9 +10,10 @@
 /* --------- IMPORT MODULES --------- */
 const ReturnOrderController     = require('../../../controller/ReturnOrderController');
 const reoDAO                    = require('../Database/mockReturnOrderDAO');
+const roDAO                     = require('../Database/mockRestockOrderDAO');
 
 /* --------- INITIALIZATION --------- */
-const returnOrderController    = new ReturnOrderController(reoDAO);
+const returnOrderController    = new ReturnOrderController(reoDAO, roDAO);
 
 
 /* --------- ERROR MESSAGES --------- */
@@ -295,11 +296,11 @@ const reqBody = {
     beforeAll(() => {
 
         /* reset mocked implementations */
-        reoDAO.getRestockOrderById.mockReset();
+        roDAO.getRestockOrderById.mockReset();
         
 
         /* mocking implementation of roDAO.getRestockOrderById */
-        reoDAO.getRestockOrderById.mockImplementationOnce(() => {
+        roDAO.getRestockOrderById.mockImplementationOnce(() => {
             throw new Error();
         }).mockImplementationOnce(() => {
             return [];
@@ -360,7 +361,7 @@ const reqBody = {
             const result = await returnOrderController.createReturnOrder(reqBody.returnDate,reqBody.restockOrderId,reqBody.products)
             expect(result).toEqual(expectedResult);
         } catch (error) {
-            expect(error).toBeInstanceOf(Error);
+            expect(error).toBeInstanceOf(expectedResult);
         }
     }); 
 }
@@ -385,10 +386,23 @@ const reqBody = {
         /* mocking implementation of reoDAO.deleteReturnOrder */
         reoDAO.deleteReturnOrder.mockImplementationOnce(()=>{
             return 1
+        }).mockImplementationOnce(()=>{
+            throw error
         })
 
 
     });
+    
+     /**
+     * ---------------------------------
+     *    INTEGRATION TEST: SUCCESS
+     * ---------------------------------
+     */
+      testDeleteReturnOrder_MOCK(
+        'SUCCESS: ',
+        1,
+        MESSG_204
+    );
 
     /**
      * ---------------------------------
@@ -404,16 +418,7 @@ const reqBody = {
             
  
 
-    /**
-     * ---------------------------------
-     *    INTEGRATION TEST: SUCCESS
-     * ---------------------------------
-     */
-     testDeleteReturnOrder_MOCK(
-        'SUCCESS: ',
-        1,
-        MESSG_204
-    );
+   
 
 });
 
@@ -423,10 +428,10 @@ const reqBody = {
  * @param {String} testName Description of the test executed
  * @param {Object} expectedResult Either error or an object returned by the function
  */
- function testDeleteReturnOrder_MOCK(testName,  ID) {
+ function testDeleteReturnOrder_MOCK(testName,  ID, expectedResult) {
     test(testName, async () => {
         try {
-            const result = await returnOrderController.deleteReturnOrder(ID);S
+            const result = await returnOrderController.deleteReturnOrder(ID);
             expect(result).toEqual(expectedResult);
         } catch (error) {
             expect(error).toBeInstanceOf(Error);

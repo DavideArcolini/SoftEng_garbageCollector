@@ -3,7 +3,7 @@ Server listening at http://localhost:3001
 
   create internal order
 [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]
-    ✔ create internal order (1463ms)
+    ✔ create internal order (1554ms)
 [ { SKUId: 1, description: 'a product', price: -0.01, qty: 1 } ]
     ✔ create internal order - UNPROCESSABLE
 
@@ -74,54 +74,22 @@ Server listening at http://localhost:3001
     ✔ [422] Unprocessable Entity (id constraint failed)
 
   API: GET /api/skuitems/:rfid
-{
-  id: 222,
-  description: 'TestDescription',
-  weight: 50,
-  volume: 50,
-  notes: 'TestNote',
-  position: null,
-  price: 10.99,
-  availableQuantity: 1
-}
     ✔ [200] OK
     ✔ [404] Not Found (rfid non existing)
     ✔ [422] Unprocessable Entity (id constraint failed)
 
   API: POST /api/skuitem
-{
-  id: 555,
-  description: 'TestDescription',
-  weight: 50,
-  volume: 50,
-  notes: 'TestNote',
-  position: null,
-  price: 10.99,
-  availableQuantity: 1
-}
     ✔ [201] Created
-undefined
     ✔ [404] Not Found (SKUid non existing)
     ✔ [422] Unprocessable Entity (body parameters constraints failed)
 
   API: PUT /api/skuitems/:rfid
-{
-  id: 777,
-  description: 'TestDescription',
-  weight: 50,
-  volume: 50,
-  notes: 'TestNote',
-  position: null,
-  price: 10.99,
-  availableQuantity: 1
-}
     ✔ [200] OK
     ✔ [404] Not Found (rfid non existing)
     ✔ [422] Unprocessable Entity (body parameters constraints failed)
     ✔ [422] Unprocessable Entity (rfid constraints failed)
 
   API: DELETE /api/skuitems/:rfid
-undefined
     ✔ [204] No Content
     ✔ [422] Unprocessable Entity
 
@@ -152,45 +120,15 @@ undefined
     ✔ 204 No Content
 
   new test descriptor
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 201 return
     ✔ empty body
     ✔ wrong idsku type
     ✔ skuid doesn't exist
 
   get test descriptor
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 200 return
 
   get test descriptor by id
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 200 return
     ✔ id non existing)
     ✔ id constraint failed
@@ -199,33 +137,11 @@ undefined
     ✔ 200 return
     ✔ id doesn't exist
     ✔ body format is wrong
-undefined
-undefined
 
   delete test descriptor
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 204 No Content
 
   new test result
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 201 return
     ✔ empty body
     ✔ wrong rfid length
@@ -233,30 +149,10 @@ undefined
     ✔ id doesn't exist
 
   get test result
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 200 return
     ✔ rfid short
 
   get test result by id
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 200 return
     ✔ id non existing)
     ✔ rfid non existing)
@@ -264,73 +160,23 @@ undefined
     ✔ rfid constraint failed
 
   modify test result
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 200 return
     ✔ id doesn't exist
     ✔ body format is wrong
 
   delete test result
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 204 No Content
 
   new item
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 201 return
     ✔ empty body
     ✔ wrong price type
     ✔ skuid doesn't exist
 
   get item
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 200 return
 
   get item by id and sup id
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 200 return
     ✔ id non existing)
     ✔ id constraint failed
@@ -341,51 +187,32 @@ undefined
     ✔ body format is wrong
 
   delete item
-{
-  id: 1,
-  description: 'newSku',
-  weight: 100,
-  volume: 50,
-  notes: 'first SKU',
-  position: null,
-  price: 10.99,
-  availableQuantity: 50
-}
     ✔ 204 No Content
 
   get restock order by id
     ✔ get restock order by id
     ✔ get restock order by id - NOT FOUND
     ✔ get restock order by id - UNPROCESSABLE ENTITY
-DELETED RO
-DELETED RO
 
   create restock order
     ✔ create restock order
     ✔ create restock order - UNPROCESSABLE ENTITY
-DELETED RO
 
   get restock orders
     ✔ get restock orders
-DELETED RO
-DELETED RO
 
   get restock orders issued
     ✔ get restock orders issued
-DELETED RO
-DELETED RO
 
   modify restock order state
     ✔ modify restock order state
     ✔ modify restock order state - NOT FOUND
     ✔ modify restock order state
-DELETED RO
 
   add transport note
     ✔ add transport note
     ✔ add transport note - NOT FOUND
     ✔ add transport note - UNPROCESSABLE
-DELETED RO
 
   set skuItems
 { SKUId: 1, itemId: 1, rfid: '12345678901234567890123456789016' }
@@ -394,23 +221,44 @@ DELETED RO
     ✔ set skuItems-NOT FOUND
 { SKUId: 1, itemId: 1, rfid: '12345678901234567890123456789016' }
     ✔ set skuItems- UNPROCESSABLE
-DELETED RO
 
   get return items
     ✔ get return items - NOT FOUND
     ✔ get return items
     ✔ get return items - UNPROCESSABLE
-DELETED RO
 
   delete restock order
-DELETED RO
     ✔ delete restock order
     ✔ delete restock order - UNPROCESSABLE
 
   create return order
+1
+[
+  {
+    id: 1,
+    issueDate: '2022/05/12 17:44',
+    state: 'ISSUED',
+    supplierId: 7,
+    SKUId: 12,
+    description: 10,
+    price: 0.01,
+    deliveryDate: null,
+    qty: 1
+  },
+  {
+    id: 1,
+    issueDate: '2022/05/12 17:44',
+    state: 'ISSUED',
+    supplierId: 7,
+    SKUId: 180,
+    description: 18,
+    price: 11.99,
+    deliveryDate: null,
+    qty: 1
+  }
+]
     ✔ create return order
     ✔ create return order
-DELETED RO
 [
   {
     id: 1,
@@ -421,17 +269,164 @@ DELETED RO
 ]
 
   get return orders
+1
+[
+  {
+    id: 1,
+    issueDate: '2022/05/12 17:44',
+    state: 'ISSUED',
+    supplierId: 7,
+    SKUId: 12,
+    description: 10,
+    price: 0.01,
+    deliveryDate: null,
+    qty: 1
+  },
+  {
+    id: 1,
+    issueDate: '2022/05/12 17:44',
+    state: 'ISSUED',
+    supplierId: 7,
+    SKUId: 180,
+    description: 18,
+    price: 11.99,
+    deliveryDate: null,
+    qty: 1
+  }
+]
+1
+[
+  {
+    id: 1,
+    issueDate: '2022/05/12 17:44',
+    state: 'ISSUED',
+    supplierId: 7,
+    SKUId: 12,
+    description: 10,
+    price: 0.01,
+    deliveryDate: null,
+    qty: 1
+  },
+  {
+    id: 1,
+    issueDate: '2022/05/12 17:44',
+    state: 'ISSUED',
+    supplierId: 7,
+    SKUId: 180,
+    description: 18,
+    price: 11.99,
+    deliveryDate: null,
+    qty: 1
+  }
+]
     ✔ get return orders
-DELETED RO
 
   get return order by id
+1
+[
+  {
+    id: 1,
+    issueDate: '2022/05/12 17:44',
+    state: 'ISSUED',
+    supplierId: 7,
+    SKUId: 12,
+    description: 10,
+    price: 0.01,
+    deliveryDate: null,
+    qty: 1
+  },
+  {
+    id: 1,
+    issueDate: '2022/05/12 17:44',
+    state: 'ISSUED',
+    supplierId: 7,
+    SKUId: 180,
+    description: 18,
+    price: 11.99,
+    deliveryDate: null,
+    qty: 1
+  }
+]
+1
+[
+  {
+    id: 1,
+    issueDate: '2022/05/12 17:44',
+    state: 'ISSUED',
+    supplierId: 7,
+    SKUId: 12,
+    description: 10,
+    price: 0.01,
+    deliveryDate: null,
+    qty: 1
+  },
+  {
+    id: 1,
+    issueDate: '2022/05/12 17:44',
+    state: 'ISSUED',
+    supplierId: 7,
+    SKUId: 180,
+    description: 18,
+    price: 11.99,
+    deliveryDate: null,
+    qty: 1
+  }
+]
     ✔ get return order by id
     ✔ get return order by id- not found
     ✔ get return order by id- unprocessable
-DELETED RO
 
   delete return order
-DELETED RO
+1
+[
+  {
+    id: 1,
+    issueDate: '2022/05/12 17:44',
+    state: 'ISSUED',
+    supplierId: 7,
+    SKUId: 12,
+    description: 10,
+    price: 0.01,
+    deliveryDate: null,
+    qty: 1
+  },
+  {
+    id: 1,
+    issueDate: '2022/05/12 17:44',
+    state: 'ISSUED',
+    supplierId: 7,
+    SKUId: 180,
+    description: 18,
+    price: 11.99,
+    deliveryDate: null,
+    qty: 1
+  }
+]
+1
+[
+  {
+    id: 1,
+    issueDate: '2022/05/12 17:44',
+    state: 'ISSUED',
+    supplierId: 7,
+    SKUId: 12,
+    description: 10,
+    price: 0.01,
+    deliveryDate: null,
+    qty: 1
+  },
+  {
+    id: 1,
+    issueDate: '2022/05/12 17:44',
+    state: 'ISSUED',
+    supplierId: 7,
+    SKUId: 180,
+    description: 18,
+    price: 11.99,
+    deliveryDate: null,
+    qty: 1
+  }
+]
     ✔ delete return order
     ✔ delete return order
     ✔ delete return order
@@ -445,15 +440,15 @@ DELETED RO
     ✔ not empty body
 
   get user
-    ✔ getting user data from the system (59ms)
+    ✔ getting user data from the system (58ms)
     ✔ empty body
     ✔ bad username format
     ✔ bad password format
     ✔ not found: wrong username
-    ✔ not found: wrong password (59ms)
+    ✔ not found: wrong password (56ms)
 
   new user
-    ✔ user created (59ms)
+    ✔ user created (56ms)
     ✔ empty body
     ✔ wrong username format
     ✔ password too short

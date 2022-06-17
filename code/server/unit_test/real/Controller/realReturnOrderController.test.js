@@ -8,12 +8,14 @@
 
 /* --------- IMPORT MODULES --------- */
 const ReturnOrderController         = require('../../../controller/ReturnOrderController');
+const RestockOrderDAO = require('../../../db/RestockOrderDAO');
 const ReturnOrderDAO                = require('../../../db/ReturnOrderDAO');
 const TestDAO                       = require('../Database/testDAO');
 
 /* --------- INITIALIZATION --------- */
 const testDAO               = new TestDAO();
-const reoDAO                 = new ReturnOrderDAO(testDAO);
+const reoDAO                = new ReturnOrderDAO(testDAO);
+const roDAO                 = new RestockOrderDAO(testDAO);
 const REOController         = new ReturnOrderController(reoDAO)
 
 /* --------- ERROR MESSAGES --------- */

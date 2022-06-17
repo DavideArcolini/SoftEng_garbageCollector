@@ -9,13 +9,14 @@
 /* --------- IMPORT MODULES --------- */
 const RestockOrderController         = require('../../../controller/RestockOrderController');
 const RestockOrderDAO     = require('../../../db/RestockOrderDAO');
+const TestResultDAO = require('../../../db/testResultDAO');
 const TestDAO              = require('../Database/testDAO');
 
 /* --------- INITIALIZATION --------- */
 const testDAO               = new TestDAO();
 const roDAO                 = new RestockOrderDAO(testDAO);
-const ROController          = new RestockOrderController(testDAO)
-
+const testResultDAO         = new TestResultDAO(testDAO);
+const ROController          = new RestockOrderController(roDAO, testResultDAO);
 /* --------- ERROR MESSAGES --------- */
 const MESSG_200 = {code: 200, message: 'Ok'}
 const MESSG_201 = {code: 201, message: 'Created'};
@@ -200,7 +201,6 @@ function testGetRestockOrdersById(testName, body, expectedResult) {
     test(testName, async() => {
         try {
             const result = await ROController.getRestockOrderById(body.id);
-            console.log(JSON.stringify(result))
             expect(result).toEqual(expectedResult)
         } catch (error) {
             expect(error).toBeInstanceOf(expectedResult);

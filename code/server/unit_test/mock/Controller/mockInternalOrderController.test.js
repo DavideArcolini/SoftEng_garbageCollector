@@ -103,12 +103,7 @@ const internalOrdersResult = [
     }
     
 ]
-let reqBody = {
-    issueDate : "2021/11/29 09:33",
-    products : [{SKUId:12,description:"a product",price:10.99,qty:30}, {SKUId:180,description: "another product",price:11.99,qty:20}],
-    customerId : 1
-   
-}
+
 
 const skuItems = [
     {
@@ -118,6 +113,12 @@ const skuItems = [
         RFID: '12345678901234567890123456789016'
     }
 ]
+const reqBody = {
+    issueDate : "2021/11/29 09:33",
+    products : [{SKUId:12,description:"a product",price:10.99,qty:30}, {SKUId:180,description: "another product",price:11.99,qty:20}],
+    customerId : 1
+   
+}
 
 /**
  * INTEGRATION TEST: InternalOrderController.getInternalOrders()
@@ -362,11 +363,11 @@ const skuItems = [
 
         
         /* mocking implementation of roDAO.roDAO.getSkuItemsOfRestockOrder */
-        ioDAO.getSkuItemsOfInternalOrder.mockImplementationOnce(()=>{
+        ioDAO.getSkuItemsOfInternalOrder.mockImplementation(()=>{
             return skuItems
         })
 
-        ioDAO.getProductsOfInternalOrder.mockImplementationOnce(()=>{
+        ioDAO.getProductsOfInternalOrder.mockImplementation(()=>{
             return products
         })
 
@@ -550,15 +551,26 @@ const skuItems = [
         /* reset mocked implementations */
         ioDAO.deleteInternalOrder.mockReset();
        
-
-        
         /* mocking implementation of roDAO.roDAO.getSkuItemsOfRestockOrder */
         ioDAO.deleteInternalOrder.mockImplementationOnce(()=>{
             return 1
-        })
+        }).mockImplementationOnce(() => {
+            throw new Error();
+        });
 
 
     });
+
+    /**
+     * ---------------------------------
+     *    INTEGRATION TEST: SUCCESS
+     * ---------------------------------
+     */
+     testDeleteInternalOrder_MOCK(
+        'SUCCESS: ',
+        1,
+        {code: 204}
+    );
 
     /**
      * ---------------------------------
@@ -570,21 +582,6 @@ const skuItems = [
         1,
         Error
     );
-
-            
- 
-
-    /**
-     * ---------------------------------
-     *    INTEGRATION TEST: SUCCESS
-     * ---------------------------------
-     */
-     testDeleteInternalOrder_MOCK(
-        'SUCCESS: ',
-        1,
-        MESSG_204
-    );
-
 });
 
 /**
@@ -593,10 +590,68 @@ const skuItems = [
  * @param {String} testName Description of the test executed
  * @param {Object} expectedResult Either error or an object returned by the function
  */
- function testDeleteInternalOrder_MOCK(testName,  ID) {
+ function testDeleteInternalOrder_MOCK(testName,  ID, expectedResult) {
     test(testName, async () => {
         try {
             const result = await internalOrderController.deleteInternalOrder(ID);
+            expect(result).toEqual(expectedResult);
+        } catch (error) {
+            expect(error).toBeInstanceOf(expectedResult);
+        }
+    }); 
+}
+/**
+ * INTEGRATION TEST: InternalOrderController.createInternalOrder()
+ * ========================================================================
+ */
+ describe('INTEGRATION TEST: InternalOrderController.createInternalOrder()', () => {
+    
+    /* reset mock implementation before every tests */
+    beforeAll(() => {
+
+        /* reset mocked implementations */
+        ioDAO.createInternalOrder.mockReset();
+       
+
+        
+        /* mocking implementation of roDAO.roDAO.getSkuItemsOfRestockOrder */
+        ioDAO.createInternalOrder.mockImplementation(()=>{
+            throw new Error();
+
+           })
+        })
+
+
+
+
+    /**
+     * ---------------------------------
+     *    INTEGRATION TEST: ERROR
+     * ---------------------------------
+     */
+     testCreateInternalOrder_MOCK(
+        '- Error: ',
+        reqBody,
+        Error
+    );
+
+            
+ 
+
+  
+
+});
+
+/**
+ * INTEGRATION TEST: InternalOrderController.createInternalOrder()
+ * ========================================================================
+ * @param {String} testName Description of the test executed
+ * @param {Object} expectedResult Either error or an object returned by the function
+ */
+ function testCreateInternalOrder_MOCK(testName,  reqBody, expectedResult) {
+    test(testName, async () => {
+        try {
+            const result = await internalOrderController.createInternalOrder(reqBody.issueDate,reqBody.products,reqBody.customerId);
             expect(result).toEqual(expectedResult);
         } catch (error) {
             expect(error).toBeInstanceOf(Error);

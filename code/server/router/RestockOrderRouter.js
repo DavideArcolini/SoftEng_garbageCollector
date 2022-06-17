@@ -2,7 +2,9 @@
 
 /* IMPORT MODULES */
 const express               = require("express");
-const ROController         = require('../controller/RestockOrderController');
+const ROController          = require('../controller/RestockOrderController');
+const RestockOrderDAO       = require('../db/RestockOrderDAO')
+const TestResultDAO         = require('../db/testResultDAO');
 const DAO                   = require("../db/DAO");
 const { validationHandler } = require("../validator/validationHandler");
 const { param }             = require('express-validator');
@@ -12,7 +14,9 @@ const { body }              = require('express-validator');
 /* INITIALIZATION */
 const router            = express.Router();
 const dao               = new DAO();
-const roc               = new ROController(dao);
+const roDAO             = new RestockOrderDAO(dao);
+const testResultDAO      = new TestResultDAO(dao);
+const roc               = new ROController(roDAO, testResultDAO);
 
 /* --------- ERROR MESSAGES --------- */
 const ERROR_404 = {error: '404 Not Found'};

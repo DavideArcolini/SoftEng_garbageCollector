@@ -16,3 +16,4 @@ exports.getInternalOrderById                 = jest.fn();
 exports.modifyInternalOrderState             = jest.fn();
 exports.setSkuItems                          = jest.fn();
 exports.deleteInternalOrder                  = jest.fn();
+exports.createInternalOrder                  = jest.fn();

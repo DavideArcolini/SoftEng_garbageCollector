@@ -278,7 +278,11 @@ const reqBody = {
             return new Promise((resolve, reject) => {
                 resolve(undefined);
             });
-        })
+        }).mockImplementationOnce(() => {
+            return new Promise((resolve, reject) => {
+                reject(new Error());
+            })
+        });
     });
 
     /**
@@ -287,20 +291,20 @@ const reqBody = {
      * ---------------------------------
      */
      testCreateReturnOrder_MOCK('- Success: ', reqBody, 2);
-
-    /**
-     * ---------------------------------
-     *      UNIT TEST: DATABASE ERROR
-     * ---------------------------------
-     */
-    testCreateReturnOrder_MOCK('- Database error: ', reqBody, Error);
-    
+     
     /**
      * ---------------------------------
      *      UNIT TEST: TABLE EMPTY
      * ---------------------------------
      */
      testCreateReturnOrder_MOCK('- table empty: ', reqBody, 1);
+    /**
+     * ---------------------------------
+     *      UNIT TEST: DATABASE ERROR
+     * ---------------------------------
+     */
+    testCreateReturnOrder_MOCK('- Database error: ', reqBody, Error);
+   
 
 });
 
@@ -314,10 +318,10 @@ const reqBody = {
     test(testName, async () => {
        
         try {
-            const result = await reoDAO.createReturnOrder(reqBody.returnDate, reqBod.restockOrderId,reqBody.products);
+            const result = await reoDAO.createReturnOrder(reqBody.returnDate, reqBody.restockOrderId,reqBody.products);
             expect(result).toEqual(expectedResult);
         } catch (error) {
-            expect(error).toBeInstanceOf(Error);
+            expect(error).toBeInstanceOf(expectedResult);
         }
     }); 
 }
