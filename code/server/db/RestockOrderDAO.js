@@ -61,10 +61,11 @@
           getSkuItemsOfRestockOrder = async (id) => {
 
             const querySQL = `
-                SELECT  SKUId, RFID, ItemId 
+                SELECT  SKUId, RFID, itemId 
                 FROM RESTOCK_ORDERS 
-                WHERE id==? AND RFID IS NOT NULL`;
-            return this.dao.all(
+                WHERE id==? AND RFID IS NOT NULL
+                ORDER BY SKUId, itemId`;
+            return await this.dao.all(
                 querySQL,id
             ).then((result)=>{
                 return result;
@@ -152,7 +153,7 @@
                 await Promise.all([...Array(parseInt(prod.qty))].map(async () => {
                     querySQL = "INSERT INTO RESTOCK_ORDERS(id, issueDate, state, supplierId, SKUId,itemId ,description, price) VALUES(?,?,?,?,?,?,?,?)";
                     /* add a new row for every product */
-                    await this.dao.run(querySQL,[id, issueDate, "ISSUED", supplierId, prod.SKUId,prod.itemId, prod.description, prod.price])
+                    await this.dao.run(querySQL,[id, issueDate, "ISSUED", supplierId, prod.SKUId,prod.itemId, prod.description, prod.price], (err) => {throw new Error()})
                 }));
 
             })

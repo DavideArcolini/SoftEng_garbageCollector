@@ -87,11 +87,13 @@ const products =  restockOrderProducts.map((x)=>{
     delete x.id
     return x;
 });
+
 const reqBody = {
     issueDate: restockOrderArray[0].issueDate,
     supplierId: restockOrderArray[0].supplierId,
     products
 }
+
 const restockOrdersResult = [
     {
         id: 1,
@@ -154,11 +156,10 @@ describe('[REAL] INTEGRATION TEST: ROController.getRestockOrders', () =>{
      testCreateRestockOrder_REAL(
         '- Success: ',
         reqBody,
-        {
-            code: 201
-        }
+        MESSG_201
     );
 
+    testCreateRestockOrder_REAL('error', undefined, Error)
 
   
     afterAll(async () => {
@@ -219,7 +220,7 @@ function testGetRestockOrdersById(testName, body, expectedResult) {
             const result = await ROController.createRestockOrder(body.issueDate,body.supplierId,body.products)
             expect(result).toEqual(expectedResult);
         } catch (error) {
-            expect(error).toBeInstanceOf(Error);
+            expect(error).toBeInstanceOf(expectedResult);
         }
  
     })
@@ -267,12 +268,24 @@ function testGetRestockOrdersById(testName, body, expectedResult) {
 
   
     afterAll(async () => {
- 
-
        const querySQL = "DELETE FROM RESTOCK_ORDERS";
         await testDAO.run(querySQL);
     });
 });
+
+/**
+ * INTEGRATION TEST: IOController.deleteRestockOrder
+ * ========================================================================
+ */
+
+describe('delete restock order', () => {
+    beforeAll(async() => {
+        await roDAO.createRestockOrder(reqBody.issueDate,reqBody.supplierId,reqBody.products)
+    })
+
+    testDeleteRestockOrder_REAL("error", undefined, Error)
+    testDeleteRestockOrder_REAL("deleted successfully", 1, MESSG_204)
+})
 
 /**
  * INTEGRATION TEST: ROController.getRestockOrders
@@ -289,3 +302,96 @@ function testGetRestockOrdersIssued_REAL(testName, expectedResult) {
         }
     })
 }
+
+describe('get return items', () => {
+    beforeAll(async() => {
+        await roDAO.createRestockOrder(reqBody.issueDate,reqBody.supplierId,reqBody.products)
+
+        sql = "INSERT INTO test_results(rfid, idTestDescriptor, Date, Result) VALUES(?,?,?,?)";
+        await testDAO.run(sql,[skuItems[0].RFID,14,"2021/11/28",false]);
+
+        //  Create restock order for 200 ok
+        await roDAO.createRestockOrder(reqBody.issueDate,reqBody.supplierId,reqBody.products);
+        await testDAO.run(`
+            UPDATE restock_orders
+            SET state=(?)
+            WHERE id=2
+        `, "COMPLETEDRETURN")
+        await ROController.setSkuItems(2, skuItems)
+        await testDAO.run(`
+            UPDATE restock_orders
+            SET RFID=(?)
+            WHERE id=2
+        `, skuItems[0].RFID)
+    })
+
+    testGetReturnItems_REAL("not found", 40, ERROR_404)
+    testGetReturnItems_REAL("throws 422", 1, ERROR_422)
+    testGetReturnItems_REAL("ok", 2, {code: 200, message: [
+        {
+            "SKUId": 12,
+            "RFID": "00000000000000000000000000000001",
+            "itemId": 10
+        },
+        {
+            "SKUId": 12,
+            "RFID": "00000000000000000000000000000001",
+            "itemId": 10
+        },
+        {
+            "SKUId": 12,
+            "RFID": "00000000000000000000000000000001",
+            "itemId": 10
+        },
+        {
+            "SKUId": 180,
+            "RFID": "00000000000000000000000000000001",
+            "itemId": 11
+        },
+        {
+            "SKUId": 180,
+            "RFID": "00000000000000000000000000000001",
+            "itemId": 11
+        }
+    ]})
+
+
+    afterAll(async () => {
+        const querySQL = "DELETE FROM RESTOCK_ORDERS";
+         await testDAO.run(querySQL);
+         await testDAO.run(`DELETE FROM test_results`)
+     });
+})
+
+/**
+ * INTEGRATION TEST: ROController.getReturnItems
+ * ========================================================================
+ * @param {Object} expectedResult Either error or an object returned by the function
+ */
+ function testGetReturnItems_REAL(testName, id, expectedResult) {
+    test(testName, async () => {
+        try {
+            const result = await ROController.getReturnItems(id)
+            expect(result).toEqual(expectedResult);
+        } catch (error) {
+            expect(error).toBeInstanceOf(expectedResult);
+        }
+    })
+}
+
+/**
+ * INTEGRATION TEST: ROController.deleteRestockOrder
+ * ========================================================================
+ * @param {Object} expectedResult Either error or an object returned by the function
+ */
+ function testDeleteRestockOrder_REAL(testName, id, expectedResult) {
+    test(testName, async () => {
+        try {
+            const result = await ROController.deleteRestockOrder(id)
+            expect(result).toEqual(expectedResult);
+        } catch (error) {
+            expect(error).toBeInstanceOf(expectedResult);
+        }
+    })
+}
+

@@ -144,7 +144,7 @@ class RestockOrderController {
             await this.roDAO.deleteRestockOrder(id);
             return MESSG_204;
         }catch(error){
-            throw error;
+            throw new Error(error.message);
         }
     }
   

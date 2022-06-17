@@ -30,37 +30,57 @@
 - [Class SKUDAO](#class-skudao)
 - [Class InternalOrderDAO](#class-internalorderdao)
 - [Class ItemDAO](#class-itemdao)
-- [Class RestockOrderController](#class-restockordercontroller)
+- [Class RestockOrderDAO](#class-restockorderdao)
 - [Class ReturnOrderController](#class-returnordercontroller)
 - [Class TestDescriptorDAO](#class-testdescriptordao)
 - [Class TestResultDAO](#class-testresultdao)
 
 ## **Class UserDAO**
 
+### **Class *UserDAO* - method *getUsers***
+
+**Criteria for method *getUsers*:**
+
+- Database is reachable
+
+**Predicates for method *getUsers*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Database is reachable| True |
+|          | False |
+
+**Combination of predicates**:
+
+| Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|
+| True | Valid |`testGetUsers(name, expected, supplier=undefined)` return the expected array of objects |`function` <br> `testGetUsers(name, expected, supplier=undefined)`|
+| False | Invalid |`testGetUsers(name, expected, supplier=undefined)` throws `Error`|`function` <br> `testGetUsers(name, expected, supplier=undefined)`|
+
 ### **Class *UserDAO* - method *createUser***
 
 **Criteria for method *createUser*:**
 
-- req is not empty
+- Database is reachable
 - `username` is *unique* in the database
 
 **Predicates for method *createUser*:**
 
 | Criteria | Predicate |
 | -------- | --------- |
-| req not empty |Valid|
-|          | undefined |
+| Database is reachable |True|
+|          | False |
 | `username` is *unique* in the database | True |
 |          | False |
 |          | undefined |
 
 **Combination of predicates**:
 
-| req not empty | `username` is *unique* in the database | Valid / Invalid | Description of the test case | Jest test case |
+| Database is reachable | `username` is *unique* in the database | Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|
-| Valid | True | Valid | `testNewUser()` terminates correctly | `function`<br>testNewUser("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, undefined)|
-| Valid | False | Invalid | `testNewUser()` throws `Error` | `function`<br>testNewUser("user ok", { <br>username : "clerk1@ezwh.com",<br>name: "Donald",<br>surname: "Trump",<br>type: "clerk",<br>password: "testpassword"<br>}, `Error`) |
-| undefined | undefined | Invalid | `testNewUser()` throws `Error` | `function`<br>testNewUser("failed", undefined, `Error`)|
+| True | True | Valid | `testNewUser()` terminates correctly | `function`<br>`testNewUser(name, usr, expected)`|
+| False | False | Invalid | `testNewUser()` throws `Error` | `function`<br>`testNewUser(name, usr, expected)` |
+| False | undefined | Invalid | `testNewUser()` throws `Error` | `function`<br>`testNewUser(name, usr, expected)`|
 
 ### **Class *UserDAO* - method *getUser***
 
@@ -68,7 +88,7 @@
 
 - `username` is *unique* in the database
 - Password valid
-- req not empty
+- Database is reachable
 
 **Predicates for method *getUser*:**
 
@@ -80,35 +100,23 @@
 | `password` valid | Yes |
 |          | No |
 || undefined |
-| req not empty | Valid |
-|| undefined |
+| Database is reachable | True |
+|| False |
 
 **Combination of predicates**
 
-User already exists in the db:
-
-```
-{ 
-    username: "mj@ezwh.com", 
-    name: "Mary",
-    surname: "Jane",
-    password: "testpassword",
-    type: "supplier"
-}
-```
-
-| `username` is *unique* in the database | `password` valid | req not empty | Valid / Invalid | Description of the test case | Jest test case |
+| `username` is *unique* in the database | `password` valid | Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|-------|
-| True | Yes | Yes | Valid | `testGetUser()` terminates returning the exact expected value | `function`<br>testGetUser("login", {username : user.username,<br> type: user.type}, <br>{id:1, <br>username: user.username, <br>name: user.name}) |
-| True | Yes | Yes | Valid | `testGetUser()` terminates returning the exact expected value | `function`<br>testGetUser("get user", {username: user.username}, <br>{id:1, <br>username: user.username, <br>name: user.name}) |
-| True | Undefined | No | Invalid | `testGetUser()` throws `Error` | `function`<br>testGetUser("failed", undefined, `Error`) -> failed|
+| True | Yes | True | Valid | `testGetUser()` terminates returning the exact expected value | `function`<br>`testGetUser(name, usr, expected)` |
+| True | Yes | True | Valid | `testGetUser()` terminates returning the exact expected value | `function`<br>`testGetUser(name, usr, expected)` |
+| True | Undefined | False | Invalid | `testGetUser()` throws `Error` | `function`<br>`testGetUser(name, usr, expected)`|
 
 ### **Class *UserDAO* - method *modifyPermissions***
 
 **Criteria for method *modifyPermissions*:**
 
 - `username` exists in the database
-- `req` not empty
+- Database is reachable
 
 **Predicates for method *modifyPermissions*:**
 
@@ -117,52 +125,43 @@ User already exists in the db:
 | `username` exists in the database | True |
 |          | False |
 |          | undefined |
-| req not empty | Yes |
+| Database is reachable | Yes |
 |          | No |
 ||undefined|
 **Combination of predicates**:
 
-| `username` exists in the database | req not empty | Valid / Invalid | Description of the test case | Jest test case |
+| `username` exists in the database |Database is reachable| Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|
-| True | Yes | Valid | `testModifyPermissions()` retrieve the exact value expected | `function`<br>testModifyPermissions('modified successfully', <br>{username: user.username, <br>oldType: user.type, <br>newType: "clerk"}, <br>{id:1}) |
-| False | Yes | Invalid | `testModifyPermissions()` terminates with `undefined` | `function` testModifyPermissions('modification failed', {}, undefined) |
-| False | No | Invalid | `testModifyPermissions()` throws `Error` | `function` testModifyPermissions('modification failed', undefined, `Error`) |
+| True | Yes | Valid | `testModifyPermissions` retrieve the exact value expected | `function`<br>`testModifyPermissions(name, usr, expected)` |
+| False | Yes | Invalid | `testModifyPermissions` terminates with `undefined` | `function` <br>`testModifyPermissions(name, usr, expected)` |
+| False | No | Invalid | `testModifyPermissions` throws `Error` | `function` <br>`testModifyPermissions(name, usr, expected)`|
 
 ### **Class *UserDAO* - method *removeUser***
 
 **Criteria for method *removeUser*:**
 
-- `req` not empty
+- Database is reachable
 
-**Predicates for method *name*:**
+**Predicates for method *removeUser*:**
 
 | Criteria | Predicate |
 | -------- | --------- |
-| `req` not empty | True |
+| Database is reachable | True |
 || False |
 
 **Combination of predicates**:
 
-User already inserted:
-```
-{ 
-    username: "mj@ezwh.com", 
-    name: "Mary",
-    surname: "Jane",
-    password: "testpassword",
-    type: "supplier"
-}
-```
-
-| `req` is not empty | Valid / Invalid | Description of the test case | Jest test case |
+| Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|
-| True  | Valid | `testRemoveUser()` terminates successfully | `function`<br> testRemoveUser("remove successfully", {<br> username: "mj@ezwh.com", <br> type: "supplier"}, <br> undefined)|+
-| False | Invalid | `testRemoveUser()` throws `Error` | `function`<br>testRemoveUser("failed", undefined, Error) |
-
+| True  | Valid | `testRemoveUser()` terminates successfully | `function`<br> `testRemoveUser(name, usr, expected)`|
+| False | Invalid | `testRemoveUser()` throws `Error` | `function`<br>`testRemoveUser(name, usr, expected)` |
 
 ## **Class PositionDAO**
+
 ### **Class *PositionDAO* - method *getPositions()***
+
 **Criteria for method *getPositions()*:**
+
  - Database is reachable
 
 **Predicates for method *getPositions()*:**
@@ -553,8 +552,8 @@ User already inserted:
 
 | Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|
-| *true* | valid |`getInternalOrders(expected)` returns <br>an array of the internal orders retrieved |`function` <br> `getInternalOrders(expected)`|
-|*false*|invalid|`getInternalOrders(expected)` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}`|`function` <br>`getInternalOrders(expected)`|
+| *true* | valid |`getInternalOrders` returns <br>an array of the internal orders retrieved |`function` <br> `getInternalOrders(expected)`|
+|*false*|invalid|`getInternalOrders` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}`|`function` <br>`getInternalOrders(expected)`|
 
 ### **Class *InternalOrderDAO* - method *getInternalOrderById***
 
@@ -623,11 +622,11 @@ User already inserted:
 
 | Database is reachable | `issueDate` | `customerId` | `products` | Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
-| *true* | *true* |*true* |*true* | valid | `createInternalOrder(issueDate,products,customerId,expected)` creates a new internal order and it retrieves the new internal order to compare with the one expected  |`function` <br>`createInternalOrder(issueDate,products,customerId,expected)`|
-| *true* | *false* |*true* |*true* | invalid | `createInternalOrder(issueDate,products,customerId,expected)` creates a new internal order but the internal order's the `issueDate` is not as expected therefore the test failes |`function` <br>`createInternalOrder(issueDate,products,customerId,expected)`|
-| *true* | *true* |*false* |*true* | invalid | `createInternalOrder(issueDate,products,customerId,expected)` creates a new internal order but the internal order's the `customerId` is not as expected  |`function` <br>`createInternalOrder(issueDate,products,customerId,expected)`|
-| *true* | *true* |*true* |*false* | invalid | `createInternalOrder(issueDate,products,customerId,expected)` creates a new internal order but the internal order's the `products` is not as expected  |`function` <br>`createInternalOrder(issueDate,products,customerId,expected)`|
-| *false* | *true* |*true* |*true* | invalid | `createInternalOrder(issueDate,products,customerId,expected)` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`  |`function` <br>`createInternalOrder(issueDate,products,customerId,expected)`|
+| *true* | *true* |*true* |*true* | valid | `createInternalOrder` creates a new internal order and it retrieves the new internal order to compare with the one expected  |`function` <br>`createInternalOrder(issueDate,products,customerId,expected)`|
+| *true* | *false* |*true* |*true* | invalid | `createInternalOrder` creates a new internal order but the internal order's the `issueDate` is not as expected therefore the test failes |`function` <br>`createInternalOrder(issueDate,products,customerId,expected)`|
+| *true* | *true* |*false* |*true* | invalid | `createInternalOrder` creates a new internal order but the internal order's the `customerId` is not as expected  |`function` <br>`createInternalOrder(issueDate,products,customerId,expected)`|
+| *true* | *true* |*true* |*false* | invalid | `createInternalOrder` creates a new internal order but the internal order's the `products` is not as expected  |`function` <br>`createInternalOrder(issueDate,products,customerId,expected)`|
+| *false* | *true* |*true* |*true* | invalid | `createInternalOrder` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`  |`function` <br>`createInternalOrder(issueDate,products,customerId,expected)`|
 
 
 
@@ -666,22 +665,22 @@ User already inserted:
 
 | Database is reachable |`id` *exists* in the database| `newState` |  `products`| Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
-| *true* | *true* | "ISSUED"  | *false* |  valid |`modifyInternalOrderState(id,newState,products,expected)` returns the `id` of the internal order successfully edited|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
+| *true* | *true* | "ISSUED"  | *false* |  valid |`modifyInternalOrderState` returns the `id` of the internal order successfully edited|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
 | *true* | *true* | "ACCEPTED"  | *false* |  valid |`modifyInternalOrderState(id,newState,products,expected)` returns the `id` of the internal order successfully edited|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
-| *true* | *true* | "REFUSED"  | *false* |  valid |`modifyInternalOrderState(id,newState,products,expected)` returns the `id` of the internal order successfully edited|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
-| *true* | *true* | "CANCELED"  | *false* |  valid |`modifyInternalOrderState(id,newState,products,expected)` returns the `id` of the internal order successfully edited|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
-| *true* | *true* | "COMPLETED"  | *true* |  valid |`modifyInternalOrderState(id,newState,products,expected)` returns the `id` of the internal order successfully edited|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
-| *true* | *true* | "COMPLETED"  | *false* |  invalid |`modifyInternalOrderState(id,newState,products,expected)` returns `{Unprocessable}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
-| *true* | *false* | "COMPLETED"  | *true* |  invalid |`modifyInternalOrderState(id,newState,products,expected)` returns `{message: "Not Found"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
-| *true* | *false* | "ISSUED"  | *false* |  invalid |`modifyInternalOrderState(id,newState,products,expected)` returns `{message: "Not Found"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
-| *true* | *false* | "ACCEPTED"  | *false* |  invalid |`modifyInternalOrderState(id,newState,products,expected)` returns `{message: "Not Found"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
-| *true* | *false* | "CANCELED"  | *false* |  invalid |`modifyInternalOrderState(id,newState,products,expected)` returns `{message: "Not Found"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
-| *true* | *false* | "REFUSED"  | *false* |  invalid |`modifyInternalOrderState(id,newState,products,expected)` returns `{message: "Not Found"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
-| *false* | *true* | "ISSUED"  | *false* |  invalid |`modifyInternalOrderState(id,newState,products,expected)` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
-| *false* | *true* | "ACCEPTED"  | *false* |  invalid |`modifyInternalOrderState(id,newState,products,expected)` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
-| *false* | *true* | "REFUSED"  | *false* |  invalid |`modifyInternalOrderState(id,newState,products,expected)` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
-| *false* | *true* | "CANCELED"  | *false* |  invalid |`modifyInternalOrderState(id,newState,products,expected)` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
-| *false* | *true* | "COMPLETED"  | *true* |  invalid |`modifyInternalOrderState(id,newState,products,expected)` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
+| *true* | *true* | "REFUSED"  | *false* |  valid |`modifyInternalOrderState` returns the `id` of the internal order successfully edited|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
+| *true* | *true* | "CANCELED"  | *false* |  valid |`modifyInternalOrderState` returns the `id` of the internal order successfully edited|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
+| *true* | *true* | "COMPLETED"  | *true* |  valid |`modifyInternalOrderState` returns the `id` of the internal order successfully edited|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
+| *true* | *true* | "COMPLETED"  | *false* |  invalid |`modifyInternalOrderState` returns `{Unprocessable}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
+| *true* | *false* | "COMPLETED"  | *true* |  invalid |`modifyInternalOrderState` returns `{message: "Not Found"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
+| *true* | *false* | "ISSUED"  | *false* |  invalid |`modifyInternalOrderState` returns `{message: "Not Found"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
+| *true* | *false* | "ACCEPTED"  | *false* |  invalid |`modifyInternalOrderState` returns `{message: "Not Found"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
+| *true* | *false* | "CANCELED"  | *false* |  invalid |`modifyInternalOrderState` returns `{message: "Not Found"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
+| *true* | *false* | "REFUSED"  | *false* |  invalid |`modifyInternalOrderState` returns `{message: "Not Found"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
+| *false* | *true* | "ISSUED"  | *false* |  invalid |`modifyInternalOrderState` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
+| *false* | *true* | "ACCEPTED"  | *false* |  invalid |`modifyInternalOrderState` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
+| *false* | *true* | "REFUSED"  | *false* |  invalid |`modifyInternalOrderState` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
+| *false* | *true* | "CANCELED"  | *false* |  invalid |`modifyInternalOrderState` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
+| *false* | *true* | "COMPLETED"  | *true* |  invalid |`modifyInternalOrderState` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`modifyInternalOrderState(id,newState,products,expected)` |
 
 
 
@@ -713,12 +712,35 @@ User already inserted:
 
 ## **Class ItemDAO**
 
+### **Class *ItemDAO*- method *getItems***
+
+**Criteria for method *getItems*:**
+
+- Database is reachable  
+
+**Predicates for method *getItemById*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|    DB is reachable        |     true      |
+|          |    false       |
+
+
+**Combination of predicates**:
+
+| DB is reachable |   Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|------|-------|
+|true| valid | `getItems()` terminates with the expected value|`function`<br>`getItems(name,expected)` |
+|false| invalid |`getItems()` throws `Error` |`function` <br> `getItems(name,expected)` |
+
+
 ### **Class *ItemDAO*- method *getItemById***
 
 **Criteria for method *getItemById*:**
 
 - Database is reachable  
 - id is unique in the DB
+- supplierId exists in the database
 
 **Predicates for method *getItemById*:**
 
@@ -728,21 +750,25 @@ User already inserted:
 |          |    false       |
 |    id exists in the DB      |     true      |
 |          |    false       |
+|  supplierId exists in the DB        |   true        |
+|          |    false       |
+
 
 **Combination of predicates**:
 
-| DB is reachable | Id exists in the DB |  Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|------|-------|-------|
-|true|true| valid | `getItemById()` terminates with the expected value|`function`<br>`getItemById(name,id,expected)` | `getItemById()` throws `Error` |`function` <br> `getItemById(name,id,expected)` |
+| DB is reachable | Id exists in the DB |supplierId exists in the DB |  Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|------|-------|-------|-------|
+|true|true|true| valid | `getItemById()` terminates with the expected value|`function`<br>`getItemById(name,id,supplierId,expected)` |
+|true|true|false| invalid |`getItemById()` terminates with empty value |`function` <br> `getItemById(name,id,supplierId,expected)` |
+|true|false|true| invalid |`getItemById()` terminates with empty value|`function` <br> `getItemById(name,id,supplierId,expected)` |
+|false|/|/| invalid |`getItemById()` throws `Error` |`function` <br> `getItemById(name,id,supplierId,expected)` |
 
 ### **Class *ItemDAO*- method *createItem***
 
 **Criteria for method *createItem*:**
 
  - Database is reachable
- - SKUId exists in database
- - supplier doesn't sell same id
- - supplier doesn't sell same SKUid
+
 
 **Predicates for method *createItem*:**
 
@@ -750,22 +776,16 @@ User already inserted:
 | -------- | --------- |
 |    DB is reachable      |      true     |
 |          |    false       |
-|    SKUId exists in the DB      |   true        |
-|          |    false       |
-|supplier doesn't sell same id|true|
-|          |    false       |
-|supplier doesn't sell same SKUId|true|
-|          |    false       |
 
 
 
 **Combination of predicates**:
 
 
-| DB is reachable | SKUId exists in the DB|supplier doesn't sell same id|supplier doesn't sell same SKUId| Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|-------|-------|-------|
-|true|true|true|true|valid|`createItem()` terminates with the expected value |`function`<br> `createItem(name,expected,json)`|
-|false|/|/|/|invalid| `createItem()` throws `Error` | `function`<br>  `createItem(name,expected,json)`|
+| DB is reachable | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|
+|true|valid|`createItem()` terminates with the expected value |`function`<br> `createItem(name,expected,json)`|
+|false|invalid| `createItem()` throws `Error` | `function`<br>  `createItem(name,expected,json)`|
 
 ### **Class *ItemDAO*- method *modifyItem***
 
@@ -773,6 +793,7 @@ User already inserted:
 
 - Database is reachable
 - id exists in the database
+- supplierId exists in the database
 
 **Predicates for method *modifyItem*:**
 
@@ -782,19 +803,26 @@ User already inserted:
 |          |    false       |
 |  id exists in the DB        |   true        |
 |          |    false       |
+|  supplierId exists in the DB        |   true        |
+|          |    false       |
+
 
 **Combination of predicates**:
 
-| DB is reachable | id exists in the DB | Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|-------|
-|true|true|valid|`modifyItem()` terminates with 200|`function` `modifyItem(name,expected,id,json)`|
-|false|/|invalid| `modifyItem()` throws `Error` | `function` `modifyItem(name,expected,id,json)`|
+| DB is reachable | id exists in the DB |supplierId exists in the DB     | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|
+|true|true|true|valid|`modifyItem()` terminates with 200|`function` `modyfyItem(name,expected,id,supplierId,json)`|
+|true|false|true|invalid|`modifyItem()` terminates |`function` `modyfyItem(name,expected,id,supplierId,json)`|
+|true|true|false|invalid|`modifyItem()` terminates|`function` `modyfyItem(name,expected,id,supplierId,json)`|
+|false|/|/|invalid| `modifyItem()` throws `Error` | `function` `modyfyItem(name,expected,id,supplierId,json)`|
 
 ### **Class *ItemDAO*- method *deleteItem***
 
 **Criteria for method *deleteItem*:**
 
 - Database is reachable
+- supplierId exists in the database
+- id exists in the database
 
 **Predicates for method *deleteItem*:**
 
@@ -802,17 +830,80 @@ User already inserted:
 | -------- | --------- |
 |     DB is reachable     |      true     |
 |          |    false       |
+|  supplierId exists in the DB        |   true        |
+|          |    false       |
+|  id exists in the DB        |   true        |
+|          |    false       |
+
 
 **Combination of predicates**:
 
-| DB is reachable|Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|
-|true|valid| `deleteItem()` terminates with expected value |`function` <br> `deleteItem(name,expected,id)`|
-|false|invalid| `deleteItem()` throws `Error`|`function` <br> `deleteItem(name,expected,id)`|
+| DB is reachable| supplierId exists in the DB| id exists in the DB|Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|
+|true|true|true|valid| `deleteItem()` terminates with expected value |`function` <br> `deleteItem(name,expected,id,supplierId)`|
+|true|true|false|invalid| `deleteItem()` terminates with empty value |`function` <br> `deleteItem(name,expected,id,supplierId)`|
+|true|false|true|invalid| `deleteItem()` terminates with empty value |`function` <br> `deleteItem(name,expected,id,supplierId)`|
+|false|/|/|invalid| `deleteItem()` throws `Error`|`function` <br> `deleteItem(name,expected,id,supplierId)`|
 
-## **Class RestockOrderController**
+### **Class *ItemDAO*- method *getItemBySupSKUID***
 
-### **Class *RestockOrderController* - method *getRestockOrders***
+**Criteria for method *getItemBySupSKUID*:**
+
+- Database is reachable
+- supplierId exists in the database
+- SKUId exists in the database
+
+**Predicates for method *getItemBySupSKUID*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|     DB is reachable     |      true     |
+|          |    false       |
+|  supplierId exists in the DB        |   true        |
+|          |    false       |
+|  SKUId exists in the DB        |   true        |
+|          |    false       |
+
+**Combination of predicates**:
+
+| DB is reachable| supplierId exists in the DB| SKUId exists in the DB|Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|
+|true|true|true|valid| `getItemBySupSKUID()` terminates with expected value |`function` <br> `getItemBySupSKUID(name,expected,skuid,supplierid)`|
+|false|/|/|invalid| `getItemBySupSKUID()` throws `Error`|`function` <br> `getItemBySupSKUID(name,expected,skuid,supplierid)`|
+|true|true|false|invalid| `getItemBySupSKUID()` terminates with empty value |`function` <br> `getItemBySupSKUID(name,expected,skuid,supplierid)`|
+|true|false|true|invalid| `getItemBySupSKUID()` terminates with empty value|`function` <br> `getItemBySupSKUID(name,expected,skuid,supplierid)`|
+
+### **Class *ItemDAO*- method *getItemBySupId***
+
+**Criteria for method *getItemBySupId*:**
+
+- Database is reachable
+- supplierId exists in the database
+- id exists in the database
+
+**Predicates for method *getItemBySupId*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|     DB is reachable     |      true     |
+|          |    false       |
+|  supplierId exists in the DB        |   true        |
+|          |    false       |
+|  id exists in the DB        |   true        |
+|          |    false       |
+
+**Combination of predicates**:
+
+| DB is reachable|supplierId exists in the DB|id exists in the DB|Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|
+|true|true|true|valid| `getItemBySupId()` terminates with expected value |`function` <br> `getItemBySupId(name,expected,id,supplierid)`|
+|true|false|true|invalid| `getItemBySupId()` terminates with empty value |`function` <br> `getItemBySupId(name,expected,id,supplierid)`|
+|true|true|false|invalid| `getItemBySupId()` terminates with empty value |`function` <br> `getItemBySupId(name,expected,id,supplierid)`|
+|false|/|/|invalid| `getItemBySupId()` throws `Error`|`function` <br> `getItemBySupId(name,expected,id,supplierid)`|
+
+## **Class RestockOrderDAO**
+
+### **Class *RestockOrderDAO* - method *getRestockOrders***
 
 **Criteria for method *getRestockOrders*:**
 
@@ -829,10 +920,10 @@ User already inserted:
 
 | Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|
-| *true* | valid |`getRestockOrders(expected)` returns <br>an array of the restock orders retrieved |`function` <br>`getRestockOrders(expected)`|
-|*false*|invalid|`getRestockOrders(expected)` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}`|`function` <br>`getRestockOrders(expected)`|
+| *true* | valid |`testGetRestockOrders_MOCK` returns <br>an array of the restock orders retrieved |`function` <br>`testGetRestockOrders_MOCK(testname, expected)`|
+|*false*|invalid|`testGetRestockOrders_MOCK` catch `TypeError` and throws `Error`|`function` <br>`testGetRestockOrders_MOCK(testname, expected)`|
 
-### **Class *RestockOrderController* - method *getRestockOrdersIssued***
+### **Class *RestockOrderDAO* - method *getRestockOrdersIssued***
 
 **Criteria for method *getRestockOrdersIssued*:**
 
@@ -849,10 +940,10 @@ User already inserted:
 
 | Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|
-| *true* | valid |`getRestockOrdersIssued(expected)` returns <br>an array of the restock orders issued retrieved |`function` <br>`getRestockOrdersIssued(expected)`|
-|*false*|invalid|`getRestockOrders(expected)` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}`|`function` <br>`getRestockOrdersIssued(expected)`|
+| *true* | valid |`testGetRestockOrdersIssued_MOCK` returns <br>an array of the restock orders issued retrieved |`function` <br>`testGetRestockOrdersIssued_MOCK(testName, expectedResult)`|
+|*false*|invalid|`testGetRestockOrders_MOCK` catch `TypeError` and throws `Error`|`function` <br>`testGetRestockOrdersIssued_MOCK(testName, expectedResult)`|
 
-### **Class *RestockOrderController* - method *getRestockOrderById***
+### **Class *RestockOrderDAO* - method *getRestockOrderById***
 
 **Criteria for method *getRestockOrderById*:**
 
@@ -872,11 +963,11 @@ User already inserted:
 
 | Database reachable | `id` *exists* in the database | Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|:-------:|
-| *true* | *true* | valid | `getRestockOrderById` retrieves the <br>restock order associated to the `id` |`function` <br>` getRestockOrderById(req,expected)` |
-| *true* | *false* | invalid | `getRestockOrderById` terminates with <br>`{message: "Not Found"}`|  `function` <br> `getRestockOrderById(req,expected)` |
-| *false* | */* | invalid | `getRestockOrderById` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}` | `function` <br>` getRestockOrderById(req,expected)` |
+| *true* | *true* | valid | `testGetRestockOrderById_MOCK` retrieves the <br>restock order associated to the `id` |`function` <br>` testGetRestockOrderID_MOCK(testName, ID, expectedResult)` |
+| *true* | *false* | invalid | `testGetRestockOrderById_MOCK` terminates with empty array|  `function` <br> `testGetRestockOrderID_MOCK(testName, ID, expectedResult)` |
+| *false* | */* | invalid | `testGetRestockOrderById_MOCK` catch `TypeError` and throws `Error` | `function` <br>` testGetRestockOrderID_MOCK(testName, ID, expectedResult)` |
 
-### **Class *RestockOrderController* - method *createRestockOrder***
+### **Class *RestockOrderDAO* - method *createRestockOrder***
 
 **Criteria for method *createRestockOrder*:**
 
@@ -902,13 +993,11 @@ User already inserted:
 
 | Database is reachable | `issueDate` | `supplierId` | `products` | Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
-| *true* | *true* |*true* |*true* | valid | `createRestockOrder(issueDate,supplierId,products,expected)` creates a new restock order and it retrieves the new restock  order to compare with the one expected  |`function` <br>`createRestockOrder(issueDate,supplierId,products,expected)`|
-| *true* | *false* |*true* |*true* | invalid | `createRestockOrder(issueDate,supplierId,products,expected)` creates a new restock  order but the restock  order's the `issueDate` is not as expected therefore the test failes |`function` <br>`createRestockOrder(issueDate,supplierId,products,expected)`|
-| *true* | *true* |*false* |*true* | invalid | `createRestockOrder(issueDate,supplierId,products,expected)` creates a new restock order but the restock  order's the `supplierId` is not as expected  |`function` <br>`createRestockOrder(issueDate,supplierId,products,expected)`|
-| *true* | *true* |*true* |*false* | invalid | `createRestockOrder(issueDate,supplierId,products,expected)` creates a new restock  order but the restock  order's the `products` is not as expected  |`function` <br>`createRestockOrder(issueDate,supplierId,products,expected)`|
-| *false* | *true* |*true* |*true* | invalid | `createRestockOrder(issueDate,supplierId,products,expected)` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`  |`function` <br>`createRestockOrder(issueDate,supplierId,products,expected)`|
+| *true* | *true* |*true* |*true* | valid | `testCreateRestockOrder_MOCK` creates a new restock order and it retrieves the new restock  order id to compare with the one expected  |`function` <br>`testCreateRestockOrder_MOCK(testName, reqBody, expectedResult)`|
+| *true* | *false* |*true* |*true* | invalid | `testCreateRestockOrder_MOCK` creates a new restock  order but the restock  order's the `issueDate` is not as expected therefore the test failes |`function` <br>`testCreateRestockOrder_MOCK(testName, reqBody, expectedResult)`|
+| *false* | *true* |*true* |*true* | invalid | `testCreateRestockOrder_MOCK` catch `TypeError` and throws`Error` |`function` <br>`testCreateRestockOrder_MOCK(testName, reqBody, expectedResult)`|
 
-### **Class *RestockOrderController* - method *modifyRestockOrderState***
+### **Class *RestockOrderDAO* - method *modifyRestockOrderState***
 
 **Criteria for method *modifyRestockOrderState*:**
 
@@ -924,51 +1013,22 @@ User already inserted:
 |                       | *false*|
 |`id` *exists* in the database|*true*|
 ||*false*|
-| `newState`|"ISSUED"|
-| |"DELIVERY"|
-| |"DELIVERED"|
-| |"TESTED"|
-| |"COMPLETEDRETURN"|
-| |"COMPLETED"|
 
 **Combination of predicates**:
 
-| Database is reachable |`id` *exists* in the database| `newState` | Valid / Invalid | Description of the test case | Jest test case |
-|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
-| *true* | *true* | "ISSUED"  | valid |`modifyRestockOrderState(id,newState,expected)` returns the `id` of the restock order successfully edited|`function` <br>`modifyRestockOrderState(id,newState,expected)` |
-| *true* | *true* | "DELIVERY"  | valid |`modifyRestockOrderState(id,newState,expected)` returns the `id` of the restock order successfully edited|`function` <br>`modifyRestockOrderState(id,newState,expected)` |
-| *true* | *true* | "DELIVERED"  | valid |`modifyRestockOrderState(id,newState,expected)` returns the `id` of the restock order successfully edited|`function` <br>`modifyRestockOrderState(id,newState,expected)` |
-| *true* | *true* | "TESTED"  | valid |`modifyRestockOrderState(id,newState,expected)` returns the `id` of the restock order successfully edited|`function` <br>`modifyRestockOrderState(id,newState,expected)` |
-| *true* | *true* | "COMPLETED"  | valid |`modifyRestockOrderState(id,newState,expected)` returns the `id` of the restock order successfully edited|`function` <br>`modifyRestockOrderState(id,newState,expected)` |
-| *true* | *true* | "COMPLETEDRETURN"  | valid |`modifyRestockOrderState(id,newState,expected)` returns the `id` of the restock order successfully edited|`function` <br>`modifyRestockOrderState(id,newState,expected)` |
-| *true* | *false* | "ISSUED"  | invalid |`modifyRestockOrderState(id,newState,expected)` returns returns `{message: "Not Found"}`|`function` <br>`modifyRestockOrderState(id,newState,expected)` |
-| *true* | *false* | "DELIVERY"  | invalid |`modifyRestockOrderState(id,newState,expected)` returns returns `{message: "Not Found"}`|`function` <br>`modifyRestockOrderState(id,newState,expected)` |
-| *true* | *false* | "DELIVERED"  | invalid |`modifyRestockOrderState(id,newState,expected)` returns returns `{message: "Not Found"}`|`function` <br>`modifyRestockOrderState(id,newState,expected)` |
-| *true* | *false* | "TESTED"  | invalid |`modifyRestockOrderState(id,newState,expected)` returns returns `{message: "Not Found"}`|`function` <br>`modifyRestockOrderState(id,newState,expected)` |
-| *true* | *false* | "COMPLETED"  | invalid |`modifyRestockOrderState(id,newState,expected)` returns returns `{message: "Not Found"}`|`function` <br>`modifyRestockOrderState(id,newState,expected)` |
-| *true* | *false* | "COMPLETEDRETURN"  | invalid |`modifyRestockOrderState(id,newState,expected)` returns returns `{message: "Not Found"}`|`function` <br>`modifyRestockOrderState(id,newState,expected)` |
-| *false* | *true* | "ISSUED"  | invalid |`modifyRestockOrderState(id,newState,expected)` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`modifyRestockOrderState(id,newState,expected)` |
-| *false* | *true* | "DELIVERY"  | invalid |`modifyRestockOrderState(id,newState,expected)` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`modifyRestockOrderState(id,newState,expected)` |
-| *false* | *true* | "DELIVERED"  | invalid |`modifyRestockOrderState(id,newState,expected)` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`modifyRestockOrderState(id,newState,expected)` |
-| *false* | *true* | "TESTED"  | invalid |`modifyRestockOrderState(id,newState,expected)` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`modifyRestockOrderState(id,newState,expected)` |
-| *false* | *true* | "COMPLETED"  | invalid |`modifyRestockOrderState(id,newState,expected)` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`modifyRestockOrderState(id,newState,expected)` |
-| *false* | *true* | "COMPLETEDRETURN"  | invalid |`modifyRestockOrderState(id,newState,expected)` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`modifyRestockOrderState(id,newState,expected)` |
+| Database is reachable |`id` *exists* in the database| Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* | *true* | valid |`testModifyRestockOrderState_MOCK` returns the `id` of the restock order successfully edited|`function` <br>`testModifyRestockOrderState_MOCK(testName, ID, newState, expectedResult)` |
+| *false* | *true*   | invalid |`testModifyRestockOrderState_MOCK` catch `TypeError` and throws `Error`|`function` <br>`testModifyRestockOrderState_MOCK(testName, ID, newState, expectedResult)` |
 
-
-
-### **Class *RestockOrderController* - method *addTransportNote***
-
-
+### **Class *RestockOrderDAO* - method *addTransportNote***
 
 **Criteria for method *addTransportNote*:**
-    
+
 - Database is reachable
 - restock order associated to the `id`  *exists* in the database
 - restock order's `state` = "DELIVERY"
 - `deliveryDate` after `issueDate`
-
-
-
 
 **Predicates for method *addTransportNote*:**
 | Criteria              | Predicate |
@@ -982,35 +1042,20 @@ User already inserted:
 | `deliveryDate` after `issueDate` | *true* |
 |                       | *false*|
 
-
-
-
 **Combination of predicates**:
 
+| Database is reachable |`id` *exists* in the database| Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* | *true* |   valid |`testAddTransportNote_MOCK` returns the `id` of the restock order successfully edited|`function` <br>`testAddTransportNote_MOCK(testName, ID, transportNote, expectedResult)` |
+| *false* | *true* | invalid |`testAddTransportNote_MOCK` catch `TypeError` and throws `Error`|`function` <br>`testAddTransportNote_MOCK(testName, ID, transportNote, expectedResult)` |
 
-| Database is reachable |`id` *exists* in the database| `newState` |   `deliveryDate` after `issueDate` | Valid / Invalid | Description of the test case | Jest test case |
-|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
-| *true* | *true* | "DELIVERY"  | *true* |  valid |`addTransportNote(id,transportNote,expected)` returns the `id` of the restock order successfully edited|`function` <br>`addTransportNote(id,transportNote,expected)` |
-| *true* | *true* | other  | *true* |  invalid |`addTransportNote(id,transportNote,expected)` returns `{unprocessable: "Cannot put transport note"}`|`function` <br>`addTransportNote(id,transportNote,expected)` |
-| *true* | *true* | "DELIVERY"  | *false* |  invalid |`addTransportNote(id,transportNote,expected)` returns `{unprocessable: "Cannot put transport note"}`|`function` <br>`addTransportNote(id,transportNote,expected)` |
-| *true* | *false* | "DELIVERY"  | *true* |  invalid |`addTransportNote(id,transportNote,expected)` returns `{message: "Not Found"}`|`function` <br>`addTransportNote(id,transportNote,expected)` |
-| *false* | *true* | "DELIVERY"  | *true* |  invalid |`addTransportNote(id,transportNote,expected)` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`|`function` <br>`addTransportNote(id,transportNote,expected)` |
-
-
-### **Class *RestockOrderController* - method *addSkuItems***
-
-
+### **Class *RestockOrderDAO* - method *addSkuItems***
 
 **Criteria for method *addSkuItems*:**
-    
+
 - Database is reachable
 - restock order associated to the `id`  *exists* in the database
 - restock order's `state` = "DELIVERED"
-
-
-
-
-
 
 **Predicates for method *addSkuItems*:**
 
@@ -1031,25 +1076,16 @@ User already inserted:
 **Combination of predicates**:
 
 
-| Database is reachable |`id` *exists* in the database| `newState` |Valid / Invalid | Description of the test case | Jest test case |
-|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
-| *true* | *true* | "DELIVERED"  |  valid |`addSkuItems(id,skuItems,expected)` returns the `id` of the restock order successfully edited|`function` <br>`addSkuItems(id,skuItems,expected)` |
-| *true* | *true* | other  |  invalid |`addSkuItems(id,skuItems,expected)` returns `{unprocessable: "Cannot put transport note"}` <br>`addSkuItems(id,skuItems,expected)` |`function` <br>`addSkuItems(id,skuItems,expected)` |
-| *true* | *false* | "DELIVERED"   |  invalid |`addSkuItems(id,skuItems,expected)` returns `{message: "Not Found"}` <br>`addSkuItems(id,skuItems,expected)` |`function` <br>`addSkuItems(id,skuItems,expected)` |
-| *false* | *true* | "DELIVERED"   |  invalid |`addSkuItems(id,skuItems,expected)` returns `{code: 503, message: "Service Unavailable"}` |`function` <br>`addSkuItems(id,skuItems,expected)` |
+| Database is reachable |`id` *exists* in the database| Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* | *true* | valid |`testSetSkuItems_MOCK` returns the `id` of the restock order successfully edited|`function` <br>`testSetSkuItems_MOCK(testName, ID, skuItems, expectedResult)` |
+| *false* | / | invalid |`testSetSkuItems_MOCK` catch `TypeError` and throws `Error` |`function` <br>`testSetSkuItems_MOCK(testName, ID, skuItems, expectedResult)` |
 
-
-### **Class *RestockOrderController* - method *deleteRestockOrder***
-
-
+### **Class *RestockOrderDAO* - method *deleteRestockOrder***
 
 **Criteria for method *deleteRestockOrder*:**
-    
+
  - Database is reachable
-
-
-
-
 
 **Predicates for method *deleteRestockOrder*:**
 
@@ -1058,26 +1094,18 @@ User already inserted:
 | Database is reachable | *true* |
 |                       | *false*|
 
-
-
-
 **Combination of predicates**:
-
 
 | Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|
-| *true* | valid |`deleteRestockOrder(req)` return the `id` of the restock order deleted successfully|`function` <br>`deleteRestockOrder(req)`|
-| *false* | invalid |`deleteRestockOrder(req)` catch `TypeError` and terminates with <br>`{code: 503, message: "Unprocessable Entity"}`|`function` <br>`deleteRestockOrder(req)`|
+| *true* | valid |`testDeleteRestockOrder_MOCK` return the `id` of the restock order deleted successfully|`function` <br>`testDeleteRestockOrder_MOCK(testName, ID, expectedResult)`|
+| *false* | invalid |`testDeleteRestockOrder_MOCK` catch `TypeError` and throws `Error`|`function` <br>`testDeleteRestockOrder_MOCK(testName, ID, expectedResult)`|
 
 ## **Class ReturnOrderController**
 
 **Criteria for method *getReturnOrders*:**
-    
+
  - Database is reachable
-
-
-
-
 
 **Predicates for method *getReturnOrders*:**
 | Criteria              | Predicate |
@@ -1085,26 +1113,18 @@ User already inserted:
 | Database is reachable | *true* |
 |                       | *false*|
 
-
 **Combination of predicates**:
-
 
 | Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|
-| *true* | valid |`getReturnOrders(expected)` returns <br>an array of the return orders retrieved |`function` <br>`getReturnOrders(expected)`|
-|*false*|invalid|`getReturnOrders(expected)` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}`|`function` <br>`getReturnOrders(expected)`|
+| *true* | valid |`testGetReturnOrders_MOCK` returns <br>an array of the return orders retrieved |`function` <br>`testGetReturnOrders_MOCK(testName, expectedResult)`|
+|*false*|invalid|`testGetReturnOrders_MOCK` throws <br>`Error`|`function` <br>`testGetReturnOrders_MOCK(testName, expectedResult)`|
 
 ### **Class *ReturnOrderController* - method *getReturnOrderById***
-
-
 
 **Criteria for method *getReturnOrderById*:**
 - Database is reachable 
 - Return order associated to the `id` *exists* in the db
-
-
-
-
 
 **Predicates for method *getReturnOrderById*:**
 
@@ -1115,40 +1135,22 @@ User already inserted:
 | return order associated to the `id` *exists* in the database|*true*|
 ||*false*|
 
-
-
-
-
-
-
-
-
 **Combination of predicates**:
-
 
 | Database reachable | `id` *exists* in the database | Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|:-------:|
-| *true* | *true* | valid | `getReturnOrderById` retrieves the <br>return order associated to the `id` |`function` <br>` getReturnOrderById(req,expected)` |
-| *true* | *false* | invalid | `getReturnOrderById` terminates with <br>`{message: "Not Found"}`|  `function` <br> `getReturnOrderById(req,expected)` |
-| *false* | */* | invalid | `getReturnOrderById` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}` | `function` <br>` getReturnOrderById(req,expected)` |
-
-
-
-
+| *true* | *true* | valid | `testGetReturnOrderID_MOCK` retrieves the <br>return order associated to the `id` |`function` <br>` testGetReturnOrderID_MOCK(testName, ID, expectedResult)` |
+| *true* | *false* | valid | `testGetReturnOrderID_MOCK` retrieves an empty array |`function` <br>` testGetReturnOrderID_MOCK(testName, ID, expectedResult)` |
+| *false* | */* | invalid | `testGetReturnOrderID_MOCK` catch `TypeError` and terminates with <br>`{code: 500, message: "Internal Server Error"}` | `function` <br>` testGetReturnOrderID_MOCK(testName, ID, expectedResult)` |
 
 ### **Class *ReturnOrderController* - method *createReturnOrder***
 
-
-
 **Criteria for method *createReturnOrder*:**
-
 
 - Database is reachable
 - `returnDate` saved in the db as expected
 - `restockOrderId` saved in the db as expected
 - `products` saved in the db as expected
-
-
 
 **Predicates for method *createReturnOrder*:**
 
@@ -1156,29 +1158,16 @@ User already inserted:
 | :--------:            | :---------: |
 | Database is reachable | *true* |
 |                       | *false*|
-| `returnDate` | *true* |
+| `body` ok             | *true* |
 |                       | *false*|
-| `restockOrderId` | *true* |
-|                       | *false*|
-| `products` | *true* |
-|                       | *false*|
-
-
-
-
-
 
 **Combination of predicates**:
 
-
-
-| Database is reachable | `returnDate` | `restockOrderId` | `products` | Valid / Invalid | Description of the test case | Jest test case |
-|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
-| *true* | *true* |*true* |*true* | valid | `createReturnOrder(returnDate,restockOrderId,products,expected)` creates a new return order and it retrieves the new return order to compare with the one expected  |`function` <br>`createReturnOrder(returnDate,restockOrderId,products,expected)`|
-| *true* | *false* |*true* |*true* | invalid | `createReturnOrder(returnDate,restockOrderId,products,expected)` creates a new return order but the return order's the `returnDate` is not as expected therefore the test failes |`function` <br>`createReturnOrder(returnDate,restockOrderId,products,expected)`|
-| *true* | *true* |*false* |*true* | invalid | `createReturnOrder(returnDate,restockOrderId,products,expected)` creates a new return order but the return order's the `restockOrderId` is not as expected  |`function` <br>`createReturnOrder(returnDate,restockOrderId,products,expected)`|
-| *true* | *true* |*true* |*false* | invalid | `createReturnOrder(returnDate,restockOrderId,products,expected)` creates a new return order but the return order's the `products` is not as expected  |`function` <br>`createReturnOrder(returnDate,restockOrderId,products,expected)`|
-| *false* | *true* |*true* |*true* | invalid | `createReturnOrder(returnDate,restockOrderId,products,expected)` catch `TypeError` and terminates with <br>`{code: 503, message: "Service Unavailable"}`  |`function` <br>`createReturnOrder(returnDate,restockOrderId,products,expected)`|
+| Database is reachable | `body` empty | Valid / Invalid | Description of the test case | Jest test case |
+|:-------:|:-------:|:-------:|:-------:|:-------:|
+| *true* | *true* | valid | `testCreateReturnOrder_MOCK` creates a new return order and it retrieves the new return order to compare with the one expected  |`function` <br>`testCreateReturnOrder_MOCK(testName, reqBody, expectedResult)`|
+| *true* |*false* | invalid | `testCreateReturnOrder_MOCK` creates a new return order but the return order's the `returnDate` is not as expected therefore the test failes |`function` <br>`testCreateReturnOrder_MOCK(testName, reqBody, expectedResult)`|
+| *false* | / | invalid | `testCreateReturnOrder_MOCK` throws `Error`  |`function` <br>`testCreateReturnOrder_MOCK(testName, reqBody, expectedResult)`|
 
 ### **Class *ReturnOrderController* - method *deleteReturnOrder***
 
@@ -1208,10 +1197,39 @@ User already inserted:
 
 | Database is reachable | Valid / Invalid | Description of the test case | Jest test case |
 |:-------:|:-------:|:-------:|:-------:|
-| *true* | valid |`deleteReturnOrder(req)` returns the `id` of the return order deleted successfully|`function` <br>`deleteReturnOrder(req)`|
-| *false* | invalid |`deleteReturnOrder(req)` catch `TypeError` and terminates with <br>`{code: 503, message: "Unprocessable Entity"}`|`function` <br>`deleteReturnOrder(req)`|
+| *true* | valid |`testDeleteReturnOrder_MOCK` returns the `id` of the return order deleted successfully|`function` <br>`testDeleteReturnOrder_MOCK(testName, ID, expectedResult)`|
+| *false* | invalid |`testDeleteReturnOrder_MOCK` throws `Error`|`function` <br>`testDeleteReturnOrder_MOCK(testName, ID, expectedResult)`|
 
 ## **Class TestDescriptorDAO**
+
+### **Class *TestDescriptorDAO* - method *getTestDescriptors***
+
+
+
+**Criteria for method *getTestDescriptors*:**
+    
+
+ - Database is reachable  
+
+
+
+**Predicates for method *getTestDescriptorById*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|    DB is reachable        |     true      |
+|          |    false       |
+
+
+
+**Combination of predicates**:
+
+
+| DB is reachable |  Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|------|-------|
+|true| valid |`getTestDescriptors()` terminates with expected value |`function` <br> `getTestDescriptors(expected)`|
+|false| invalid | `getTestDescriptors()` throws `Error` |`function` `getTestDescriptors(expected)`|
+
 
 ### **Class *TestDescriptorDAO* - method *getTestDescriptorById***
 
@@ -1244,6 +1262,7 @@ User already inserted:
 | DB is reachable | Id exists in the DB |  Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|------|-------|-------|
 |true|true| valid |`getTestDescriptorById()` terminates with expected value |`function` <br> `getTestDescriptorById(id,expected)`|
+|true|false| invalid |`getTestDescriptorById()` terminates with empty value |`function` <br> `getTestDescriptorById(id,expected)`|
 |false|true| invalid | `getTestDescriptorById()` throws `Error` |`function` `getTestDescriptorById(id,expected)`|
 
 ### **Class *TestDescriptorDAO* - method *createTestDescriptor***
@@ -1254,7 +1273,6 @@ User already inserted:
     
 
  - Database is reachable
- - idSKU exists in database
 
 
 
@@ -1266,8 +1284,6 @@ User already inserted:
 | -------- | --------- |
 |    DB is reachable      |      true     |
 |          |    false       |
-|    idSKU exists in the DB      |   true        |
-|          |    false       |
 
 
 
@@ -1277,8 +1293,8 @@ User already inserted:
 
 | DB is reachable | idSKU exists in the DB| Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|
-|true|true|valid| `createTestDescriptor()` terminates with the expected value|`function` <br> `createTestDescriptor(expected,json)`|
-|false|false|invalid|`createTestDescriptor()` throws `Error` |`function` <br> `createTestDescriptor(expected,json)`|
+|true|valid| `createTestDescriptor()` terminates with the expected value|`function` <br> `createTestDescriptor(expected,json)`|
+|false|invalid|`createTestDescriptor()` throws `Error` |`function` <br> `createTestDescriptor(expected,json)`|
 
 ### **Class *TestDescriptorDAO* - method *modifyTestDescriptor***
 
@@ -1303,8 +1319,7 @@ User already inserted:
 |          |    false       |
 |  id exists in the DB        |   true        |
 |          |    false       |
-|newidSKU exist in the DB|true|
-||false|
+
 
 
 
@@ -1312,10 +1327,11 @@ User already inserted:
 **Combination of predicates**:
 
 
-| DB is reachable | id exists in the DB |newidSKU exist in the DB| Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|-------|-------|
-|true|true|true|valid| `modifytestDescriptor()` terminates with expected value |`function` <br> `modifyTestDescriptor(expected,json,id)`|
-|false|false|false|invalid|`modifyTestDescriptor()` throws `Error`|`function` <br> `modifyTestDescriptor(expected,json,id)`|
+| DB is reachable | id exists in the DB | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|
+|true|true|valid| `modifytestDescriptor()` terminates with expected value |`function` <br> `modifyTestDescriptor(expected,json,id)`|
+|true|false|invalid| `modifytestDescriptor()` terminates|`function` <br> `modifyTestDescriptor(expected,json,id)`|
+|false|false|invalid|`modifyTestDescriptor()` throws `Error`|`function` <br> `modifyTestDescriptor(expected,json,id)`|
 
 ### **Class *TestDescriptorDAO* - method *deleteTestDescriptor***
 
@@ -1347,11 +1363,37 @@ User already inserted:
 | DB is reachable|Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|
 |true|valid|`deleteTestDescriptor()` terminates with expected value|`function` <br> `deleteTestDescriptor(expected,id)`|
-|true|invalid|`deleteTestDescriptor()` can't delete a undefined test |`function` <br> `deleteTestDescriptor(expected,id)`|
 |false|invalid|`deleteTestDescriptor()` throws `Error`|`function` <br> `deleteTestDescriptor(expected,id)`|
 
 
 ## **Class TestResultDAO**
+
+### **Class *TestResultDAO* - method *getTestResults***
+
+**Criteria for method *getTestResults*:**
+
+ - Database is reachable
+ - rfid exists in the database
+
+
+**Predicates for method *getTestResults*:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+|     DB is reachable     |  true         |
+|          |    false       |
+|   rfid exist in the DB       |     true      |
+|          |   false        |
+
+
+**Combination of predicates**:
+
+| DB is reachable |  rfid exist in the DB    |  Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|
+|true|true|valid|`getTestResults()` terminates with expected value |`function` <br> `getTestResults(expected,req)`|
+|true|false|invalid|`getTestResults()` terminates with empty value|`function` <br> `getTestResults(expected,req)`|
+|false|/|invalid|`getTestResults()` throws `Error`|`function` <br> `getTestResults(expected,req)`|
+
 
 ### **Class *TestResultDAO* - method *getTestResultById***
 
@@ -1377,9 +1419,8 @@ User already inserted:
 | DB is reachable |  rfid exist in the DB    |  id exist in the DB    | Valid / Invalid | Description of the test case | Jest test case |
 |-------|-------|-------|-------|-------|-------|
 |true|true|true|valid|`getTestResultById()` terminates with expected value |`function` <br> `getTestResultById(expected,req)`|
-|true|true|false|invalid|`getTestResultById()` fails on id check and return 404|`function` <br> `getTestResultById(expected,req)`|
-|true|false|true|invalid|`getTestResultById()` fails on rfid check and return 404|`function` <br> `getTestResultById(expected,req)`|
-|true|false|false|invalid|`getTestResultById()` fails on rfid check and return 404|`function` <br> `getTestResultById(expected,req)`|
+|true|true|false|invalid|`getTestResultById()` terminates with empty value|`function` <br> `getTestResultById(expected,req)`|
+|true|false|true|invalid|`getTestResultById()` terminates with empty value|`function` <br> `getTestResultById(expected,req)`|
 |false|true|true|invalid|`getTestResultById()` throws `Error`|`function` <br> `getTestResultById(expected,req)`|
 
 
@@ -1395,20 +1436,14 @@ User already inserted:
 | -------- | --------- |
 |     DB is reachable     |  true         |
 |          |    false       |
-|   rfid exist in the DB        | true          |
-|          |   false        |
-|idTestDescriptor exists in the DB|true|
-||false|
+
 
 **Combination of predicates**:
 
-| DB is reachable |rfid exist in the DB  |idTestDescriptor exists in the DB | Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|-------|-------|
-|true|true|true|valid|`createTestResult()` terminates with expected value|`function` <br> `createTestResult(expected, req)`|
-|true|true|false|invalid|`createTestResult()` fails on idTestDescriptor check and return 404|`function` <br> `createTestResult(expected, req)`|
-|true|false|true|invalid|`createTestResult()` fails on rfid check and return 404|`function` <br> `createTestResult(expected, req)`|
-|true|false|false|invalid|`createTestResult()` fails on rfidcheck and return 404|`function` <br> `createTestResult(expected, req)`|
-|false|true|true|invalid|`createTestResult()` throws `Error`|`function` <br> `createTestResult(expected, req)`|
+| DB is reachable | Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|
+|true|valid|`createTestResult()` terminates with expected value|`function` <br> `createTestResult(expected, req)`|
+|false|invalid|`createTestResult()` throws `Error`|`function` <br> `createTestResult(expected, req)`|
 
 ### **Class *TestResultDAO* - method *modifyTestResult***
 
@@ -1425,22 +1460,16 @@ User already inserted:
 | -------- | --------- |
 |     DB is reachable     |  true         |
 |          |    false       |
-|   rfid exists DB       | true          |
-|          |    false       |
 |   id exists in DB     |      true     |
-|          |    false       |
-|newIdTestDescriptor exist in the DB|true|
 |          |    false       |
 
 **Combination of predicates**:
 
-| DB is reachable |   rfid exists DB   |newIdTestDescriptor exist in the DB    | id exists in DB| Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|-------|-------|-------|
-|true|true|true|true|valid|`modifyTestResult()` terminates with 200 returned|`function` <br> `modifyTestResult(expected, req1, req2)`|
-|true|true|true|false|invalid|`modifyTestResult()` fails on id check and return 404|`function` <br> `modifyTestResult(expected, req1, req2)`|
-|true|true|false|/|invalid|`modifyTestResult()` fails on newIdTestDescriptor check and return 404|`function` <br> `modifyTestResult(expected, req1, req2)`|
-|true|false|/|/|invalid|`modifyTestResult()` fails on rfid check and return 404|`function` <br> `modifyTestResult(expected, req1, req2)`|
-|false|/|/|/|invalid|`modifyTestResult()` throws `Error`|`function` <br> `modifyTestResult(expected, req1, req2)`|
+| DB is reachable | id exists in DB| Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|
+|true|true|valid|`modifyTestResult()` terminates with 200 returned|`function` <br> ` modifyTestResult(expected,id,json)`|
+|true|false|invalid|`modifyTestResult()` terminates |`function` <br> ` modifyTestResult(expected,id,json)`|
+|false|/|invalid|`modifyTestResult()` throws `Error`|`function` <br> ` modifyTestResult(expected,id,json)`|
 
 ### **Class *TestResultDAO* - method *deleteTestResult***
 
@@ -1454,13 +1483,19 @@ User already inserted:
 | -------- | --------- |
 |     DB is reachable     |  true         |
 |          |    false       |
+|rfid exist in the DB|true|
+||false|
+|   id exists in DB     |      true     |
+|          |    false       |
 
 **Combination of predicates**:
 
-| DB is reachable |  Valid / Invalid | Description of the test case | Jest test case |
-|-------|-------|-------|-------|
-|true|valid|`deleteTestResult()` terminates with 204 returned|`function` <br> `deleteTestResult(expected, req)`|
-|false|invalid|`deleteTestResult()` throws `Error`|`function` <br> `deleteTestResult(expected, req)`|
+| DB is reachable |rfid exist in the DB| id exists in DB   |  Valid / Invalid | Description of the test case | Jest test case |
+|-------|-------|-------|-------|-------|-------|
+|true|true|true|valid|`deleteTestResult()` terminates with 204 returned|`function` <br> `deleteTestResult(expected,id,rfid)`|
+|true|false|true|invalid|`deleteTestResult()` terminates with 204 returned|`function` <br> `deleteTestResult(expected,id,rfid)`|
+|true|ture|false|invalid|`deleteTestResult()` terminates with 204 returned|`function` <br> `deleteTestResult(expected,id,rfid)`|
+|false|/|/|invalid|`deleteTestResult()` throws `Error`|`function` <br> `deleteTestResult(expected,id,rfid)`|
 
 # White Box Unit Tests
 
@@ -1468,9 +1503,10 @@ User already inserted:
 
 | Unit name | Jest test case |
 |--|--|
+| Class **UserDAO.js** method `getUsers()` | `testGetUsers()` |
 | Class **UserDAO.js** method `createUser()` | `testNewUser()` |
 | Class **UserDAO.js** method `getUser()` | `testGetUser()` |
-| Class **UserDAO.js** method `modifyPermissions()` | `testModifyPermissions()` |
+| Class **UserDAO.js** method `modifyPermissions()` | `testModifyPermissions(name, usr, expected)` |
 | Class **UserDAO.js** method `removeUser()` | `testRemoveUser()` |
 | Class **PositionDAO.js** method `newPosition()` | `newPosition_TEST()` |
 | Class **PositionDAO.js** method `editPosition()` | `editPosition_TEST()` |
@@ -1486,14 +1522,14 @@ User already inserted:
 | Class **SKUDAO.js** method `updateSKU()` | `testUpdateSKU_REAL()` |
 | Class **SKUDAO.js** method `updateSKUpositionID()` | `testUpdateSKUpositionID_REAL()` |
 | Class **SKUDAO.js** method `deleteSKU()` | `testDeleteSKU_REAL()` |
-| Class **RestockOrderController.js** method `createRestockOrder()` | `createRestockOrder()` |
-| Class **RestockOrderController.js** method `getRestockOrderById()` | `getRestockOrderById()` |
-| Class **RestockOrderController.js** method `getRestockOrders()` | `getRestockOrders()` |
-| Class **RestockOrderController.js** method `getRestockOrdersIssued()` | `getRestockOrdersIssued()` |
-| Class **RestockOrderController.js** method `modifyRestockOrderState()` | `modifyRestockOrderState()` |
-| Class **RestockOrderController.js** method `addTransportNote()` | `addTransportNote()` |
-| Class **RestockOrderController.js** method `setSkuItems()` | `addSkuItems()` |
-| Class **RestockOrderController.js** method `deleteRestockOrder()` | `deleteRestockOrder()` |
+| Class **RestockOrderDAO.js** method `createRestockOrder()` | `createRestockOrder()` |
+| Class **RestockOrderDAO.js** method `testGetRestockOrderById_MOCK()` | `testGetRestockOrderById_MOCK()` |
+| Class **RestockOrderDAO.js** method `getRestockOrders()` | `getRestockOrders()` |
+| Class **RestockOrderDAO.js** method `getRestockOrdersIssued()` | `getRestockOrdersIssued()` |
+| Class **RestockOrderDAO.js** method `modifyRestockOrderState()` | `modifyRestockOrderState()` |
+| Class **RestockOrderDAO.js** method `addTransportNote()` | `addTransportNote()` |
+| Class **RestockOrderDAO.js** method `setSkuItems()` | `addSkuItems()` |
+| Class **RestockOrderDAO.js** method `deleteRestockOrder()` | `deleteRestockOrder()` |
 | Class **InternalOrderDAO.js** method `createInternalOrder()` | `createInternalOrder()` |
 | Class **InternalOrderDAO.js** method `modifyInternalOrderState()` | `modifyInternalOrderState()` |
 | Class **InternalOrderDAO.js** method `deleteInternalOrder()` | `deleteInternalOrder()` |
@@ -1529,9 +1565,9 @@ Please note: TestDAO is not testable due to the server architecture. It creates 
 
 | Unit name | Loop rows | Number of iterations | Jest test case |
 |---|---|---|---|
-| Class **RestockOrderController.js**  method `createRestockOrder()`        | 27-35 | products.length | `createRestockOrder_TEST(issueDate,supplierId,products,expected)` |
-| Class **RestockOrderController.js**  method `setSkuItems()`               | 201-2015 | skuItems.length | `addSkuItems(id,skuItems,expected)` |
-| Class **RestockOrderController.js**  method `getRestockOrders()`          | 56-63 | one for each restock order retrieved | `getRestockOrders(id,skuItems,expected)` |
+| Class **RestockOrderDAO.js**  method `createRestockOrder()`        | 27-35 | products.length | `createRestockOrder_TEST(issueDate,supplierId,products,expected)` |
+| Class **RestockOrderDAO.js**  method `setSkuItems()`               | 201-2015 | skuItems.length | `testSetSkuItems_MOCK(testName, ID, skuItems, expectedResult)` |
+| Class **RestockOrderDAO.js**  method `getRestockOrders()`          | 56-63 | one for each restock order retrieved | `getRestockOrders(id,skuItems,expected)` |
 | Class **InternalOrderDAO.js** method `createInternalOrder()`       | 26-34 | products.length | `createInternalOrder(issueDate,products,customerId,expected)` |
 | Class **InternalOrderDAO.js** method `modifyInternalOrderState()`  | 188-193 | products.length | `modifyInternalOrderState(id,newState,products,expected)` |
 | Class **InternalOrderDAO.js** method `getInternalOrders()`         | 51-63 | products.length | ` getInternalOrders(expected)` |

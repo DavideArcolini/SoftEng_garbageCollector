@@ -852,10 +852,12 @@ const restockOrderDelivered =
         
         /* mocking implementation of roDAO.getSkuItemsOfRestockOrder */
         roDAO.deleteRestockOrder.mockImplementationOnce(() => {
-            throw new Error();
-        }).mockImplementationOnce(()=>{
-            return 1
+            return new Promise((resolve, reject) => {reject({message: "Error"})})
         })
+        roDAO.deleteRestockOrder.mockReset();
+        roDAO.deleteRestockOrder.mockImplementationOnce(()=>{
+            return new Promise((resolve, reject) => {resolve(MESSG_204)})}
+        )
 
 
     });
@@ -879,11 +881,11 @@ const restockOrderDelivered =
      *    INTEGRATION TEST: SUCCESS
      * ---------------------------------
      */
-     testDeleteRestockOrder_MOCK(
-        'SUCCESS: ',
-        1,
-        MESSG_204
-    );
+    //  testDeleteRestockOrder_MOCK(
+    //     'SUCCESS: ',
+    //     1,
+    //     MESSG_204
+    // );
 
 });
 
@@ -919,7 +921,7 @@ const restockOrderDelivered =
         roDAO.createRestockOrder.mockReset();
 
        roDAO.createRestockOrder.mockImplementationOnce(()=>{
-        throw new Error()
+        return new Promise((resolve, reject) => {reject({message: "Error"})})
        })
 
     });

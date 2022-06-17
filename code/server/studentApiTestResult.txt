@@ -3,7 +3,11 @@ Server listening at http://localhost:3001
 
   create internal order
 [ { SKUId: 1, description: 'a product', price: 0.01, qty: 1 } ]
+<<<<<<< HEAD
     ✔ create internal order (1554ms)
+=======
+    1) create internal order
+>>>>>>> 6a637ba6fb9b38bb5724756a878bcb97bfd98995
 [ { SKUId: 1, description: 'a product', price: -0.01, qty: 1 } ]
     ✔ create internal order - UNPROCESSABLE
 
@@ -136,6 +140,8 @@ Server listening at http://localhost:3001
   modify test descriptor
     ✔ 200 return
     ✔ id doesn't exist
+undefined
+undefined
     ✔ body format is wrong
 
   delete test descriptor
@@ -440,15 +446,26 @@ Server listening at http://localhost:3001
     ✔ not empty body
 
   get user
+<<<<<<< HEAD
     ✔ getting user data from the system (58ms)
+=======
+    ✔ getting user data from the system (93ms)
+>>>>>>> 6a637ba6fb9b38bb5724756a878bcb97bfd98995
     ✔ empty body
     ✔ bad username format
     ✔ bad password format
     ✔ not found: wrong username
+<<<<<<< HEAD
     ✔ not found: wrong password (56ms)
 
   new user
     ✔ user created (56ms)
+=======
+    ✔ not found: wrong password (91ms)
+
+  new user
+    ✔ user created (92ms)
+>>>>>>> 6a637ba6fb9b38bb5724756a878bcb97bfd98995
     ✔ empty body
     ✔ wrong username format
     ✔ password too short
@@ -470,5 +487,14 @@ Server listening at http://localhost:3001
     ✔ deleted
 
 
-  154 passing (2s)
+  153 passing (3s)
+  1 failing
+
+  1) create internal order
+       create internal order:
+     Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure "done()" is called; if returning a Promise, ensure it resolves. (/Users/peipi98/Documents/PoliTO/Materie/Software_Engineering/team30/SoftEng_garbageCollector/code/server/test/testInternalOrderRouter.js)
+      at listOnTimeout (node:internal/timers:564:17)
+      at process.processTimers (node:internal/timers:507:7)
+
+
 
