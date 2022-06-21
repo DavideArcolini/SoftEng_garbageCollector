@@ -6,13 +6,14 @@ e# Integration and API Test Report
  * Davide Arcolini
  * Giuseppe Atanasio
 
-**Date**: 8th June 2022
+**Date**: 22 June 2022
 
 **Version**: 
 | Version | Changes |
 | ------- |---------|
 | 1.0 | Added first version of API Test Report document. |
 | 1.1 | Add new dependency graph |
+| 2.0 |  |
 # Contents
 
 - [Integration and API Test Report](#integration-and-api-test-report)
@@ -32,12 +33,15 @@ e# Integration and API Test Report
 
 # Integration approach
 
-The integration sequence we adopted is **bottom-up**. We started with unit-testing, in particular first with mock tests and then with real tests, in which we tested the controllers and their methods, and those are documented in `UnitTestReport.md`. Then, we proceeded to test the APIs in which we tested the routers for each controller class (`ItemRouter.js`, `UserRouter.js`, `PositionRouter.js`, `SKURouter.js`, etc).
+The integration sequence we adopted is **bottom-up**. We started with unit-testing, in particular first with mock tests and then with real tests, in which we tested the DAOs and their methods, and those are documented in `UnitTestReport.md`. Then, we proceeded to test the controllers and at the end also the APIs, in which we tested the routers for each controller class (`ItemRouter.js`, `UserRouter.js`, `PositionRouter.js`, `SKURouter.js`, etc).
 We used a single mockup, which is `mock_dao.js`.
 
 #  Integration Tests
 
-## Step 1
+## Step 1 (See UnitTestReport.md)
+
+## Step 2
+
 | Classes  | mock up used |Jest test cases |
 |--|--|--|
 | **UserController** | `getStoredUsers_TEST_mock()` | `getStoredUsers_TEST()` |
@@ -98,7 +102,7 @@ We used a single mockup, which is `mock_dao.js`.
 | **TestResultController**|`modifyTestResult()` | `modifyTestResult()`|
 | **TestResultController**|`deleteTestResult()` | `deleteTestResult()`|
 
-## Step 2
+## Step 3
 | Classes  | Mocha-Chaii test cases |
 |--|--|
 | **UserController** | `getStoredUsers()` |

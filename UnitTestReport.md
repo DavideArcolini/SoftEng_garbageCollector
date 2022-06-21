@@ -1554,10 +1554,11 @@
 
 ### Code coverage report
 
-Please note: TestDAO is not testable due to the server architecture. It creates and drop only the DB's tables, and also auxiliary methods `run()`, `get()`, `all()`.
+Please note: DAO and TestDAO are not testable due to the server architecture. It creates and drop only the DB's tables, and also auxiliary methods `run()`, `get()`, `all()`.
 
 
-![coverage](./images/coverage.png)
+![tests](./images/tests.jpg)
+![coverage](./images/coverage.jpg)
 
     
 
@@ -1565,18 +1566,9 @@ Please note: TestDAO is not testable due to the server architecture. It creates 
 
 | Unit name | Loop rows | Number of iterations | Jest test case |
 |---|---|---|---|
-| Class **RestockOrderDAO.js**  method `createRestockOrder()`        | 27-35 | products.length | `createRestockOrder_TEST(issueDate,supplierId,products,expected)` |
-| Class **RestockOrderDAO.js**  method `setSkuItems()`               | 201-2015 | skuItems.length | `testSetSkuItems_MOCK(testName, ID, skuItems, expectedResult)` |
-| Class **RestockOrderDAO.js**  method `getRestockOrders()`          | 56-63 | one for each restock order retrieved | `getRestockOrders(id,skuItems,expected)` |
-| Class **InternalOrderDAO.js** method `createInternalOrder()`       | 26-34 | products.length | `createInternalOrder(issueDate,products,customerId,expected)` |
-| Class **InternalOrderDAO.js** method `modifyInternalOrderState()`  | 188-193 | products.length | `modifyInternalOrderState(id,newState,products,expected)` |
-| Class **InternalOrderDAO.js** method `getInternalOrders()`         | 51-63 | products.length | ` getInternalOrders(expected)` |
-| Class **InternalOrderDAO.js** method `getInternalOrdersIssued()`   | 86-97 | products.length | ` getInternalOrdersIssued(expected)` |
-| Class **InternalOrderDAO.js** method `getInternalOrdersAccepted()` | 113-123 | products.length | ` getInternalOrdersAccepted(expected)` |
+| Class **RestockOrderDAO.js**  method `createRestockOrder()`        | 151-159 | products.length | `createRestockOrder_TEST(issueDate,supplierId,products,expected)` |
+| Class **RestockOrderDAO.js**  method `setSkuItems()`               | 201-218 | skuItems.length | `testSetSkuItems_MOCK(testName, ID, skuItems, expectedResult)` |
+| Class **InternalOrderDAO.js** method `createInternalOrder()`       | 166-181 | products.length | `createInternalOrder(issueDate,products,customerId,expected)` |
 | Class **SKUDAO.js**           method `getSKUs()`             | 80-86 | number of SKUS in the DB | `testGetSKUs_REAL(testName, expectedResult)` |
-| Class **TestResultDAO.js**    method `getTestResults()`            | 30     |number of Test Result retrieved|`getTestResults(expected,rfid)`|
-| Class **ReturnOrderController.js**   method `createReturnOrder()`         | 24 | products.length | `createInternalOrder(issueDate,products,customerId,expected)` |
-| Class **TestResultDAO.js**    method ``modifyTestResult()``          | 136    |number of Test Result retrieved|`modifyTestResult(expected,req1,req2)`|
-
 
 
